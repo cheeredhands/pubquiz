@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace Pubquiz.Models
+namespace Pubquiz.Domain
 {
     public class Question
     {

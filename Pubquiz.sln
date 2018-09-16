@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.WebApi", "Pubquiz.WebApi\Pubquiz.WebApi.csproj", "{BB0B76FD-B3B4-4EE8-9473-FAF25B336082}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Models", "Pubquiz.Models\Pubquiz.Models.csproj", "{53E83F91-4083-4368-B278-EA4BB8A6C624}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Domain", "Pubquiz.Domain\Pubquiz.Domain.csproj", "{53E83F91-4083-4368-B278-EA4BB8A6C624}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

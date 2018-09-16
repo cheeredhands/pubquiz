@@ -6,7 +6,7 @@ using System.Linq;
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace Pubquiz.Models
+namespace Pubquiz.Domain
 {
     public class Game
     {

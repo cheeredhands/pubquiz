@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>Pubquiz.Domain</AssemblyName>
+        <RootNamespace>Pubquiz.Domain</RootNamespace>
     </PropertyGroup>
 
 </Project>
