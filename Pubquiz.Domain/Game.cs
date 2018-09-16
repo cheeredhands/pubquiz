@@ -11,6 +11,7 @@ namespace Pubquiz.Domain
     public class Game
     {
         public Guid Id { get; set; }
+        public string Title { get; set; }
         public GameState State { get; set; }
         public Quiz Quiz { get; set; }
         public List<Team> Teams { get; set; }
@@ -18,14 +19,85 @@ namespace Pubquiz.Domain
         public Question CurrentQuestion { get; set; }
         public int CurrentQuestionIndex { get; set; }
         public int CurrentQuestionSetIndex { get; set; }
+
+        public Game()
+        {
+            Id = Guid.NewGuid();
+            State = GameState.Closed;
+            Teams = new List<Team>();
+        }
+
+        public void SetState(GameState newGameState)
+        {
+            // todo check validity of state change
+            switch (newGameState)
+            {
+                case GameState.Closed:
+                    if (State != GameState.Open)
+                    {
+                        throw new DomainException("Can only close the game from the open state.", true);
+                    }
+
+                    break;
+                case GameState.Open:
+                    if (State != GameState.Closed)
+                    {
+                        throw new DomainException("Can only open the game from the closed state.", true);
+                    }
+
+                    if (State == GameState.Closed && Quiz == null)
+                    {
+                        throw new DomainException("Can't open the game without a quiz.", true);
+                    }
+
+                    if (State == GameState.Closed && Title == null)
+                    {
+                        throw new DomainException("Can't open the game without a title.", true);
+                    }
+
+                    break;
+                case GameState.Running:
+                    if (State != GameState.Open && State != GameState.Paused)
+                    {
+                        throw new DomainException("Can only start the game from the open and paused states.", true);
+                    }
+
+                    if (!Teams.Any())
+                    {
+                        throw new DomainException("Can't start the game without teams.", true);
+                    }
+
+                    break;
+                case GameState.Paused:
+                    if (State != GameState.Running)
+                    {
+                        throw new DomainException("Can only pause the game from the running state.", true);
+                    }
+
+                    break;
+
+                case GameState.Finished:
+                    if (State != GameState.Running && State != GameState.Paused)
+                    {
+                        throw new DomainException("Can only finish the game from the running and paused states.", true);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(newGameState), newGameState, null);
+            }
+
+            State = newGameState;
+        }
     }
 
     public enum GameState
     {
+        Closed,
         Open, // e.g. open for registration
-        Started, // rename? InSession? Running?
+        Running, // InSession? Started?
         Paused,
-        Closed
+        Finished // Ended?
     }
 
     public class Team
@@ -37,6 +109,11 @@ namespace Pubquiz.Domain
         public Dictionary<Guid, int> ScorePerQuestionSet { get; set; }
 
         public List<Answer> Answers { get; set; }
+
+        public Team()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 
     public class Answer
@@ -47,8 +124,10 @@ namespace Pubquiz.Domain
         public int TotalScore { get; set; }
         public bool FlaggedForManualCorrection { get; set; }
 
-        public Answer()
+        public Answer(Guid questionSetId, Guid questionId)
         {
+            QuestionSetId = questionSetId;
+            QuestionId = questionId;
             InteractionResponses = new List<InteractionResponse>();
         }
 

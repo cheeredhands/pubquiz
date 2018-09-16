@@ -19,6 +19,7 @@ namespace Pubquiz.Domain
 
         public Question()
         {
+            Id = Guid.NewGuid();
             Media = new List<Media>();
         }
     }
@@ -34,6 +35,7 @@ namespace Pubquiz.Domain
 
         public Interaction()
         {
+            Id = Guid.NewGuid();
             ChoiceOptions = new List<ChoiceOption>();
         }
     }
@@ -63,6 +65,11 @@ namespace Pubquiz.Domain
         public Guid Id { get; set; }
         public string Text { get; set; }
         // maybe later? public Media Media { get; set; }
+
+        public ChoiceOption()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 
     public enum InteractionType
@@ -83,6 +90,7 @@ namespace Pubquiz.Domain
 
         public Media(string uri, MediaType mediaType)
         {
+            Id = Guid.NewGuid();
             Uri = uri;
             MediaType = mediaType;
         }
