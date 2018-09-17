@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Pubquiz.Domain.Models
 {
+    /// <summary>
+    /// A planned instance of a game that uses a certain quiz.
+    /// Changes in time throughout the game, e.g. has state.
+    /// </summary>
     public class Game
     {
         public Guid Id { get; set; }

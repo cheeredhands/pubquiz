@@ -12,9 +12,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var mcQuestion = quiz.QuestionSets.First().Questions[0];
+            var mcQuestion =  quiz.QuizSections.First().Questions[0];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, mcQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, mcQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1}));
 
             // Act
@@ -29,9 +29,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var mcQuestion = quiz.QuestionSets.First().Questions.First();
+            var mcQuestion = quiz.QuizSections.First().Questions.First();
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, mcQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, mcQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {3}));
 
             // Act
@@ -46,9 +46,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var mcQuestion = quiz.QuestionSets.First().Questions.First();
+            var mcQuestion = quiz.QuizSections.First().Questions.First();
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, mcQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, mcQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1, 3}));
 
             // Act
@@ -63,9 +63,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var mrQuestion = quiz.QuestionSets.First().Questions[1];
+            var mrQuestion = quiz.QuizSections.First().Questions[1];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, mrQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, mrQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {4, 3}));
 
             // Act
@@ -80,9 +80,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var mrQuestion = quiz.QuestionSets.First().Questions[1];
+            var mrQuestion = quiz.QuizSections.First().Questions[1];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, mrQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, mrQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1, 3}));
 
             // Act
@@ -97,9 +97,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var mrQuestion = quiz.QuestionSets.First().Questions[1];
+            var mrQuestion = quiz.QuizSections.First().Questions[1];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, mrQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, mrQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1, 2}));
 
             // Act
@@ -114,9 +114,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var mrQuestion = quiz.QuestionSets.First().Questions[1];
+            var mrQuestion = quiz.QuizSections.First().Questions[1];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, mrQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, mrQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1, 2, 3, 4}));
 
             // Act
@@ -131,9 +131,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var mrQuestion = quiz.QuestionSets.First().Questions[1];
+            var mrQuestion = quiz.QuizSections.First().Questions[1];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, mrQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, mrQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, new int[] { }));
 
             // Act
@@ -148,9 +148,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var saQuestion = quiz.QuestionSets.First().Questions[2];
+            var saQuestion = quiz.QuizSections.First().Questions[2];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, saQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, saQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "answer"));
 
             // Act
@@ -165,9 +165,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var saQuestion = quiz.QuestionSets.First().Questions[2];
+            var saQuestion = quiz.QuizSections.First().Questions[2];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, saQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, saQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "wrong answer"));
 
             // Act
@@ -183,9 +183,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var saQuestion = quiz.QuestionSets.First().Questions[2];
+            var saQuestion = quiz.QuizSections.First().Questions[2];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, saQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, saQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, string.Empty));
 
             // Act
@@ -201,9 +201,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var saQuestion = quiz.QuestionSets.First().Questions[3];
+            var saQuestion = quiz.QuizSections.First().Questions[3];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, saQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, saQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "answer"));
 
             // Act
@@ -218,9 +218,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var saQuestion = quiz.QuestionSets.First().Questions[3];
+            var saQuestion = quiz.QuizSections.First().Questions[3];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, saQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, saQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "ansver"));
 
             // Act
@@ -235,9 +235,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var multipleSaQuestion = quiz.QuestionSets.First().Questions[4];
+            var multipleSaQuestion = quiz.QuizSections.First().Questions[4];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, multipleSaQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, multipleSaQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "answer1"));
             answer.InteractionResponses.Add(new InteractionResponse(2, "answer2"));
 
@@ -253,9 +253,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var multipleSaQuestion = quiz.QuestionSets.First().Questions[4];
+            var multipleSaQuestion = quiz.QuizSections.First().Questions[4];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, multipleSaQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, multipleSaQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "answer1"));
             answer.InteractionResponses.Add(new InteractionResponse(2, "wrong answer"));
 
@@ -271,9 +271,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var multipleSaQuestion = quiz.QuestionSets.First().Questions[4];
+            var multipleSaQuestion = quiz.QuizSections.First().Questions[4];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, multipleSaQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, multipleSaQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "wrong answer"));
             answer.InteractionResponses.Add(new InteractionResponse(2, "answer2"));
 
@@ -289,9 +289,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var etQuestion = quiz.QuestionSets.First().Questions[5];
+            var etQuestion = quiz.QuizSections.First().Questions[5];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, etQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, etQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "an answer"));
 
             // Act
@@ -307,9 +307,9 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var etQuestion = quiz.QuestionSets.First().Questions[5];
+            var etQuestion = quiz.QuizSections.First().Questions[5];
 
-            var answer = new Answer(quiz.QuestionSets.First().Id, etQuestion.Id);
+            var answer = new Answer(quiz.QuizSections.First().Id, etQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "an answer"));
 
             // Act

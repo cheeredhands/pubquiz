@@ -8,12 +8,8 @@ using System.Linq;
 
 namespace Pubquiz.Domain.Models
 {
-    public class Question
+    public class Question : QuizItem
     {
-        public Guid Id { get; set; }
-        public string Title { get; set; }
-        public string Body { get; set; }
-        public List<Media> Media { get; set; }
         public QuestionType QuestionType { get; set; }
         public int MaxScore { get; set; }
         public List<Interaction> Interactions { get; set; }

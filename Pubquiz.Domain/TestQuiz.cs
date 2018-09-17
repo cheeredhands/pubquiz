@@ -154,11 +154,10 @@ namespace Pubquiz.Domain
 
         public static Quiz GetQuiz()
         {
-            var questionSet = new QuestionSet
+            var questionSet = new QuizSection
             {
                 Title = "Main quiz part",
-                Category = "Anything goes",
-                Questions = new List<Question>
+                QuizItems = new List<QuizItem>
                 {
                     GetMCQuestion(),
                     GetMRQuestion(),
@@ -170,7 +169,7 @@ namespace Pubquiz.Domain
             };
 
             var quiz = new Quiz {Title = "Testquiz"};
-            quiz.QuestionSets.Add(questionSet);
+            quiz.QuizSections.Add(questionSet);
 
             return quiz;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -8,19 +9,24 @@ using System.Collections.Generic;
 namespace Pubquiz.Domain.Models
 {
     /// <summary>
-    /// An instance of a quiz (a composition of questions) that can be held at some time.
-    /// Contains question sets which contain questions.
+    /// A section of a quiz, e.g. a round or a category.
     /// </summary>
-    public class Quiz
+    public class QuizSection
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public List<QuizSection> QuizSections { get; set; }
+        public List<QuizItem> QuizItems { get; set; }
 
-        public Quiz()
+        /// <summary>
+        /// Only the questions in this section.
+        /// </summary>
+        public List<Question> Questions => QuizItems.OfType<Question>().ToList();
+
+
+        public QuizSection()
         {
             Id = Guid.NewGuid();
-            QuizSections = new List<QuizSection>();
+            QuizItems = new List<QuizItem>();
         }
     }
 }

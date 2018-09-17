@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Pubquiz.Domain.Models;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace Pubquiz.Domain
+namespace Pubquiz.Domain.Models
 {
     public class Team
     {
