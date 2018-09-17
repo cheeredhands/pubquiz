@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Pubquiz.Domain.Models;
 
 namespace Pubquiz.Domain.Tests
 {
@@ -8,39 +8,43 @@ namespace Pubquiz.Domain.Tests
     public class GameStateTests
     {
         [TestMethod]
-        public void GameInRunningState_Open_ThrowsException()
+        public void GameNotInClosedState_Open_ThrowsException()
         {
-            // arrange
-            var game = new Game {State = GameState.Running};
+            foreach (GameState state in Enum.GetValues(typeof(GameState)))
+            {
+                if (state == GameState.Closed || state == GameState.Open)
+                {
+                    continue;
+                }
 
-            // act & assert
-            var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
-            Assert.AreEqual("Can only open the game from the closed state.", exception.Message);
-            Assert.IsTrue(exception.IsBadRequest);
+                // arrange
+                var game = new Game {State = state};
+
+                // act & assert
+                var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
+                Assert.AreEqual("Can only open the game from the closed state.", exception.Message);
+                Assert.IsTrue(exception.IsBadRequest);
+            }
         }
 
         [TestMethod]
-        public void GameInPausedState_Open_ThrowsException()
+        public void GameNotInOpenState_Close_ThrowsException()
         {
-            // arrange
-            var game = new Game {State = GameState.Paused};
+            foreach (GameState state in Enum.GetValues(typeof(GameState)))
+            {
+                if (state == GameState.Open || state == GameState.Closed)
+                {
+                    continue;
+                }
 
-            // act & assert
-            var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
-            Assert.AreEqual("Can only open the game from the closed state.", exception.Message);
-            Assert.IsTrue(exception.IsBadRequest);
-        }
+                // arrange
+                var game = new Game {State = state};
 
-        [TestMethod]
-        public void GameInFinishedState_Open_ThrowsException()
-        {
-            // arrange
-            var game = new Game {State = GameState.Finished};
-
-            // act & assert
-            var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
-            Assert.AreEqual("Can only open the game from the closed state.", exception.Message);
-            Assert.IsTrue(exception.IsBadRequest);
+                // act & assert
+                var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Closed));
+                Assert.AreEqual("Can only close the game from the open state.", exception.Message);
+                Assert.IsTrue(exception.IsBadRequest);
+            }
         }
 
         [TestMethod]
@@ -57,6 +61,30 @@ namespace Pubquiz.Domain.Tests
         }
 
         [TestMethod]
+        public void GameInClosedStateWithoutAQuiz_Open_ThrowsException()
+        {
+            // arrange
+            var game = new Game {State = GameState.Closed, Title = "Testquiz"};
+
+            // act & assert
+            var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
+            Assert.AreEqual("Can't open the game without a quiz and/or a title.", exception.Message);
+            Assert.IsTrue(exception.IsBadRequest);
+        }
+
+        [TestMethod]
+        public void GameInClosedStateWithoutATitle_Open_ThrowsException()
+        {
+            // arrange
+            var game = new Game {State = GameState.Closed, Quiz = new Quiz()};
+
+            // act & assert
+            var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
+            Assert.AreEqual("Can't open the game without a quiz and/or a title.", exception.Message);
+            Assert.IsTrue(exception.IsBadRequest);
+        }
+
+        [TestMethod]
         public void GameInOpenState_Run_StateChanged()
         {
             // arrange
@@ -68,6 +96,40 @@ namespace Pubquiz.Domain.Tests
 
             // assert
             Assert.AreEqual(game.State, GameState.Running);
+        }
+
+
+        [TestMethod]
+        public void GameInOpenStateWithoutTeams_Run_ThrowsException()
+        {
+            // arrange
+            var game = new Game {State = GameState.Open};
+
+
+            // act & assert
+            var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Running));
+            Assert.AreEqual("Can't start the game without teams.", exception.Message);
+            Assert.IsTrue(exception.IsBadRequest);
+        }
+
+        [TestMethod]
+        public void GameNotInOpenOrPausedState_Run_ThrowsException()
+        {
+            foreach (GameState state in Enum.GetValues(typeof(GameState)))
+            {
+                if (state == GameState.Open || state == GameState.Paused || state == GameState.Running)
+                {
+                    continue;
+                }
+
+                // arrange
+                var game = new Game {State = state};
+
+                // act & assert
+                var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Running));
+                Assert.AreEqual("Can only start the game from the open and paused states.", exception.Message);
+                Assert.IsTrue(exception.IsBadRequest);
+            }
         }
 
         [TestMethod]
@@ -97,6 +159,26 @@ namespace Pubquiz.Domain.Tests
         }
 
         [TestMethod]
+        public void GameNotInRunningState_Pause_ThrowsException()
+        {
+            foreach (GameState state in Enum.GetValues(typeof(GameState)))
+            {
+                if (state == GameState.Running || state == GameState.Paused)
+                {
+                    continue;
+                }
+
+                // arrange
+                var game = new Game {State = state};
+
+                // act & assert
+                var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Paused));
+                Assert.AreEqual("Can only pause the game from the running state.", exception.Message);
+                Assert.IsTrue(exception.IsBadRequest);
+            }
+        }
+
+        [TestMethod]
         public void GameInPausedState_Run_StateChanged()
         {
             // arrange
@@ -111,6 +193,26 @@ namespace Pubquiz.Domain.Tests
         }
 
         [TestMethod]
+        public void GameNotInRunningOrPausedState_Finish_ThrowsException()
+        {
+            foreach (GameState state in Enum.GetValues(typeof(GameState)))
+            {
+                if (state == GameState.Running || state == GameState.Paused || state == GameState.Finished)
+                {
+                    continue;
+                }
+
+                // arrange
+                var game = new Game {State = state};
+
+                // act & assert
+                var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Finished));
+                Assert.AreEqual("Can only finish the game from the running and paused states.", exception.Message);
+                Assert.IsTrue(exception.IsBadRequest);
+            }
+        }
+
+        [TestMethod]
         public void GameInPausedState_Finish_StateChanged()
         {
             // arrange
@@ -122,34 +224,6 @@ namespace Pubquiz.Domain.Tests
 
             // assert
             Assert.AreEqual(game.State, GameState.Finished);
-        }
-
-        [TestMethod]
-        public void TestMethod1()
-        {
-            // Arrange
-            var questionSet = new QuestionSet
-            {
-                Title = "Main quiz part",
-                Category = "Anything goes"
-            };
-
-            var team = new Team
-            {
-                Name = "Testteam",
-                MemberNames = new List<string> {"M88", "THT"}
-            };
-
-            var quiz = new Quiz {Title = "Testquiz"};
-            quiz.QuestionSets.Add(questionSet);
-            var game = new Game {Quiz = quiz};
-            game.Teams.Add(team);
-
-
-            // Act
-
-            // Assert
-            Assert.IsTrue(true);
         }
     }
 }
