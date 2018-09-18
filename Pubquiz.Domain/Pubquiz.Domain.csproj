@@ -6,4 +6,8 @@
         <RootNamespace>Pubquiz.Domain</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Citolab.Repository" Version="2018.7.2.2"/>
+    </ItemGroup>
+
 </Project>

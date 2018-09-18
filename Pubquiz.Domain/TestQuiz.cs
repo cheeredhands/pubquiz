@@ -12,7 +12,7 @@ namespace Pubquiz.Domain
                 Body = "Question body",
                 Title = "Multiple choice",
                 MaxScore = 1,
-                QuestionType = QuestionType.MC
+                QuestionType = QuestionType.MultipleChoice
             };
 
             mcQuestion.Interactions.Add(new Interaction(1)
@@ -26,7 +26,7 @@ namespace Pubquiz.Domain
                     new ChoiceOption(4, "Option 4")
                 },
                 Solution = new Solution(new[] {3}),
-                InteractionType = InteractionType.MC,
+                InteractionType = InteractionType.MultipleChoice,
                 MaxScore = 1
             });
 
@@ -40,7 +40,7 @@ namespace Pubquiz.Domain
                 Body = "Question body",
                 Title = "Multiple response",
                 MaxScore = 1,
-                QuestionType = QuestionType.MR
+                QuestionType = QuestionType.MultipleResponse
             };
 
             mrQuestion.Interactions.Add(new Interaction(1)
@@ -54,7 +54,7 @@ namespace Pubquiz.Domain
                     new ChoiceOption(4, "Corrent option 4")
                 },
                 Solution = new Solution(new[] {3, 4}),
-                InteractionType = InteractionType.MR,
+                InteractionType = InteractionType.MultipleResponse,
                 MaxScore = 1
             });
 
@@ -66,16 +66,16 @@ namespace Pubquiz.Domain
             var mrQuestion = new Question
             {
                 Body = "Question body",
-                Title = "Short answer with one solutions",
+                Title = "Short answer with one solution",
                 MaxScore = 1,
-                QuestionType = QuestionType.SA
+                QuestionType = QuestionType.ShortAnswer
             };
 
             mrQuestion.Interactions.Add(new Interaction(1)
             {
                 Text = "What is the right answer? (hint: 'answer')",
                 Solution = new Solution(new[] {"answer"}),
-                InteractionType = InteractionType.SA,
+                InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
 
@@ -89,14 +89,14 @@ namespace Pubquiz.Domain
                 Body = "Question body",
                 Title = "Short answer with multiple solutions",
                 MaxScore = 1,
-                QuestionType = QuestionType.SA
+                QuestionType = QuestionType.ShortAnswer
             };
 
             mrQuestion.Interactions.Add(new Interaction(1)
             {
                 Text = "What is the right answer? (hint: 'answer')",
                 Solution = new Solution(new[] {"answer", "ansver"}),
-                InteractionType = InteractionType.SA,
+                InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
 
@@ -109,15 +109,15 @@ namespace Pubquiz.Domain
             {
                 Body = "Question body",
                 Title = "Test question",
-                MaxScore = 1,
-                QuestionType = QuestionType.SA
+                MaxScore = 3,
+                QuestionType = QuestionType.ShortAnswer
             };
 
             multipleSAQuestion.Interactions.Add(new Interaction(1)
             {
                 Text = "1. What is the right answer? (hint: 'answer1')",
                 Solution = new Solution(new[] {"answer1"}),
-                InteractionType = InteractionType.SA,
+                InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
 
@@ -125,7 +125,7 @@ namespace Pubquiz.Domain
             {
                 Text = "2. What is the right answer? (hint: 'answer2')",
                 Solution = new Solution(new[] {"answer2"}),
-                InteractionType = InteractionType.SA,
+                InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 2
             });
             return multipleSAQuestion;
@@ -138,13 +138,13 @@ namespace Pubquiz.Domain
                 Body = "Question body",
                 Title = "Extended text (no solution, manually corrected)",
                 MaxScore = 1,
-                QuestionType = QuestionType.ET
+                QuestionType = QuestionType.ExtendedText
             };
 
             etQuestion.Interactions.Add(new Interaction(1)
             {
                 Text = "Name all of the right answers.",
-                InteractionType = InteractionType.ET,
+                InteractionType = InteractionType.ExtendedText,
                 MaxScore = 1
             });
 
@@ -154,9 +154,9 @@ namespace Pubquiz.Domain
 
         public static Quiz GetQuiz()
         {
-            var questionSet = new QuizSection
+            var quizSection = new QuizSection
             {
-                Title = "Main quiz part",
+                Title = "Main quiz section",
                 QuizItems = new List<QuizItem>
                 {
                     GetMCQuestion(),
@@ -169,7 +169,7 @@ namespace Pubquiz.Domain
             };
 
             var quiz = new Quiz {Title = "Testquiz"};
-            quiz.QuizSections.Add(questionSet);
+            quiz.QuizSections.Add(quizSection);
 
             return quiz;
         }

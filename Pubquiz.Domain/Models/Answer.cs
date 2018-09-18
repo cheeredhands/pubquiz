@@ -32,8 +32,8 @@ namespace Pubquiz.Domain.Models
                 var solution = interaction.Solution;
                 switch (interaction.InteractionType)
                 {
-                    case InteractionType.MC:
-                    case InteractionType.MR:
+                    case InteractionType.MultipleChoice:
+                    case InteractionType.MultipleResponse:
                         var correctOptionIds = solution.ChoiceOptionIds;
                         var responseOptionIds = interactionResponse.ChoiceOptionIds;
                         if (correctOptionIds.Count == responseOptionIds.Count &&
@@ -44,7 +44,7 @@ namespace Pubquiz.Domain.Models
                         }
 
                         break;
-                    case InteractionType.SA:
+                    case InteractionType.ShortAnswer:
                         if (interactionResponse.ManuallyCorrected)
                         {
                             interactionResponse.AwardedScore =
@@ -63,7 +63,7 @@ namespace Pubquiz.Domain.Models
                         }
 
                         break;
-                    case InteractionType.ET:
+                    case InteractionType.ExtendedText:
                         if (interactionResponse.ManuallyCorrected)
                         {
                             interactionResponse.AwardedScore =

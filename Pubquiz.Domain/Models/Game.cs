@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Citolab.Repository;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -12,13 +13,13 @@ namespace Pubquiz.Domain.Models
     /// A planned instance of a game that uses a certain quiz.
     /// Changes in time throughout the game, e.g. has state.
     /// </summary>
-    public class Game
+    public class Game : Model
     {
-        public Guid Id { get; set; }
         public string Title { get; set; }
         public GameState State { get; set; }
         public Quiz Quiz { get; set; }
         public List<Team> Teams { get; set; }
+        public string InviteCode { get; set; }
 
         public Question CurrentQuestion { get; set; }
         public int CurrentQuestionIndex { get; set; }
