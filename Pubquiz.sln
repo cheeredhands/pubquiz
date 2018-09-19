@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Domain", "Pubquiz.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Domain.Tests", "Pubquiz.Domain.Tests\Pubquiz.Domain.Tests.csproj", "{A40BA4BA-4072-4E72-82EF-3464A214F571}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Repository", "Pubquiz.Repository\Pubquiz.Repository.csproj", "{8F853D0F-9EEC-4866-9326-DA88C5E2DD16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{A40BA4BA-4072-4E72-82EF-3464A214F571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A40BA4BA-4072-4E72-82EF-3464A214F571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A40BA4BA-4072-4E72-82EF-3464A214F571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F853D0F-9EEC-4866-9326-DA88C5E2DD16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F853D0F-9EEC-4866-9326-DA88C5E2DD16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F853D0F-9EEC-4866-9326-DA88C5E2DD16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F853D0F-9EEC-4866-9326-DA88C5E2DD16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Citolab.Repository;
+using Pubquiz.Repository;
 
 namespace Pubquiz.Domain
 {
@@ -9,7 +9,12 @@ namespace Pubquiz.Domain
     /// <typeparam name="TResponse"></typeparam>
     public abstract class Command<TResponse> : Request
     {
-        public IRepositoryFactory RepositoryFactory { protected get; set; }
+        protected readonly IRepositoryFactory RepositoryFactory;
+
+        protected Command(IRepositoryFactory repositoryFactory)
+        {
+            RepositoryFactory = repositoryFactory;
+        }
 
         public Task<TResponse> Execute()
         {

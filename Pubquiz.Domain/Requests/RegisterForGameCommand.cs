@@ -1,39 +1,57 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Citolab.Repository;
 using Pubquiz.Domain.Models;
+using Pubquiz.Domain.Tools;
+using Pubquiz.Repository;
 
 namespace Pubquiz.Domain.Requests
 {
     public class RegisterForGameCommand : Command<Team>
     {
-        private readonly IRepository<Team> _teamRepository;
-        private readonly IRepository<Game> _gameRepository;
-        private readonly string _teamName;
-        private readonly string _inviteCode;
+        public string TeamName;
+        public string Code;
 
-        public RegisterForGameCommand(string teamName, string inviteCode)
+        public RegisterForGameCommand(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
         {
-            _teamRepository = RepositoryFactory.GetRepository<Team>();
-            _gameRepository = RepositoryFactory.GetRepository<Game>();
-            _teamName = teamName;
-            _inviteCode = inviteCode;
         }
 
-        protected override Task<Team> DoExecute()
+        protected override async Task<Team> DoExecute()
         {
+            var gameRepository = RepositoryFactory.GetRepository<Game>();
+            var teamRepository = RepositoryFactory.GetRepository<Team>();
+
             // check validity of invite code, otherwise throw DomainException
-            var game = _gameRepository.AsQueryable().FirstOrDefault(g => g.InviteCode == _inviteCode);
+            var game = gameRepository.AsQueryable().FirstOrDefault(g => g.InviteCode == Code);
             if (game == null)
             {
-                throw new DomainException("Invalid invite code.", false);
+                // check if it's a recovery code for a team
+                var team = teamRepository.AsQueryable().FirstOrDefault(t => t.SessionRecoveryCode == Code);
+                if (team != null)
+                {
+                    return team;
+                }
+
+                throw new DomainException("Invalid code.", false);
             }
 
             // check if team name is taken, otherwise throw DomainException
+            var isTeamNameTaken = await teamRepository.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
+            if (isTeamNameTaken)
+            {
+                throw new DomainException("Team name is taken.", true);
+            }
 
             // register team and return team object
+            var newTeam = new Team
+            {
+                Name = TeamName,
+                GameId = game.Id,
+                SessionRecoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepository, game.Id)
+            };
 
-            throw new System.NotImplementedException();
+            await teamRepository.AddAsync(newTeam);
+
+            return newTeam;
         }
     }
 }

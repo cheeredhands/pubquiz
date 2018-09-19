@@ -1,6 +1,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
+using Pubquiz.Domain.Tools;
 
 namespace Pubquiz.Domain.Tests
 {

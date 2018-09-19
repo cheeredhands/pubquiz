@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Pubquiz.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Pubquiz.Domain;
+using Pubquiz.Domain.Models;
+using Pubquiz.Domain.Requests;
 
 namespace Pubquiz.WebApi.Controllers
 {
@@ -10,6 +14,13 @@ namespace Pubquiz.WebApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IRepositoryFactory _repositoryFactory;
+
+        public ValuesController(IRepositoryFactory repositoryFactory)
+        {
+            _repositoryFactory = repositoryFactory;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -26,9 +37,7 @@ namespace Pubquiz.WebApi.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        public Task<Team> Post([FromBody] RegisterForGameCommand command) => command.Execute();
 
         // PUT api/values/5
         [HttpPut("{id}")]

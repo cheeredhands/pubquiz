@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Pubquiz.Repository;
 
 namespace Pubquiz.Domain
 {
@@ -7,6 +8,13 @@ namespace Pubquiz.Domain
     /// </summary>
     public abstract class Notification : Request
     {
+        protected readonly IRepositoryFactory RepositoryFactory;
+
+        protected Notification(IRepositoryFactory repositoryFactory)
+        {
+            RepositoryFactory = repositoryFactory;
+        }
+
         public Task Execute()
         {
             return DoExecute();
