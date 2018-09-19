@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pubquiz.Domain.Tools;
 using Pubquiz.Repository;
+// ReSharper disable CollectionNeverUpdated.Global
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -18,8 +19,8 @@ namespace Pubquiz.Domain.Models
     {
         public string Title { get; set; }
         public GameState State { get; set; }
-        public Quiz Quiz { get; set; }
-        public List<Team> Teams { get; set; }
+        public Guid QuizId { get; set; }
+        public List<Guid> TeamIds { get; set; }
         public string InviteCode { get; set; }
 
         public Question CurrentQuestion { get; set; }
@@ -30,7 +31,8 @@ namespace Pubquiz.Domain.Models
         {
             Id = Guid.NewGuid();
             State = GameState.Closed;
-            Teams = new List<Team>();
+            QuizId = Guid.Empty;
+            TeamIds = new List<Guid>();
         }
 
         public void SetState(GameState newGameState)
@@ -50,7 +52,7 @@ namespace Pubquiz.Domain.Models
                         throw new DomainException("Can only open the game from the closed state.", true);
                     }
 
-                    if (State == GameState.Closed && (Quiz == null || string.IsNullOrWhiteSpace(Title)))
+                    if (State == GameState.Closed && (QuizId == Guid.Empty || string.IsNullOrWhiteSpace(Title)))
                     {
                         throw new DomainException("Can't open the game without a quiz and/or a title.", true);
                     }
@@ -62,7 +64,7 @@ namespace Pubquiz.Domain.Models
                         throw new DomainException("Can only start the game from the open and paused states.", true);
                     }
 
-                    if (!Teams.Any())
+                    if (!TeamIds.Any())
                     {
                         throw new DomainException("Can't start the game without teams.", true);
                     }

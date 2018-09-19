@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pubquiz.Domain.Models
 {
-   public abstract class QuizItem
+   public class QuizItem
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

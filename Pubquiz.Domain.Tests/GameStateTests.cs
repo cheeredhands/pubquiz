@@ -77,7 +77,8 @@ namespace Pubquiz.Domain.Tests
         public void GameInClosedStateWithoutATitle_Open_ThrowsException()
         {
             // arrange
-            var game = new Game {State = GameState.Closed, Quiz = new Quiz()};
+            var quiz = TestQuiz.GetQuiz();
+            var game = new Game {State = GameState.Closed, QuizId = quiz.Id};
 
             // act & assert
             var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
@@ -90,7 +91,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var game = new Game {State = GameState.Open};
-            game.Teams.Add(new Team());
+            game.TeamIds.Add(Guid.NewGuid());
 
             // act 
             game.SetState(GameState.Running);
@@ -184,7 +185,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var game = new Game {State = GameState.Paused};
-            game.Teams.Add(new Team());
+            game.TeamIds.Add(Guid.NewGuid());
 
             // act 
             game.SetState(GameState.Running);
@@ -218,7 +219,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var game = new Game {State = GameState.Paused};
-            game.Teams.Add(new Team());
+            game.TeamIds.Add(Guid.NewGuid());
 
             // act 
             game.SetState(GameState.Finished);

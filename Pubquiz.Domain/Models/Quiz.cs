@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pubquiz.Repository;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -11,9 +12,8 @@ namespace Pubquiz.Domain.Models
     /// An instance of a quiz (a composition of questions) that can be held at some time.
     /// Contains question sets which contain questions.
     /// </summary>
-    public class Quiz
+    public class Quiz : Model
     {
-        public Guid Id { get; set; }
         public string Title { get; set; }
         public List<QuizSection> QuizSections { get; set; }
 

@@ -106,6 +106,8 @@ namespace Pubquiz.Domain.Models
         public int LevenshteinTolerance { get; set; }
         public bool FlagIfWithinTolerance { get; set; }
 
+        public Solution(){}
+        
         public Solution(IEnumerable<int> optionIds)
         {
             ChoiceOptionIds = optionIds.ToList();
