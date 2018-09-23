@@ -12,8 +12,7 @@ namespace Pubquiz.Domain.Requests
 
         protected override async Task<TeamViewModel> DoExecute()
         {
-            return new TeamViewModel();
-            
+            return await Task.Run(() => new TeamViewModel());
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pubquiz.Domain.Models;
 using Pubquiz.Repository.Extensions;
 using Pubquiz.WebApi.Helpers;
 using Swashbuckle.AspNetCore.Swagger;
@@ -16,7 +19,7 @@ namespace Pubquiz.WebApi
     public class Startup
     {
         private IHostingEnvironment _hostingEnvironment;
-        
+
         public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -42,14 +45,19 @@ namespace Pubquiz.WebApi
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddApiExplorer()
                 .AddJsonFormatters()
-                .AddCacheTagHelper();
+                .AddCacheTagHelper()
+                .AddAuthorization(options =>
+                {
+                    options.DefaultPolicy = new AuthorizationPolicyBuilder( JwtBearerDefaults.AuthenticationScheme)
+                        .RequireAuthenticatedUser().Build();
+                });
             services.AddSingleton<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
-
+//services.AddIdentity<Team>()
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new Info {Title = "Pubquiz backend", Version = "v1"});
             });
-            
+
             services.ConfigureSwaggerGen(options =>
             {
                 options.DescribeAllEnumsAsStrings();
@@ -60,15 +68,16 @@ namespace Pubquiz.WebApi
                 {
                     options.IncludeXmlComments(commentsFile);
                 }
+
                 var xmlDocPath = Configuration["Swagger:Path"];
                 if (File.Exists(xmlDocPath))
                 {
                     options.IncludeXmlComments(xmlDocPath);
                 }
+
                 options.CustomSchemaIds(x => x.FullName);
-                
             });
-           
+
             services.AddSignalR();
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
@@ -90,10 +99,7 @@ namespace Pubquiz.WebApi
             //app.UseHttpsRedirection();
             app.UseMvc();
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
         }
     }
 }

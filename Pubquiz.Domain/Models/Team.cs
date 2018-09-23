@@ -8,7 +8,7 @@ using Pubquiz.Repository;
 
 namespace Pubquiz.Domain.Models
 {
-    public class Team : Model
+    public class Team : User
     {
         public string Name { get; set; }
         public List<string> MemberNames { get; set; }
@@ -16,9 +16,7 @@ namespace Pubquiz.Domain.Models
         public Dictionary<Guid, int> ScorePerQuestionSet { get; set; }
 
         public Guid GameId { get; set; }
-        
-        public string SessionRecoveryCode { get; set; }
-        
+
         public List<Answer> Answers { get; set; }
 
         public Team()

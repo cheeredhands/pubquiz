@@ -15,7 +15,7 @@ namespace Pubquiz.Domain.Tools
 
         public static string GenerateSessionRecoveryCode(IRepository<Team> teamRepository, Guid gameId)
         {
-            var result = string.Empty;
+            string result;
             do
             {
                 var words = new List<string>();
@@ -28,7 +28,7 @@ namespace Pubquiz.Domain.Tools
                 }
 
                 result = string.Join(" ", words);
-            } while (teamRepository.AnyAsync(t => t.SessionRecoveryCode == result && t.GameId == gameId).Result);
+            } while (teamRepository.AnyAsync(t => t.RecoveryCode == result && t.GameId == gameId).Result);
 
             return result;
         }

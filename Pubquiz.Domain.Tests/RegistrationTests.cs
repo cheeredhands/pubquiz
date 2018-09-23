@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -16,6 +15,7 @@ namespace Pubquiz.Domain.Tests
     {
         private IRepositoryFactory _repositoryFactory;
 
+        private Game _game;
         [TestInitialize]
         public void Initialize()
         {
@@ -27,15 +27,15 @@ namespace Pubquiz.Domain.Tests
             var quizRepository = _repositoryFactory.GetRepository<Quiz>();
             var teamRepository = _repositoryFactory.GetRepository<Team>();
             var gameRepository = _repositoryFactory.GetRepository<Game>();
-            var game = TestGame.GetGame();
+            _game = TestGame.GetGame();
             var quiz = TestQuiz.GetQuiz();
-            var teams = TestTeams.GetTeams(teamRepository, game.Id);
-            game.QuizId = quiz.Id;
-            game.TeamIds = teams.Select(t => t.Id).ToList();
+            var teams = TestTeams.GetTeams(teamRepository, _game.Id);
+            _game.QuizId = quiz.Id;
+            _game.TeamIds = teams.Select(t => t.Id).ToList();
 
             quizRepository.AddAsync(quiz).Wait();
             teams.ForEach(t => teamRepository.AddAsync(t).Wait());
-            gameRepository.AddAsync(game).Wait();
+            gameRepository.AddAsync(_game).Wait();
         }
 
         [TestMethod]
@@ -49,6 +49,21 @@ namespace Pubquiz.Domain.Tests
 
             // assert
             Assert.AreEqual("Team 4", team.Name);
+        }
+
+        [TestMethod]
+        public void TestGame_UseTeamRecoveryCode_RecoveryCodeAccepted()
+        {
+            // arrange 
+            var firstTeamId = _game.TeamIds[0];
+            var firstTeam = _repositoryFactory.GetRepository<Team>().GetAsync(firstTeamId).Result;
+            var command = new RegisterForGameCommand(_repositoryFactory) { TeamName = "", Code = firstTeam.RecoveryCode};
+            
+            // act
+            var team = command.Execute().Result;
+            
+            // assert
+            team.RecoveryCode = firstTeam.RecoveryCode;
         }
 
         [TestMethod]
