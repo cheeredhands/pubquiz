@@ -4,16 +4,18 @@ using Pubquiz.Domain.Models;
 
 namespace Pubquiz.WebApi.Helpers
 {
-    public class IdentityUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid>
     {
         /// <summary>
         /// The invite or recovery code that was used.
         /// </summary>
         public string Code { get; set; }
 
-        public static IdentityUser FromUser(User user)
+        public string TeamName { get; set; }
+
+        public static ApplicationUser FromUser(User user)
         {
-            return new IdentityUser
+            return new ApplicationUser
             {
                 Id = user.Id,
                 UserName = user.UserName,

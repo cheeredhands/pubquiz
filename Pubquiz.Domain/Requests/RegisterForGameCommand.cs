@@ -43,8 +43,8 @@ namespace Pubquiz.Domain.Requests
             }
 
             // register team and return team object
-            var userName = TeamName.Replace(" ", "%20");
-            var normalizedUserName = userName.Normalize();
+            var userName = TeamName.ReplaceSpaces();
+            var normalizedUserName = userName.ToUpperInvariant();
             var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepo, game.Id);
             var newTeam = new Team
             {
