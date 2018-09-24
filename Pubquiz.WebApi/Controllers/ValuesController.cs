@@ -14,6 +14,7 @@ namespace Pubquiz.WebApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        // gtest
         private readonly IRepositoryFactory _repositoryFactory;
 
         public ValuesController(IRepositoryFactory repositoryFactory)
