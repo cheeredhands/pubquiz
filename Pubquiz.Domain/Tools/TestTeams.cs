@@ -11,9 +11,15 @@ namespace Pubquiz.Domain.Tools
         {
             var teams = new List<Team>();
 
+            var team1Name = "Team 1";
+            var team2Name = "Team 1";
+            var team3Name = "Team 1";
+
             teams.Add(new Team
             {
-                Name = "Team 1",
+                Name = team1Name,
+                UserName = team1Name.ReplaceSpaces(),
+                NormalizedUserName = team1Name.ReplaceSpaces().ToUpperInvariant(),
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepository, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
@@ -21,20 +27,38 @@ namespace Pubquiz.Domain.Tools
 
             teams.Add(new Team
             {
-                Name = "Team 2",
+                Name = team2Name,
+                UserName = team2Name.ReplaceSpaces(),
+                NormalizedUserName = team2Name.ReplaceSpaces().ToUpperInvariant(),
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepository, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
             });
             teams.Add(new Team
             {
-                Name = "Team 3",
+                Name = team3Name,
+                UserName = team3Name.ReplaceSpaces(),
+                NormalizedUserName = team3Name.ReplaceSpaces().ToUpperInvariant(),
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepository, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
             });
 
             return teams;
+        }
+
+        public static IEnumerable<User> GetUsersFromTeams(IEnumerable<Team> teams)
+        {
+            foreach (var team in teams)
+            {
+                yield return new User
+                {
+                    Id = team.Id,
+                    UserName = team.UserName,
+                    NormalizedUserName = team.NormalizedUserName,
+                    RecoveryCode = team.RecoveryCode
+                };
+            }
         }
     }
 }

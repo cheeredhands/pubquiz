@@ -6,6 +6,30 @@ using Pubquiz.Repository;
 
 namespace Pubquiz.Domain.Requests
 {
+    public class CreateUserCommand : Command<User>
+    {
+        public User User { get; set; }
+
+        public CreateUserCommand(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
+        {
+        }
+
+        protected override async Task<User> DoExecute()
+        {
+            var teamRepo = RepositoryFactory.GetRepository<Team>();
+            var userRepo = RepositoryFactory.GetRepository<User>();
+
+            // check if team exists
+            var team = await teamRepo.GetAsync(User.Id);
+            if (team == null)
+            {
+                throw new DomainException($"Team with id {User.Id} doesn't exist.", true);
+            }
+
+            throw new System.NotImplementedException();
+        }
+    }
+
     public class RegisterForGameCommand : Command<Team>
     {
         public string TeamName;
@@ -43,14 +67,14 @@ namespace Pubquiz.Domain.Requests
             }
 
             // register team and return team object
-            var userName = TeamName.Replace(" ", "%20");
-            var normalizedUserName = userName.Normalize();
+            var userName = TeamName.ReplaceSpaces();
+            var normalizedUserName = userName.ToUpperInvariant();
             var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepo, game.Id);
             var newTeam = new Team
             {
                 Name = TeamName,
                 UserName = userName,
-                NormalizedUserName = normalizedUserName,               
+                NormalizedUserName = normalizedUserName,
                 GameId = game.Id,
                 RecoveryCode = recoveryCode
             };
