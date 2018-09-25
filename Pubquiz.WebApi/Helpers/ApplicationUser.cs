@@ -19,7 +19,8 @@ namespace Pubquiz.WebApi.Helpers
             {
                 Id = user.Id,
                 UserName = user.UserName,
-                NormalizedUserName = user.NormalizedUserName
+                NormalizedUserName = user.NormalizedUserName,
+                Code = user.RecoveryCode
             };
         }
     }

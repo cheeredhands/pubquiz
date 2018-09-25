@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal;
 using Pubquiz.Domain.Requests;
 using Pubquiz.Domain.Tools;
 using Pubquiz.Repository;
 using Pubquiz.WebApi.Helpers;
+
 
 namespace Pubquiz.WebApi.Controllers
 {
@@ -28,9 +28,11 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task RegisterForGame([FromBody] RegisterForGameCommand command)
+        public async Task<ActionResult> RegisterForGame([FromBody] RegisterForGameCommand command)
         {
             //await Logout();
+            //var team = command.Execute().Result;
+            
             var userName = command.TeamName.ReplaceSpaces();
             var applicationUser = new ApplicationUser
             {
@@ -41,12 +43,13 @@ namespace Pubquiz.WebApi.Controllers
             };
             var result = await _userManager.CreateAsync(applicationUser);
             if (result.Succeeded)
-            {
+            {                
                 await _signInManager.SignInAsync(applicationUser, true);
+                return Ok();
             }
             else
             {
-                ModelState.AddModelError("asd","asdas");
+                return BadRequest(result);
             }
             //await HttpContext.SignInAsync(new GenericPrincipal(new GenericIdentity(command.TeamName), null));
         }

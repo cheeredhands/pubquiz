@@ -12,7 +12,7 @@ using Pubquiz.Repository;
 
 namespace Pubquiz.WebApi.Helpers
 {
-    public class MyUserStore : IUserPasswordStore<ApplicationUser>
+    public class MyUserStore : IUserStore<ApplicationUser>
     {
         private readonly IRepositoryFactory _repositoryFactory;
 
@@ -32,7 +32,7 @@ namespace Pubquiz.WebApi.Helpers
             Task.FromResult(user.UserName);
 
 
-        public  Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
+        public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
             return new Task(async () =>
@@ -75,7 +75,8 @@ namespace Pubquiz.WebApi.Helpers
                 {TeamName = user.UserName, Code = user.Code};
             try
             {
-                await command.Execute();
+               var team = await command.Execute();
+                user.Id = team.Id;
             }
             catch (DomainException exception)
             {
@@ -131,44 +132,32 @@ namespace Pubquiz.WebApi.Helpers
             }
 
             var query = new GetUserByIdQuery(_repositoryFactory) {UserId = guidId};
-            var user = await query.Execute();
-            return ApplicationUser.FromUser(user);
+            try
+            {
+                var user = await query.Execute();
+                return ApplicationUser.FromUser(user);
+            }
+            catch (DomainException)
+            {
+                return null;
+            }
         }
 
-        public  Task<ApplicationUser> FindByNameAsync(string normalizedUserName,
+        public async Task<ApplicationUser> FindByNameAsync(string normalizedUserName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = new GetUserByNormalizedUserNameQuery(_repositoryFactory)
                 {NormalizedUserName = normalizedUserName};
-            return Task.FromResult<ApplicationUser>(null);
-//            try
-//            {
-//            var user = await query.Execute();
-//            return ApplicationUser.FromUser(user);
-//            }
-//            catch (DomainException e)
-//            {
-//                return null;
-//            }
+
+            try
+            {
+                var user = await query.Execute();
+                return ApplicationUser.FromUser(user);
+            }
+            catch (DomainException)
+            {
+                return null;
+            }
         }
-
-        #region IUserPasswordStore
-
-        public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
     }
 }

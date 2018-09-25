@@ -70,21 +70,21 @@ namespace Pubquiz.WebApi
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
                 CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
-                    options.LoginPath = new PathString("/swagger");
-                    options.AccessDeniedPath = new PathString("/swagger");
-                    options.Events.OnRedirectToLogin = context =>
-                    {
-                        if (context.Request.Path.StartsWithSegments("/api")
-                            && context.Response.StatusCode == StatusCodes.Status200OK)
-                        {
-                            context.Response.Clear();
-                            context.Response.StatusCode = StatusCodes.Status404NotFound;
-                            return Task.CompletedTask;
-                        }
-
-                        context.Response.Redirect(context.RedirectUri);
-                        return Task.CompletedTask;
-                    };
+//                    options.LoginPath = new PathString("/swagger");
+//                    options.AccessDeniedPath = new PathString("/swagger");
+//                    options.Events.OnRedirectToLogin = context =>
+//                    {
+//                        if (context.Request.Path.StartsWithSegments("/api")
+//                            && context.Response.StatusCode == StatusCodes.Status200OK)
+//                        {
+//                            context.Response.Clear();
+//                            context.Response.StatusCode = StatusCodes.Status404NotFound;
+//                            return Task.CompletedTask;
+//                        }
+//
+//                        context.Response.Redirect(context.RedirectUri);
+//                        return Task.CompletedTask;
+//                    };
                 });
             services.AddIdentity<ApplicationUser, ApplicationRole>(o =>
                 o.User.AllowedUserNameCharacters =
