@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Tools;

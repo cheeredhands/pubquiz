@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,6 +17,7 @@ namespace Pubquiz.Domain.Tests
         private IRepositoryFactory _repositoryFactory;
 
         private Game _game;
+
         [TestInitialize]
         public void Initialize()
         {
@@ -24,18 +26,25 @@ namespace Pubquiz.Domain.Tests
             IRepositoryOptions inMemoryRepositoryOptions = new InMemoryDatabaseOptions();
             _repositoryFactory = new NoActionFactory(memoryCache, loggerFactory, inMemoryRepositoryOptions);
 
-            var quizRepository = _repositoryFactory.GetRepository<Quiz>();
-            var teamRepository = _repositoryFactory.GetRepository<Team>();
-            var gameRepository = _repositoryFactory.GetRepository<Game>();
+            var quizRepo = _repositoryFactory.GetRepository<Quiz>();
+            var teamRepo = _repositoryFactory.GetRepository<Team>();
+            var gameRepo = _repositoryFactory.GetRepository<Game>();
+
             _game = TestGame.GetGame();
             var quiz = TestQuiz.GetQuiz();
-            var teams = TestTeams.GetTeams(teamRepository, _game.Id);
+            var teams = TestTeams.GetTeams(teamRepo, _game.Id);
             _game.QuizId = quiz.Id;
             _game.TeamIds = teams.Select(t => t.Id).ToList();
 
-            quizRepository.AddAsync(quiz).Wait();
-            teams.ForEach(t => teamRepository.AddAsync(t).Wait());
-            gameRepository.AddAsync(_game).Wait();
+            // quizRepo.AddAsync(quiz).Wait();
+            //teams.ForEach(t => teamRepo.AddAsync(t).Wait());
+            // gameRepo.AddAsync(_game).Wait();
+
+            Task.WaitAll(
+                quizRepo.AddAsync(quiz),
+                teams.ToAsyncEnumerable().ForEachAsync(t => teamRepo.AddAsync(t)),
+               // users.ToAsyncEnumerable().ForEachAsync(t => userRepo.AddAsync(t)),
+                gameRepo.AddAsync(_game));
         }
 
         [TestMethod]
@@ -57,11 +66,11 @@ namespace Pubquiz.Domain.Tests
             // arrange 
             var firstTeamId = _game.TeamIds[0];
             var firstTeam = _repositoryFactory.GetRepository<Team>().GetAsync(firstTeamId).Result;
-            var command = new RegisterForGameCommand(_repositoryFactory) { TeamName = "", Code = firstTeam.RecoveryCode};
-            
+            var command = new RegisterForGameCommand(_repositoryFactory) {TeamName = "", Code = firstTeam.RecoveryCode};
+
             // act
             var team = command.Execute().Result;
-            
+
             // assert
             team.RecoveryCode = firstTeam.RecoveryCode;
         }
@@ -77,7 +86,7 @@ namespace Pubquiz.Domain.Tests
             Assert.AreEqual("Invalid code.", exception.Message);
             Assert.IsFalse(exception.IsBadRequest);
         }
-        
+
         [TestMethod]
         public void TestGame_RegisterWithExistingTeamName_ThrowsException()
         {

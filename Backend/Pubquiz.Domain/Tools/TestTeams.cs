@@ -12,8 +12,8 @@ namespace Pubquiz.Domain.Tools
             var teams = new List<Team>();
 
             var team1Name = "Team 1";
-            var team2Name = "Team 1";
-            var team3Name = "Team 1";
+            var team2Name = "Team 2";
+            var team3Name = "Team 3";
 
             teams.Add(new Team
             {
