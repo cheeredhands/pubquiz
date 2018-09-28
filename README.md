@@ -1,3 +1,4 @@
-# pubquiz-backend
+# Pubquiz system
 
-This is a dotnet core WebAPI backend for the fantastic pubquiz app that doesn't exist yet.
+ - backend - dotnet core WebAPI backend for the fantastic pubquiz app that doesn't exist yet.
+ - frontend - vue.js frontend?
