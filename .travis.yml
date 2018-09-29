@@ -4,4 +4,4 @@ dotnet: 2.1.402
 script:
  - cd backend
  - dotnet restore
- - dotnet test
+ - dotnet test Pubquiz.Domain.Tests
