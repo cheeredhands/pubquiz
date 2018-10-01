@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace Pubquiz.Repository.Decorators
+namespace Pubquiz.Persistence.Decorators
 {
     /// <summary>
     ///     Base class for Repository decorators.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class RepositoryDecoratorBase<T> : IRepository<T> where T : Model, new()
+    public abstract class CollectionDecoratorBase<T> : ICollection<T> where T : Model, new()
     {
-        private readonly IRepository<T> _decoree;
+        private readonly ICollection<T> _decoree;
         protected readonly IMemoryCache MemoryCache;
         protected ILoggerFactory LoggerFactory;
 
@@ -22,7 +22,7 @@ namespace Pubquiz.Repository.Decorators
         /// </summary>
         /// <param name="memoryCache"></param>
         /// <param name="decoree"></param>
-        protected RepositoryDecoratorBase(IMemoryCache memoryCache, IRepository<T> decoree)
+        protected CollectionDecoratorBase(IMemoryCache memoryCache, ICollection<T> decoree)
         {
             _decoree = decoree;
             MemoryCache = memoryCache;

@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 using Pubquiz.Domain.ViewModels;
 
 namespace Pubquiz.Domain.Requests
 {
     public class TeamViewModelQuery : Query<TeamViewModel>
     {
-        public TeamViewModelQuery(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
+        public TeamViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 

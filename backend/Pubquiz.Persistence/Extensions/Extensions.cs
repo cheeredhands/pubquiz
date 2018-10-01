@@ -1,30 +1,30 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Pubquiz.Repository.Mongo;
-using Pubquiz.Repository.NoAction;
+using Pubquiz.Persistence.MongoDb;
+using Pubquiz.Persistence.NoAction;
 
-namespace Pubquiz.Repository.Extensions
+namespace Pubquiz.Persistence.Extensions
 {
     public static class Extensions
     {
-        public static IServiceCollection AddInMemoryRepository(this IServiceCollection services)
+        public static IServiceCollection AddInMemoryPersistence(this IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
             services.AddMemoryCache();
             services.AddLogging();
-            services.AddSingleton<IRepositoryOptions>(new InMemoryDatabaseOptions());
-            services.AddScoped<IRepositoryFactory, NoActionFactory>();
+            services.AddSingleton<ICollectionOptions>(new InMemoryDatabaseOptions());
+            services.AddScoped<IUnitOfWork, NoActionUnitOfWork>();
             return services;
         }
 
-      public static IServiceCollection AddMongoRepository(this IServiceCollection services, string databaseName, string connectionString)
+      public static IServiceCollection AddMongoDbPersistence(this IServiceCollection services, string databaseName, string connectionString)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
             services.AddMemoryCache();
             services.AddLogging();
-            services.AddSingleton<IRepositoryOptions>(new MongoDatabaseOptions(databaseName, connectionString));
-            services.AddScoped<IRepositoryFactory, MongoFactory>();
+            services.AddSingleton<ICollectionOptions>(new MongoDbDatabaseOptions(databaseName, connectionString));
+            services.AddScoped<IUnitOfWork, MongoDbUnitOfWork>();
             return services;
         }
         

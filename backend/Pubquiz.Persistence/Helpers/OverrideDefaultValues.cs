@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pubquiz.Repository.Helpers
+namespace Pubquiz.Persistence.Helpers
 {
     /// <summary>
     ///     Using this class you can set modified by/date created by/date yourself

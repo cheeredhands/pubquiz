@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Requests
 {
     public class SubmitInteractionResponseNotification : Notification
     {
-        public SubmitInteractionResponseNotification(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
+        public SubmitInteractionResponseNotification(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 

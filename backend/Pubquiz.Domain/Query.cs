@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain
 {
@@ -9,11 +9,11 @@ namespace Pubquiz.Domain
     /// <typeparam name="TResponse"></typeparam>
     public abstract class Query<TResponse> : Request
     {
-        protected readonly IRepositoryFactory RepositoryFactory;
+        protected readonly IUnitOfWork UnitOfWork;
 
-        protected Query(IRepositoryFactory repositoryFactory)
+        protected Query(IUnitOfWork unitOfWork)
         {
-            RepositoryFactory = repositoryFactory;
+            UnitOfWork = unitOfWork;
         }
 
         public Task<TResponse> Execute()

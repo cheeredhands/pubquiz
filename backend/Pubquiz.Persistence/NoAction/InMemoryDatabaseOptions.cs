@@ -1,4 +1,4 @@
-﻿namespace Pubquiz.Repository.NoAction
+﻿namespace Pubquiz.Persistence.NoAction
 {
     public class InMemoryDatabaseOptions : IInMemoryDatabaseOptions
     {

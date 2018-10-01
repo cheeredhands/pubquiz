@@ -1,6 +1,6 @@
-﻿namespace Pubquiz.Repository
+﻿namespace Pubquiz.Persistence
 {
-    public interface IRepositoryOptions
+    public interface ICollectionOptions
     {
         bool FlagDelete { get; set; }
         bool TimeLoggingEnabled { get; set; }

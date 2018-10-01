@@ -3,17 +3,18 @@ using System.Collections.Concurrent;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using Pubquiz.Repository.Decorators;
+using Pubquiz.Persistence.Decorators;
 
-namespace Pubquiz.Repository.Mongo
+namespace Pubquiz.Persistence.MongoDb
 {
     /// <summary>
     ///     Factory for mongo database
     /// </summary>
-    public class MongoFactory : RepositoryFactoryBase
+    public class MongoDbUnitOfWork : UnitOfWorkBase
     {
         private readonly ILogger _logger;
         private readonly IMongoDatabase _mongoDatabase;
+        private readonly IClientSession _clientSession;
 
         /// <summary>
         ///     Constructor
@@ -21,11 +22,12 @@ namespace Pubquiz.Repository.Mongo
         /// <param name="memoryCache"></param>
         /// <param name="loggerFactory"></param>
         /// <param name="options"></param>
-        public MongoFactory(IMemoryCache memoryCache, ILoggerFactory loggerFactory,
-            IRepositoryOptions options)
+        public MongoDbUnitOfWork(IMemoryCache memoryCache, ILoggerFactory loggerFactory,
+            ICollectionOptions options)
             : base(memoryCache, loggerFactory, options)
         {
-            if (!(options is IMongoDatabaseOptions mongoOptions)) throw new Exception("Options should be of type IMongoDatabaseOptions");
+            if (!(options is IMongoDbDatabaseOptions mongoOptions))
+                throw new Exception("Options should be of type IMongoDatabaseOptions");
             _logger = loggerFactory.CreateLogger(GetType());
             try
             {
@@ -48,7 +50,10 @@ namespace Pubquiz.Repository.Mongo
                 {
                     environment = "Development";
                 }
+
                 _mongoDatabase = client.GetDatabase($"{mongoOptions.DatabaseName}-{environment}");
+                _clientSession = _mongoDatabase.Client.StartSession();
+                _clientSession.StartTransaction();
                 Repositories = new ConcurrentDictionary<Type, object>();
             }
             catch (Exception exception)
@@ -65,16 +70,17 @@ namespace Pubquiz.Repository.Mongo
         public ConcurrentDictionary<Type, object> Repositories { get; set; }
 
         /// <inheritdoc />
-        public override IRepository<T> GetRepository<T>()
+        public override ICollection<T> GetCollection<T>()
         {
             if (Repositories.TryGetValue(typeof(T), out var repository))
             {
-                return (IRepository<T>)repository;
+                return (ICollection<T>) repository;
             }
+
             var mongoRepository = new FlagAsDeletedDecorator<T>(MemoryCache,
                 new FillDefaultValueDecorator<T>(MemoryCache,
                     new CacheDecorator<T>(MemoryCache, false,
-                        new MongoRepository<T>(LoggerFactory, _mongoDatabase)), ActorId));
+                        new MongoDbCollection<T>(LoggerFactory, _mongoDatabase)), ActorId));
             if (LogTime)
             {
                 var timeLoggedMongoRepository = new LogTimeDecorator<T>(MemoryCache, mongoRepository, _logger);
@@ -84,7 +90,41 @@ namespace Pubquiz.Repository.Mongo
             {
                 Repositories.TryAdd(typeof(T), mongoRepository);
             }
+
             return mongoRepository;
+        }
+
+        /// <inheritdoc />
+        public override void Commit()
+        {
+            while (true)
+            {
+                try
+                {
+                    _clientSession.CommitTransaction();
+                    _logger.LogInformation("Transaction committed.");
+                    break;
+                }
+                catch (MongoException exception)
+                {
+                    // can retry commit
+                    if (exception.HasErrorLabel("UnknownTransactionCommitResult"))
+                    {
+                        _logger.LogWarning("UnknownTransactionCommitResult, retrying commit operation");
+                    }
+                    else
+                    {
+                        _logger.LogError($"Error during commit: {exception.Message}.");
+                        throw;
+                    }
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override void Abort()
+        {
+            _clientSession.AbortTransaction();
         }
     }
 }

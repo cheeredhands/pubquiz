@@ -4,28 +4,28 @@ using Microsoft.Extensions.Logging;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.WebApi.Helpers
 {
     public class TestSeeder
     {
-        private readonly IRepositoryFactory _repositoryFactory;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
-        public TestSeeder(IRepositoryFactory repositoryFactory, ILoggerFactory loggerFactory)
+        public TestSeeder(IUnitOfWork unitOfWork, ILoggerFactory loggerFactory)
         {
-            _repositoryFactory = repositoryFactory;
+            _unitOfWork = unitOfWork;
             _logger = loggerFactory.CreateLogger<TestSeeder>();
         }
 
         public void SeedTestSet()
         {
             _logger.LogInformation("Seeding test set.");
-            var quizRepo = _repositoryFactory.GetRepository<Quiz>();
-            var teamRepo = _repositoryFactory.GetRepository<Team>();
-            var gameRepo = _repositoryFactory.GetRepository<Game>();
-            var userRepo = _repositoryFactory.GetRepository<User>();
+            var quizRepo = _unitOfWork.GetCollection<Quiz>();
+            var teamRepo = _unitOfWork.GetCollection<Team>();
+            var gameRepo = _unitOfWork.GetCollection<Game>();
+            var userRepo = _unitOfWork.GetCollection<User>();
             var game = TestGame.GetGame();
             var quiz = TestQuiz.GetQuiz();
             var teams = TestTeams.GetTeams(teamRepo, game.Id);

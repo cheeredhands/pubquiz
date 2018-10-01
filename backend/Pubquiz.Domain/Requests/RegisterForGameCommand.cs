@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Requests
 {
@@ -10,14 +10,14 @@ namespace Pubquiz.Domain.Requests
     {
         public User User { get; set; }
 
-        public CreateUserCommand(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
+        public CreateUserCommand(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
         protected override async Task<User> DoExecute()
         {
-            var teamRepo = RepositoryFactory.GetRepository<Team>();
-            var userRepo = RepositoryFactory.GetRepository<User>();
+            var teamRepo = UnitOfWork.GetCollection<Team>();
+            var userRepo = UnitOfWork.GetCollection<User>();
 
             // check if team exists
             var team = await teamRepo.GetAsync(User.Id);
@@ -35,15 +35,15 @@ namespace Pubquiz.Domain.Requests
         public string TeamName;
         public string Code;
 
-        public RegisterForGameCommand(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
+        public RegisterForGameCommand(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
         protected override async Task<Team> DoExecute()
         {
-            var gameRepo = RepositoryFactory.GetRepository<Game>();
-            var teamRepo = RepositoryFactory.GetRepository<Team>();
-            var userRepo = RepositoryFactory.GetRepository<User>();
+            var gameRepo = UnitOfWork.GetCollection<Game>();
+            var teamRepo = UnitOfWork.GetCollection<Team>();
+            var userRepo = UnitOfWork.GetCollection<User>();
 
             // check validity of invite code, otherwise throw DomainException
             var game = gameRepo.AsQueryable().FirstOrDefault(g => g.InviteCode == Code);

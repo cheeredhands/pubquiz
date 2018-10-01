@@ -2,14 +2,14 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Pubquiz.Repository.Decorators;
+using Pubquiz.Persistence.Decorators;
 
-namespace Pubquiz.Repository.NoAction
+namespace Pubquiz.Persistence.NoAction
 {
     /// <summary>
     ///     Factory doesnt do anything with storage. Can be decorated with a memory repository to do the 'storage'
     /// </summary>
-    public class NoActionFactory : RepositoryFactoryBase
+    public class NoActionUnitOfWork : UnitOfWorkBase
     {
         private readonly ILogger _logger;
 
@@ -19,7 +19,7 @@ namespace Pubquiz.Repository.NoAction
         /// <param name="memoryCache"></param>
         /// <param name="loggerFactory"></param>
         /// <param name="options"></param>
-        public NoActionFactory(IMemoryCache memoryCache, ILoggerFactory loggerFactory, IRepositoryOptions options)
+        public NoActionUnitOfWork(IMemoryCache memoryCache, ILoggerFactory loggerFactory, ICollectionOptions options)
             : base(memoryCache, loggerFactory, options)
         {
             Repositories = new ConcurrentDictionary<Type, object>();
@@ -32,16 +32,17 @@ namespace Pubquiz.Repository.NoAction
         public ConcurrentDictionary<Type, object> Repositories { get; set; }
 
         /// <inheritdoc />
-        public override IRepository<T> GetRepository<T>()
+        public override ICollection<T> GetCollection<T>()
         {
             if (Repositories.TryGetValue(typeof(T), out var repository))
             {
-                return (IRepository<T>)repository;
+                return (ICollection<T>) repository;
             }
+
             var noActionRepository = new FlagAsDeletedDecorator<T>(MemoryCache,
                 new FillDefaultValueDecorator<T>(MemoryCache,
                     new CacheDecorator<T>(MemoryCache, true,
-                        new NoActionRepository<T>()), ActorId));
+                        new NoActionCollection<T>()), ActorId));
             if (LogTime)
             {
                 var timeLoggedNoActionRepository =
@@ -52,8 +53,18 @@ namespace Pubquiz.Repository.NoAction
             {
                 Repositories.TryAdd(typeof(T), noActionRepository);
             }
+
             Repositories.TryAdd(typeof(T), noActionRepository);
             return noActionRepository;
+        }
+
+        public override void Commit()
+        {
+        }
+
+        public override void Abort()
+        {
+            throw new NotImplementedException();
         }
     }
 }

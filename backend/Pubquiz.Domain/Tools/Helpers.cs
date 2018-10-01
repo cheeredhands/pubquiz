@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Pubquiz.Domain.Models;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Tools
 {
@@ -13,7 +13,7 @@ namespace Pubquiz.Domain.Tools
             "gijs", "lam", "kees", "weide", "does", "hok", "duif", "schapen"
         };
 
-        public static string GenerateSessionRecoveryCode(IRepository<Team> teamRepository, Guid gameId)
+        public static string GenerateSessionRecoveryCode(Persistence.ICollection<Team> teamCollection, Guid gameId)
         {
             string result;
             do
@@ -28,7 +28,7 @@ namespace Pubquiz.Domain.Tools
                 }
 
                 result = string.Join(" ", words);
-            } while (teamRepository.AnyAsync(t => t.RecoveryCode == result && t.GameId == gameId).Result);
+            } while (teamCollection.AnyAsync(t => t.RecoveryCode == result && t.GameId == gameId).Result);
 
             return result;
         }

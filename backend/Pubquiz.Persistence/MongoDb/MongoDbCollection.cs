@@ -5,12 +5,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using Pubquiz.Repository.Helpers;
+using Pubquiz.Persistence.Helpers;
 
-namespace Pubquiz.Repository.Mongo
+namespace Pubquiz.Persistence.MongoDb
 {
     /// <inheritdoc />
-    public class MongoRepository<T> : IRepository<T> where T : Model, new()
+    public class MongoDbCollection<T> : ICollection<T> where T : Model, new()
     {
         protected readonly IMongoCollection<T> Collection;
         protected readonly ILogger Logger;
@@ -20,7 +20,7 @@ namespace Pubquiz.Repository.Mongo
         /// </summary>
         /// <param name="loggerFactory"></param>
         /// <param name="mongoDatabase"></param>
-        public MongoRepository(ILoggerFactory loggerFactory, IMongoDatabase mongoDatabase)
+        public MongoDbCollection(ILoggerFactory loggerFactory, IMongoDatabase mongoDatabase)
         {
             Logger = loggerFactory.CreateLogger(GetType());
             try

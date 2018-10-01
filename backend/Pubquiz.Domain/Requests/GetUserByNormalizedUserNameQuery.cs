@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Requests
 {
@@ -10,13 +10,13 @@ namespace Pubquiz.Domain.Requests
     {
         public string NormalizedUserName { get; set; }
 
-        public GetUserByNormalizedUserNameQuery(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
+        public GetUserByNormalizedUserNameQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
         protected override Task<User> DoExecute() => Task.Run(() =>
         {
-            var userRepo = RepositoryFactory.GetRepository<User>();
+            var userRepo = UnitOfWork.GetCollection<User>();
 
             var user = userRepo.AsQueryable().FirstOrDefault(u => u.NormalizedUserName == NormalizedUserName);
             if (user == null)

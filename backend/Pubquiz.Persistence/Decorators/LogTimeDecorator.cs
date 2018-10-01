@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace Pubquiz.Repository.Decorators
+namespace Pubquiz.Persistence.Decorators
 {
-    public class LogTimeDecorator<T> : RepositoryDecoratorBase<T> where T : Model, new()
+    public class LogTimeDecorator<T> : CollectionDecoratorBase<T> where T : Model, new()
     {
         private readonly ILogger _logger;
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
-        public LogTimeDecorator(IMemoryCache memoryCache, IRepository<T> decoree, ILogger logger) : base(memoryCache, decoree)
+        public LogTimeDecorator(IMemoryCache memoryCache, ICollection<T> decoree, ILogger logger) : base(memoryCache, decoree)
         {
             _logger = logger;
         }

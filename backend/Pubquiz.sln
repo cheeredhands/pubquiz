@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Domain.Tests", "Pub
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend'", "Backend'", "{E5BB8315-593E-4809-B071-FE859E0D1B12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Repository", "Pubquiz.Repository\Pubquiz.Repository.csproj", "{7CABA0D5-C782-4623-8BC0-12FB72993F13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Persistence", "Pubquiz.Persistence\Pubquiz.Persistence.csproj", "{7CABA0D5-C782-4623-8BC0-12FB72993F13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.WebApi", "Pubquiz.WebApi\Pubquiz.WebApi.csproj", "{0077B729-BBC9-4C1C-9315-9A661D8D63F4}"
 EndProject

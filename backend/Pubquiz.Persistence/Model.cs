@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Pubquiz.Repository
+namespace Pubquiz.Persistence
 {
     /// <summary>
     ///     Base class for all read models.

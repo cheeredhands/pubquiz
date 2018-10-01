@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global

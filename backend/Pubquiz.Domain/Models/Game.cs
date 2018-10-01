@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 // ReSharper disable CollectionNeverUpdated.Global
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global

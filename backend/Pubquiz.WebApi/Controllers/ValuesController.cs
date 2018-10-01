@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
@@ -18,11 +18,11 @@ namespace Pubquiz.WebApi.Controllers
     public class ValuesController : ControllerBase
     {
         // gtest
-        private readonly IRepositoryFactory _repositoryFactory;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ValuesController(IRepositoryFactory repositoryFactory)
+        public ValuesController(IUnitOfWork unitOfWork)
         {
-            _repositoryFactory = repositoryFactory;
+            _unitOfWork = unitOfWork;
         }
 
         // GET api/values

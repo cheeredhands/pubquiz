@@ -6,15 +6,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Requests;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
-using Pubquiz.Repository.NoAction;
+using Pubquiz.Persistence;
+using Pubquiz.Persistence.NoAction;
 
 namespace Pubquiz.Domain.Tests
 {
     [TestClass]
     public class RegistrationTests
     {
-        private IRepositoryFactory _repositoryFactory;
+        private IUnitOfWork _unitOfWork;
 
         private Game _game;
 
@@ -23,12 +23,12 @@ namespace Pubquiz.Domain.Tests
         {
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
             var loggerFactory = new LoggerFactory();
-            IRepositoryOptions inMemoryRepositoryOptions = new InMemoryDatabaseOptions();
-            _repositoryFactory = new NoActionFactory(memoryCache, loggerFactory, inMemoryRepositoryOptions);
+            ICollectionOptions inMemoryCollectionOptions = new InMemoryDatabaseOptions();
+            _unitOfWork = new NoActionUnitOfWork(memoryCache, loggerFactory, inMemoryCollectionOptions);
 
-            var quizRepo = _repositoryFactory.GetRepository<Quiz>();
-            var teamRepo = _repositoryFactory.GetRepository<Team>();
-            var gameRepo = _repositoryFactory.GetRepository<Game>();
+            var quizRepo = _unitOfWork.GetCollection<Quiz>();
+            var teamRepo = _unitOfWork.GetCollection<Team>();
+            var gameRepo = _unitOfWork.GetCollection<Game>();
 
             _game = TestGame.GetGame();
             var quiz = TestQuiz.GetQuiz();
@@ -51,7 +51,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithCorrectNewTeam_TeamRegistered()
         {
             // arrange
-            var command = new RegisterForGameCommand(_repositoryFactory) {TeamName = "Team 4", Code = "JOINME"};
+            var command = new RegisterForGameCommand(_unitOfWork) {TeamName = "Team 4", Code = "JOINME"};
 
             // act
             var team = command.Execute().Result;
@@ -65,8 +65,8 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange 
             var firstTeamId = _game.TeamIds[0];
-            var firstTeam = _repositoryFactory.GetRepository<Team>().GetAsync(firstTeamId).Result;
-            var command = new RegisterForGameCommand(_repositoryFactory) {TeamName = "", Code = firstTeam.RecoveryCode};
+            var firstTeam = _unitOfWork.GetCollection<Team>().GetAsync(firstTeamId).Result;
+            var command = new RegisterForGameCommand(_unitOfWork) {TeamName = "", Code = firstTeam.RecoveryCode};
 
             // act
             var team = command.Execute().Result;
@@ -79,7 +79,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithInvalidCode_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(_repositoryFactory) {TeamName = "Team 4", Code = "INVALIDCODE"};
+            var command = new RegisterForGameCommand(_unitOfWork) {TeamName = "Team 4", Code = "INVALIDCODE"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -91,7 +91,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithExistingTeamName_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(_repositoryFactory) {TeamName = "Team 3", Code = "JOINME"};
+            var command = new RegisterForGameCommand(_unitOfWork) {TeamName = "Team 3", Code = "JOINME"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;

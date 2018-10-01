@@ -1,11 +1,13 @@
-﻿namespace Pubquiz.Repository.Mongo
+﻿using Pubquiz.Persistence.MongoDb;
+
+namespace Pubquiz.Persistence.MongoDb
 {
-    public class MongoDatabaseOptions : IMongoDatabaseOptions
+    public class MongoDbDatabaseOptions : IMongoDbDatabaseOptions
     {
         public string DatabaseName { get; }
         public string ConnectionString { get; }
 
-        public MongoDatabaseOptions(string databaseName, string connectionString)
+        public MongoDbDatabaseOptions(string databaseName, string connectionString)
         {
             DatabaseName = databaseName;
             ConnectionString = connectionString;

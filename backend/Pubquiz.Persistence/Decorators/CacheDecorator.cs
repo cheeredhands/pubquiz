@@ -5,16 +5,16 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Pubquiz.Repository.Extensions;
-using Pubquiz.Repository.Helpers;
+using Pubquiz.Persistence.Extensions;
+using Pubquiz.Persistence.Helpers;
 
-namespace Pubquiz.Repository.Decorators
+namespace Pubquiz.Persistence.Decorators
 {
     /// <summary>
     ///     Decorator to use memory cache
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class CacheDecorator<T> : RepositoryDecoratorBase<T> where T : Model, new()
+    public class CacheDecorator<T> : CollectionDecoratorBase<T> where T : Model, new()
     {
         private readonly string _collectionKey = "CachedCollection";
         private readonly object _lockCollection = new object();
@@ -22,7 +22,7 @@ namespace Pubquiz.Repository.Decorators
         private readonly bool _neverRemove;
 
         /// <inheritdoc />
-        public CacheDecorator(IMemoryCache memoryCache, bool neverRemove, IRepository<T> decoree) : base(memoryCache, decoree)
+        public CacheDecorator(IMemoryCache memoryCache, bool neverRemove, ICollection<T> decoree) : base(memoryCache, decoree)
         {
             _neverRemove = neverRemove;
             if (neverRemove)

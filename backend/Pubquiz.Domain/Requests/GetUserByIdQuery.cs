@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Requests
 {
@@ -10,13 +10,13 @@ namespace Pubquiz.Domain.Requests
     {
         public Guid UserId { get; set; }
 
-        public GetUserByIdQuery(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
+        public GetUserByIdQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
         protected override async Task<User> DoExecute()
         {
-            var userRepo = RepositoryFactory.GetRepository<User>();
+            var userRepo = UnitOfWork.GetCollection<User>();
 
             var user = await userRepo.GetAsync(UserId);
             if (user == null)

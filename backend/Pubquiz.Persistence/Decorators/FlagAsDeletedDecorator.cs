@@ -3,16 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Pubquiz.Repository.Decorators
+namespace Pubquiz.Persistence.Decorators
 {
     /// <summary>
     ///     Decorator to used flagging instead of deleting
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FlagAsDeletedDecorator<T> : RepositoryDecoratorBase<T> where T : Model, new()
+    public class FlagAsDeletedDecorator<T> : CollectionDecoratorBase<T> where T : Model, new()
     {
         /// <inheritdoc />
-        public FlagAsDeletedDecorator(IMemoryCache memoryCache, IRepository<T> decoree) :
+        public FlagAsDeletedDecorator(IMemoryCache memoryCache, ICollection<T> decoree) :
             base(memoryCache, decoree)
         { }
 

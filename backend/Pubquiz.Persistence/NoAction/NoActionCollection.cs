@@ -3,19 +3,19 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Pubquiz.Repository.Extensions;
+using Pubquiz.Persistence.Extensions;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
 //This repository must be used in combination with a caching. If the cache decorator
 //Never clears, this can be used as an in memory repository.
-namespace Pubquiz.Repository.NoAction
+namespace Pubquiz.Persistence.NoAction
 {
     /// <summary>
     ///     Base repository for no action
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class NoActionRepository<T> : IRepository<T> where T : Model, new()
+    public class NoActionCollection<T> : ICollection<T> where T : Model, new()
     {
         public IQueryable<T> AsQueryable() => new ConcurrentBag<T>().Clone().AsQueryable();
         public async Task<T> GetAsync(Guid id) => null;

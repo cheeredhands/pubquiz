@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain.Requests;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 using Pubquiz.WebApi.Helpers;
 
 
@@ -14,14 +14,14 @@ namespace Pubquiz.WebApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IRepositoryFactory _repositoryFactory;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountController(IRepositoryFactory repositoryFactory, SignInManager<ApplicationUser> signInManager,
+        public AccountController(IUnitOfWork unitOfWork, SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager)
         {
-            _repositoryFactory = repositoryFactory;
+            _unitOfWork = unitOfWork;
             _signInManager = signInManager;
             _userManager = userManager;
         }

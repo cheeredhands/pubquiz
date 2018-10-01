@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pubquiz.Repository.Helpers
+namespace Pubquiz.Persistence.Helpers
 {
     [Flags]
     public enum IndexConstraints

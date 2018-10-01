@@ -7,18 +7,18 @@ using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Requests;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 
 namespace Pubquiz.WebApi.Helpers
 {
     public class MyUserStore : IUserStore<ApplicationUser>
     {
-        private readonly IRepositoryFactory _repositoryFactory;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public MyUserStore(IRepositoryFactory repositoryFactory)
+        public MyUserStore(IUnitOfWork unitOfWork)
         {
-            _repositoryFactory = repositoryFactory;
+            _unitOfWork = unitOfWork;
         }
 
         public void Dispose()
@@ -37,8 +37,8 @@ namespace Pubquiz.WebApi.Helpers
             return Task.CompletedTask;
             return new Task(async () =>
             {
-                var userRepo = _repositoryFactory.GetRepository<User>();
-                var teamRepo = _repositoryFactory.GetRepository<Team>();
+                var userRepo = _unitOfWork.GetCollection<User>();
+                var teamRepo = _unitOfWork.GetCollection<Team>();
                 var userUser = await userRepo.GetAsync(user.Id);
                 var teamUser = await teamRepo.GetAsync(user.Id);
                 userUser.UserName = userName;
@@ -57,8 +57,8 @@ namespace Pubquiz.WebApi.Helpers
             return Task.CompletedTask;
             return new Task(async () =>
             {
-                var userRepo = _repositoryFactory.GetRepository<User>();
-                var teamRepo = _repositoryFactory.GetRepository<Team>();
+                var userRepo = _unitOfWork.GetCollection<User>();
+                var teamRepo = _unitOfWork.GetCollection<Team>();
                 var userUser = await userRepo.GetAsync(user.Id);
                 var teamUser = await teamRepo.GetAsync(user.Id);
                 userUser.NormalizedUserName = normalizedName;
@@ -71,7 +71,7 @@ namespace Pubquiz.WebApi.Helpers
         public async Task<IdentityResult> CreateAsync(ApplicationUser user,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var command = new RegisterForGameCommand(_repositoryFactory)
+            var command = new RegisterForGameCommand(_unitOfWork)
                 {TeamName = user.UserName, Code = user.Code};
             try
             {
@@ -91,7 +91,7 @@ namespace Pubquiz.WebApi.Helpers
             CancellationToken cancellationToken = default(CancellationToken))
         {
             // Only team names can be updated for now
-            var command = new ChangeTeamNameNotification(_repositoryFactory)
+            var command = new ChangeTeamNameNotification(_unitOfWork)
                 {TeamId = user.Id, NewName = user.UserName};
             try
             {
@@ -109,7 +109,7 @@ namespace Pubquiz.WebApi.Helpers
         public async Task<IdentityResult> DeleteAsync(ApplicationUser user,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var command = new DeleteTeamNotification(_repositoryFactory) {TeamId = user.Id};
+            var command = new DeleteTeamNotification(_unitOfWork) {TeamId = user.Id};
             try
             {
                 await command.Execute();
@@ -131,7 +131,7 @@ namespace Pubquiz.WebApi.Helpers
                 throw new ArgumentException($"{userId} is not a valid guid.");
             }
 
-            var query = new GetUserByIdQuery(_repositoryFactory) {UserId = guidId};
+            var query = new GetUserByIdQuery(_unitOfWork) {UserId = guidId};
             try
             {
                 var user = await query.Execute();
@@ -146,7 +146,7 @@ namespace Pubquiz.WebApi.Helpers
         public async Task<ApplicationUser> FindByNameAsync(string normalizedUserName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = new GetUserByNormalizedUserNameQuery(_repositoryFactory)
+            var query = new GetUserByNormalizedUserNameQuery(_unitOfWork)
                 {NormalizedUserName = normalizedUserName};
 
             try

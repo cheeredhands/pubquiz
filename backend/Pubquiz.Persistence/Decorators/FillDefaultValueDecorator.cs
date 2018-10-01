@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Pubquiz.Repository.Helpers;
+using Pubquiz.Persistence.Helpers;
 
-namespace Pubquiz.Repository.Decorators
+namespace Pubquiz.Persistence.Decorators
 {
     /// <summary>
     ///     Used to fill default values like, created, createdby, modified, modifiedby, id etc..
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FillDefaultValueDecorator<T> : RepositoryDecoratorBase<T> where T : Model, new()
+    public class FillDefaultValueDecorator<T> : CollectionDecoratorBase<T> where T : Model, new()
     {
         private readonly Guid? _actorId;
 
         /// <inheritdoc />
-        public FillDefaultValueDecorator(IMemoryCache memoryCache, IRepository<T> decoree, Guid? actorId)
+        public FillDefaultValueDecorator(IMemoryCache memoryCache, ICollection<T> decoree, Guid? actorId)
             : base(memoryCache, decoree)
         {
             _actorId = actorId;

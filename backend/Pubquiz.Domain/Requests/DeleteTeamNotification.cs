@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Tools;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Requests
 {
@@ -10,14 +10,14 @@ namespace Pubquiz.Domain.Requests
     {
         public Guid TeamId { get; set; }
 
-        public DeleteTeamNotification(IRepositoryFactory repositoryFactory) : base(repositoryFactory)
+        public DeleteTeamNotification(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
         protected override async Task DoExecute()
         {
-            var teamRepo = RepositoryFactory.GetRepository<Team>();
-            var userRepo = RepositoryFactory.GetRepository<User>();
+            var teamRepo = UnitOfWork.GetCollection<Team>();
+            var userRepo = UnitOfWork.GetCollection<User>();
 
             var user = await userRepo.GetAsync(TeamId);
             if (user == null)

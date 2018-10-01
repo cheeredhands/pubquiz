@@ -1,5 +1,5 @@
 using System;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Models
 {

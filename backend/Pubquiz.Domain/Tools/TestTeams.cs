@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Pubquiz.Domain.Models;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Tools
 {
     public static class TestTeams
     {
-        public static List<Team> GetTeams(IRepository<Team> teamRepository, Guid gameId)
+        public static List<Team> GetTeams(Persistence.ICollection<Team> teamCollection, Guid gameId)
         {
             var teams = new List<Team>();
 
@@ -21,7 +21,7 @@ namespace Pubquiz.Domain.Tools
                 UserName = team1Name.ReplaceSpaces(),
                 NormalizedUserName = team1Name.ReplaceSpaces().ToUpperInvariant(),
                 GameId = gameId,
-                RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepository, gameId),
+                RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
             });
 
@@ -31,7 +31,7 @@ namespace Pubquiz.Domain.Tools
                 UserName = team2Name.ReplaceSpaces(),
                 NormalizedUserName = team2Name.ReplaceSpaces().ToUpperInvariant(),
                 GameId = gameId,
-                RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepository, gameId),
+                RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
             });
             teams.Add(new Team
@@ -40,7 +40,7 @@ namespace Pubquiz.Domain.Tools
                 UserName = team3Name.ReplaceSpaces(),
                 NormalizedUserName = team3Name.ReplaceSpaces().ToUpperInvariant(),
                 GameId = gameId,
-                RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepository, gameId),
+                RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
             });
 

@@ -15,8 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pubquiz.Domain.Models;
-using Pubquiz.Repository;
-using Pubquiz.Repository.Extensions;
+using Pubquiz.Persistence;
+using Pubquiz.Persistence.Extensions;
 using Pubquiz.WebApi.Helpers;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -45,7 +45,7 @@ namespace Pubquiz.WebApi
                 builder.AddConsole();
                 builder.AddDebug();
             });
-            services.AddInMemoryRepository();
+            services.AddInMemoryPersistence();
             services.AddRequests(Assembly.Load("Pubquiz.Domain"));
             services.AddMvcCore(options =>
                 {
@@ -144,7 +144,7 @@ namespace Pubquiz.WebApi
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
             
             // Seed the test data
-            var repoFactory =  app.ApplicationServices.GetService<IRepositoryFactory>();
+            var repoFactory =  app.ApplicationServices.GetService<IUnitOfWork>();
             var loggerFactory =  app.ApplicationServices.GetService<ILoggerFactory>();
             var seeder = new TestSeeder(repoFactory, loggerFactory);
             seeder.SeedTestSet();

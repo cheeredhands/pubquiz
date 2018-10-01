@@ -3,16 +3,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Pubquiz.Repository
+namespace Pubquiz.Persistence
 {
     /// <summary>
     ///     Interface for retrieving data
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRepository<T> where T : Model, new()
+    public interface ICollection<T> where T : Model, new()
     {
         /// <summary>
-        ///     Get all objects, linq queries can be done on the IQueryable collecion.
+        ///     Get all objects, linq queries can be done on the IQueryable collection.
         /// </summary>
         /// <returns></returns>
         IQueryable<T> AsQueryable();

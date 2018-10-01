@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Pubquiz.Repository;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain
 {
@@ -8,11 +8,11 @@ namespace Pubquiz.Domain
     /// </summary>
     public abstract class Notification : Request
     {
-        protected readonly IRepositoryFactory RepositoryFactory;
+        protected readonly IUnitOfWork UnitOfWork;
 
-        protected Notification(IRepositoryFactory repositoryFactory)
+        protected Notification(IUnitOfWork unitOfWork)
         {
-            RepositoryFactory = repositoryFactory;
+            UnitOfWork = unitOfWork;
         }
 
         public Task Execute()
