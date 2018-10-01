@@ -144,9 +144,9 @@ namespace Pubquiz.WebApi
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
             
             // Seed the test data
-            var repoFactory =  app.ApplicationServices.GetService<IUnitOfWork>();
+            var unitOfWork =  app.ApplicationServices.GetService<IUnitOfWork>();
             var loggerFactory =  app.ApplicationServices.GetService<ILoggerFactory>();
-            var seeder = new TestSeeder(repoFactory, loggerFactory);
+            var seeder = new TestSeeder(unitOfWork, loggerFactory);
             seeder.SeedTestSet();
             
            

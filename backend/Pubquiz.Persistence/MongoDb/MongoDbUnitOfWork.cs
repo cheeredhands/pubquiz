@@ -8,7 +8,7 @@ using Pubquiz.Persistence.Decorators;
 namespace Pubquiz.Persistence.MongoDb
 {
     /// <summary>
-    ///     Factory for mongo database
+    ///     Unit of Work for mongo database
     /// </summary>
     public class MongoDbUnitOfWork : UnitOfWorkBase
     {
@@ -54,7 +54,7 @@ namespace Pubquiz.Persistence.MongoDb
                 _mongoDatabase = client.GetDatabase($"{mongoOptions.DatabaseName}-{environment}");
                 _clientSession = _mongoDatabase.Client.StartSession();
                 _clientSession.StartTransaction();
-                Repositories = new ConcurrentDictionary<Type, object>();
+                Collections = new ConcurrentDictionary<Type, object>();
             }
             catch (Exception exception)
             {
@@ -65,33 +65,33 @@ namespace Pubquiz.Persistence.MongoDb
         }
 
         /// <summary>
-        ///     Repositories
+        ///     Collections
         /// </summary>
-        public ConcurrentDictionary<Type, object> Repositories { get; set; }
+        private ConcurrentDictionary<Type, object> Collections { get; set; }
 
         /// <inheritdoc />
         public override ICollection<T> GetCollection<T>()
         {
-            if (Repositories.TryGetValue(typeof(T), out var repository))
+            if (Collections.TryGetValue(typeof(T), out var collection))
             {
-                return (ICollection<T>) repository;
+                return (ICollection<T>) collection;
             }
 
-            var mongoRepository = new FlagAsDeletedDecorator<T>(MemoryCache,
+            var mongoCollection = new FlagAsDeletedDecorator<T>(MemoryCache,
                 new FillDefaultValueDecorator<T>(MemoryCache,
                     new CacheDecorator<T>(MemoryCache, false,
                         new MongoDbCollection<T>(LoggerFactory, _mongoDatabase)), ActorId));
             if (LogTime)
             {
-                var timeLoggedMongoRepository = new LogTimeDecorator<T>(MemoryCache, mongoRepository, _logger);
-                Repositories.TryAdd(typeof(T), timeLoggedMongoRepository);
+                var timeLoggedMongoDbCollection = new LogTimeDecorator<T>(MemoryCache, mongoCollection, _logger);
+                Collections.TryAdd(typeof(T), timeLoggedMongoDbCollection);
             }
             else
             {
-                Repositories.TryAdd(typeof(T), mongoRepository);
+                Collections.TryAdd(typeof(T), mongoCollection);
             }
 
-            return mongoRepository;
+            return mongoCollection;
         }
 
         /// <inheritdoc />

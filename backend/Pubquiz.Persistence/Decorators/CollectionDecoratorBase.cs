@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace Pubquiz.Persistence.Decorators
 {
     /// <summary>
-    ///     Base class for Repository decorators.
+    ///     Base class for collection decorators.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class CollectionDecoratorBase<T> : ICollection<T> where T : Model, new()

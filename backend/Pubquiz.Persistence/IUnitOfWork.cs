@@ -3,7 +3,7 @@
 namespace Pubquiz.Persistence
 {
     /// <summary>
-    ///     Interface for repository factory
+    ///     Interface for Unit of Work
     /// </summary>
     public interface IUnitOfWork
     {
@@ -13,7 +13,7 @@ namespace Pubquiz.Persistence
         Guid? ActorId { get; set; }
 
         /// <summary>
-        ///     Get the repository
+        ///     Get the collection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>

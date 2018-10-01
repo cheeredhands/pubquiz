@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace Pubquiz.Persistence
 {
     /// <summary>
-    ///     Base class for factories
+    ///     Base class for unit of work implementations.
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {

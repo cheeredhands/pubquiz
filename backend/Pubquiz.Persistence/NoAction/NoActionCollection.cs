@@ -7,12 +7,12 @@ using Pubquiz.Persistence.Extensions;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
-//This repository must be used in combination with a caching. If the cache decorator
-//Never clears, this can be used as an in memory repository.
+//This collection must be used in combination with caching. If the cache decorator
+//Never clears, this can be used as an in memory collection.
 namespace Pubquiz.Persistence.NoAction
 {
     /// <summary>
-    ///     Base repository for no action
+    ///     Base collection for no action
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class NoActionCollection<T> : ICollection<T> where T : Model, new()

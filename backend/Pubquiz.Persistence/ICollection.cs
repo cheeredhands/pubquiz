@@ -47,26 +47,26 @@ namespace Pubquiz.Persistence
         Task<bool> DeleteAsync(Guid id);
 
         /// <summary>
-        ///     Gets the number of documents in the repository
+        ///     Gets the number of documents in the collection
         /// </summary>
         /// <returns></returns>
         Task<long> GetCountAsync();
 
         /// <summary>
-        ///     Gets the number of documents in the repository that satisfy the filter.
+        ///     Gets the number of documents in the collection that satisfy the filter.
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
         Task<long> GetCountAsync(Expression<Func<T, bool>> filter);
 
         /// <summary>
-        ///     True if the repository contains documents.
+        ///     True if the collection contains documents.
         /// </summary>
         /// <returns></returns>
         Task<bool> AnyAsync();
 
         /// <summary>
-        ///     True if the repository contains documents that satisfy the filter.
+        ///     True if the collection contains documents that satisfy the filter.
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>

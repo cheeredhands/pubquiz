@@ -7,7 +7,7 @@ using Pubquiz.Persistence.Decorators;
 namespace Pubquiz.Persistence.NoAction
 {
     /// <summary>
-    ///     Factory doesnt do anything with storage. Can be decorated with a memory repository to do the 'storage'
+    ///     Unit of work doesn't do anything with storage. Can be decorated with a memorycache collection to do the 'storage'
     /// </summary>
     public class NoActionUnitOfWork : UnitOfWorkBase
     {
@@ -22,40 +22,40 @@ namespace Pubquiz.Persistence.NoAction
         public NoActionUnitOfWork(IMemoryCache memoryCache, ILoggerFactory loggerFactory, ICollectionOptions options)
             : base(memoryCache, loggerFactory, options)
         {
-            Repositories = new ConcurrentDictionary<Type, object>();
+            Collections = new ConcurrentDictionary<Type, object>();
             _logger = loggerFactory.CreateLogger(GetType());
         }
 
         /// <summary>
-        ///     Repositories
+        ///     Collections
         /// </summary>
-        public ConcurrentDictionary<Type, object> Repositories { get; set; }
+        private ConcurrentDictionary<Type, object> Collections { get; set; }
 
         /// <inheritdoc />
         public override ICollection<T> GetCollection<T>()
         {
-            if (Repositories.TryGetValue(typeof(T), out var repository))
+            if (Collections.TryGetValue(typeof(T), out var collection))
             {
-                return (ICollection<T>) repository;
+                return (ICollection<T>) collection;
             }
 
-            var noActionRepository = new FlagAsDeletedDecorator<T>(MemoryCache,
+            var noActionCollection = new FlagAsDeletedDecorator<T>(MemoryCache,
                 new FillDefaultValueDecorator<T>(MemoryCache,
                     new CacheDecorator<T>(MemoryCache, true,
                         new NoActionCollection<T>()), ActorId));
             if (LogTime)
             {
-                var timeLoggedNoActionRepository =
-                    new LogTimeDecorator<T>(MemoryCache, noActionRepository, _logger);
-                Repositories.TryAdd(typeof(T), timeLoggedNoActionRepository);
+                var timeLoggedNoActionCollection =
+                    new LogTimeDecorator<T>(MemoryCache, noActionCollection, _logger);
+                Collections.TryAdd(typeof(T), timeLoggedNoActionCollection);
             }
             else
             {
-                Repositories.TryAdd(typeof(T), noActionRepository);
+                Collections.TryAdd(typeof(T), noActionCollection);
             }
 
-            Repositories.TryAdd(typeof(T), noActionRepository);
-            return noActionRepository;
+            Collections.TryAdd(typeof(T), noActionCollection);
+            return noActionCollection;
         }
 
         public override void Commit()
