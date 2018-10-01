@@ -88,6 +88,8 @@ namespace Pubquiz.Domain.Requests
 
             await teamRepo.AddAsync(newTeam);
             await userRepo.AddAsync(user);
+            
+            UnitOfWork.Commit();
             return newTeam;
         }
     }

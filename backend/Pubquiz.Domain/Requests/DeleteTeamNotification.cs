@@ -27,6 +27,7 @@ namespace Pubquiz.Domain.Requests
 
             await userRepo.DeleteAsync(TeamId);
             await teamRepo.DeleteAsync(TeamId);
+            UnitOfWork.Commit();
         }
     }
 }
