@@ -6,30 +6,6 @@ using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Requests
 {
-    public class CreateUserCommand : Command<User>
-    {
-        public User User { get; set; }
-
-        public CreateUserCommand(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
-
-        protected override async Task<User> DoExecute()
-        {
-            var teamRepo = UnitOfWork.GetCollection<Team>();
-            var userRepo = UnitOfWork.GetCollection<User>();
-
-            // check if team exists
-            var team = await teamRepo.GetAsync(User.Id);
-            if (team == null)
-            {
-                throw new DomainException($"Team with id {User.Id} doesn't exist.", true);
-            }
-
-            throw new System.NotImplementedException();
-        }
-    }
-
     public class RegisterForGameCommand : Command<Team>
     {
         public string TeamName;
@@ -88,8 +64,7 @@ namespace Pubquiz.Domain.Requests
 
             await teamRepo.AddAsync(newTeam);
             await userRepo.AddAsync(user);
-            
-            UnitOfWork.Commit();
+
             return newTeam;
         }
     }

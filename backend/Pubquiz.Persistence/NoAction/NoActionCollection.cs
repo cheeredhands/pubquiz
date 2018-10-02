@@ -27,5 +27,6 @@ namespace Pubquiz.Persistence.NoAction
         public async Task<bool> AnyAsync() => false;
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> filter) => false;
         public async Task<T> FirstOrDefaultAsync() => new T();
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter) => new T();
     }
 }

@@ -7,15 +7,18 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain.Tools;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.WebApi.Helpers
 {
     public class DomainExceptionFilter : ExceptionFilterAttribute
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
-        public DomainExceptionFilter(ILoggerFactory loggerFactory)
+        public DomainExceptionFilter(ILoggerFactory loggerFactory, IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _logger = loggerFactory.CreateLogger<DomainExceptionFilter>();
         }
 
@@ -54,6 +57,7 @@ namespace Pubquiz.WebApi.Helpers
                 }
             }
 
+            _unitOfWork.Abort();
             base.OnException(context);
         }
     }

@@ -71,15 +71,23 @@ namespace Pubquiz.WebApi.Helpers
         public async Task<IdentityResult> CreateAsync(ApplicationUser user,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var command = new RegisterForGameCommand(_unitOfWork)
-                {TeamName = user.UserName, Code = user.Code};
+            var command = new CreateUserCommand(_unitOfWork)
+            {
+                User = new User
+                {
+                    UserName = user.UserName,
+                    NormalizedUserName = user.NormalizedUserName,
+                    RecoveryCode = user.Code
+                }
+            };
             try
             {
-               var team = await command.Execute();
-                user.Id = team.Id;
+                var newUser = await command.Execute();
+                user.Id = newUser.Id;
             }
             catch (DomainException exception)
             {
+                _unitOfWork.Abort();
                 return IdentityResult.Failed(new IdentityError
                     {Code = "Domain error", Description = exception.Message});
             }

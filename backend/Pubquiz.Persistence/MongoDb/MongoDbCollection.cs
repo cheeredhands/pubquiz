@@ -66,7 +66,7 @@ namespace Pubquiz.Persistence.MongoDb
 
         /// <inheritdoc />
         public async Task<long> GetCountAsync(Expression<Func<T, bool>> filter) =>
-             await Collection.CountDocumentsAsync(filter);
+            await Collection.CountDocumentsAsync(filter);
 
         /// <inheritdoc />
         public async Task<bool> AnyAsync() => await GetCountAsync() > 0;
@@ -78,6 +78,10 @@ namespace Pubquiz.Persistence.MongoDb
         /// <inheritdoc />
         public async Task<T> FirstOrDefaultAsync() =>
             await Collection.AsQueryable().FirstOrDefaultAsync();
+
+        public Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter) => Task.Run(() =>
+            Collection.AsQueryable().FirstOrDefault(filter)
+        );
 
         private void EnsureIndexes()
         {
@@ -93,9 +97,10 @@ namespace Pubquiz.Persistence.MongoDb
             // Walk the members of the class to see if there are any directly attached index directives
             foreach (var m in theClass.GetRuntimeProperties())
             {
-                var attribute = m.GetCustomAttributes().FirstOrDefault(a => a.GetType() == typeof(EnsureIndexAttribute));
+                var attribute = m.GetCustomAttributes()
+                    .FirstOrDefault(a => a.GetType() == typeof(EnsureIndexAttribute));
                 if (attribute != null)
-                    EnsureIndexesAsDeclared((EnsureIndexAttribute)attribute, m.Name);
+                    EnsureIndexesAsDeclared((EnsureIndexAttribute) attribute, m.Name);
             }
         }
 
