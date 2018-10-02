@@ -77,5 +77,12 @@ namespace Pubquiz.Persistence
         /// </summary>
         /// <returns></returns>
         Task<T> FirstOrDefaultAsync();
+
+        /// <summary>
+        /// Get the first or default in the collection that satisfies the filter.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter);
     }
 }

@@ -40,22 +40,25 @@ namespace Pubquiz.Persistence.Decorators
         public virtual async Task<bool> UpdateAsync(T document) =>
             await _decoree.UpdateAsync(document);
 
-        public virtual async Task<T> GetAsync(Guid id)=>
+        public virtual async Task<T> GetAsync(Guid id) =>
             await _decoree.GetAsync(id);
-        
+
         public virtual async Task<long> GetCountAsync() =>
             await _decoree.GetCountAsync();
 
         public virtual async Task<long> GetCountAsync(Expression<Func<T, bool>> filter) =>
             await _decoree.GetCountAsync(filter);
 
-        public virtual async Task<bool> AnyAsync()=>
+        public virtual async Task<bool> AnyAsync() =>
             await _decoree.AnyAsync();
-        
+
         public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> filter) =>
             await _decoree.AnyAsync(filter);
-        
+
         public virtual async Task<T> FirstOrDefaultAsync() =>
-            await _decoree.FirstOrDefaultAsync();        
+            await _decoree.FirstOrDefaultAsync();
+
+        public virtual async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter) =>
+            await _decoree.FirstOrDefaultAsync(filter);
     }
 }

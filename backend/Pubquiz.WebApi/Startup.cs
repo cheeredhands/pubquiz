@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
+using Pubquiz.Persistence.Helpers;
 using Pubquiz.WebApi.Helpers;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -48,8 +49,9 @@ namespace Pubquiz.WebApi
             services.AddInMemoryPersistence();
             services.AddRequests(Assembly.Load("Pubquiz.Domain"));
             services.AddMvcCore(options =>
-                {
+                {                   
                     options.Filters.Add(typeof(DomainExceptionFilter));
+                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
                     var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
                         .RequireAuthenticatedUser()
                         .Build();
