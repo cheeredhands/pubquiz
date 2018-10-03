@@ -5,3 +5,5 @@ script:
  - cd backend
  - dotnet restore
  - dotnet test Pubquiz.Domain.Tests
+notifications:
+   slack: thtm88:k10a1Ibdj8sdbDbAh8H1pAji
