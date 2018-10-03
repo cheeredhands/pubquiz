@@ -64,7 +64,6 @@ namespace Pubquiz.Persistence.NoAction
 
         public override void Abort()
         {
-            throw new NotImplementedException();
         }
     }
 }

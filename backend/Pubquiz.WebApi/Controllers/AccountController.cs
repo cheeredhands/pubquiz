@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Pubquiz.Domain.Requests;
 using Pubquiz.Domain.Tools;
 using Pubquiz.Persistence;
@@ -30,9 +31,8 @@ namespace Pubquiz.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> RegisterForGame([FromBody] RegisterForGameCommand command)
         {
-            //await Logout();
-            //var team = command.Execute().Result;
-            
+            await _signInManager.SignOutAsync();
+
             var userName = command.TeamName.ReplaceSpaces();
             var applicationUser = new ApplicationUser
             {
@@ -43,14 +43,14 @@ namespace Pubquiz.WebApi.Controllers
             };
             var result = await _userManager.CreateAsync(applicationUser);
             if (result.Succeeded)
-            {                
+            {
                 await _signInManager.SignInAsync(applicationUser, true);
+                command.UserId = applicationUser.Id;
+                await command.Execute();
                 return Ok();
             }
-            else
-            {
-                return BadRequest(result);
-            }
+
+            return BadRequest(result);
             //await HttpContext.SignInAsync(new GenericPrincipal(new GenericIdentity(command.TeamName), null));
         }
 
