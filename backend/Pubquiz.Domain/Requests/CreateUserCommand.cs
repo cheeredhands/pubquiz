@@ -28,7 +28,7 @@ namespace Pubquiz.Domain.Requests
 //            throw new System.NotImplementedException();
 
             var users = UnitOfWork.GetCollection<User>();
-            var existingUser = users.FirstOrDefaultAsync(u => u.UserName == User.UserName).Result;
+            var existingUser = users.FirstOrDefaultAsync(u => u.NormalizedUserName == User.NormalizedUserName).Result;
             if (existingUser != null)
             {
                 throw new DomainException($"User with username {User.UserName} already exists.", true);

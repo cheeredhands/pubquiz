@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
@@ -8,6 +9,7 @@ namespace Pubquiz.Domain.Requests
 {
     public class RegisterForGameCommand : Command<Team>
     {
+        public Guid UserId;
         public string TeamName;
         public string Code;
 
@@ -48,22 +50,16 @@ namespace Pubquiz.Domain.Requests
             var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepo, game.Id);
             var newTeam = new Team
             {
+                Id = UserId,
                 Name = TeamName,
                 UserName = userName,
                 NormalizedUserName = normalizedUserName,
                 GameId = game.Id,
                 RecoveryCode = recoveryCode
             };
-            var user = new User
-            {
-                Id = newTeam.Id,
-                UserName = userName,
-                NormalizedUserName = normalizedUserName,
-                RecoveryCode = recoveryCode
-            };
+           
 
             await teamRepo.AddAsync(newTeam);
-            await userRepo.AddAsync(user);
 
             return newTeam;
         }

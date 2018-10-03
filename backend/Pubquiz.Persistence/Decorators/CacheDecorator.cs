@@ -151,6 +151,14 @@ namespace Pubquiz.Persistence.Decorators
                 : await base.FirstOrDefaultAsync();
         }
 
+        public override async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter)
+        {
+            if (MemoryCache == null) return await base.FirstOrDefaultAsync(filter);
+            return _neverRemove
+                ? Collection.Values.OfType<T>().AsQueryable().FirstOrDefault(filter).Clone()
+                : await base.FirstOrDefaultAsync(filter);
+        }
+
         public override async Task<bool> AnyAsync()
         {
             if (MemoryCache == null) return await base.AnyAsync();
