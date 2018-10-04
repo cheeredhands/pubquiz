@@ -49,7 +49,7 @@ namespace Pubquiz.WebApi
             services.AddInMemoryPersistence();
             services.AddRequests(Assembly.Load("Pubquiz.Domain"));
             services.AddMvcCore(options =>
-                {                   
+                {
                     options.Filters.Add(typeof(DomainExceptionFilter));
                     options.Filters.Add(typeof(UnitOfWorkActionFilter));
                     var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -62,37 +62,19 @@ namespace Pubquiz.WebApi
                 .AddJsonFormatters()
                 .AddCacheTagHelper()
                 .AddAuthorization();
-//                .AddAuthorization(options => //https://github.com/aspnet/Security/issues/1488#issuecomment-336634950
-//                {
-//                    options.DefaultPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-//                });
 
             services.AddSingleton<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
-                CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                options =>
                 {
-//                    options.LoginPath = new PathString("/swagger");
-//                    options.AccessDeniedPath = new PathString("/swagger");
-//                    options.Events.OnRedirectToLogin = context =>
-//                    {
-//                        if (context.Request.Path.StartsWithSegments("/api")
-//                            && context.Response.StatusCode == StatusCodes.Status200OK)
-//                        {
-//                            context.Response.Clear();
-//                            context.Response.StatusCode = StatusCodes.Status404NotFound;
-//                            return Task.CompletedTask;
-//                        }
-//
-//                        context.Response.Redirect(context.RedirectUri);
-//                        return Task.CompletedTask;
-//                    };
+                    options.LoginPath = new PathString("/swagger");
+                    options.Events.OnRedirectToLogin = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status404NotFound;
+                        return Task.CompletedTask;
+                    };
                 });
-            services.AddIdentity<ApplicationUser, ApplicationRole>(o =>
-                o.User.AllowedUserNameCharacters =
-                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+%");
-            services.AddTransient<IUserStore<ApplicationUser>, MyUserStore>();
-            services.AddTransient<IRoleStore<ApplicationRole>, MyRoleStore>();
 
             services.AddSwaggerGen(options =>
             {
@@ -121,8 +103,6 @@ namespace Pubquiz.WebApi
 
             services.AddSignalR();
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            
-           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -144,14 +124,12 @@ namespace Pubquiz.WebApi
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
-            
+
             // Seed the test data
-            var unitOfWork =  app.ApplicationServices.GetService<IUnitOfWork>();
-            var loggerFactory =  app.ApplicationServices.GetService<ILoggerFactory>();
+            var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
             var seeder = new TestSeeder(unitOfWork, loggerFactory);
             seeder.SeedTestSet();
-            
-           
         }
     }
 }

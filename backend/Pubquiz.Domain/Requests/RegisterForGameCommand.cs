@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
@@ -9,7 +8,6 @@ namespace Pubquiz.Domain.Requests
 {
     public class RegisterForGameCommand : Command<Team>
     {
-        public Guid UserId;
         public string TeamName;
         public string Code;
 
@@ -34,30 +32,27 @@ namespace Pubquiz.Domain.Requests
                     return team;
                 }
 
-                throw new DomainException("Invalid code.", false);
+                throw new DomainException(1, "Invalid code.", false);
             }
 
             // check if team name is taken, otherwise throw DomainException
             var isTeamNameTaken = await teamRepo.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
             if (isTeamNameTaken)
             {
-                throw new DomainException("Team name is taken.", true);
+                throw new DomainException(2, "Team name is taken.", true);
             }
 
             // register team and return team object
             var userName = TeamName.ReplaceSpaces();
-            var normalizedUserName = userName.ToUpperInvariant();
             var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepo, game.Id);
             var newTeam = new Team
             {
-                Id = UserId,
                 Name = TeamName,
                 UserName = userName,
-                NormalizedUserName = normalizedUserName,
                 GameId = game.Id,
                 RecoveryCode = recoveryCode
             };
-           
+
 
             await teamRepo.AddAsync(newTeam);
 

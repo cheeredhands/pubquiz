@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+using Pubquiz.Domain.Models;
 using Pubquiz.Domain.Requests;
-using Pubquiz.Domain.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Helpers;
 
@@ -16,56 +19,52 @@ namespace Pubquiz.WebApi.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountController(IUnitOfWork unitOfWork, SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
+        public AccountController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _signInManager = signInManager;
-            _userManager = userManager;
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult> RegisterForGame([FromBody] RegisterForGameCommand command)
         {
-            await _signInManager.SignOutAsync();
-
-            var userName = command.TeamName.ReplaceSpaces();
-            var applicationUser = new ApplicationUser
+            var team = await command.Execute();
+            var claims = new List<Claim>
             {
-                TeamName = command.TeamName,
-                UserName = userName,
-                NormalizedUserName = userName.ToUpperInvariant(),
-                Code = command.Code
+                new Claim(ClaimTypes.Name, team.UserName),
+                new Claim(ClaimTypes.NameIdentifier, team.Id.ToString())
             };
-            var result = await _userManager.CreateAsync(applicationUser);
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(applicationUser, true);
-                command.UserId = applicationUser.Id;
-                await command.Execute();
-                return Ok();
-            }
+            var userIdentity = new ClaimsIdentity(claims, "login");
+            var principal = new ClaimsPrincipal(userIdentity);
+            await HttpContext.SignInAsync(principal);
 
-            return BadRequest(result);
-            //await HttpContext.SignInAsync(new GenericPrincipal(new GenericIdentity(command.TeamName), null));
+            return Ok(new {Code = 1, Message = $"Team {team.Name} registered and logged in."});
         }
 
         [HttpPost("testauth")]
         public ActionResult TestAuth()
         {
-            return Ok("test ok.");
+            var teams = new List<string>();
+            var teamCollection = _unitOfWork.GetCollection<Team>();
+
+            foreach (var team in teamCollection.AsQueryable())
+            {
+                teams.Add($"{team.Name} - '{team.RecoveryCode}'");
+            }
+
+            return Ok(new
+            {
+                Code = 42,
+                Message = $"{string.Join(", ", teams.ToArray())}. Test ok. {User.Identity.Name} - {User.GetId()}"
+            });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToPage("/swagger");
+            await HttpContext.SignOutAsync();
+            return Ok(new {Code = 2, Message = "Successfully logged out."});
         }
     }
 }
