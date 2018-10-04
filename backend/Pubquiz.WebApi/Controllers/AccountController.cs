@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain.Models;
@@ -33,11 +34,12 @@ namespace Pubquiz.WebApi.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, team.UserName),
-                new Claim(ClaimTypes.NameIdentifier, team.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, team.Id.ToString()),
+                new Claim(ClaimTypes.Role, "Team")
             };
-            var userIdentity = new ClaimsIdentity(claims, "login");
+            var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(userIdentity);
-            await HttpContext.SignInAsync(principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return Ok(new {Code = 1, Message = $"Team {team.Name} registered and logged in."});
         }
@@ -63,7 +65,7 @@ namespace Pubquiz.WebApi.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Ok(new {Code = 2, Message = "Successfully logged out."});
         }
     }
