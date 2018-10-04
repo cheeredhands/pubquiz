@@ -27,7 +27,7 @@ namespace Pubquiz.WebApi.Helpers
             var domainExceptions = new List<DomainException>();
             if (context.Exception is DomainException)
             {
-                domainExceptions.Add((DomainException) context.Exception);
+                domainExceptions.Add((DomainException)context.Exception);
             }
 
             if (context.Exception is AggregateException exception)
@@ -38,7 +38,7 @@ namespace Pubquiz.WebApi.Helpers
 
             if (domainExceptions.Any())
             {
-                var messages = string.Join(", ", domainExceptions.Select(e => $"{e.Message} ({e.ErrorCode})"));
+                var messages = domainExceptions.Select(e => new { ErrorCode = e.ErrorCode, Message = e.Message });
                 var badRequest = domainExceptions.Any(e => e.IsBadRequest);
                 foreach (var domainException in domainExceptions)
                 {
