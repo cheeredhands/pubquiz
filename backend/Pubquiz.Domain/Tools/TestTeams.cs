@@ -19,7 +19,6 @@ namespace Pubquiz.Domain.Tools
             {
                 Name = team1Name,
                 UserName = team1Name.ReplaceSpaces(),
-                NormalizedUserName = team1Name.ReplaceSpaces().ToUpperInvariant(),
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
@@ -29,7 +28,6 @@ namespace Pubquiz.Domain.Tools
             {
                 Name = team2Name,
                 UserName = team2Name.ReplaceSpaces(),
-                NormalizedUserName = team2Name.ReplaceSpaces().ToUpperInvariant(),
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
@@ -38,7 +36,7 @@ namespace Pubquiz.Domain.Tools
             {
                 Name = team3Name,
                 UserName = team3Name.ReplaceSpaces(),
-                NormalizedUserName = team3Name.ReplaceSpaces().ToUpperInvariant(),
+
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
                 MemberNames = new List<string> {"member 1", "member 2", "member 3"}
@@ -55,7 +53,6 @@ namespace Pubquiz.Domain.Tools
                 {
                     Id = team.Id,
                     UserName = team.UserName,
-                    NormalizedUserName = team.NormalizedUserName,
                     RecoveryCode = team.RecoveryCode
                 };
             }
