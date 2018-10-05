@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -43,7 +44,7 @@ namespace Pubquiz.Domain.Tests
             Task.WaitAll(
                 quizRepo.AddAsync(quiz),
                 teams.ToAsyncEnumerable().ForEachAsync(t => teamRepo.AddAsync(t)),
-               // users.ToAsyncEnumerable().ForEachAsync(t => userRepo.AddAsync(t)),
+                // users.ToAsyncEnumerable().ForEachAsync(t => userRepo.AddAsync(t)),
                 gameRepo.AddAsync(_game));
         }
 
@@ -96,6 +97,49 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual("Team name is taken.", exception.Message);
+            Assert.IsTrue(exception.IsBadRequest);
+        }
+
+        [TestMethod]
+        public void TestGame_ChangeTeamNameForValidTeam_TeamNameChanged()
+        {
+            // arrange
+            var teamId = _game.TeamIds[0]; // Team 1
+            var command = new ChangeTeamNameCommand(_unitOfWork) {NewName = "Team 1a", TeamId = teamId};
+
+            // act
+            var team = command.Execute().Result;
+
+            // assert
+            Assert.AreEqual("Team 1a", team.Name);
+            Assert.AreEqual("Team%201a", team.UserName);
+        }
+
+        [TestMethod]
+        public void TestGame_ChangeTeamNameForInvalidTeam_ThrowsException()
+        {
+            // arrange
+            var teamId = Guid.Empty;
+            var command = new ChangeTeamNameCommand(_unitOfWork) {NewName = "Team 1a", TeamId = teamId};
+
+            // act & assert
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
+            Assert.AreEqual("Invalid team id.", exception.Message);
+            Assert.AreEqual(3, exception.ErrorCode);
+            Assert.IsFalse(exception.IsBadRequest);
+        }
+
+        [TestMethod]
+        public void TestGame_ChangeTeamNameToTakenName_ThrowsException()
+        {
+            // arrange
+            var teamId = _game.TeamIds[0]; // Team 1
+            var command = new ChangeTeamNameCommand(_unitOfWork) {NewName = "Team 2", TeamId = teamId};
+
+            // act & assert
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
+            Assert.AreEqual("Team name is taken.", exception.Message);
+            Assert.AreEqual(2, exception.ErrorCode);
             Assert.IsTrue(exception.IsBadRequest);
         }
     }

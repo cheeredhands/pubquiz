@@ -15,7 +15,7 @@ using Pubquiz.WebApi.Helpers;
 
 namespace Pubquiz.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/account")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -31,6 +31,13 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult> RegisterForGame([FromBody] RegisterForGameCommand command)
         {
             var team = await command.Execute();
+            await SignIn(team);
+
+            return Ok(new {Code = 1, Message = $"Team {team.Name} registered and logged in."});
+        }
+
+        private async Task SignIn(Team team)
+        {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, team.UserName),
@@ -40,8 +47,6 @@ namespace Pubquiz.WebApi.Controllers
             var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(userIdentity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            return Ok(new {Code = 1, Message = $"Team {team.Name} registered and logged in."});
         }
 
         [HttpPost("testauth")]
@@ -62,11 +67,25 @@ namespace Pubquiz.WebApi.Controllers
             });
         }
 
+        [HttpPost("changeteamname")]
+        public async Task<IActionResult> ChangeTeamName(ChangeTeamNameCommand command)
+        {
+            var team = await command.Execute();
+            await SignOut();
+            await SignIn(team);
+            return Ok(new {Code = 4, Message = "Team renamed."});
+        }
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await SignOut();
             return Ok(new {Code = 2, Message = "Successfully logged out."});
+        }
+
+        private async Task SignOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }
