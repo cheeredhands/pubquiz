@@ -16,18 +16,15 @@ namespace Pubquiz.Domain.Requests
 
         protected override async Task DoExecute()
         {
-            var teamRepo = UnitOfWork.GetCollection<Team>();
-            var userRepo = UnitOfWork.GetCollection<User>();
+            var teamCollection = UnitOfWork.GetCollection<Team>();
 
-            var user = await userRepo.GetAsync(TeamId);
-            if (user == null)
+            var team = await teamCollection.GetAsync(TeamId);
+            if (team == null)
             {
-                throw new DomainException("Team/user not found.", false);
+                throw new DomainException(3, "Invalid team id.", false);
             }
 
-            await userRepo.DeleteAsync(TeamId);
-            await teamRepo.DeleteAsync(TeamId);
-            UnitOfWork.Commit();
+            await teamCollection.DeleteAsync(TeamId);
         }
     }
 }

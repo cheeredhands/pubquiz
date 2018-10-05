@@ -25,7 +25,9 @@ namespace Pubquiz.Domain.Models
 
         public Question CurrentQuestion { get; set; }
         public int CurrentQuestionIndex { get; set; }
-        public int CurrentQuestionSetIndex { get; set; }
+        public Guid CurrentQuestionId { get; set; }
+        public int CurrentQuizSectionIndex { get; set; }
+        public Guid CurrentQuizSectionId { get; set; }
 
         public Game()
         {

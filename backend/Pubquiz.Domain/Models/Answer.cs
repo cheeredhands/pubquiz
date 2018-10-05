@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pubquiz.Domain.Tools;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -10,15 +11,15 @@ namespace Pubquiz.Domain.Models
 {
     public class Answer
     {
-        public Guid QuestionSetId { get; set; }
+        public Guid QuizSectionId { get; set; }
         public Guid QuestionId { get; set; }
         public List<InteractionResponse> InteractionResponses { get; set; }
         public int TotalScore { get; set; }
         public bool FlaggedForManualCorrection { get; set; }
 
-        public Answer(Guid questionSetId, Guid questionId)
+        public Answer(Guid quizSectionId, Guid questionId)
         {
-            QuestionSetId = questionSetId;
+            QuizSectionId = quizSectionId;
             QuestionId = questionId;
             InteractionResponses = new List<InteractionResponse>();
         }
@@ -70,6 +71,7 @@ namespace Pubquiz.Domain.Models
                                 interactionResponse.ManualCorrectionOutcome ? interaction.MaxScore : 0;
                             break;
                         }
+
                         interactionResponse.FlaggedForManualCorrection = true;
                         break;
                     default:
@@ -100,9 +102,11 @@ namespace Pubquiz.Domain.Models
             InteractionId = interactionId;
         }
 
-        public InteractionResponse(int interactionId, IEnumerable<int> choiceOptionIds) : this(interactionId)
+        public InteractionResponse(int interactionId, IEnumerable<int> choiceOptionIds, string response = "") : this(
+            interactionId)
         {
             ChoiceOptionIds = choiceOptionIds.ToList();
+            Response = response;
         }
 
         public InteractionResponse(int interactionId, string response) : this(interactionId)
