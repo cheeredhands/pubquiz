@@ -11,7 +11,7 @@ namespace Pubquiz.Domain.Models
     public class Team : User
     {
         public string Name { get; set; }
-        public List<string> MemberNames { get; set; }
+        public string MemberNames { get; set; }
         public int TotalScore { get; set; }
         public Dictionary<Guid, int> ScorePerQuestionSet { get; set; }
 

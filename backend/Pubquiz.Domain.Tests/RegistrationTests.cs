@@ -37,14 +37,9 @@ namespace Pubquiz.Domain.Tests
             _game.QuizId = quiz.Id;
             _game.TeamIds = teams.Select(t => t.Id).ToList();
 
-            // quizRepo.AddAsync(quiz).Wait();
-            //teams.ForEach(t => teamRepo.AddAsync(t).Wait());
-            // gameRepo.AddAsync(_game).Wait();
-
             Task.WaitAll(
                 quizRepo.AddAsync(quiz),
                 teams.ToAsyncEnumerable().ForEachAsync(t => teamRepo.AddAsync(t)),
-                // users.ToAsyncEnumerable().ForEachAsync(t => userRepo.AddAsync(t)),
                 gameRepo.AddAsync(_game));
         }
 
@@ -56,6 +51,7 @@ namespace Pubquiz.Domain.Tests
 
             // act
             var team = command.Execute().Result;
+            _unitOfWork.Commit();
 
             // assert
             Assert.AreEqual("Team 4", team.Name);
@@ -71,6 +67,7 @@ namespace Pubquiz.Domain.Tests
 
             // act
             var team = command.Execute().Result;
+            _unitOfWork.Commit();
 
             // assert
             team.RecoveryCode = firstTeam.RecoveryCode;
@@ -109,6 +106,7 @@ namespace Pubquiz.Domain.Tests
 
             // act
             var team = command.Execute().Result;
+            _unitOfWork.Commit();
 
             // assert
             Assert.AreEqual("Team 1a", team.Name);
@@ -141,6 +139,35 @@ namespace Pubquiz.Domain.Tests
             Assert.AreEqual("Team name is taken.", exception.Message);
             Assert.AreEqual(2, exception.ErrorCode);
             Assert.IsTrue(exception.IsBadRequest);
+        }
+
+        [TestMethod]
+        public void TestGame_ChangeTeamMembersForInvalidTeam_ThrowsException()
+        {
+            // arrange
+            var teamId = Guid.Empty;
+            var notification = new ChangeTeamMembersNotification(_unitOfWork) {TeamMembers = "a,b,c", TeamId = teamId};
+
+            // act & assert
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
+            Assert.AreEqual("Invalid team id.", exception.Message);
+            Assert.AreEqual(3, exception.ErrorCode);
+            Assert.IsFalse(exception.IsBadRequest);
+        }
+
+        [TestMethod]
+        public void TestGame_ChangeTeamMembersForValidTeam_TeamMembersChanged()
+        {
+            // arrange
+            var teamId = _game.TeamIds[0]; // Team 1
+            var notification = new ChangeTeamMembersNotification(_unitOfWork) {TeamMembers = "a,b,c", TeamId = teamId};
+
+            // act
+            notification.Execute().Wait();
+            _unitOfWork.Commit();
+
+            var team = _unitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
+            Assert.AreEqual("a,b,c", team.MemberNames);
         }
     }
 }

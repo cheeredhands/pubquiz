@@ -15,13 +15,15 @@ namespace Pubquiz.Domain.Tools
             var team2Name = "Team 2";
             var team3Name = "Team 3";
 
+            var teamMembers = "Bruce Lee, Chuck Norris, Jack Bauer";
+
             teams.Add(new Team
             {
                 Name = team1Name,
                 UserName = team1Name.ReplaceSpaces(),
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
-                MemberNames = new List<string> {"member 1", "member 2", "member 3"}
+                MemberNames = teamMembers
             });
 
             teams.Add(new Team
@@ -30,7 +32,7 @@ namespace Pubquiz.Domain.Tools
                 UserName = team2Name.ReplaceSpaces(),
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
-                MemberNames = new List<string> {"member 1", "member 2", "member 3"}
+                MemberNames = teamMembers
             });
             teams.Add(new Team
             {
@@ -39,7 +41,7 @@ namespace Pubquiz.Domain.Tools
 
                 GameId = gameId,
                 RecoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, gameId),
-                MemberNames = new List<string> {"member 1", "member 2", "member 3"}
+                MemberNames = teamMembers
             });
 
             return teams;

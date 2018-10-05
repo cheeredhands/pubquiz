@@ -33,7 +33,7 @@ namespace Pubquiz.WebApi.Controllers
             var team = await command.Execute();
             await SignIn(team);
 
-            return Ok(new {Code = 1, Message = $"Team {team.Name} registered and logged in."});
+            return Ok(new {Code = 1, Message = $"Team {team.Name} registered and logged in.", TeamId = team.Id});
         }
 
         private async Task SignIn(Team team)
@@ -70,10 +70,31 @@ namespace Pubquiz.WebApi.Controllers
         [HttpPost("changeteamname")]
         public async Task<IActionResult> ChangeTeamName(ChangeTeamNameCommand command)
         {
+            var teamId = User.GetId();
+            if (command.TeamId == Guid.Empty || teamId != command.TeamId)
+            {
+                return Forbid();
+            }
+
+            command.TeamId = teamId;
             var team = await command.Execute();
             await SignOut();
             await SignIn(team);
-            return Ok(new {Code = 4, Message = "Team renamed."});
+            return Ok(new {Code = 4, Message = "Team renamed.", TeamName = team.Name});
+        }
+
+        [HttpPost("changeteammembers")]
+        public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembersNotification notification)
+        {
+            var teamId = User.GetId();
+            if (notification.TeamId == Guid.Empty || teamId != notification.TeamId)
+            {
+                return Forbid();
+            }
+
+            notification.TeamId = teamId;
+            await notification.Execute();
+            return Ok(new {Code = 5, Message = "Team members changed."});
         }
 
         [HttpPost("logout")]
