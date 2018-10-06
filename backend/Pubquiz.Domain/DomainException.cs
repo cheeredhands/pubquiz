@@ -1,6 +1,6 @@
 using System;
 
-namespace Pubquiz.Domain.Tools
+namespace Pubquiz.Domain
 {
     public class DomainException : Exception
     {

@@ -13,7 +13,7 @@ namespace Pubquiz.Domain.Models
         public string Name { get; set; }
         public string MemberNames { get; set; }
         public int TotalScore { get; set; }
-        public Dictionary<Guid, int> ScorePerQuestionSet { get; set; }
+        public Dictionary<Guid, int> ScorePerQuizSection { get; set; }
 
         public Guid GameId { get; set; }
 
@@ -22,6 +22,18 @@ namespace Pubquiz.Domain.Models
         public Team()
         {
             Id = Guid.NewGuid();
+            Answers = new List<Answer>();
+            ScorePerQuizSection = new Dictionary<Guid, int>();
+        }
+
+        public void UpdateScore()
+        {
+            ScorePerQuizSection = new Dictionary<Guid, int>();
+
+            foreach (var answer in Answers)
+            {
+                ScorePerQuizSection[answer.QuizSectionId] += answer.TotalScore;
+            }
         }
     }
 }

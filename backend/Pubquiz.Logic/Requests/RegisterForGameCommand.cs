@@ -1,10 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
     public class RegisterForGameCommand : Command<Team>
     {

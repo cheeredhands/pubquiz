@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Security.Claims;
 using Microsoft.Extensions.DependencyInjection;
 using Pubquiz.Domain;
+using Pubquiz.Logic;
 
 namespace Pubquiz.WebApi.Helpers
 {

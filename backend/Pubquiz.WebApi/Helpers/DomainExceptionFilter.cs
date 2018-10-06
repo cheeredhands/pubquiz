@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Domain;
 using Pubquiz.Persistence;
 
 namespace Pubquiz.WebApi.Helpers

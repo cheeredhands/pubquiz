@@ -10,6 +10,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Rebus.ServiceProvider">
+          <Version>4.0.1</Version>
+        </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore">
             <Version>3.0.0</Version>
         </PackageReference>
@@ -23,6 +26,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Pubquiz.Domain\Pubquiz.Domain.csproj" />
+      <ProjectReference Include="..\Pubquiz.Logic\Pubquiz.Logic.csproj" />
     </ItemGroup>
 
 </Project>

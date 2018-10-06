@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
 using Pubquiz.Domain.Models;
-using Pubquiz.Persistence;
 
-namespace Pubquiz.Domain.Tools
+namespace Pubquiz.Logic.Tools
 {
     public static class TestGame
     {

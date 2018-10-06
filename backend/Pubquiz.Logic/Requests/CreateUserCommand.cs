@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
     public class CreateUserCommand : Command<User>
     {

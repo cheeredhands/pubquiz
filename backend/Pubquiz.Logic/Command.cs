@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.Domain
+namespace Pubquiz.Logic
 {
     /// <summary>
     /// A command request.

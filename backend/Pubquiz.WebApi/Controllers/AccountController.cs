@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Requests;
+using Pubquiz.Logic.Requests;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Helpers;
 
@@ -84,7 +84,7 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("changeteammembers")]
-        public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembersNotification notification)
+        public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembers notification)
         {
             var teamId = User.GetId();
             if (notification.TeamId == Guid.Empty || teamId != notification.TeamId)

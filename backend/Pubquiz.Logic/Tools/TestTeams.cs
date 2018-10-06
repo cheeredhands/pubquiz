@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Pubquiz.Domain.Models;
-using Pubquiz.Persistence;
 
-namespace Pubquiz.Domain.Tools
+namespace Pubquiz.Logic.Tools
 {
     public static class TestTeams
     {

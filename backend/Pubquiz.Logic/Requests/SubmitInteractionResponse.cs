@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Persistence;
+using Rebus.Bus;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
-    public class SubmitInteractionResponseNotification : Notification
+    public class SubmitInteractionResponse : Notification
     {
         public Guid TeamId { get; set; }
         public Guid QuestionId { get; set; }
@@ -16,7 +18,7 @@ namespace Pubquiz.Domain.Requests
         public List<int> ChoiceOptionIds { get; set; }
         public string Response { get; set; }
 
-        public SubmitInteractionResponseNotification(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public SubmitInteractionResponse(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
@@ -68,14 +70,16 @@ namespace Pubquiz.Domain.Requests
             if (answer == null)
             {
                 answer = new Answer(quizSectionId.Value, QuestionId);
-                answer.InteractionResponses.Add(new InteractionResponse(InteractionId, ChoiceOptionIds, Response));
+                team.Answers.Add(answer);
             }
 
+            answer.SetInteractionResponse(InteractionId, ChoiceOptionIds, Response);
 
-            // score it
-            answer.Score(question);
-
-
+            // send a domain event: InteractionResponseAdded, which will be picked up by:
+            // - the scoring handler
+            // - a client notification handler
+            await Bus.Publish(new InteractionResponseAdded(TeamId, quizSectionId.Value, QuestionId, InteractionId));
+            //answer.Score(question);
         }
     }
 }

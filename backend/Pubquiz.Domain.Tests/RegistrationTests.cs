@@ -1,14 +1,23 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Requests;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Logic.Handlers;
+using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Requests;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.NoAction;
+using Rebus.Activation;
+using Rebus.Bus;
+using Rebus.Config;
+using Rebus.Persistence.InMem;
+using Rebus.Routing.TypeBased;
+using Rebus.Transport.InMem;
 
 namespace Pubquiz.Domain.Tests
 {
@@ -16,16 +25,19 @@ namespace Pubquiz.Domain.Tests
     public class RegistrationTests
     {
         private IUnitOfWork _unitOfWork;
-
         private Game _game;
+        private IBus _bus;
+        private ILoggerFactory _loggerFactory;
+        private InMemorySubscriberStore _inMemorySubscriberStore;
 
         [TestInitialize]
         public void Initialize()
         {
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var loggerFactory = new LoggerFactory();
+            _loggerFactory = new LoggerFactory();
+            _loggerFactory.AddConsole();
             ICollectionOptions inMemoryCollectionOptions = new InMemoryDatabaseOptions();
-            _unitOfWork = new NoActionUnitOfWork(memoryCache, loggerFactory, inMemoryCollectionOptions);
+            _unitOfWork = new NoActionUnitOfWork(memoryCache, _loggerFactory, inMemoryCollectionOptions);
 
             var quizRepo = _unitOfWork.GetCollection<Quiz>();
             var teamRepo = _unitOfWork.GetCollection<Team>();
@@ -41,6 +53,23 @@ namespace Pubquiz.Domain.Tests
                 quizRepo.AddAsync(quiz),
                 teams.ToAsyncEnumerable().ForEachAsync(t => teamRepo.AddAsync(t)),
                 gameRepo.AddAsync(_game));
+
+            // set up bus
+            var activator = new BuiltinHandlerActivator();
+            activator.Register((bus, messageContext) => new ScoringHandler(_unitOfWork, bus));
+            activator.Register(() => new ClientNotificationHandler(_loggerFactory));
+
+            // needed so the inmemory subscription store will be centralized
+            _inMemorySubscriberStore = new InMemorySubscriberStore();
+
+            Configure.With(activator).Logging(l => l.ColoredConsole())
+                .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
+                .Routing(r => r.TypeBased().MapAssemblyOf<TeamMembersChanged>("Messages"))
+                .Subscriptions(s => s.StoreInMemory(_inMemorySubscriberStore))
+                .Start();
+
+            _bus = activator.Bus;
+            _bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic"));
         }
 
         [TestMethod]
@@ -146,7 +175,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty;
-            var notification = new ChangeTeamMembersNotification(_unitOfWork) {TeamMembers = "a,b,c", TeamId = teamId};
+            var notification = new ChangeTeamMembers(_unitOfWork, _bus) {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
@@ -160,7 +189,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = _game.TeamIds[0]; // Team 1
-            var notification = new ChangeTeamMembersNotification(_unitOfWork) {TeamMembers = "a,b,c", TeamId = teamId};
+            var notification = new ChangeTeamMembers(_unitOfWork, _bus) {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act
             notification.Execute().Wait();

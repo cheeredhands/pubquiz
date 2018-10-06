@@ -1,4 +1,4 @@
-namespace Pubquiz.Domain.Tools
+namespace Pubquiz.Logic.Tools
 {
     public static class StringExtensions
     {

@@ -1,16 +1,17 @@
 using System;
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
 using Pubquiz.Persistence;
+using Rebus.Bus;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
-    public class DeleteTeamNotification : Notification
+    public class DeleteTeam : Notification
     {
         public Guid TeamId { get; set; }
 
-        public DeleteTeamNotification(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public DeleteTeam(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 

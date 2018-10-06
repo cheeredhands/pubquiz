@@ -1,17 +1,19 @@
 using System;
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Persistence;
+using Rebus.Bus;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
-    public class ChangeTeamMembersNotification : Notification
+    public class ChangeTeamMembers : Notification
     {
         public Guid TeamId { get; set; }
         public string TeamMembers { get; set; }
 
-        public ChangeTeamMembersNotification(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ChangeTeamMembers(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
@@ -29,6 +31,7 @@ namespace Pubquiz.Domain.Requests
             team.MemberNames = TeamMembers;
 
             await teamCollection.UpdateAsync(team);
+            await Bus.Publish(new TeamMembersChanged());
         }
     }
 }
