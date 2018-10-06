@@ -74,12 +74,26 @@ namespace Pubquiz.Logic.Requests
             }
 
             answer.SetInteractionResponse(InteractionId, ChoiceOptionIds, Response);
-
+            UnitOfWork.Commit();
+            
             // send a domain event: InteractionResponseAdded, which will be picked up by:
             // - the scoring handler
             // - a client notification handler
-            await Bus.Publish(new InteractionResponseAdded(TeamId, quizSectionId.Value, QuestionId, InteractionId));
+            var response = string.IsNullOrEmpty(Response) ? GetChoiceOptionTexts(question, ChoiceOptionIds) : Response;
+            await Bus.Publish(
+                new InteractionResponseAdded(TeamId, team.Name, quizSectionId.Value, QuestionId, response));
             //answer.Score(question);
+        }
+
+        private string GetChoiceOptionTexts(Question question, List<int> choiceOptionIds)
+        {
+            var choiceOptionTexts = new List<string>();
+            foreach (var choiceOptionId in choiceOptionIds)
+            {
+                choiceOptionTexts.Add(question.Interactions[InteractionId].ChoiceOptions[choiceOptionId].Text);
+            }
+
+            return string.Join(", ", choiceOptionTexts);
         }
     }
 }

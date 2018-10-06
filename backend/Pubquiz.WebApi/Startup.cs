@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
 using Pubquiz.Persistence.Helpers;
@@ -44,12 +45,14 @@ namespace Pubquiz.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AutoRegisterHandlersFromAssembly("Pubquiz.Domain");
-
+            services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
+            // needed so the inmemory subscription store will be centralized
+            var inMemorySubscriberStore = new InMemorySubscriberStore();
+            services.AddSingleton(inMemorySubscriberStore);
             services.AddRebus(configure =>
                 configure.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
                     .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
-                    .Subscriptions(s => s.StoreInMemory())
+                    .Subscriptions(s => s.StoreInMemory(inMemorySubscriberStore))
                     .Routing(r => r.TypeBased().MapAssemblyOf<InteractionResponseAdded>("Messages")));
 
             services.AddResponseCompression();
@@ -61,7 +64,7 @@ namespace Pubquiz.WebApi
                 builder.AddDebug();
             });
             services.AddInMemoryPersistence();
-            services.AddRequests(Assembly.Load("Pubquiz.Domain"));
+            services.AddRequests(Assembly.Load("Pubquiz.Logic"));
             services.AddMvcCore(options =>
                 {
                     options.Filters.Add(typeof(DomainExceptionFilter));
@@ -132,10 +135,11 @@ namespace Pubquiz.WebApi
                 //app.UseHsts();
             }
 
-            app.UseRebus().Run(async context =>
-            {
-                var bus = app.ApplicationServices.GetRequiredService<IBus>();
-            });
+            app.UseRebus(bus => bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic")));
+//            app.UseRebus().Run(async context =>
+//            {
+//                var bus = app.ApplicationServices.GetRequiredService<IBus>();
+//            });
             app.UseDefaultFiles();
             app.UseStaticFiles();
             //app.UseHttpsRedirection();
