@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
-using Pubquiz.Persistence;
+using Pubquiz.Domain;
 using Pubquiz.Domain.ViewModels;
+using Pubquiz.Persistence;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
     public class TeamViewModelQuery : Query<TeamViewModel>
     {

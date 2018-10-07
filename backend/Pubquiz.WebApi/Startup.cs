@@ -2,34 +2,41 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
 using Pubquiz.Persistence.Helpers;
 using Pubquiz.WebApi.Helpers;
+using Rebus.Bus;
+using Rebus.Persistence.InMem;
+using Rebus.Routing.TypeBased;
+using Rebus.ServiceProvider;
+using Rebus.Transport.InMem;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Pubquiz.WebApi
 {
     public class Startup
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment,
+            ILoggerFactory loggerFactory)
         {
             _hostingEnvironment = hostingEnvironment;
+            _loggerFactory = loggerFactory;
             Configuration = configuration;
         }
 
@@ -38,6 +45,16 @@ namespace Pubquiz.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
+            // needed so the inmemory subscription store will be centralized
+            var inMemorySubscriberStore = new InMemorySubscriberStore();
+            services.AddSingleton(inMemorySubscriberStore);
+            services.AddRebus(configure =>
+                configure.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
+                    .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
+                    .Subscriptions(s => s.StoreInMemory(inMemorySubscriberStore))
+                    .Routing(r => r.TypeBased().MapAssemblyOf<InteractionResponseAdded>("Messages")));
+
             services.AddResponseCompression();
             services.AddMemoryCache();
             services.AddLogging(builder =>
@@ -47,7 +64,7 @@ namespace Pubquiz.WebApi
                 builder.AddDebug();
             });
             services.AddInMemoryPersistence();
-            services.AddRequests(Assembly.Load("Pubquiz.Domain"));
+            services.AddRequests(Assembly.Load("Pubquiz.Logic"));
             services.AddMvcCore(options =>
                 {
                     options.Filters.Add(typeof(DomainExceptionFilter));
@@ -118,6 +135,11 @@ namespace Pubquiz.WebApi
                 //app.UseHsts();
             }
 
+            app.UseRebus(bus => bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic")));
+//            app.UseRebus().Run(async context =>
+//            {
+//                var bus = app.ApplicationServices.GetRequiredService<IBus>();
+//            });
             app.UseDefaultFiles();
             app.UseStaticFiles();
             //app.UseHttpsRedirection();

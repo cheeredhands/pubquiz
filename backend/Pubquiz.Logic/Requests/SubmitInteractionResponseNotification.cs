@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
+using Rebus.Bus;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
     public class SubmitInteractionResponseNotification : Notification
     {
@@ -16,7 +19,7 @@ namespace Pubquiz.Domain.Requests
         public List<int> ChoiceOptionIds { get; set; }
         public string Response { get; set; }
 
-        public SubmitInteractionResponseNotification(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public SubmitInteractionResponseNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
@@ -28,7 +31,7 @@ namespace Pubquiz.Domain.Requests
             var team = await teamCollection.GetAsync(TeamId);
             if (team == null)
             {
-                throw new DomainException(3, "Invalid team id.", false);
+                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
             }
 
             var questionCollection = UnitOfWork.GetCollection<Question>();
@@ -36,7 +39,7 @@ namespace Pubquiz.Domain.Requests
             var question = await questionCollection.GetAsync(QuestionId);
             if (question == null)
             {
-                throw new DomainException(6, "Invalid question id.", false);
+                throw new DomainException(ErrorCodes.InvalidQuestionId, "Invalid question id.", false);
             }
 
             var gameCollection = UnitOfWork.GetCollection<Game>();
@@ -49,17 +52,17 @@ namespace Pubquiz.Domain.Requests
             var quizSectionId = quiz.QuizSections.FirstOrDefault(qs => qs.Questions.Any(q => q.Id == QuestionId))?.Id;
             if (!quizSectionId.HasValue)
             {
-                throw new DomainException(8, "This question doesn't belong to the quiz.", true);
+                throw new DomainException(ErrorCodes.QuestionNotInQuiz, "This question doesn't belong to the quiz.", true);
             }
 
             if (game.CurrentQuizSectionId != quizSectionId.Value)
             {
-                throw new DomainException(9, "This question doesn't belong to the current quiz section.", true);
+                throw new DomainException(ErrorCodes.QuestionNotInCurrentQuizSection, "This question doesn't belong to the current quiz section.", true);
             }
 
             if (question.Interactions.All(i => i.Id != InteractionId))
             {
-                throw new DomainException(7, "Invalid interaction id.", false);
+                throw new DomainException(ErrorCodes.InvalidInteractionId, "Invalid interaction id.", false);
             }
 
 
@@ -68,14 +71,30 @@ namespace Pubquiz.Domain.Requests
             if (answer == null)
             {
                 answer = new Answer(quizSectionId.Value, QuestionId);
-                answer.InteractionResponses.Add(new InteractionResponse(InteractionId, ChoiceOptionIds, Response));
+                team.Answers.Add(answer);
             }
 
+            answer.SetInteractionResponse(InteractionId, ChoiceOptionIds, Response);
+            UnitOfWork.Commit();
+            
+            // send a domain event: InteractionResponseAdded, which will be picked up by:
+            // - the scoring handler
+            // - a client notification handler
+            var response = string.IsNullOrEmpty(Response) ? GetChoiceOptionTexts(question, ChoiceOptionIds) : Response;
+            await Bus.Publish(
+                new InteractionResponseAdded(TeamId, team.Name, quizSectionId.Value, QuestionId, response));
+            //answer.Score(question);
+        }
 
-            // score it
-            answer.Score(question);
+        private string GetChoiceOptionTexts(Question question, List<int> choiceOptionIds)
+        {
+            var choiceOptionTexts = new List<string>();
+            foreach (var choiceOptionId in choiceOptionIds)
+            {
+                choiceOptionTexts.Add(question.Interactions[InteractionId].ChoiceOptions[choiceOptionId].Text);
+            }
 
-
+            return string.Join(", ", choiceOptionTexts);
         }
     }
 }

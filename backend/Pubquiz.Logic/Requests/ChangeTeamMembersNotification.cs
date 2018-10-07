@@ -1,17 +1,20 @@
 using System;
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
+using Rebus.Bus;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
     public class ChangeTeamMembersNotification : Notification
     {
         public Guid TeamId { get; set; }
         public string TeamMembers { get; set; }
 
-        public ChangeTeamMembersNotification(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ChangeTeamMembersNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
@@ -22,13 +25,14 @@ namespace Pubquiz.Domain.Requests
             var team = await teamCollection.GetAsync(TeamId);
             if (team == null)
             {
-                throw new DomainException(3, "Invalid team id.", false);
+                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
             }
 
             // set new team members
             team.MemberNames = TeamMembers;
 
             await teamCollection.UpdateAsync(team);
+            await Bus.Publish(new TeamMembersChanged());
         }
     }
 }

@@ -1,9 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
 namespace Pubquiz.WebApi.Helpers
@@ -22,26 +21,22 @@ namespace Pubquiz.WebApi.Helpers
         public void SeedTestSet()
         {
             _logger.LogInformation("Seeding test set.");
-            var quizRepo = _unitOfWork.GetCollection<Quiz>();
-            var teamRepo = _unitOfWork.GetCollection<Team>();
-            var gameRepo = _unitOfWork.GetCollection<Game>();
-            var userRepo = _unitOfWork.GetCollection<User>();
-            var game = TestGame.GetGame();
+            var quizCollection = _unitOfWork.GetCollection<Quiz>();
+            var teamCollection = _unitOfWork.GetCollection<Team>();
+            var userCollection = _unitOfWork.GetCollection<User>();
+            var gameCollection = _unitOfWork.GetCollection<Game>();
+            var users = TestUsers.GetUsers();
+            var game = TestGame.GetGame(users.Where(u => u.UserRole == UserRole.QuizMaster).Select(u => u.Id));
+            var teams = TestTeams.GetTeams(teamCollection, game.Id);
             var quiz = TestQuiz.GetQuiz();
-            var teams = TestTeams.GetTeams(teamRepo, game.Id);
             game.QuizId = quiz.Id;
             game.TeamIds = teams.Select(t => t.Id).ToList();
-            var users = TestTeams.GetUsersFromTeams(teams).ToList();
-            //quizRepo.AddAsync(quiz).Wait();
-            //Task.WaitAll(teams.Select(t => teamRepo.AddAsync(t)).Cast<Task>().ToArray());
-            Task.WaitAll(
-                quizRepo.AddAsync(quiz),
-                teams.ToAsyncEnumerable().ForEachAsync(t => teamRepo.AddAsync(t)),
-                users.ToAsyncEnumerable().ForEachAsync(t => userRepo.AddAsync(t)), 
-                gameRepo.AddAsync(game));
 
-            //users.ForEach(u => userRepo.AddAsync(u).Wait());
-            //gameRepo.AddAsync(game).Wait();
+            Task.WaitAll(
+                quizCollection.AddAsync(quiz),
+                teams.ToAsyncEnumerable().ForEachAsync(t => teamCollection.AddAsync(t)),
+                users.ToAsyncEnumerable().ForEachAsync(u => userCollection.AddAsync(u)),
+                gameCollection.AddAsync(game));
         }
     }
 }

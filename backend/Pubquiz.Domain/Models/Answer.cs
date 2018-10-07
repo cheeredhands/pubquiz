@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pubquiz.Domain.Tools;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -22,6 +21,21 @@ namespace Pubquiz.Domain.Models
             QuizSectionId = quizSectionId;
             QuestionId = questionId;
             InteractionResponses = new List<InteractionResponse>();
+        }
+
+        public void SetInteractionResponse(int interactionId, IEnumerable<int> choiceOptionIds, string response)
+        {
+            var interactionResponse = InteractionResponses.FirstOrDefault(r => r.InteractionId == interactionId);
+            if (interactionResponse == null)
+            {
+                interactionResponse = new InteractionResponse(interactionId, choiceOptionIds, response);
+                InteractionResponses.Add(interactionResponse);
+            }
+            else
+            {
+                interactionResponse.ChoiceOptionIds = choiceOptionIds.ToList();
+                interactionResponse.Response = response;
+            }
         }
 
         public void Score(Question question)

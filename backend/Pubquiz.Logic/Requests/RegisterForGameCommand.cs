@@ -1,17 +1,19 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.Tools;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
+using Rebus.Bus;
 
-namespace Pubquiz.Domain.Requests
+namespace Pubquiz.Logic.Requests
 {
     public class RegisterForGameCommand : Command<Team>
     {
         public string TeamName;
         public string Code;
 
-        public RegisterForGameCommand(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public RegisterForGameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
@@ -32,14 +34,14 @@ namespace Pubquiz.Domain.Requests
                     return team;
                 }
 
-                throw new DomainException(1, "Invalid code.", false);
+                throw new DomainException(ErrorCodes.InvalidCode, "Invalid code.", false);
             }
 
             // check if team name is taken, otherwise throw DomainException
             var isTeamNameTaken = await teamRepo.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
             if (isTeamNameTaken)
             {
-                throw new DomainException(2, "Team name is taken.", true);
+                throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
             }
 
             // register team and return team object
@@ -50,7 +52,8 @@ namespace Pubquiz.Domain.Requests
                 Name = TeamName,
                 UserName = userName,
                 GameId = game.Id,
-                RecoveryCode = recoveryCode
+                RecoveryCode = recoveryCode,
+                UserRole = UserRole.Team
             };
 
 
