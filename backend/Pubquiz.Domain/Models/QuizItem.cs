@@ -7,8 +7,18 @@ namespace Pubquiz.Domain.Models
 {
     public class QuizItem : Model
     {
-        public string Title { get; set; }
-        public string Body { get; set; }
-        public List<Media> Media { get; set; }
+        public ItemType ItemType { get; set; }
+
+        public QuizItem(Guid id, ItemType itemType)
+        {
+            Id = id;
+            ItemType = itemType;
+        }
+    }
+
+    public enum ItemType
+    {
+        Question,
+        Information
     }
 }

@@ -31,7 +31,7 @@ namespace Pubquiz.Logic.Requests
             var team = await teamCollection.GetAsync(TeamId);
             if (team == null)
             {
-                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
+                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", true);
             }
 
             var questionCollection = UnitOfWork.GetCollection<Question>();
@@ -39,7 +39,7 @@ namespace Pubquiz.Logic.Requests
             var question = await questionCollection.GetAsync(QuestionId);
             if (question == null)
             {
-                throw new DomainException(ErrorCodes.InvalidQuestionId, "Invalid question id.", false);
+                throw new DomainException(ErrorCodes.InvalidQuestionId, "Invalid question id.", true);
             }
 
             var gameCollection = UnitOfWork.GetCollection<Game>();
@@ -49,20 +49,23 @@ namespace Pubquiz.Logic.Requests
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
             var quiz = await quizCollection.GetAsync(quizId);
 
-            var quizSectionId = quiz.QuizSections.FirstOrDefault(qs => qs.Questions.Any(q => q.Id == QuestionId))?.Id;
+            var quizSectionId = quiz.QuizSections
+                .FirstOrDefault(qs => qs.QuestionItems.Any(q => q.Id == QuestionId))?.Id;
             if (!quizSectionId.HasValue)
             {
-                throw new DomainException(ErrorCodes.QuestionNotInQuiz, "This question doesn't belong to the quiz.", true);
+                throw new DomainException(ErrorCodes.QuestionNotInQuiz, "This question doesn't belong to the quiz.",
+                    true);
             }
 
             if (game.CurrentQuizSectionId != quizSectionId.Value)
             {
-                throw new DomainException(ErrorCodes.QuestionNotInCurrentQuizSection, "This question doesn't belong to the current quiz section.", true);
+                throw new DomainException(ErrorCodes.QuestionNotInCurrentQuizSection,
+                    "This question doesn't belong to the current quiz section.", true);
             }
 
             if (question.Interactions.All(i => i.Id != InteractionId))
             {
-                throw new DomainException(ErrorCodes.InvalidInteractionId, "Invalid interaction id.", false);
+                throw new DomainException(ErrorCodes.InvalidInteractionId, "Invalid interaction id.", true);
             }
 
 
@@ -76,7 +79,7 @@ namespace Pubquiz.Logic.Requests
 
             answer.SetInteractionResponse(InteractionId, ChoiceOptionIds, Response);
             UnitOfWork.Commit();
-            
+
             // send a domain event: InteractionResponseAdded, which will be picked up by:
             // - the scoring handler
             // - a client notification handler

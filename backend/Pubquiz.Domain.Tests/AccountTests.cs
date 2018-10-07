@@ -1,92 +1,25 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Handlers;
-using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Requests;
-using Pubquiz.Logic.Tools;
-using Pubquiz.Persistence;
-using Pubquiz.Persistence.NoAction;
-using Rebus.Activation;
-using Rebus.Bus;
-using Rebus.Config;
-using Rebus.Persistence.InMem;
-using Rebus.Routing.TypeBased;
-using Rebus.Transport.InMem;
 
 namespace Pubquiz.Domain.Tests
 {
     [TestCategory("Account actions")]
     [TestClass]
-    public class AccountTests
+    public class AccountTests : InitializedTestBase
     {
-        private IUnitOfWork _unitOfWork;
-        private Game _game;
-        private List<User> _users;
-        private IBus _bus;
-        private ILoggerFactory _loggerFactory;
-        private InMemorySubscriberStore _inMemorySubscriberStore;
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            _loggerFactory = new LoggerFactory();
-            _loggerFactory.AddConsole();
-            ICollectionOptions inMemoryCollectionOptions = new InMemoryDatabaseOptions();
-            _unitOfWork = new NoActionUnitOfWork(memoryCache, _loggerFactory, inMemoryCollectionOptions);
-
-            var quizCollection = _unitOfWork.GetCollection<Quiz>();
-            var userCollection = _unitOfWork.GetCollection<User>();
-            var teamCollection = _unitOfWork.GetCollection<Team>();
-            var gameCollection = _unitOfWork.GetCollection<Game>();
-            _users = TestUsers.GetUsers();
-            _game = TestGame.GetGame(_users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id));
-            var quiz = TestQuiz.GetQuiz();
-            var teams = TestTeams.GetTeams(teamCollection, _game.Id);
-            _game.QuizId = quiz.Id;
-            _game.TeamIds = teams.Select(t => t.Id).ToList();
-
-            Task.WaitAll(
-                quizCollection.AddAsync(quiz),
-                teams.ToAsyncEnumerable().ForEachAsync(t => teamCollection.AddAsync(t)),
-                _users.ToAsyncEnumerable().ForEachAsync(u => userCollection.AddAsync(u)),
-                gameCollection.AddAsync(_game));
-
-            // set up bus
-            var activator = new BuiltinHandlerActivator();
-            activator.Register((bus, messageContext) => new ScoringHandler(_unitOfWork, bus));
-            activator.Register(() => new ClientNotificationHandler(_loggerFactory));
-
-            // needed so the inmemory subscription store will be centralized
-            _inMemorySubscriberStore = new InMemorySubscriberStore();
-
-            Configure.With(activator).Logging(l => l.ColoredConsole())
-                .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
-                .Routing(r => r.TypeBased().MapAssemblyOf<TeamMembersChanged>("Messages"))
-                .Subscriptions(s => s.StoreInMemory(_inMemorySubscriberStore))
-                .Start();
-
-            _bus = activator.Bus;
-            _bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic"));
-        }
-
         [TestCategory("Team registration")]
         [TestMethod]
         public void TestGame_RegisterWithCorrectNewTeam_TeamRegistered()
         {
             // arrange
-            var command = new RegisterForGameCommand(_unitOfWork, _bus) {TeamName = "Team 4", Code = "JOINME"};
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "Team 4", Code = "JOINME"};
 
             // act
             var team = command.Execute().Result;
-            _unitOfWork.Commit();
+            UnitOfWork.Commit();
 
             // assert
             Assert.AreEqual("Team 4", team.Name);
@@ -97,13 +30,13 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_UseTeamRecoveryCode_RecoveryCodeAccepted()
         {
             // arrange 
-            var firstTeamId = _game.TeamIds[0];
-            var firstTeam = _unitOfWork.GetCollection<Team>().GetAsync(firstTeamId).Result;
-            var command = new RegisterForGameCommand(_unitOfWork, _bus) {TeamName = "", Code = firstTeam.RecoveryCode};
+            var firstTeamId = Game.TeamIds[0];
+            var firstTeam = UnitOfWork.GetCollection<Team>().GetAsync(firstTeamId).Result;
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "", Code = firstTeam.RecoveryCode};
 
             // act
             var team = command.Execute().Result;
-            _unitOfWork.Commit();
+            UnitOfWork.Commit();
 
             // assert
             team.RecoveryCode = firstTeam.RecoveryCode;
@@ -114,7 +47,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithInvalidCode_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(_unitOfWork, _bus) {TeamName = "Team 4", Code = "INVALIDCODE"};
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "Team 4", Code = "INVALIDCODE"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -127,7 +60,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithExistingTeamName_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(_unitOfWork, _bus) {TeamName = "Team 3", Code = "JOINME"};
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "Team 3", Code = "JOINME"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -140,12 +73,12 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_ChangeTeamNameForValidTeam_TeamNameChanged()
         {
             // arrange
-            var teamId = _game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamNameCommand(_unitOfWork, _bus) {NewName = "Team 1a", TeamId = teamId};
+            var teamId = Game.TeamIds[0]; // Team 1
+            var command = new ChangeTeamNameCommand(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
 
             // act
             var team = command.Execute().Result;
-            _unitOfWork.Commit();
+            UnitOfWork.Commit();
 
             // assert
             Assert.AreEqual("Team 1a", team.Name);
@@ -158,7 +91,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty;
-            var command = new ChangeTeamNameCommand(_unitOfWork, _bus) {NewName = "Team 1a", TeamId = teamId};
+            var command = new ChangeTeamNameCommand(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -172,8 +105,8 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_ChangeTeamNameToTakenName_ThrowsException()
         {
             // arrange
-            var teamId = _game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamNameCommand(_unitOfWork, _bus) {NewName = "Team 2", TeamId = teamId};
+            var teamId = Game.TeamIds[0]; // Team 1
+            var command = new ChangeTeamNameCommand(UnitOfWork, Bus) {NewName = "Team 2", TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -188,7 +121,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty;
-            var notification = new ChangeTeamMembersNotification(_unitOfWork, _bus)
+            var notification = new ChangeTeamMembersNotification(UnitOfWork, Bus)
                 {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act & assert
@@ -203,15 +136,15 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_ChangeTeamMembersForValidTeam_TeamMembersChanged()
         {
             // arrange
-            var teamId = _game.TeamIds[0]; // Team 1
-            var notification = new ChangeTeamMembersNotification(_unitOfWork, _bus)
+            var teamId = Game.TeamIds[0]; // Team 1
+            var notification = new ChangeTeamMembersNotification(UnitOfWork, Bus)
                 {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act
             notification.Execute().Wait();
-            _unitOfWork.Commit();
+            UnitOfWork.Commit();
 
-            var team = _unitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
+            var team = UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
             Assert.AreEqual("a,b,c", team.MemberNames);
         }
 
@@ -221,8 +154,8 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty;
-            var user = _users.First(u => u.UserName == "Quiz master 1");
-            var notification = new DeleteTeamNotification(_unitOfWork, _bus) {ActorId = user.Id, TeamId = teamId};
+            var user = Users.First(u => u.UserName == "Quiz master 1");
+            var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = user.Id, TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
@@ -236,9 +169,9 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_DeleteTeamWithInvalidActorId_ThrowsException()
         {
             // arrange
-            var teamId = _game.TeamIds[0]; // Team 1
+            var teamId = Game.TeamIds[0]; // Team 1
             var actorId = Guid.Empty;
-            var notification = new DeleteTeamNotification(_unitOfWork, _bus) {ActorId = actorId, TeamId = teamId};
+            var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = actorId, TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
@@ -252,14 +185,14 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_DeleteTeamByUnauthorizedQuizMaster_ThrowsException()
         {
             // arrange
-            var teamId = _game.TeamIds[0]; // Team 1
-            var user = _users.First(u => u.UserName == "Quiz master 2");
-            var notification = new DeleteTeamNotification(_unitOfWork, _bus) {ActorId = user.Id, TeamId = teamId};
+            var teamId = Game.TeamIds[0]; // Team 1
+            var user = Users.First(u => u.UserName == "Quiz master 2");
+            var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = user.Id, TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
             Assert.AreEqual(ErrorCodes.QuizMasterUnauthorizedForGame, exception.ErrorCode);
-            Assert.AreEqual($"Actor with id {user.Id} is not authorized for game '{_game.Id}'", exception.Message);
+            Assert.AreEqual($"Actor with id {user.Id} is not authorized for game '{Game.Id}'", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -268,17 +201,17 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_DeleteValidTeamWithValidActorId_TeamDeleted()
         {
             // arrange
-            var teamId = _game.TeamIds[0]; // Team 1
-            var user = _users.First(u => u.UserName == "Quiz master 1");
-            var notification = new DeleteTeamNotification(_unitOfWork, _bus) {ActorId = user.Id, TeamId = teamId};
+            var teamId = Game.TeamIds[0]; // Team 1
+            var user = Users.First(u => u.UserName == "Quiz master 1");
+            var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = user.Id, TeamId = teamId};
 
             // act
             notification.Execute().Wait();
-            _unitOfWork.Commit();
+            UnitOfWork.Commit();
 
             // assert
-            Assert.IsNull(_unitOfWork.GetCollection<Team>().GetAsync(teamId).Result);
-            CollectionAssert.DoesNotContain(_unitOfWork.GetCollection<Game>().GetAsync(_game.Id).Result.TeamIds,
+            Assert.IsNull(UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result);
+            CollectionAssert.DoesNotContain(UnitOfWork.GetCollection<Game>().GetAsync(Game.Id).Result.TeamIds,
                 teamId);
         }
 
@@ -287,7 +220,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_LoginAdmin_AdminLoggedIn()
         {
             // arrange
-            var command = new LoginCommand(_unitOfWork, _bus) {UserName = "Admin", Password = "secret123"};
+            var command = new LoginCommand(UnitOfWork, Bus) {UserName = "Admin", Password = "secret123"};
 
             // act
             var user = command.Execute().Result;
@@ -301,7 +234,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_LoginQuizMaster_QuizMasterLoggedIn()
         {
             // arrange
-            var command = new LoginCommand(_unitOfWork, _bus) {UserName = "Quiz master 1", Password = "qm1"};
+            var command = new LoginCommand(UnitOfWork, Bus) {UserName = "Quiz master 1", Password = "qm1"};
 
             // act
             var user = command.Execute().Result;
@@ -315,7 +248,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_LoginInvalidPassword_ThrowsException()
         {
             // arrange
-            var command = new LoginCommand(_unitOfWork, _bus) {UserName = "Admin", Password = "wrong password"};
+            var command = new LoginCommand(UnitOfWork, Bus) {UserName = "Admin", Password = "wrong password"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -329,7 +262,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_LoginInvalidUserName_ThrowsException()
         {
             // arrange
-            var command = new LoginCommand(_unitOfWork, _bus) {UserName = "NonexistentUser", Password = "secret123"};
+            var command = new LoginCommand(UnitOfWork, Bus) {UserName = "NonexistentUser", Password = "secret123"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;

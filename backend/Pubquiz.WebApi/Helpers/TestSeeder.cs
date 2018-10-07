@@ -26,9 +26,10 @@ namespace Pubquiz.WebApi.Helpers
             var userCollection = _unitOfWork.GetCollection<User>();
             var gameCollection = _unitOfWork.GetCollection<Game>();
             var users = TestUsers.GetUsers();
-            var game = TestGame.GetGame(users.Where(u => u.UserRole == UserRole.QuizMaster).Select(u => u.Id));
-            var teams = TestTeams.GetTeams(teamCollection, game.Id);
             var quiz = TestQuiz.GetQuiz();
+            var game = TestGame.GetGame(users.Where(u => u.UserRole == UserRole.QuizMaster).Select(u => u.Id), 0,
+                quiz.QuizSections[0].Id);
+            var teams = TestTeams.GetTeams(teamCollection, game.Id);
             game.QuizId = quiz.Id;
             game.TeamIds = teams.Select(t => t.Id).ToList();
 

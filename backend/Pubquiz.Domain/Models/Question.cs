@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pubquiz.Persistence;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -8,8 +9,12 @@ using System.Linq;
 
 namespace Pubquiz.Domain.Models
 {
-    public class Question : QuizItem
+    public class Question : Model
     {
+        public string Title { get; set; }
+        public string Body { get; set; }
+        public List<Media> Media { get; set; }
+
         public QuestionType QuestionType { get; set; }
         public int MaxScore { get; set; }
         public List<Interaction> Interactions { get; set; }
@@ -106,8 +111,10 @@ namespace Pubquiz.Domain.Models
         public int LevenshteinTolerance { get; set; }
         public bool FlagIfWithinTolerance { get; set; }
 
-        public Solution(){}
-        
+        public Solution()
+        {
+        }
+
         public Solution(IEnumerable<int> optionIds)
         {
             ChoiceOptionIds = optionIds.ToList();

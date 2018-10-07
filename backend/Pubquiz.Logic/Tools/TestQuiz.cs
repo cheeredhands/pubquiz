@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Pubquiz.Domain.Models;
 
@@ -9,6 +10,7 @@ namespace Pubquiz.Logic.Tools
         {
             var mcQuestion = new Question
             {
+                Id = Guid.Parse("EB42AF2C-DD76-4470-8480-8EC6DD8203DA"),
                 Body = "Question body",
                 Title = "Multiple choice",
                 MaxScore = 1,
@@ -37,6 +39,7 @@ namespace Pubquiz.Logic.Tools
         {
             var mrQuestion = new Question
             {
+                Id = Guid.Parse("F39D1BD5-60E9-4615-8512-553149CDC28C"),
                 Body = "Question body",
                 Title = "Multiple response",
                 MaxScore = 1,
@@ -65,6 +68,7 @@ namespace Pubquiz.Logic.Tools
         {
             var mrQuestion = new Question
             {
+                Id = Guid.Parse("6423EA00-9984-40DC-8D76-499447C3EA3B"),
                 Body = "Question body",
                 Title = "Short answer with one solution",
                 MaxScore = 1,
@@ -81,11 +85,12 @@ namespace Pubquiz.Logic.Tools
 
             return mrQuestion;
         }
-        
+
         public static Question GetSAWithMultipleSolutionsQuestion()
         {
             var mrQuestion = new Question
             {
+                Id = Guid.Parse("DD550891-8EF3-4313-BF0F-871D96A3BFC5"),
                 Body = "Question body",
                 Title = "Short answer with multiple solutions",
                 MaxScore = 1,
@@ -107,6 +112,7 @@ namespace Pubquiz.Logic.Tools
         {
             var multipleSAQuestion = new Question
             {
+                Id = Guid.Parse("4B431B8E-9C58-4849-AB0E-3070767CFC81"),
                 Body = "Question body",
                 Title = "Test question",
                 MaxScore = 3,
@@ -130,11 +136,12 @@ namespace Pubquiz.Logic.Tools
             });
             return multipleSAQuestion;
         }
-        
+
         public static Question GetETQuestion()
         {
             var etQuestion = new Question
             {
+                Id = Guid.Parse("88681DFF-61E7-4289-8CCD-835D02BF0FA8"),
                 Body = "Question body",
                 Title = "Extended text (no solution, manually corrected)",
                 MaxScore = 1,
@@ -151,25 +158,52 @@ namespace Pubquiz.Logic.Tools
             return etQuestion;
         }
 
+        public static List<Question> GetQuestions()
+        {
+            return new List<Question>
+            {
+                GetMCQuestion(),
+                GetMRQuestion(),
+                GetSAQuestion(),
+                GetSAWithMultipleSolutionsQuestion(),
+                GetMultipleSAQuestion(),
+                GetETQuestion()
+            };
+        }
 
         public static Quiz GetQuiz()
         {
-            var quizSection = new QuizSection
+            var quizSection1 = new QuizSection
             {
-                Title = "Main quiz section",
+                Id = Guid.Parse("CFD8977B-4F15-4F7C-9E18-DE1238B97327"),
+                Title = "First quiz section",
                 QuizItems = new List<QuizItem>
                 {
-                    GetMCQuestion(),
-                    GetMRQuestion(),
-                    GetSAQuestion(),
-                    GetSAWithMultipleSolutionsQuestion(),
-                    GetMultipleSAQuestion(),
-                    GetETQuestion()
+                    new QuizItem(GetMCQuestion().Id, ItemType.Question),
+                    new QuizItem(GetMRQuestion().Id, ItemType.Question),
+                    new QuizItem(GetSAQuestion().Id, ItemType.Question)
                 }
             };
 
-            var quiz = new Quiz {Title = "Testquiz"};
-            quiz.QuizSections.Add(quizSection);
+            var quizSection2 = new QuizSection
+            {
+                Id = Guid.Parse("41E0F686-CEF2-493E-A5FD-1D1DD75BAEEB"),
+                Title = "Second quiz section",
+                QuizItems = new List<QuizItem>
+                {
+                    new QuizItem(GetSAWithMultipleSolutionsQuestion().Id, ItemType.Question),
+                    new QuizItem(GetMultipleSAQuestion().Id, ItemType.Question),
+                    new QuizItem(GetETQuestion().Id, ItemType.Question)
+                }
+            };
+
+            var quiz = new Quiz
+            {
+                Id = Guid.Parse("ACC39DF3-B1A5-4F97-BC12-AA59BC580418"),
+                Title = "Testquiz"
+            };
+            quiz.QuizSections.Add(quizSection1);
+            quiz.QuizSections.Add(quizSection2);
 
             return quiz;
         }

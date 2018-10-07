@@ -20,8 +20,7 @@ namespace Pubquiz.Domain.Models
         /// <summary>
         /// Only the questions in this section.
         /// </summary>
-        public List<Question> Questions => QuizItems.OfType<Question>().ToList();
-
+        public List<QuizItem> QuestionItems => QuizItems.Where(q => q.ItemType == ItemType.Question).ToList();
 
         public QuizSection()
         {
