@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Persistence;
@@ -69,13 +67,7 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult TestAuth()
         {
-//            var teams = new List<string>();
             var teamCollection = _unitOfWork.GetCollection<Team>();
-
-//            foreach (var team in teamCollection.AsQueryable())
-//            {
-//                teams.Add($"{team.Name} - '{team.RecoveryCode}'");
-//            }
             var teams = teamCollection.AsQueryable().ToList();
 
             return Ok(new
@@ -95,7 +87,6 @@ namespace Pubquiz.WebApi.Controllers
                 return Forbid();
             }
 
-            command.TeamId = teamId;
             var team = await command.Execute();
             await SignOut();
             await SignIn(team);
@@ -111,7 +102,6 @@ namespace Pubquiz.WebApi.Controllers
                 return Forbid();
             }
 
-            notification.TeamId = teamId;
             await notification.Execute();
             return Ok(new {Code = SuccessCodes.TeamMembersChanged, Message = "Team members changed."});
         }
