@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
@@ -30,7 +31,7 @@ namespace Pubquiz.Logic.Requests
             var team = await teamCollection.GetAsync(TeamId);
             if (team == null)
             {
-                throw new DomainException(3, "Invalid team id.", false);
+                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
             }
 
             var questionCollection = UnitOfWork.GetCollection<Question>();
@@ -38,7 +39,7 @@ namespace Pubquiz.Logic.Requests
             var question = await questionCollection.GetAsync(QuestionId);
             if (question == null)
             {
-                throw new DomainException(6, "Invalid question id.", false);
+                throw new DomainException(ErrorCodes.InvalidQuestionId, "Invalid question id.", false);
             }
 
             var gameCollection = UnitOfWork.GetCollection<Game>();
@@ -51,17 +52,17 @@ namespace Pubquiz.Logic.Requests
             var quizSectionId = quiz.QuizSections.FirstOrDefault(qs => qs.Questions.Any(q => q.Id == QuestionId))?.Id;
             if (!quizSectionId.HasValue)
             {
-                throw new DomainException(8, "This question doesn't belong to the quiz.", true);
+                throw new DomainException(ErrorCodes.QuestionNotInQuiz, "This question doesn't belong to the quiz.", true);
             }
 
             if (game.CurrentQuizSectionId != quizSectionId.Value)
             {
-                throw new DomainException(9, "This question doesn't belong to the current quiz section.", true);
+                throw new DomainException(ErrorCodes.QuestionNotInCurrentQuizSection, "This question doesn't belong to the current quiz section.", true);
             }
 
             if (question.Interactions.All(i => i.Id != InteractionId))
             {
-                throw new DomainException(7, "Invalid interaction id.", false);
+                throw new DomainException(ErrorCodes.InvalidInteractionId, "Invalid interaction id.", false);
             }
 
 

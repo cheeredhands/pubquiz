@@ -34,14 +34,14 @@ namespace Pubquiz.Logic.Requests
                     return team;
                 }
 
-                throw new DomainException(1, "Invalid code.", false);
+                throw new DomainException(ErrorCodes.InvalidCode, "Invalid code.", false);
             }
 
             // check if team name is taken, otherwise throw DomainException
             var isTeamNameTaken = await teamRepo.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
             if (isTeamNameTaken)
             {
-                throw new DomainException(2, "Team name is taken.", true);
+                throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
             }
 
             // register team and return team object
@@ -52,7 +52,8 @@ namespace Pubquiz.Logic.Requests
                 Name = TeamName,
                 UserName = userName,
                 GameId = game.Id,
-                RecoveryCode = recoveryCode
+                RecoveryCode = recoveryCode,
+                UserRole = UserRole.Team
             };
 
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 using Rebus.Handlers;
@@ -29,7 +30,7 @@ namespace Pubquiz.Logic.Handlers
             {
                 // log it somewhere, or send a message (with a DomainException?) to the hub so the quizmaster knows something went wrong?
                 // something like:
-                var exception = new DomainException(200, "Team could not be found while scoring answer.", true);
+                var exception = new DomainException(ErrorCodes.InvalidTeamId, "Team could not be found while scoring answer.", true);
                 await _bus.Publish(new ErrorOccurred(exception));
                 return;
             }
@@ -51,6 +52,7 @@ namespace Pubquiz.Logic.Handlers
 
             // score it!
             question.Score(answer);
+            team.UpdateScore();
 
             // send AnswerScored message, so the clients will be notified and the team scores and dashboard will be updated
             await _bus.Publish(new AnswerScored());

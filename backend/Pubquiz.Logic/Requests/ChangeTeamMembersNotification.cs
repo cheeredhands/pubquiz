@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
@@ -24,7 +25,7 @@ namespace Pubquiz.Logic.Requests
             var team = await teamCollection.GetAsync(TeamId);
             if (team == null)
             {
-                throw new DomainException(3, "Invalid team id.", false);
+                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
             }
 
             // set new team members

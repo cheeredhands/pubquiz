@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pubquiz.Persistence;
+
 // ReSharper disable CollectionNeverUpdated.Global
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -20,6 +21,7 @@ namespace Pubquiz.Domain.Models
         public GameState State { get; set; }
         public Guid QuizId { get; set; }
         public List<Guid> TeamIds { get; set; }
+        public List<Guid> QuizMasterIds { get; set; }
         public string InviteCode { get; set; }
 
         public Question CurrentQuestion { get; set; }
@@ -43,38 +45,44 @@ namespace Pubquiz.Domain.Models
                 case GameState.Closed:
                     if (State != GameState.Open)
                     {
-                        throw new DomainException("Can only close the game from the open state.", true);
+                        throw new DomainException(ErrorCodes.InvalidGameStateTransition,
+                            "Can only close the game from the open state.", true);
                     }
 
                     break;
                 case GameState.Open:
                     if (State != GameState.Closed)
                     {
-                        throw new DomainException("Can only open the game from the closed state.", true);
+                        throw new DomainException(ErrorCodes.InvalidGameStateTransition,
+                            "Can only open the game from the closed state.", true);
                     }
 
                     if (State == GameState.Closed && (QuizId == Guid.Empty || string.IsNullOrWhiteSpace(Title)))
                     {
-                        throw new DomainException("Can't open the game without a quiz and/or a title.", true);
+                        throw new DomainException(ErrorCodes.InvalidGameStateTransition,
+                            "Can't open the game without a quiz and/or a title.", true);
                     }
 
                     break;
                 case GameState.Running:
                     if (State != GameState.Open && State != GameState.Paused)
                     {
-                        throw new DomainException("Can only start the game from the open and paused states.", true);
+                        throw new DomainException(ErrorCodes.InvalidGameStateTransition,
+                            "Can only start the game from the open and paused states.", true);
                     }
 
                     if (!TeamIds.Any())
                     {
-                        throw new DomainException("Can't start the game without teams.", true);
+                        throw new DomainException(ErrorCodes.InvalidGameStateTransition,
+                            "Can't start the game without teams.", true);
                     }
 
                     break;
                 case GameState.Paused:
                     if (State != GameState.Running)
                     {
-                        throw new DomainException("Can only pause the game from the running state.", true);
+                        throw new DomainException(ErrorCodes.InvalidGameStateTransition,
+                            "Can only pause the game from the running state.", true);
                     }
 
                     break;
@@ -82,7 +90,8 @@ namespace Pubquiz.Domain.Models
                 case GameState.Finished:
                     if (State != GameState.Running && State != GameState.Paused)
                     {
-                        throw new DomainException("Can only finish the game from the running and paused states.", true);
+                        throw new DomainException(ErrorCodes.InvalidGameStateTransition,
+                            "Can only finish the game from the running and paused states.", true);
                     }
 
                     break;

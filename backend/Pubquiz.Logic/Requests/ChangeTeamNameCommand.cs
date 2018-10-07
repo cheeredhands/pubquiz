@@ -24,14 +24,14 @@ namespace Pubquiz.Logic.Requests
             var team = await teamCollection.GetAsync(TeamId);
             if (team == null)
             {
-                throw new DomainException(3, "Invalid team id.", false);
+                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
             }
 
             // check if team name is taken, otherwise throw DomainException
             var isTeamNameTaken = await teamCollection.AnyAsync(t => t.Name == NewName && t.GameId == team.GameId);
             if (isTeamNameTaken)
             {
-                throw new DomainException(2, "Team name is taken.", true);
+                throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
             }
 
             // set new name
