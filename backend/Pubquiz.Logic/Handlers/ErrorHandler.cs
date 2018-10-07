@@ -14,10 +14,10 @@ namespace Pubquiz.Logic.Handlers
             _logger = loggerFactory.CreateLogger<ErrorHandler>();
         }
 
-        public async Task Handle(ErrorOccurred message)
+        public Task Handle(ErrorOccurred message) => Task.Run(() =>
         {
             _logger.LogError(message.DomainException.ErrorCode, message.DomainException,
                 "An error occurred while handling a message.");
-        }
+        });
     }
 }

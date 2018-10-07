@@ -16,26 +16,27 @@ namespace Pubquiz.Logic.Handlers
             _logger = loggerFactory.CreateLogger<ClientNotificationHandler>();
         }
 
-        public async Task Handle(AnswerScored message)
+        public Task Handle(AnswerScored message) => Task.Run(() =>
         {
             // notify clients via hub
-        }
+        });
 
-        public async Task Handle(InteractionResponseAdded message)
+        public Task Handle(InteractionResponseAdded message) => Task.Run(() =>
         {
             // notify clients via hub
             // something like:
             // var sendMessage = new {Code = 100, message.TeamId, message.TeamName, message.QuestionId, message.Response};
-        }
+        });
 
-        public async Task Handle(TeamMembersChanged message)
-        {
-            _logger.LogInformation("test!!!!!!!!!!!!!!");
-        }
-
-        public async Task Handle(ErrorOccurred message)
+        public Task Handle(TeamMembersChanged message) => Task.Run(() =>
         {
             // notify clients via hub
-        }
+            _logger.LogInformation("Handling TeamMembersChanged message");
+        });
+
+        public Task Handle(ErrorOccurred message) => Task.Run(() =>
+        {
+            // notify clients via hub
+        });
     }
 }

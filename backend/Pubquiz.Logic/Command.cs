@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Persistence;
+using Rebus.Bus;
 
 namespace Pubquiz.Logic
 {
@@ -11,10 +12,12 @@ namespace Pubquiz.Logic
     public abstract class Command<TResponse> : Request
     {
         protected readonly IUnitOfWork UnitOfWork;
+        protected readonly IBus Bus;
 
-        protected Command(IUnitOfWork unitOfWork)
+        protected Command(IUnitOfWork unitOfWork, IBus bus)
         {
             UnitOfWork = unitOfWork;
+            Bus = bus;
         }
 
         public Task<TResponse> Execute()

@@ -76,7 +76,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithCorrectNewTeam_TeamRegistered()
         {
             // arrange
-            var command = new RegisterForGameCommand(_unitOfWork) {TeamName = "Team 4", Code = "JOINME"};
+            var command = new RegisterForGameCommand(_unitOfWork, _bus) {TeamName = "Team 4", Code = "JOINME"};
 
             // act
             var team = command.Execute().Result;
@@ -92,7 +92,7 @@ namespace Pubquiz.Domain.Tests
             // arrange 
             var firstTeamId = _game.TeamIds[0];
             var firstTeam = _unitOfWork.GetCollection<Team>().GetAsync(firstTeamId).Result;
-            var command = new RegisterForGameCommand(_unitOfWork) {TeamName = "", Code = firstTeam.RecoveryCode};
+            var command = new RegisterForGameCommand(_unitOfWork, _bus) {TeamName = "", Code = firstTeam.RecoveryCode};
 
             // act
             var team = command.Execute().Result;
@@ -106,7 +106,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithInvalidCode_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(_unitOfWork) {TeamName = "Team 4", Code = "INVALIDCODE"};
+            var command = new RegisterForGameCommand(_unitOfWork, _bus) {TeamName = "Team 4", Code = "INVALIDCODE"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -118,7 +118,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithExistingTeamName_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(_unitOfWork) {TeamName = "Team 3", Code = "JOINME"};
+            var command = new RegisterForGameCommand(_unitOfWork, _bus) {TeamName = "Team 3", Code = "JOINME"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -131,7 +131,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = _game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamNameCommand(_unitOfWork) {NewName = "Team 1a", TeamId = teamId};
+            var command = new ChangeTeamNameCommand(_unitOfWork, _bus) {NewName = "Team 1a", TeamId = teamId};
 
             // act
             var team = command.Execute().Result;
@@ -147,7 +147,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty;
-            var command = new ChangeTeamNameCommand(_unitOfWork) {NewName = "Team 1a", TeamId = teamId};
+            var command = new ChangeTeamNameCommand(_unitOfWork, _bus) {NewName = "Team 1a", TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -161,7 +161,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = _game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamNameCommand(_unitOfWork) {NewName = "Team 2", TeamId = teamId};
+            var command = new ChangeTeamNameCommand(_unitOfWork, _bus) {NewName = "Team 2", TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -175,7 +175,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty;
-            var notification = new ChangeTeamMembers(_unitOfWork, _bus) {TeamMembers = "a,b,c", TeamId = teamId};
+            var notification = new ChangeTeamMembersNotification(_unitOfWork, _bus) {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
@@ -189,7 +189,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = _game.TeamIds[0]; // Team 1
-            var notification = new ChangeTeamMembers(_unitOfWork, _bus) {TeamMembers = "a,b,c", TeamId = teamId};
+            var notification = new ChangeTeamMembersNotification(_unitOfWork, _bus) {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act
             notification.Execute().Wait();

@@ -7,11 +7,11 @@ using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
-    public class DeleteTeam : Notification
+    public class DeleteTeamNotification : Notification
     {
         public Guid TeamId { get; set; }
 
-        public DeleteTeam(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public DeleteTeamNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 

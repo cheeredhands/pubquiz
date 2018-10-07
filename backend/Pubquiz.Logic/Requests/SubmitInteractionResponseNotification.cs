@@ -10,7 +10,7 @@ using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
-    public class SubmitInteractionResponse : Notification
+    public class SubmitInteractionResponseNotification : Notification
     {
         public Guid TeamId { get; set; }
         public Guid QuestionId { get; set; }
@@ -18,7 +18,7 @@ namespace Pubquiz.Logic.Requests
         public List<int> ChoiceOptionIds { get; set; }
         public string Response { get; set; }
 
-        public SubmitInteractionResponse(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public SubmitInteractionResponseNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 

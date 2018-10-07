@@ -8,12 +8,12 @@ using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
-    public class ChangeTeamMembers : Notification
+    public class ChangeTeamMembersNotification : Notification
     {
         public Guid TeamId { get; set; }
         public string TeamMembers { get; set; }
 
-        public ChangeTeamMembers(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public ChangeTeamMembersNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 

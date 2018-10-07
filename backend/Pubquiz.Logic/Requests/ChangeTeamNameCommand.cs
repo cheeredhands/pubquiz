@@ -4,6 +4,7 @@ using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
+using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
@@ -12,7 +13,7 @@ namespace Pubquiz.Logic.Requests
         public Guid TeamId;
         public string NewName;
 
-        public ChangeTeamNameCommand(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ChangeTeamNameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 

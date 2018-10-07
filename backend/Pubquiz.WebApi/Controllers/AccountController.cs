@@ -84,7 +84,7 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("changeteammembers")]
-        public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembers notification)
+        public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembersNotification notification)
         {
             var teamId = User.GetId();
             if (notification.TeamId == Guid.Empty || teamId != notification.TeamId)
