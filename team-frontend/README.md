@@ -1,4 +1,8 @@
-# hoivue
+# Team frontend
+
+```
+vue ui
+```
 
 ## Project setup
 ```
