@@ -45,6 +45,7 @@ namespace Pubquiz.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
             // needed so the inmemory subscription store will be centralized
             var inMemorySubscriberStore = new InMemorySubscriberStore();
@@ -95,7 +96,7 @@ namespace Pubquiz.WebApi
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new Info {Title = "Pubquiz backend", Version = "v1"});
+                options.SwaggerDoc("v1", new Info { Title = "Pubquiz backend", Version = "v1" });
             });
 
             services.ConfigureSwaggerGen(options =>
@@ -125,6 +126,13 @@ namespace Pubquiz.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:8080", "*")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
             app.UseAuthentication();
             if (env.IsDevelopment())
             {
@@ -136,10 +144,10 @@ namespace Pubquiz.WebApi
             }
 
             app.UseRebus(bus => bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic")));
-//            app.UseRebus().Run(async context =>
-//            {
-//                var bus = app.ApplicationServices.GetRequiredService<IBus>();
-//            });
+            //            app.UseRebus().Run(async context =>
+            //            {
+            //                var bus = app.ApplicationServices.GetRequiredService<IBus>();
+            //            });
             app.UseDefaultFiles();
             app.UseStaticFiles();
             //app.UseHttpsRedirection();
