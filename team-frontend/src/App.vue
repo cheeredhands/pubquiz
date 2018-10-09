@@ -1,17 +1,12 @@
 <template>
   <div id="app">
-    <RegisterTeam msg="Registreren"/>
-      </div>
+    <router-view/>
+  </div>
 </template>
 
 <script>
-import RegisterTeam from "./components/RegisterTeam.vue";
-
 export default {
-  name: "app",
-  components: {
-    RegisterTeam
-  }
+  name: "app"
 };
 </script>
 
