@@ -17,7 +17,8 @@ namespace Pubquiz.Logic.Tools
                 InviteCode = "JOINME",
                 QuizMasterIds = quizMasterIds.ToList(),
                 CurrentQuizSectionIndex = currentQuizSectionIndex,
-                CurrentQuizSectionId = currentQuizSectionId
+                CurrentQuizSectionId = currentQuizSectionId,
+                State = GameState.Open
             };
 
             return game;

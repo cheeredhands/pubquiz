@@ -34,7 +34,8 @@ namespace Pubquiz.Logic.Requests
                     "The lobby for this game is not open.", true);
             }
 
-            var otherTeamsInGame = teamCollection.AsQueryable().Where(t => game.TeamIds.Contains(t.Id))
+            var otherTeamsInGame = teamCollection.AsQueryable()
+                .Where(t => t.Id != TeamId && game.TeamIds.Contains(t.Id))
                 .Select(t => t.Name).ToList();
 
             var model = new TeamLobbyViewModel

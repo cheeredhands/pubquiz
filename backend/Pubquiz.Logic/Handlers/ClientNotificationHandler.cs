@@ -7,7 +7,7 @@ namespace Pubquiz.Logic.Handlers
 {
     public class ClientNotificationHandler :
         IHandleMessages<AnswerScored>, IHandleMessages<InteractionResponseAdded>, IHandleMessages<TeamMembersChanged>,
-        IHandleMessages<ErrorOccurred>
+        IHandleMessages<ErrorOccurred>, IHandleMessages<TeamRegistered>
     {
         private readonly ILogger _logger;
 
@@ -35,6 +35,11 @@ namespace Pubquiz.Logic.Handlers
         });
 
         public Task Handle(ErrorOccurred message) => Task.Run(() =>
+        {
+            // notify clients via hub
+        });
+
+        public Task Handle(TeamRegistered message) => Task.Run(() =>
         {
             // notify clients via hub
         });

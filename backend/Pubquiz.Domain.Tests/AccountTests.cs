@@ -27,6 +27,24 @@ namespace Pubquiz.Domain.Tests
 
         [TestCategory("Team registration")]
         [TestMethod]
+        public void TestGame_RegisterWithCorrectNewTeam_TeamInGame()
+        {
+            // arrange
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "Team 4", Code = "JOINME"};
+
+            // act
+            var team = command.Execute().Result;
+            UnitOfWork.Commit();
+
+            // assert
+            var gameCollection = UnitOfWork.GetCollection<Game>();
+            var game = gameCollection.GetAsync(team.GameId).Result;
+            CollectionAssert.Contains(game.TeamIds, team.Id);
+            Assert.AreEqual("Team 4", team.Name);
+        }
+
+        [TestCategory("Team registration")]
+        [TestMethod]
         public void TestGame_UseTeamRecoveryCode_RecoveryCodeAccepted()
         {
             // arrange 

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
@@ -19,16 +20,15 @@ namespace Pubquiz.Logic.Requests
 
         protected override async Task<Team> DoExecute()
         {
-            var gameRepo = UnitOfWork.GetCollection<Game>();
-            var teamRepo = UnitOfWork.GetCollection<Team>();
-            var userRepo = UnitOfWork.GetCollection<User>();
+            var gameCollection = UnitOfWork.GetCollection<Game>();
+            var teamCollection = UnitOfWork.GetCollection<Team>();
 
             // check validity of invite code, otherwise throw DomainException
-            var game = gameRepo.AsQueryable().FirstOrDefault(g => g.InviteCode == Code);
+            var game = gameCollection.AsQueryable().FirstOrDefault(g => g.InviteCode == Code);
             if (game == null)
             {
                 // check if it's a recovery code for a team
-                var team = teamRepo.AsQueryable().FirstOrDefault(t => t.RecoveryCode == Code);
+                var team = teamCollection.AsQueryable().FirstOrDefault(t => t.RecoveryCode == Code);
                 if (team != null)
                 {
                     return team;
@@ -38,7 +38,7 @@ namespace Pubquiz.Logic.Requests
             }
 
             // check if team name is taken, otherwise throw DomainException
-            var isTeamNameTaken = await teamRepo.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
+            var isTeamNameTaken = await teamCollection.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
             if (isTeamNameTaken)
             {
                 throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
@@ -46,7 +46,7 @@ namespace Pubquiz.Logic.Requests
 
             // register team and return team object
             var userName = TeamName.ReplaceSpaces();
-            var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamRepo, game.Id);
+            var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
             var newTeam = new Team
             {
                 Name = TeamName,
@@ -56,8 +56,12 @@ namespace Pubquiz.Logic.Requests
                 UserRole = UserRole.Team
             };
 
+            game.TeamIds.Add(newTeam.Id);
 
-            await teamRepo.AddAsync(newTeam);
+            await teamCollection.AddAsync(newTeam);
+            await gameCollection.UpdateAsync(game);
+
+            await Bus.Publish(new TeamRegistered(newTeam.Id, newTeam.Name));
 
             return newTeam;
         }
