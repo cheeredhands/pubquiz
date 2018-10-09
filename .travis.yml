@@ -4,6 +4,6 @@ dotnet: 2.1.402
 script:
  - cd backend
  - dotnet restore
- - dotnet test Pubquiz.Domain.Tests
+ - dotnet test Pubquiz.Domain.Tests /p:CollectCoverage=true
 notifications:
    slack: thtm88:k10a1Ibdj8sdbDbAh8H1pAji
