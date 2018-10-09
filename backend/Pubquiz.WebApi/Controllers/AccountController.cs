@@ -35,7 +35,8 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new
             {
-                Code = SuccessCodes.TeamRegisteredAndLoggedIn, Message = $"Team {team.Name} registered and logged in.",
+                Code = SuccessCodes.TeamRegisteredAndLoggedIn,
+                Message = $"Team {team.Name} registered and logged in.",
                 TeamId = team.Id
             });
         }
@@ -82,10 +83,12 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<IActionResult> ChangeTeamName(ChangeTeamNameCommand command)
         {
             var teamId = User.GetId();
-            if (command.TeamId == Guid.Empty || teamId != command.TeamId)
+            if (command.TeamId != Guid.Empty && teamId != command.TeamId)
             {
                 return Forbid();
             }
+
+            command.TeamId = teamId;
 
             var team = await command.Execute();
             await SignOut();
@@ -97,10 +100,12 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembersNotification notification)
         {
             var teamId = User.GetId();
-            if (notification.TeamId == Guid.Empty || teamId != notification.TeamId)
+            if (notification.TeamId != Guid.Empty && notification.TeamId != teamId)
             {
                 return Forbid();
             }
+
+            notification.TeamId = teamId;
 
             await notification.Execute();
             return Ok(new {Code = SuccessCodes.TeamMembersChanged, Message = "Team members changed."});
@@ -110,11 +115,13 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(Roles = "QuizMaster, Admin")]
         public async Task<IActionResult> DeleteTeam(DeleteTeamNotification notification)
         {
-            if (notification.ActorId != Guid.Empty)
+            var actorId = User.GetId();
+            if (notification.ActorId != Guid.Empty && notification.ActorId != actorId)
             {
                 return Forbid();
             }
-            notification.ActorId = User.GetId();
+
+            notification.ActorId = actorId;
             await notification.Execute();
             return Ok(new {Code = SuccessCodes.TeamDeleted, Message = $"Team with id {notification.TeamId} deleted"});
         }
