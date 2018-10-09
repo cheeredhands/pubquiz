@@ -7,7 +7,7 @@ using Pubquiz.Logic.Requests;
 namespace Pubquiz.Domain.Tests
 {
     [TestClass]
-    public class GameTests : InitializedTestBase
+    public class GameSubmitResponseTests : InitializedTestBase
     {
         [TestMethod]
         public void TestGame_SubmitResponseForInvalidTeam_ThrowsException()
@@ -108,8 +108,6 @@ namespace Pubquiz.Domain.Tests
             Assert.AreEqual(ErrorCodes.InvalidInteractionId, exception.ErrorCode);
             Assert.AreEqual("Invalid interaction id.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
-
-         
         }
     }
 }

@@ -27,6 +27,7 @@ namespace Pubquiz.Domain.Tests
         protected Game Game;
         protected Quiz Quiz;
         protected List<User> Users;
+        protected List<Team> Teams;
         protected List<Question> QuestionsInQuiz;
         protected List<Question> OtherQuestions;
         protected IBus Bus;
@@ -53,16 +54,16 @@ namespace Pubquiz.Domain.Tests
             Game = TestGame.GetGame(Users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), 0,
                 Quiz.QuizSections[0].Id);
 
-            var teams = TestTeams.GetTeams(teamCollection, Game.Id);
+            Teams = TestTeams.GetTeams(teamCollection, Game.Id);
             Game.QuizId = Quiz.Id;
-            Game.TeamIds = teams.Select(t => t.Id).ToList();
+            Game.TeamIds = Teams.Select(t => t.Id).ToList();
             QuestionsInQuiz = TestQuiz.GetQuestions();
             OtherQuestions = new List<Question> {new Question(), new Question(), new Question()};
             Task.WaitAll(
                 quizCollection.AddAsync(Quiz),
                 QuestionsInQuiz.ToAsyncEnumerable().ForEachAsync(q => questionCollection.AddAsync(q)),
                 OtherQuestions.ToAsyncEnumerable().ForEachAsync(q => questionCollection.AddAsync(q)),
-                teams.ToAsyncEnumerable().ForEachAsync(t => teamCollection.AddAsync(t)),
+                Teams.ToAsyncEnumerable().ForEachAsync(t => teamCollection.AddAsync(t)),
                 Users.ToAsyncEnumerable().ForEachAsync(u => userCollection.AddAsync(u)),
                 gameCollection.AddAsync(Game));
 

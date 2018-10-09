@@ -304,7 +304,7 @@ namespace Pubquiz.Domain.Tests
         }
         
         [TestMethod]
-        public void TestQuizAnswerEtFlaggedForManualCorrectionNoScore_ManualScoreCorrect_OneTotalScore()
+        public void TestQuiz_AnswerEtFlaggedForManualCorrectionNoScore_ManualScoreCorrect_OneTotalScore()
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
