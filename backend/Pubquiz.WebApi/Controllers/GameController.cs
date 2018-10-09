@@ -43,5 +43,25 @@ namespace Pubquiz.WebApi.Controllers
             await notification.Execute();
             return Ok(new {Code = SuccessCodes.InteractionResponseSubmitted, Message = "Response submitted ok."});
         }
+
+        [HttpPost("setgamestate")]
+        [Authorize(Roles = "Admin, QuizMaster")]
+        public async Task<IActionResult> SetGameState(SetGameStateNotification notification)
+        {
+            var teamId = User.GetId();
+            if (notification.ActorId != Guid.Empty && teamId != notification.ActorId)
+            {
+                return Forbid();
+            }
+
+            notification.ActorId = User.GetId();
+            await notification.Execute();
+
+            return Ok(new
+            {
+                Code = SuccessCodes.GameStateChanged,
+                Message = $"Game state changed to {notification.NewGameState}."
+            });
+        }
     }
 }
