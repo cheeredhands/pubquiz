@@ -2,11 +2,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Messages;
-using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 using Rebus.Handlers;
+using AnswerScored = Pubquiz.Logic.Messages.AnswerScored;
+using ErrorOccurred = Pubquiz.Logic.Messages.ErrorOccurred;
+using InteractionResponseAdded = Pubquiz.Logic.Messages.InteractionResponseAdded;
 
 namespace Pubquiz.Logic.Handlers
 {

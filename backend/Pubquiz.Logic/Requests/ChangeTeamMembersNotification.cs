@@ -2,10 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Messages;
-using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
+using TeamMembersChanged = Pubquiz.Logic.Messages.TeamMembersChanged;
 
 namespace Pubquiz.Logic.Requests
 {
@@ -32,7 +31,7 @@ namespace Pubquiz.Logic.Requests
             team.MemberNames = TeamMembers;
 
             await teamCollection.UpdateAsync(team);
-            await Bus.Publish(new TeamMembersChanged());
+            await Bus.Publish(new TeamMembersChanged(team.GameId, TeamId, team.Name, TeamMembers));
         }
     }
 }

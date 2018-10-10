@@ -12,13 +12,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
 using Pubquiz.Persistence.Helpers;
 using Pubquiz.WebApi.Helpers;
-using Rebus.Bus;
 using Rebus.Persistence.InMem;
 using Rebus.Routing.TypeBased;
 using Rebus.ServiceProvider;
@@ -154,6 +154,11 @@ namespace Pubquiz.WebApi
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
+
+            app.UseSignalR(route =>
+            {
+                route.MapHub<GameHub>("/gamehub");
+            });
 
             // Seed the test data
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Pubquiz.Logic.Messages;
 using Rebus.Handlers;
+using ErrorOccurred = Pubquiz.Logic.Messages.ErrorOccurred;
 
 namespace Pubquiz.Logic.Handlers
 {

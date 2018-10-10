@@ -1,16 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Domain", "Pubquiz.Domain\Pubquiz.Domain.csproj", "{13525F71-1B91-40A2-8997-BB851F4B0FF9}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2041
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pubquiz.Domain", "Pubquiz.Domain\Pubquiz.Domain.csproj", "{13525F71-1B91-40A2-8997-BB851F4B0FF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Domain.Tests", "Pubquiz.Domain.Tests\Pubquiz.Domain.Tests.csproj", "{4FA1CAEA-85DE-43B6-BB42-AC7EAE99414C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pubquiz.Domain.Tests", "Pubquiz.Domain.Tests\Pubquiz.Domain.Tests.csproj", "{4FA1CAEA-85DE-43B6-BB42-AC7EAE99414C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend'", "Backend'", "{E5BB8315-593E-4809-B071-FE859E0D1B12}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repo items", "Repo items", "{E5BB8315-593E-4809-B071-FE859E0D1B12}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\.travis.yml = ..\.travis.yml
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Persistence", "Pubquiz.Persistence\Pubquiz.Persistence.csproj", "{7CABA0D5-C782-4623-8BC0-12FB72993F13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pubquiz.Persistence", "Pubquiz.Persistence\Pubquiz.Persistence.csproj", "{7CABA0D5-C782-4623-8BC0-12FB72993F13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.WebApi", "Pubquiz.WebApi\Pubquiz.WebApi.csproj", "{0077B729-BBC9-4C1C-9315-9A661D8D63F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pubquiz.WebApi", "Pubquiz.WebApi\Pubquiz.WebApi.csproj", "{0077B729-BBC9-4C1C-9315-9A661D8D63F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pubquiz.Logic", "Pubquiz.Logic\Pubquiz.Logic.csproj", "{2656BA01-5FBF-497F-A981-D61419021E64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pubquiz.Logic", "Pubquiz.Logic\Pubquiz.Logic.csproj", "{2656BA01-5FBF-497F-A981-D61419021E64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,11 +47,10 @@ Global
 		{2656BA01-5FBF-497F-A981-D61419021E64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2656BA01-5FBF-497F-A981-D61419021E64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{13525F71-1B91-40A2-8997-BB851F4B0FF9} = {E5BB8315-593E-4809-B071-FE859E0D1B12}
-		{4FA1CAEA-85DE-43B6-BB42-AC7EAE99414C} = {E5BB8315-593E-4809-B071-FE859E0D1B12}
-		{7CABA0D5-C782-4623-8BC0-12FB72993F13} = {E5BB8315-593E-4809-B071-FE859E0D1B12}
-		{0077B729-BBC9-4C1C-9315-9A661D8D63F4} = {E5BB8315-593E-4809-B071-FE859E0D1B12}
-		{2656BA01-5FBF-497F-A981-D61419021E64} = {E5BB8315-593E-4809-B071-FE859E0D1B12}
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1E5E27C-E127-423F-B4E9-9B5CA95E7AC8}
 	EndGlobalSection
 EndGlobal

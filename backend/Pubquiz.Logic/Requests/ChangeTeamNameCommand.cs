@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
@@ -35,9 +36,13 @@ namespace Pubquiz.Logic.Requests
             }
 
             // set new name
+            var oldTeamName = team.Name;
             team.Name = NewName;
             team.UserName = NewName.ReplaceSpaces();
             await teamCollection.UpdateAsync(team);
+
+            await Bus.Publish(new TeamNameUpdated(TeamId, team.GameId, oldTeamName, NewName));
+
             return team;
         }
     }

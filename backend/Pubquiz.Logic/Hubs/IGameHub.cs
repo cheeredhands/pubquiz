@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
 
-namespace Pubquiz.WebApi.Hubs
+namespace Pubquiz.Logic.Hubs
 {
     public interface IGameHub
     {
@@ -9,16 +10,23 @@ namespace Pubquiz.WebApi.Hubs
         /// Called when a team registered for a game. Notifies other teams and the quizmaster
         /// within the current game.
         /// </summary>
-        /// <param name="team">The team </param>
+        /// <param name="message"></param>
         /// <returns></returns>
-        Task TeamRegisteredAsync(Team team);
-        
+        Task TeamRegisteredAsync(TeamRegistered message);
+
         /// <summary>
         /// Called when a team updates its name.
         /// </summary>
-        /// <param name="team">The team with the new name.</param>
+        /// <param name="message"></param>
         /// <returns></returns>
-        Task TeamNameUpdatedAsync(Team team);
+        Task TeamNameUpdatedAsync(TeamNameUpdated message);
+
+        /// <summary>
+        /// Called when a team changes its team members.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task TeamMembersChangedAsync(TeamMembersChanged message);
         
         /// <summary>
         /// Called when a team is typing an answer.
@@ -36,13 +44,13 @@ namespace Pubquiz.WebApi.Hubs
         /// <param name="answer"></param>
         /// <returns></returns>
         Task AnswerRequiresReviewAsync(Answer answer);
-       
+
         /// <summary>
         /// Called when the quiz master changes the state of the game.
         /// </summary>
-        /// <param name="game">The game with the updated <see cref="GameState"/>.</param>
+        /// <param name="message"></param>
         /// <returns></returns>
-        Task GameStateChangedAsync(Game game);
+        Task GameStateChangedAsync(GameStateChanged message);
         
         /// <summary>
         /// Called when the quiz master navigates to the another question.

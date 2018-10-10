@@ -4,10 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Messages;
-using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
+using InteractionResponseAdded = Pubquiz.Logic.Messages.InteractionResponseAdded;
 
 namespace Pubquiz.Logic.Requests
 {

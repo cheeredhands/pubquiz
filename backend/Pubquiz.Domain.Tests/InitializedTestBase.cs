@@ -70,7 +70,7 @@ namespace Pubquiz.Domain.Tests
             // set up bus
             var activator = new BuiltinHandlerActivator();
             activator.Register((bus, messageContext) => new ScoringHandler(UnitOfWork, bus));
-            activator.Register(() => new ClientNotificationHandler(_loggerFactory));
+            activator.Register(() => new ClientNotificationHandler(_loggerFactory, null));
 
             // needed so the inmemory subscription store will be centralized
             _inMemorySubscriberStore = new InMemorySubscriberStore();

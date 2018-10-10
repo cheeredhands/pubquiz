@@ -2,10 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
+using TeamRegistered = Pubquiz.Logic.Messages.TeamRegistered;
 
 namespace Pubquiz.Logic.Requests
 {
@@ -61,7 +61,7 @@ namespace Pubquiz.Logic.Requests
             await teamCollection.AddAsync(newTeam);
             await gameCollection.UpdateAsync(game);
 
-            await Bus.Publish(new TeamRegistered(newTeam.Id, newTeam.Name));
+            await Bus.Publish(new TeamRegistered(newTeam.Id, newTeam.Name, game.Id));
 
             return newTeam;
         }

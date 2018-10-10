@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal;
 using Pubquiz.Domain.Models;
-using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using Pubquiz.Logic.Messages;
 
-namespace Pubquiz.WebApi.Hubs
+namespace Pubquiz.Logic.Hubs
 {
     /// <summary>
     /// The GameHub is responsible for communicating relevant changes in a game.
@@ -22,20 +21,20 @@ namespace Pubquiz.WebApi.Hubs
     /// </summary>
     public class GameHub : Hub<IGameHub>
     {
-        public async Task TeamRegistered(Team team)
+        public async Task TeamRegistered(TeamRegistered message)
         {
-            if (team == null) throw new ArgumentException(nameof(team));
+            if (message == null) throw new ArgumentException(nameof(message));
 
             // add to the teams group
-            var teamGroupId = GetTeamsGroupId(team.GameId);
+            var teamGroupId = GetTeamsGroupId(message.GameId);
             await Groups.AddToGroupAsync(Context.ConnectionId, teamGroupId);
-            
+
             // notify quiz master 
-            var quizMasterGroupId = GetQuizMasterGroupId(team.GameId);
-            await Clients.Group(quizMasterGroupId).TeamRegisteredAsync(team);
+            var quizMasterGroupId = GetQuizMasterGroupId(message.GameId);
+            await Clients.Group(quizMasterGroupId).TeamRegisteredAsync(message);
 
             // notify other teams
-            await Clients.Group(teamGroupId).TeamRegisteredAsync(team);
+            await Clients.Group(teamGroupId).TeamRegisteredAsync(message);
         }
 
         /// <summary>
@@ -48,23 +47,32 @@ namespace Pubquiz.WebApi.Hubs
         {
             if (game == null) throw new ArgumentException(nameof(game));
             if (user == null) throw new ArgumentException(nameof(user));
-            
+
             // add this connection to the quiz master group
             var quizmasterGroupId = GetQuizMasterGroupId(game);
             await Groups.AddToGroupAsync(Context.ConnectionId, quizmasterGroupId);
         }
-        
-        public async Task TeamNameUpdated(Team team)
+
+        public async Task TeamMembersChanged(TeamMembersChanged message)
         {
-            if (team == null) throw new ArgumentException(nameof(team));
+            if (message == null) throw new ArgumentException(nameof(message));
 
             // notify quiz master 
-            var quizMasterGroupId = GetQuizMasterGroupId(team.GameId);
-            await Clients.Group(quizMasterGroupId).TeamNameUpdatedAsync(team);
+            var quizMasterGroupId = GetQuizMasterGroupId(message.GameId);
+            await Clients.Group(quizMasterGroupId).TeamMembersChangedAsync(message);
+        }
+
+        public async Task TeamNameUpdated(TeamNameUpdated message)
+        {
+            if (message == null) throw new ArgumentException(nameof(message));
+
+            // notify quiz master 
+            var quizMasterGroupId = GetQuizMasterGroupId(message.GameId);
+            await Clients.Group(quizMasterGroupId).TeamNameUpdatedAsync(message);
 
             // notify other teams
-            var teamGroupId = GetTeamsGroupId(team.GameId);
-            await Clients.Group(teamGroupId).TeamNameUpdatedAsync(team);
+            var teamGroupId = GetTeamsGroupId(message.GameId);
+            await Clients.Group(teamGroupId).TeamNameUpdatedAsync(message);
         }
 
         public async Task TeamIsTyping(Team team, Question question, bool isTyping)
@@ -82,19 +90,19 @@ namespace Pubquiz.WebApi.Hubs
             if (answer == null) throw new ArgumentException(nameof(answer));
 
             // TODO: include team?
-            
+
             // notify quiz master 
             var quizMasterGroupId = GetQuizMasterGroupId(gameId);
             await Clients.Group(quizMasterGroupId).AnswerRequiresReviewAsync(answer);
         }
 
-        public async Task GameStateChanged(Game game)
+        public async Task GameStateChanged(GameStateChanged message)
         {
-            if (game == null) throw new ArgumentException(nameof(game));
+            if (message == null) throw new ArgumentException(nameof(message));
 
             // notify the teams
-            var teamGroupId = GetTeamsGroupId(game);
-            await Clients.Group(teamGroupId).GameStateChangedAsync(game);
+            var teamGroupId = GetTeamsGroupId(message.GameId);
+            await Clients.Group(teamGroupId).GameStateChangedAsync(message);
         }
 
         public async Task CurrentQuestionIndexChanged(Game game)
@@ -109,7 +117,7 @@ namespace Pubquiz.WebApi.Hubs
         public async Task ScoresReleased(Game game)
         {
             if (game == null) throw new ArgumentException(nameof(game));
-            
+
             // notify the teams
             var teamGroupId = GetTeamsGroupId(game);
             await Clients.Group(teamGroupId).ScoresReleasedAsync(game);

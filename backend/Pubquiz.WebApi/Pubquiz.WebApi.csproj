@@ -25,7 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Pubquiz.Domain\Pubquiz.Domain.csproj" />
       <ProjectReference Include="..\Pubquiz.Logic\Pubquiz.Logic.csproj" />
     </ItemGroup>
 

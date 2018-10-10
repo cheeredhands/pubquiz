@@ -2,17 +2,19 @@
 
 namespace Pubquiz.Logic.Messages
 {
-    public class TeamRegistered
+    public class TeamNameUpdated
     {
         public Guid TeamId { get; }
         public Guid GameId { get; }
+        public string OldTeamName { get; }
         public string TeamName { get; }
 
-        public TeamRegistered(Guid teamId, string teamName, Guid gameId)
+        public TeamNameUpdated(Guid teamId, Guid gameId, string oldTeamName, string teamName)
         {
             TeamId = teamId;
-            TeamName = teamName;
             GameId = gameId;
+            OldTeamName = oldTeamName;
+            TeamName = teamName;
         }
     }
 }
