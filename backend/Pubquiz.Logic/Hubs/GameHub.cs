@@ -1,8 +1,11 @@
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Hubs
 {
@@ -21,36 +24,66 @@ namespace Pubquiz.Logic.Hubs
     /// </summary>
     public class GameHub : Hub<IGameHub>
     {
+        public override async Task OnConnectedAsync()
+        {
+            var userRole = Context.User.GetUserRole();
+            var currentGameId = Context.User.GetCurrentGameId();
+            switch (userRole)
+            {
+                case UserRole.Team:
+                    var teamGroupId = GetTeamsGroupId(currentGameId);
+                    await Groups.AddToGroupAsync(Context.ConnectionId, teamGroupId);
+                    break;
+                case UserRole.Admin:
+                    await Groups.AddToGroupAsync(Context.ConnectionId, GetAdminGroupId());
+                    break;
+                case UserRole.QuizMaster:
+                    var quizmasterGroupId = GetQuizMasterGroupId(currentGameId);
+                    await Groups.AddToGroupAsync(Context.ConnectionId, quizmasterGroupId);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            await base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            var userRole = Context.User.GetUserRole();
+            var currentGameId = Context.User.GetCurrentGameId();
+            switch (userRole)
+            {
+                case UserRole.Team:
+                    var teamGroupId = GetTeamsGroupId(currentGameId);
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, teamGroupId);
+                    break;
+                case UserRole.Admin:
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, GetAdminGroupId());
+                    break;
+                case UserRole.QuizMaster:
+                    var quizmasterGroupId = GetQuizMasterGroupId(currentGameId);
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, quizmasterGroupId);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            await base.OnDisconnectedAsync(exception);
+        }
+
         public async Task TeamRegistered(TeamRegistered message)
         {
             if (message == null) throw new ArgumentException(nameof(message));
 
-            // add to the teams group
             var teamGroupId = GetTeamsGroupId(message.GameId);
-            await Groups.AddToGroupAsync(Context.ConnectionId, teamGroupId);
+            var quizMasterGroupId = GetQuizMasterGroupId(message.GameId);
 
             // notify quiz master 
-            var quizMasterGroupId = GetQuizMasterGroupId(message.GameId);
             await Clients.Group(quizMasterGroupId).TeamRegisteredAsync(message);
 
             // notify other teams
             await Clients.Group(teamGroupId).TeamRegisteredAsync(message);
-        }
-
-        /// <summary>
-        /// Called when the quiz master registers for the <param name="game">.</param>.
-        /// </summary>
-        /// <param name="game"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public async Task QuizMasterRegistered(Game game, User user)
-        {
-            if (game == null) throw new ArgumentException(nameof(game));
-            if (user == null) throw new ArgumentException(nameof(user));
-
-            // add this connection to the quiz master group
-            var quizmasterGroupId = GetQuizMasterGroupId(game);
-            await Groups.AddToGroupAsync(Context.ConnectionId, quizmasterGroupId);
         }
 
         public async Task TeamMembersChanged(TeamMembersChanged message)
@@ -110,7 +143,7 @@ namespace Pubquiz.Logic.Hubs
             if (game == null) throw new ArgumentException(nameof(game));
 
             // notify the teams
-            var teamGroupId = GetTeamsGroupId(game);
+            var teamGroupId = GetTeamsGroupId(game.Id);
             await Clients.Group(teamGroupId).CurrentQuestionIndexChangedAsync(game);
         }
 
@@ -119,13 +152,8 @@ namespace Pubquiz.Logic.Hubs
             if (game == null) throw new ArgumentException(nameof(game));
 
             // notify the teams
-            var teamGroupId = GetTeamsGroupId(game);
+            var teamGroupId = GetTeamsGroupId(game.Id);
             await Clients.Group(teamGroupId).ScoresReleasedAsync(game);
-        }
-
-        private static string GetTeamsGroupId(Game game)
-        {
-            return GetTeamsGroupId(game.Id);
         }
 
         private static string GetTeamsGroupId(Guid gameId)
@@ -134,15 +162,15 @@ namespace Pubquiz.Logic.Hubs
             return $"teams-{gameId}";
         }
 
-        private static string GetQuizMasterGroupId(Game game)
-        {
-            return GetQuizMasterGroupId(game.Id);
-        }
-
         private static string GetQuizMasterGroupId(Guid gameId)
         {
             // TODO: add as method to Game class?
             return $"quizmaster-{gameId}";
+        }
+
+        private static string GetAdminGroupId()
+        {
+            return "admin";
         }
     }
 }

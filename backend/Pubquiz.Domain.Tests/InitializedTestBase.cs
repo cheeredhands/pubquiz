@@ -53,7 +53,7 @@ namespace Pubquiz.Domain.Tests
             Quiz = TestQuiz.GetQuiz();
             Game = TestGame.GetGame(Users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), 0,
                 Quiz.QuizSections[0].Id);
-
+            Users.First(u => u.UserName == "Quiz master 1").GameIds.Add(Game.Id);
             Teams = TestTeams.GetTeams(teamCollection, Game.Id);
             Game.QuizId = Quiz.Id;
             Game.TeamIds = Teams.Select(t => t.Id).ToList();

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Helpers;
 
@@ -31,7 +32,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult> RegisterForGame([FromBody] RegisterForGameCommand command)
         {
             var team = await command.Execute();
-            await SignIn(team);
+            await SignIn(team, team.GameId);
 
             return Ok(new
             {
@@ -48,10 +49,33 @@ namespace Pubquiz.WebApi.Controllers
             var user = await command.Execute();
             await SignIn(user);
             return Ok(new
-                {Code = SuccessCodes.UserLoggedIn, Message = $"User {user.UserName} logged in.", UserId = user.Id});
+            {
+                Code = SuccessCodes.UserLoggedIn,
+                Message = $"User {user.UserName} logged in.",
+                UserId = user.Id,
+                user.GameIds
+            });
         }
 
-        private async Task SignIn(User user)
+        [HttpPost("selectgame")]
+        [Authorize(Roles = "QuizMaster")]
+        public async Task<IActionResult> SelectGame([FromBody] SelectGameCommand command)
+        {
+            var userId = User.GetId();
+            if (command.ActorId != Guid.Empty && userId != command.ActorId)
+            {
+                return Forbid();
+            }
+
+            command.ActorId = userId;
+            var user = await command.Execute();
+            await SignOut();
+            await SignIn(user, command.GameId);
+
+            return Ok(new {Code = SuccessCodes.GameSelected, Message = "Game selected", command.GameId});
+        }
+
+        private async Task SignIn(User user, Guid currentGame = default(Guid))
         {
             var claims = new List<Claim>
             {
@@ -59,6 +83,11 @@ namespace Pubquiz.WebApi.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.UserRole.ToString())
             };
+            if (currentGame != Guid.Empty)
+            {
+                claims.Add(new Claim("CurrentGame", currentGame.ToString()));
+            }
+
             var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(userIdentity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);

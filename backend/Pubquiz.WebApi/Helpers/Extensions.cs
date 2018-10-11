@@ -66,20 +66,5 @@ namespace Pubquiz.WebApi.Helpers
 
             return false;
         }
-
-        public static Guid GetId(this ClaimsPrincipal claimsPrincipal)
-        {
-            var idClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (idClaim != null)
-            {
-                var idString = idClaim.Value;
-                if (Guid.TryParse(idString, out Guid id))
-                {
-                    return id;
-                }
-            }
-
-            return Guid.Empty;
-        }
     }
 }

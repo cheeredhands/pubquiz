@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Models
@@ -9,6 +10,12 @@ namespace Pubquiz.Domain.Models
         public string Password { get; set; }
         public string RecoveryCode { get; set; }
         public UserRole UserRole { get; set; }
+        public List<Guid> GameIds { get; set; }
+
+        public User() 
+        {
+            GameIds = new List<Guid>();
+        }
     }
 
     public enum UserRole

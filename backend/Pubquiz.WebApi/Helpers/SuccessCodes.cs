@@ -13,5 +13,6 @@ namespace Pubquiz.WebApi.Helpers
         public const int AuthSuccesfullyTested = 42;
 
         public const int GameStateChanged = 9;
+        public const int GameSelected = 10;
     }
 }

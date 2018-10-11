@@ -15,5 +15,8 @@ namespace Pubquiz.Domain
         public const int InvalidUserId = 11;
         public const int QuizMasterUnauthorizedForGame = 12;
         public const int LobbyUnavailableBecauseOfGameState = 13;
+        public const int NoRoleClaimForUser = 14;
+        public const int NoCurrentGameIdClaimForUser = 15;
+        public const int UnauthorizedRole = 16;
     }
 }
