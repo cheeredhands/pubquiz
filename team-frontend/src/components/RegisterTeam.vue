@@ -25,7 +25,7 @@ export default {
     register() {
       // register!
       Axios.post(
-        "http://localhost:5000/api/account/register",
+        "/api/account/register",
         {
           teamName: this.teamName,
           code: this.code
@@ -33,7 +33,13 @@ export default {
         { withCredentials: true }
       )
         .then(response => {
-          //this.msg = response.data.teamId;
+          // disco. add team to store
+          this.$store.commit(
+            "setTeam",
+            new { teamId: response.data.teamId, name: this.teamName }
+          );
+
+          // and goto lobby
           this.$router.push("Lobby");
         })
         .catch(error => (this.msg = error.response.data[0].message));
