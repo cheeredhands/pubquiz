@@ -2,7 +2,7 @@
 <div class="lobby">
     <h1>Welkom in de lobby... </h1>
     <hr />
-  <p>Er zijn nu {{ nrOfTeams }} team(s) aan het wachten...</p>
+  <p>Er zijn nu {{ otherTeams }} team(s) aan het wachten...</p>
 </div>
 </template>
 <script>
@@ -13,7 +13,7 @@ export default {
     teams: Array,
   },
   computed: {
-    teams() {
+    otherTeams() {
       return this.$store.teams;
     }
   }
