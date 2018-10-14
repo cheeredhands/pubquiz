@@ -120,6 +120,8 @@ namespace Pubquiz.WebApi
             });
 
             services.AddSignalR();
+            services.AddSingleton<GameHub>();
+
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
