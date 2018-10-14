@@ -72,21 +72,24 @@ namespace Pubquiz.Logic.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task TeamRegistered(TeamRegistered message)
+        public async Task TeamRegisteredAsync(TeamRegistered message)
         {
             if (message == null) throw new ArgumentException(nameof(message));
 
             var teamGroupId = GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = GetQuizMasterGroupId(message.GameId);
 
+            // add team to group
+            await Groups.AddToGroupAsync(Context.ConnectionId, teamGroupId);
+
             // notify quiz master 
             await Clients.Group(quizMasterGroupId).TeamRegisteredAsync(message);
 
             // notify other teams
-            await Clients.Group(teamGroupId).TeamRegisteredAsync(message);
+            await Clients.OthersInGroup(teamGroupId).TeamRegisteredAsync(message);
         }
 
-        public async Task TeamMembersChanged(TeamMembersChanged message)
+        public async Task TeamMembersChangedAsync(TeamMembersChanged message)
         {
             if (message == null) throw new ArgumentException(nameof(message));
 
@@ -95,7 +98,7 @@ namespace Pubquiz.Logic.Hubs
             await Clients.Group(quizMasterGroupId).TeamMembersChangedAsync(message);
         }
 
-        public async Task TeamNameUpdated(TeamNameUpdated message)
+        public async Task TeamNameUpdatedAsync(TeamNameUpdated message)
         {
             if (message == null) throw new ArgumentException(nameof(message));
 
@@ -108,7 +111,7 @@ namespace Pubquiz.Logic.Hubs
             await Clients.Group(teamGroupId).TeamNameUpdatedAsync(message);
         }
 
-        public async Task TeamIsTyping(Team team, Question question, bool isTyping)
+        public async Task TeamIsTypingAsync(Team team, Question question, bool isTyping)
         {
             if (team == null) throw new ArgumentException(nameof(team));
             if (question == null) throw new ArgumentException(nameof(question));
@@ -118,7 +121,7 @@ namespace Pubquiz.Logic.Hubs
             await Clients.Group(quizMasterGroupId).TeamIsTypingAsync(team, question, isTyping);
         }
 
-        public async Task AnswerRequiresReview(Guid gameId, Answer answer)
+        public async Task AnswerRequiresReviewAsync(Guid gameId, Answer answer)
         {
             if (answer == null) throw new ArgumentException(nameof(answer));
 
@@ -129,7 +132,7 @@ namespace Pubquiz.Logic.Hubs
             await Clients.Group(quizMasterGroupId).AnswerRequiresReviewAsync(answer);
         }
 
-        public async Task GameStateChanged(GameStateChanged message)
+        public async Task GameStateChangedAsync(GameStateChanged message)
         {
             if (message == null) throw new ArgumentException(nameof(message));
 
@@ -138,7 +141,7 @@ namespace Pubquiz.Logic.Hubs
             await Clients.Group(teamGroupId).GameStateChangedAsync(message);
         }
 
-        public async Task CurrentQuestionIndexChanged(Game game)
+        public async Task CurrentQuestionIndexChangedAsync(Game game)
         {
             if (game == null) throw new ArgumentException(nameof(game));
 
@@ -147,13 +150,19 @@ namespace Pubquiz.Logic.Hubs
             await Clients.Group(teamGroupId).CurrentQuestionIndexChangedAsync(game);
         }
 
-        public async Task ScoresReleased(Game game)
+        public async Task ScoresReleasedAsync(Game game)
         {
             if (game == null) throw new ArgumentException(nameof(game));
 
             // notify the teams
             var teamGroupId = GetTeamsGroupId(game.Id);
             await Clients.Group(teamGroupId).ScoresReleasedAsync(game);
+        }
+
+        public async Task QuizmasterRegisteredAsync(Game game)
+        {
+            var quizMasterGroupId = GetQuizMasterGroupId(game.Id);
+            await Groups.AddToGroupAsync(Context.ConnectionId, quizMasterGroupId);
         }
 
         private static string GetTeamsGroupId(Guid gameId)

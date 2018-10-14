@@ -65,5 +65,12 @@ namespace Pubquiz.Logic.Hubs
         /// <param name="game"></param>
         /// <returns></returns>
         Task ScoresReleasedAsync(Game game);
+
+        /// <summary>
+        /// Called when the quiz master registers for a game.
+        /// </summary>
+        /// <param name="game">The game.</param>
+        /// <returns></returns>
+        Task QuizmasterRegisteredAsync(Game game);
     }
 }
