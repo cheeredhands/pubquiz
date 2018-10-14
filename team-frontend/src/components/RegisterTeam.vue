@@ -36,7 +36,7 @@ export default {
           // disco. add team to store
           this.$store.commit(
             "setTeam",
-            { teamId: response.data.teamId, teamName: this.teamName }
+            { teamId: response.data.teamId, name: this.teamName }
           );
 
           // and goto lobby
