@@ -3,12 +3,6 @@ using Microsoft.Extensions.Logging;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Rebus.Handlers;
-using AnswerScored = Pubquiz.Logic.Messages.AnswerScored;
-using ErrorOccurred = Pubquiz.Logic.Messages.ErrorOccurred;
-using GameStateChanged = Pubquiz.Logic.Messages.GameStateChanged;
-using InteractionResponseAdded = Pubquiz.Logic.Messages.InteractionResponseAdded;
-using TeamMembersChanged = Pubquiz.Logic.Messages.TeamMembersChanged;
-using TeamRegistered = Pubquiz.Logic.Messages.TeamRegistered;
 
 namespace Pubquiz.Logic.Handlers
 {
@@ -40,7 +34,7 @@ namespace Pubquiz.Logic.Handlers
 
         public Task Handle(TeamMembersChanged message)
         {
-            return _gameHub?.TeamMembersChanged(message);
+            return _gameHub.TeamMembersChangedAsync(message);
         }
 
         public Task Handle(ErrorOccurred message) => Task.Run(() =>
@@ -50,17 +44,17 @@ namespace Pubquiz.Logic.Handlers
 
         public Task Handle(TeamRegistered message)
         {
-            return _gameHub?.TeamRegistered(message);
+            return _gameHub?.TeamRegisteredAsync(message);
         }
 
         public Task Handle(GameStateChanged message)
         {
-            return _gameHub?.GameStateChanged(message);
+            return _gameHub?.GameStateChangedAsync(message);
         }
 
         public Task Handle(TeamNameUpdated message)
         {
-            return _gameHub?.TeamNameUpdated(message);
+            return _gameHub?.TeamNameUpdatedAsync(message);
         }
     }
 }
