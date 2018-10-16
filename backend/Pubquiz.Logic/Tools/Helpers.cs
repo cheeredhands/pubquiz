@@ -31,5 +31,22 @@ namespace Pubquiz.Logic.Tools
 
             return result;
         }
+
+        public static string GetTeamsGroupId(Guid gameId)
+        {
+            // TODO: add as method to Team class?
+            return $"teams-{gameId}";
+        }
+
+        public static string GetQuizMasterGroupId(Guid gameId)
+        {
+            // TODO: add as method to Game class?
+            return $"quizmaster-{gameId}";
+        }
+
+        public static string GetAdminGroupId()
+        {
+            return "admin";
+        }
     }
 }

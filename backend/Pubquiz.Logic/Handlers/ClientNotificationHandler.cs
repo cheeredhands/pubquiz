@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Tools;
 using Rebus.Handlers;
 
 namespace Pubquiz.Logic.Handlers
@@ -11,12 +13,12 @@ namespace Pubquiz.Logic.Handlers
         IHandleMessages<ErrorOccurred>, IHandleMessages<TeamRegistered>, IHandleMessages<GameStateChanged>,
         IHandleMessages<TeamNameUpdated>
     {
-        private readonly GameHub _gameHub;
+        private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
         private readonly ILogger _logger;
 
-        public ClientNotificationHandler(ILoggerFactory loggerFactory, GameHub gameHub)
+        public ClientNotificationHandler(ILoggerFactory loggerFactory, IHubContext<GameHub, IGameHub> gameHubContext)
         {
-            _gameHub = gameHub;
+            _gameHubContext = gameHubContext;
             _logger = loggerFactory.CreateLogger<ClientNotificationHandler>();
         }
 
@@ -32,9 +34,12 @@ namespace Pubquiz.Logic.Handlers
             // var sendMessage = new {Code = 100, message.TeamId, message.TeamName, message.QuestionId, message.Response};
         });
 
-        public Task Handle(TeamMembersChanged message)
+        public async Task Handle(TeamMembersChanged message)
         {
-            return _gameHub.TeamMembersChangedAsync(message);
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).TeamMembersChanged(message);
         }
 
         public Task Handle(ErrorOccurred message) => Task.Run(() =>
@@ -42,19 +47,46 @@ namespace Pubquiz.Logic.Handlers
             // notify clients via hub
         });
 
-        public Task Handle(TeamRegistered message)
+        public async Task Handle(TeamRegistered message)
         {
-            return _gameHub?.TeamRegisteredAsync(message);
+            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).TeamRegistered(message);
+
+            // notify other teams
+            // todo: pass the connection id in the TeamRegistered message?
+            //await clients.AllExcept().OthersInGroup(teamGroupId).TeamRegistered(message);
         }
 
-        public Task Handle(GameStateChanged message)
+        public async Task Handle(GameStateChanged message)
         {
-            return _gameHub?.GameStateChangedAsync(message);
+            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).GameStateChanged(message);
+
+            // notify other teams
+            // todo: pass the connection id in the TeamRegistered message? or use this message to confirm the change on the caller?
+            //await clients.OthersInGroup(teamGroupId).GameStateChanged(message);
         }
 
-        public Task Handle(TeamNameUpdated message)
+        public async Task Handle(TeamNameUpdated message)
         {
-            return _gameHub?.TeamNameUpdatedAsync(message);
+            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            var clients = _gameHubContext.Clients as IHubCallerClients<IGameHub>;
+
+            // notify quiz master 
+            await clients.Group(quizMasterGroupId).TeamNameUpdated(message);
+
+            // notify other teams
+            // todo: pass the connection id in the TeamRegistered message? or use this message to confirm the change on the caller?
+            // await clients.OthersInGroup(teamGroupId).TeamNameUpdated(message);
         }
     }
 }
