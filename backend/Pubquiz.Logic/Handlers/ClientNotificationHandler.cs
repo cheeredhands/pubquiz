@@ -22,17 +22,17 @@ namespace Pubquiz.Logic.Handlers
             _logger = loggerFactory.CreateLogger<ClientNotificationHandler>();
         }
 
-        public Task Handle(AnswerScored message) => Task.Run(() =>
+        public async Task Handle(AnswerScored message)
         {
-            // notify clients via hub
-        });
 
-        public Task Handle(InteractionResponseAdded message) => Task.Run(() =>
+        }
+
+        public async Task Handle(InteractionResponseAdded message) 
         {
             // notify clients via hub
             // something like:
             // var sendMessage = new {Code = 100, message.TeamId, message.TeamName, message.QuestionId, message.Response};
-        });
+        }
 
         public async Task Handle(TeamMembersChanged message)
         {
@@ -42,10 +42,10 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(quizMasterGroupId).TeamMembersChanged(message);
         }
 
-        public Task Handle(ErrorOccurred message) => Task.Run(() =>
+        public async Task Handle(ErrorOccurred message)
         {
-            // notify clients via hub
-        });
+            
+        }
 
         public async Task Handle(TeamRegistered message)
         {
