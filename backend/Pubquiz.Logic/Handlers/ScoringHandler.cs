@@ -2,12 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 using Rebus.Handlers;
-using AnswerScored = Pubquiz.Logic.Messages.AnswerScored;
-using ErrorOccurred = Pubquiz.Logic.Messages.ErrorOccurred;
-using InteractionResponseAdded = Pubquiz.Logic.Messages.InteractionResponseAdded;
 
 namespace Pubquiz.Logic.Handlers
 {
@@ -54,7 +52,7 @@ namespace Pubquiz.Logic.Handlers
             // score it!
             question.Score(answer);
             team.UpdateScore();
-
+            
             // send AnswerScored message, so the clients will be notified and the team scores and dashboard will be updated
             await _bus.Publish(new AnswerScored());
         }

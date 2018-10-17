@@ -65,7 +65,6 @@ namespace Pubquiz.Logic.Handlers
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
-            
             // notify quiz master 
             await _gameHubContext.Clients.Group(quizMasterGroupId).GameStateChanged(message);
 
@@ -79,13 +78,12 @@ namespace Pubquiz.Logic.Handlers
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
-            var clients = _gameHubContext.Clients as IHubCallerClients<IGameHub>;
-
             // notify quiz master 
-            await clients.Group(quizMasterGroupId).TeamNameUpdated(message);
+            await _gameHubContext.Clients.Group(quizMasterGroupId).TeamNameUpdated(message);
 
             // notify other teams
             // todo: pass the connection id in the TeamRegistered message? or use this message to confirm the change on the caller?
+            // var clients = _gameHubContext.Clients as IHubCallerClients<IGameHub>;
             // await clients.OthersInGroup(teamGroupId).TeamNameUpdated(message);
         }
     }
