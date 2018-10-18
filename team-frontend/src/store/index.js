@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import SignalR from "@aspnet/signalr";
+import * as SignalR from "@aspnet/signalr";
 
 Vue.use(Vuex);
 
@@ -37,9 +37,12 @@ export default new Vuex.Store({
       // init signalR
       // initialize signalR connection here
       const connection = new SignalR.HubConnectionBuilder()
-        .withUrl("http://localhost:5000/gamehub")
+        .withUrl("https://localhost:5001/gamehub")
         .build();
-
+      connection.start().then(() => {
+        // save it
+        commit("saveSignalRConnection", connection);
+      });
       // todo set up the server callbacks
       // connection.on("send", data => {
       //   console.log(data);
@@ -49,7 +52,7 @@ export default new Vuex.Store({
       // connection.start().then(() => connection.invoke("send", "Hello"));
 
       // save it
-      commit("saveSignalRConnection", connection);
+      //commit("saveSignalRConnection", connection);
     }
   }
 });
