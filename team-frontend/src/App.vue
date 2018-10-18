@@ -2,13 +2,38 @@
   <div id="app">    
     <nav class="nav"></nav>
     <router-view/>
-    <footer class="footer"></footer>
+    <footer class="footer">{{message}}</footer>
   </div>
 </template>
 
 <script>
 export default {
-  name: "app"
+  name: "app",
+  data() {
+    return {
+      message: ""
+    };
+  },
+  created() {
+    this.$axios
+      .get("/api/account/whoami", { withCredentials: true })
+      .then(response => {
+        if (response.data.userName === "") {
+          return;
+        }
+        // disco. init team (add team to store, start signalr)
+        this.$store
+          .dispatch("initTeam", {
+            teamId: response.data.userId,
+            name: response.data.userName
+          })
+          .then(() => {
+            // and goto lobby
+            this.$router.replace("Lobby");
+          });
+      })
+      .catch(error => (this.message = error.response));
+  }
 };
 </script>
 

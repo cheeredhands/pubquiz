@@ -29,14 +29,15 @@ export default {
   methods: {
     register() {
       // register!
-      Axios.post(
-        "/api/account/register",
-        {
-          teamName: this.teamName,
-          code: this.code
-        },
-        { withCredentials: true }
-      )
+      this.$axios
+        .post(
+          "/api/account/register",
+          {
+            teamName: this.teamName,
+            code: this.code
+          },
+          { withCredentials: true }
+        )
         .then(response => {
           // disco. init team (add team to store, start signalr)
           this.$store.dispatch("initTeam", {

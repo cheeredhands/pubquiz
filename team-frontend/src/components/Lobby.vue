@@ -1,6 +1,6 @@
 <template>
 <div class="lobby">
-    <h1>Welkom in de lobby... '{{ team.name }}'</h1>
+    <h1>Welkom in de lobby, {{ team.name }}</h1>
     <hr />
     <p></p>
     <p>Er zijn nu {{ otherTeams.length }} team(s) aan het wachten:</p>
@@ -16,7 +16,7 @@ export default {
   name: "Lobby",
   computed: {
     team() {
-      return this.$store.state.quiz.team;
+      return this.$store.state.quiz.team || "";
     },
     otherTeams() {
       return this.$store.state.quiz.teams;

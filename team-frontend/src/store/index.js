@@ -50,9 +50,6 @@ export default new Vuex.Store({
 
       // send something to the backend
       // connection.start().then(() => connection.invoke("send", "Hello"));
-
-      // save it
-      //commit("saveSignalRConnection", connection);
     }
   }
 });
