@@ -1,7 +1,9 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
@@ -22,8 +24,16 @@ namespace Pubquiz.Logic.Hubs
     /// called teams-<gameId>.
     /// Whenever a connection is lost, group membership MUST be rebuild.
     /// </summary>
+    [Authorize]
     public class GameHub : Hub<IGameHub>
     {
+        private readonly ILogger<GameHub> _logger;
+
+        public GameHub(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<GameHub>();
+        }
+
         public override async Task OnConnectedAsync()
         {
             var userRole = Context.User.GetUserRole();
@@ -44,7 +54,7 @@ namespace Pubquiz.Logic.Hubs
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
+            _logger.LogInformation($"User {Context.User.Identity.Name} connected with role {userRole}");
             await base.OnConnectedAsync();
         }
 
