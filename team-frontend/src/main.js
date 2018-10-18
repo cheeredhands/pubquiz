@@ -8,6 +8,7 @@ import gamehub from './services/gamehub';
 
 Vue.config.productionTip = false;
 
+// initialize the gamehub connection
 gamehub.init();
 
 new Vue({

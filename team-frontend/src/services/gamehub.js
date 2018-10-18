@@ -1,6 +1,6 @@
 import * as SignalR from "@aspnet/signalr";
 import Vuex from "vuex";
-import * as store from './../store/';
+import store from "./../store/index.js";
 
 export default {
   init() {
@@ -12,12 +12,12 @@ export default {
     connection
       .start()
       .then(() => {
-        // save it
-        this.$store.commit("saveSignalRConnection", connection);
+        // save it.
+        store.commit("saveSignalRConnection", connection);
       });
 
     // define methods for each server-side call.
-    connection.on('NotifyTeamRegistered', function (message) {
+    connection.on('NotifyTeamRegistered', message => {
 
     });
   }
