@@ -36,13 +36,7 @@ export default new Vuex.Store({
 
       // init signalR
       // initialize signalR connection here
-      const connection = new SignalR.HubConnectionBuilder()
-        .withUrl("https://localhost:5001/gamehub")
-        .build();
-      connection.start().then(() => {
-        // save it
-        commit("saveSignalRConnection", connection);
-      });
+
       // todo set up the server callbacks
       // connection.on("send", data => {
       //   console.log(data);

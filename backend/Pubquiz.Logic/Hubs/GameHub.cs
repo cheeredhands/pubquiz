@@ -24,7 +24,7 @@ namespace Pubquiz.Logic.Hubs
     /// called teams-<gameId>.
     /// Whenever a connection is lost, group membership MUST be rebuild.
     /// </summary>
-    [Authorize]
+    //[Authorize]
     public class GameHub : Hub<IGameHub>
     {
         private readonly ILogger<GameHub> _logger;
@@ -36,48 +36,48 @@ namespace Pubquiz.Logic.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            var userRole = Context.User.GetUserRole();
-            var currentGameId = Context.User.GetCurrentGameId();
-            switch (userRole)
-            {
-                case UserRole.Team:
-                    var teamGroupId = Helpers.GetTeamsGroupId(currentGameId);
-                    await Groups.AddToGroupAsync(Context.ConnectionId, teamGroupId);
-                    break;
-                case UserRole.Admin:
-                    await Groups.AddToGroupAsync(Context.ConnectionId, Helpers.GetAdminGroupId());
-                    break;
-                case UserRole.QuizMaster:
-                    var quizmasterGroupId = Helpers.GetQuizMasterGroupId(currentGameId);
-                    await Groups.AddToGroupAsync(Context.ConnectionId, quizmasterGroupId);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            _logger.LogInformation($"User {Context.User.Identity.Name} connected with role {userRole}");
+            //var userRole = Context.User.GetUserRole();
+            //var currentGameId = Context.User.GetCurrentGameId();
+            //switch (userRole)
+            //{
+            //    case UserRole.Team:
+            //        var teamGroupId = Helpers.GetTeamsGroupId(currentGameId);
+            //        await Groups.AddToGroupAsync(Context.ConnectionId, teamGroupId);
+            //        break;
+            //    case UserRole.Admin:
+            //        await Groups.AddToGroupAsync(Context.ConnectionId, Helpers.GetAdminGroupId());
+            //        break;
+            //    case UserRole.QuizMaster:
+            //        var quizmasterGroupId = Helpers.GetQuizMasterGroupId(currentGameId);
+            //        await Groups.AddToGroupAsync(Context.ConnectionId, quizmasterGroupId);
+            //        break;
+            //    default:
+            //        throw new ArgumentOutOfRangeException();
+            //}
+            //_logger.LogInformation($"User {Context.User.Identity.Name} connected with role {userRole}");
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var userRole = Context.User.GetUserRole();
-            var currentGameId = Context.User.GetCurrentGameId();
-            switch (userRole)
-            {
-                case UserRole.Team:
-                    var teamGroupId = Helpers.GetTeamsGroupId(currentGameId);
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, teamGroupId);
-                    break;
-                case UserRole.Admin:
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, Helpers.GetAdminGroupId());
-                    break;
-                case UserRole.QuizMaster:
-                    var quizmasterGroupId = Helpers.GetQuizMasterGroupId(currentGameId);
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, quizmasterGroupId);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            //var userRole = Context.User.GetUserRole();
+            //var currentGameId = Context.User.GetCurrentGameId();
+            //switch (userRole)
+            //{
+            //    case UserRole.Team:
+            //        var teamGroupId = Helpers.GetTeamsGroupId(currentGameId);
+            //        await Groups.RemoveFromGroupAsync(Context.ConnectionId, teamGroupId);
+            //        break;
+            //    case UserRole.Admin:
+            //        await Groups.RemoveFromGroupAsync(Context.ConnectionId, Helpers.GetAdminGroupId());
+            //        break;
+            //    case UserRole.QuizMaster:
+            //        var quizmasterGroupId = Helpers.GetQuizMasterGroupId(currentGameId);
+            //        await Groups.RemoveFromGroupAsync(Context.ConnectionId, quizmasterGroupId);
+            //        break;
+            //    default:
+            //        throw new ArgumentOutOfRangeException();
+            //}
 
             await base.OnDisconnectedAsync(exception);
         }
