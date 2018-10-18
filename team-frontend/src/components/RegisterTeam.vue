@@ -1,10 +1,15 @@
 <template>
-  <div class="register">
+  <div id="content">
     <h1>{{ msg }}</h1>
+    <div class="login">
     <p><label for="teamName">Team name</label><input v-model="teamName" id="teamName" /> </p>
     <p> <label for="code">Code</label> <input v-model="code" id="code"/></p>
  <p><button type="submit" @click="register()">Register</button></p>
+ </div>
+ <div>
+  <router-link to="Login">Admin</router-link>
   </div>
+ </div>
 </template>
 
 <script>
@@ -18,7 +23,7 @@ export default {
   data() {
     return {
       teamName: "",
-      code: ""
+      code: "JOINME"
     };
   },
   methods: {
@@ -33,11 +38,11 @@ export default {
         { withCredentials: true }
       )
         .then(response => {
-          // disco. add team to store
-          this.$store.commit(
-            "setTeam",
-            { teamId: response.data.teamId, name: this.teamName }
-          );
+          // disco. init team (add team to store, start signalr)
+          this.$store.dispatch("initTeam", {
+            teamId: response.data.teamId,
+            name: this.teamName
+          });
 
           // and goto lobby
           this.$router.push("Lobby");

@@ -1,5 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
+import SignalR from "@aspnet/signalr";
 
 Vue.use(Vuex);
 
@@ -12,11 +13,10 @@ export default new Vuex.Store({
       team: null,
       // defines the other teams
       teams: []
-    }
+    },
+    signalrconnection: null
   },
-  getters: {
-
-  },
+  getters: {},
   mutations: {
     setTeam(state, team) {
       // called when the current team registers succesfully
@@ -25,6 +25,31 @@ export default new Vuex.Store({
     addTeam(state, team) {
       // called by the signalr stuff when a new team registers
       state.quiz.teams.push(team);
+    },
+    saveSignalRConnection(state, signalrconnection) {
+      state.signalrconnection = signalrconnection;
     }
   },
+  actions: {
+    initTeam({ commit }, team) {
+      commit("setTeam", team);
+
+      // init signalR
+      // initialize signalR connection here
+      const connection = new SignalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5000/gamehub")
+        .build();
+
+      // todo set up the server callbacks
+      // connection.on("send", data => {
+      //   console.log(data);
+      // });
+
+      // send something to the backend
+      // connection.start().then(() => connection.invoke("send", "Hello"));
+
+      // save it
+      commit("saveSignalRConnection", connection);
+    }
+  }
 });
