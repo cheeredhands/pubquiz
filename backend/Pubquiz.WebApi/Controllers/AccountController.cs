@@ -27,6 +27,24 @@ namespace Pubquiz.WebApi.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [HttpGet("whoami")]
+        [AllowAnonymous]
+        public IActionResult WhoAmI()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return Ok(new
+                {
+                    UserName = User.Identity.Name,
+                    UserId = User.GetId(),
+                    CurrentGameId = User.GetCurrentGameId(),
+                    UserRole = User.GetUserRole()
+                });
+            }
+
+            return Ok(new {UserName = ""});
+        }
+
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult> RegisterForGame([FromBody] RegisterForGameCommand command)
