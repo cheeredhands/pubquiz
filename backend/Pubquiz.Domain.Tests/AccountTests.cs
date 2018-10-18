@@ -100,7 +100,7 @@ namespace Pubquiz.Domain.Tests
 
             // assert
             Assert.AreEqual("Team 1a", team.Name);
-            Assert.AreEqual("Team%201a", team.UserName);
+            Assert.AreEqual("Team 1a", team.UserName);
         }
 
         [TestCategory("Team registration")]
