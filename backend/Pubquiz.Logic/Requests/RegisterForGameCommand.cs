@@ -45,11 +45,11 @@ namespace Pubquiz.Logic.Requests
             }
 
             // register team and return team object
-            var userName = TeamName.ReplaceSpaces();
+            var userName = TeamName.Trim();
             var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
             var newTeam = new Team
             {
-                Name = TeamName,
+                Name = userName,
                 UserName = userName,
                 GameId = game.Id,
                 RecoveryCode = recoveryCode,

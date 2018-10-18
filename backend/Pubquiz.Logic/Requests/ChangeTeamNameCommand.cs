@@ -37,8 +37,8 @@ namespace Pubquiz.Logic.Requests
 
             // set new name
             var oldTeamName = team.Name;
-            team.Name = NewName;
-            team.UserName = NewName.ReplaceSpaces();
+            team.Name = NewName.Trim();
+            team.UserName = NewName.Trim();
             await teamCollection.UpdateAsync(team);
 
             await Bus.Publish(new TeamNameUpdated(TeamId, team.GameId, oldTeamName, NewName));
