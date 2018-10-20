@@ -4,10 +4,15 @@ using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.ViewModels;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Query to get the <see cref="TeamLobbyViewModel"/> for a specific <see cref="Team"/>.
+    /// </summary>
+    [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
     public class TeamLobbyViewModelQuery : Query<TeamLobbyViewModel>
     {
         public Guid TeamId { get; set; }
@@ -20,12 +25,7 @@ namespace Pubquiz.Logic.Requests
         {
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
-            if (team == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id, or you're not a team.", false);
-            }
-
-            var gameCollection = UnitOfWork.GetCollection<Game>();
+           var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(team.GameId);
 
             if (game.State != GameState.Open)
@@ -36,13 +36,12 @@ namespace Pubquiz.Logic.Requests
 
             var otherTeamsInGame = teamCollection.AsQueryable()
                 .Where(t => t.Id != TeamId && game.TeamIds.Contains(t.Id))
-                .Select(t => t.Name).ToList();
+                .Select(t => new TeamViewModel {TeamName = t.Name, MemberNames = t.MemberNames}).ToList();
 
             var model = new TeamLobbyViewModel
             {
                 TeamId = TeamId,
-                TeamMembers = team.MemberNames,
-                TeamName = team.Name,
+                Team = new TeamViewModel {TeamName = team.Name, MemberNames = team.MemberNames},
                 OtherTeamsInGame = otherTeamsInGame
             };
             return model;

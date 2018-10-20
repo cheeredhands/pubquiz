@@ -9,18 +9,17 @@ namespace Pubquiz.Logic
     /// A command request that doesn't have a return value e.g. fire-and-forget.
     /// </summary>
     public abstract class Notification : Request
-    {
-        protected readonly IUnitOfWork UnitOfWork;
+    {        
         protected readonly IBus Bus;
 
-        protected Notification(IUnitOfWork unitOfWork, IBus bus)
+        protected Notification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork)
         {
-            UnitOfWork = unitOfWork;
             Bus = bus;
         }
 
         public Task Execute()
         {
+            CheckValidationAttributes();
             return DoExecute();
         }
 

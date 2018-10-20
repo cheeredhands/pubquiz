@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -24,6 +25,12 @@ namespace Pubquiz.Persistence
         /// <returns></returns>
         Task<T> GetAsync(Guid id);
 
+        /// <summary>
+        /// Gets one or more documents identified by the supplied ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<IEnumerable<T>> GetAsync(params Guid[] ids);
 
         /// <summary>
         ///     Update a document.

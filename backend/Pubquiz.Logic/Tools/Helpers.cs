@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Tools
 {
@@ -8,8 +10,27 @@ namespace Pubquiz.Logic.Tools
     {
         private static readonly List<string> Wordlist = new List<string>
         {
-            "flatulent", "stroef", "extra", "dof", "peuzel", "aap", "noot", "mies", "wim", "zus", "jet", "teun", "vuur",
-            "gijs", "lam", "kees", "weide", "does", "hok", "duif", "schapen"
+            "flatulent",
+            "stroef",
+            "extra",
+            "dof",
+            "peuzel",
+            "aap",
+            "noot",
+            "mies",
+            "wim",
+            "zus",
+            "jet",
+            "teun",
+            "vuur",
+            "gijs",
+            "lam",
+            "kees",
+            "weide",
+            "does",
+            "hok",
+            "duif",
+            "schapen"
         };
 
         public static string GenerateSessionRecoveryCode(Persistence.ICollection<Team> teamCollection, Guid gameId)

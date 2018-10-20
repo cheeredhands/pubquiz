@@ -11,6 +11,7 @@ namespace Pubquiz.Domain.Models
         public string RecoveryCode { get; set; }
         public UserRole UserRole { get; set; }
         public List<Guid> GameIds { get; set; }
+        public Guid CurrentGameId { get; set; }
 
         public User() 
         {

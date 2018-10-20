@@ -4,11 +4,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Command to select a current <see cref="Game"/>.
+    /// </summary>
+    [ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
+    [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
     public class SelectGameCommand : Command<User>
     {
         public Guid ActorId { get; set; }
@@ -22,21 +28,9 @@ namespace Pubquiz.Logic.Requests
         {
             var userCollection = UnitOfWork.GetCollection<User>();
             var user = await userCollection.GetAsync(ActorId);
-            if (user == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidUserId, "Invalid user id.", true);
-            }
-
             if (user.UserRole != UserRole.QuizMaster)
             {
                 throw new DomainException(ErrorCodes.UnauthorizedRole, "You can't do that with this role.", true);
-            }
-
-            var gameCollection = UnitOfWork.GetCollection<Game>();
-            var game = await gameCollection.GetAsync(GameId);
-            if (game == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidGameId, "Invalid game id.", true);
             }
 
             if (!user.GameIds.Contains(GameId))
@@ -45,6 +39,8 @@ namespace Pubquiz.Logic.Requests
                     $"Actor with id {ActorId} is not authorized for game '{GameId}'", true);
             }
 
+            user.CurrentGameId = GameId;
+            await userCollection.UpdateAsync(user);
             return user;
         }
     }

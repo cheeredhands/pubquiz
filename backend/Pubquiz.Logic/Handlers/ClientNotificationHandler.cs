@@ -24,11 +24,12 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(AnswerScored message)
         {
-
+            await Task.CompletedTask;
         }
 
         public async Task Handle(InteractionResponseAdded message) 
         {
+            await Task.CompletedTask;
             // notify clients via hub
             // something like:
             // var sendMessage = new {Code = 100, message.TeamId, message.TeamName, message.QuestionId, message.Response};
@@ -44,7 +45,7 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(ErrorOccurred message)
         {
-            
+            await Task.CompletedTask;
         }
 
         public async Task Handle(TeamRegistered message)

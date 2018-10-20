@@ -11,17 +11,16 @@ namespace Pubquiz.Logic
     /// <typeparam name="TResponse"></typeparam>
     public abstract class Command<TResponse> : Request
     {
-        protected readonly IUnitOfWork UnitOfWork;
         protected readonly IBus Bus;
 
-        protected Command(IUnitOfWork unitOfWork, IBus bus)
+        protected Command(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork)
         {
-            UnitOfWork = unitOfWork;
             Bus = bus;
         }
 
         public Task<TResponse> Execute()
         {
+            CheckValidationAttributes();
             return DoExecute();
         }
 

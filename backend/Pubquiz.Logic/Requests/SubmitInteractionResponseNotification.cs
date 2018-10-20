@@ -4,12 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 using InteractionResponseAdded = Pubquiz.Logic.Messages.InteractionResponseAdded;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Notification to submit an interaction response for a certain <see cref="Interaction"/> in a <see cref="Question"/>
+    /// </summary>
+    [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
+    [ValidateEntity(EntityType = typeof(Question), IdPropertyName = "QuestionId")]
     public class SubmitInteractionResponseNotification : Notification
     {
         public Guid TeamId { get; set; }
@@ -24,23 +30,10 @@ namespace Pubquiz.Logic.Requests
 
         protected override async Task DoExecute()
         {
-            // check valid
             var teamCollection = UnitOfWork.GetCollection<Team>();
-
-            var team = await teamCollection.GetAsync(TeamId);
-            if (team == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", true);
-            }
-
+            var team = await teamCollection.GetAsync(TeamId);          
             var questionCollection = UnitOfWork.GetCollection<Question>();
-
-            var question = await questionCollection.GetAsync(QuestionId);
-            if (question == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidQuestionId, "Invalid question id.", true);
-            }
-
+            var question = await questionCollection.GetAsync(QuestionId);       
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(team.GameId);
             var quizId = game.QuizId;
@@ -64,7 +57,7 @@ namespace Pubquiz.Logic.Requests
 
             if (question.Interactions.All(i => i.Id != InteractionId))
             {
-                throw new DomainException(ErrorCodes.InvalidInteractionId, "Invalid interaction id.", true);
+                throw new DomainException(ErrorCodes.InvalidInteractionId, "Invalid InteractionId.", true);
             }
 
 

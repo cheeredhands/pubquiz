@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pubquiz.Domain.ViewModels;
 using Pubquiz.Persistence;
 
 // ReSharper disable CollectionNeverUpdated.Global
@@ -100,6 +101,16 @@ namespace Pubquiz.Domain.Models
             }
 
             State = newGameState;
+        }
+
+        public GameViewModel ToViewModel()
+        {
+            return new GameViewModel
+            {
+                GameId = Id,
+                State = State,
+                GameTitle = Title
+            };
         }
     }
 

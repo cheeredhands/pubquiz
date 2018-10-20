@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -43,6 +45,10 @@ namespace Pubquiz.Persistence.MongoDb
         /// <inheritdoc />
         public Task<T> GetAsync(Guid id) => Collection.FindAsync(o => o.Id == id).Result?.SingleOrDefaultAsync();
 
+        /// <inheritdoc />
+        public Task<IEnumerable<T>> GetAsync(params Guid[] ids) =>
+            Task.FromResult(Collection.FindAsync(o => ids.Contains(o.Id)).Result?.ToEnumerable());
+        
         /// <inheritdoc />
         public async Task<bool> UpdateAsync(T document) =>
             await Collection.FindOneAndReplaceAsync(i => i.Id == document.Id, document) != null;

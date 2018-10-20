@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Pubquiz.Persistence.NoAction
     {
         public IQueryable<T> AsQueryable() => new ConcurrentBag<T>().Clone().AsQueryable();
         public async Task<T> GetAsync(Guid id) => null;
+        public async Task<IEnumerable<T>> GetAsync(params Guid[] ids) => new ConcurrentBag<T>().Clone().AsQueryable();
         public async Task<bool> UpdateAsync(T document) => true;
         public async Task<T> AddAsync(T document) => document.Clone();
         public async Task<bool> DeleteAsync(Guid id) => true;

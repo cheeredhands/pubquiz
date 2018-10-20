@@ -9,6 +9,9 @@ using TeamRegistered = Pubquiz.Logic.Messages.TeamRegistered;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Command to register for a <see cref="Game"/>.
+    /// </summary>
     public class RegisterForGameCommand : Command<Team>
     {
         public string TeamName;

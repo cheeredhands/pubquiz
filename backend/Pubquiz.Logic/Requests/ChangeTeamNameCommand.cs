@@ -9,6 +9,10 @@ using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Command to change the <see cref="Team"/> name.
+    /// </summary>
+    [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
     public class ChangeTeamNameCommand : Command<Team>
     {
         public Guid TeamId;
@@ -20,13 +24,8 @@ namespace Pubquiz.Logic.Requests
 
         protected override async Task<Team> DoExecute()
         {
-            // check team exists
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
-            if (team == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
-            }
 
             // check if team name is taken, otherwise throw DomainException
             var isTeamNameTaken = await teamCollection.AnyAsync(t => t.Name == NewName && t.GameId == team.GameId);

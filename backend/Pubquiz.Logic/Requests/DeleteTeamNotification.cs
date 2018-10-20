@@ -11,6 +11,11 @@ using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Notification to delete a <see cref="Team"/>.
+    /// </summary>
+    [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
+    [ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
     public class DeleteTeamNotification : Notification
     {
         public Guid ActorId { get; set; }
@@ -23,23 +28,13 @@ namespace Pubquiz.Logic.Requests
         protected override async Task DoExecute()
         {
             var teamCollection = UnitOfWork.GetCollection<Team>();
-
             var team = await teamCollection.GetAsync(TeamId);
-            if (team == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
-            }
-
             var user = await UnitOfWork.GetCollection<User>().GetAsync(ActorId);
-            if (user == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidUserId, "Invalid actor id.", true);
-            }
 
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(team.GameId);
             if (user.UserRole != UserRole.Admin)
-            {                
+            {
                 if (game.QuizMasterIds.All(i => i != ActorId))
                 {
                     throw new DomainException(ErrorCodes.QuizMasterUnauthorizedForGame,
@@ -50,8 +45,6 @@ namespace Pubquiz.Logic.Requests
             game.TeamIds.Remove(team.Id);
             await gameCollection.UpdateAsync(game);
             await teamCollection.DeleteAsync(TeamId);
-            
-            
         }
     }
 }

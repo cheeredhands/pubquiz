@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -43,6 +44,9 @@ namespace Pubquiz.Persistence.Decorators
         public virtual async Task<T> GetAsync(Guid id) =>
             await _decoree.GetAsync(id);
 
+        public virtual async Task<IEnumerable<T>> GetAsync(params Guid[] ids) =>
+            await _decoree.GetAsync(ids);
+        
         public virtual async Task<long> GetCountAsync() =>
             await _decoree.GetCountAsync();
 

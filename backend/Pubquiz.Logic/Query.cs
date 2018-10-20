@@ -1,5 +1,7 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Pubquiz.Domain;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic
@@ -10,15 +12,14 @@ namespace Pubquiz.Logic
     /// <typeparam name="TResponse"></typeparam>
     public abstract class Query<TResponse> : Request
     {
-        protected readonly IUnitOfWork UnitOfWork;
-
-        protected Query(IUnitOfWork unitOfWork)
+        protected Query(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            UnitOfWork = unitOfWork;
         }
 
         public Task<TResponse> Execute()
         {
+            CheckValidationAttributes();
+
             return DoExecute();
         }
 

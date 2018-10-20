@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pubquiz.Domain.ViewModels;
 using Pubquiz.Persistence;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -24,6 +25,15 @@ namespace Pubquiz.Domain.Models
             Id = Guid.NewGuid();
             Answers = new List<Answer>();
             ScorePerQuizSection = new Dictionary<Guid, int>();
+        }
+
+        public TeamViewModel ToViewModel()
+        {
+            return new TeamViewModel
+            {
+                TeamName = Name,
+                MemberNames = MemberNames
+            };
         }
 
         public void UpdateScore()

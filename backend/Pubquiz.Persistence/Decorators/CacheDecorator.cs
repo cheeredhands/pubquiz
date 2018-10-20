@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -22,7 +23,8 @@ namespace Pubquiz.Persistence.Decorators
         private readonly bool _neverRemove;
 
         /// <inheritdoc />
-        public CacheDecorator(IMemoryCache memoryCache, bool neverRemove, ICollection<T> decoree) : base(memoryCache, decoree)
+        public CacheDecorator(IMemoryCache memoryCache, bool neverRemove, ICollection<T> decoree) : base(memoryCache,
+            decoree)
         {
             _neverRemove = neverRemove;
             if (neverRemove)
@@ -69,6 +71,22 @@ namespace Pubquiz.Persistence.Decorators
             return ret.Clone();
         }
 
+        /// <inheritdoc />
+        public override async Task<IEnumerable<T>> GetAsync(params Guid[] ids)
+        {
+            if (MemoryCache == null) return await base.GetAsync(ids);
+            var result = new List<T>();
+            foreach (var id in ids)
+            {
+                var item = MemoryCache.TryGetValue($"{typeof(T)}-{id}", out T returnValue)
+                    ? returnValue
+                    : await base.GetAsync(id);
+                result.Add(item.Clone());
+            }
+
+            return result;
+        }
+
         /// <summary>
         ///     Add objects to cache before adding to database
         /// </summary>
@@ -88,6 +106,7 @@ namespace Pubquiz.Persistence.Decorators
                     MemoryCache.Set(_collectionKey, coll, _memoryCacheOptions);
                 }
             }
+
             MemoryCache.Set(key, doc, _memoryCacheOptions);
             var ret = await base.AddAsync(doc);
             return ret.Clone();
@@ -114,11 +133,12 @@ namespace Pubquiz.Persistence.Decorators
                     }
                 }
             }
+
             MemoryCache.Set(key, doc, _memoryCacheOptions);
             return await base.UpdateAsync(document);
         }
 
-       public override async Task<bool> DeleteAsync(Guid id)
+        public override async Task<bool> DeleteAsync(Guid id)
         {
             if (MemoryCache == null) return await base.DeleteAsync(id);
             var key = $"{typeof(T)}-{id}";
@@ -133,6 +153,7 @@ namespace Pubquiz.Persistence.Decorators
                     }
                 }
             }
+
             MemoryCache.Remove(key);
             return await base.DeleteAsync(id);
         }

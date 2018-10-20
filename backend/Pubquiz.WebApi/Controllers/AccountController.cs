@@ -99,12 +99,9 @@ namespace Pubquiz.WebApi.Controllers
             {
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.UserRole.ToString())
+                new Claim(ClaimTypes.Role, user.UserRole.ToString()),
+                new Claim("CurrentGame", currentGame.ToString())
             };
-            if (currentGame != Guid.Empty)
-            {
-                claims.Add(new Claim("CurrentGame", currentGame.ToString()));
-            }
 
             var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(userIdentity);

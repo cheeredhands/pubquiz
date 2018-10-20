@@ -6,8 +6,7 @@ namespace Pubquiz.Domain.ViewModels
     public class TeamLobbyViewModel
     {
         public Guid TeamId { get; set; }
-        public string TeamName { get; set; }
-        public string TeamMembers { get; set; }
-        public List<string> OtherTeamsInGame { get; set; }
+        public TeamViewModel Team { get; set; }
+        public List<TeamViewModel> OtherTeamsInGame { get; set; }
     }
 }

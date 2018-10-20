@@ -2,12 +2,17 @@ using System;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 using TeamMembersChanged = Pubquiz.Logic.Messages.TeamMembersChanged;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Notification to change the <see cref="Team"/> members.
+    /// </summary>
+    [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
     public class ChangeTeamMembersNotification : Notification
     {
         public Guid TeamId { get; set; }
@@ -19,15 +24,8 @@ namespace Pubquiz.Logic.Requests
 
         protected override async Task DoExecute()
         {
-            // check team exists
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
-            if (team == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid team id.", false);
-            }
-
-            // set new team members
             team.MemberNames = TeamMembers;
 
             await teamCollection.UpdateAsync(team);

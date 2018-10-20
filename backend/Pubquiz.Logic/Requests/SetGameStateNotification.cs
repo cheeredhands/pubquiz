@@ -3,12 +3,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 using GameStateChanged = Pubquiz.Logic.Messages.GameStateChanged;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Notification to set the <see cref="GameState">state</see> of a specific <see cref="Game"/>.
+    /// </summary>
+    [ValidateEntity(EntityType = typeof(User),IdPropertyName = "ActorId")]
+    [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
     public class SetGameStateNotification : Notification
     {
         public Guid ActorId { get; set; }
@@ -23,16 +29,8 @@ namespace Pubquiz.Logic.Requests
         {
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(GameId);
-            if (game == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidGameId, "Invalid game id.", false);
-            }
-
+            
             var user = await UnitOfWork.GetCollection<User>().GetAsync(ActorId);
-            if (user == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidUserId, "Invalid actor id.", true);
-            }
 
             if (user.UserRole != UserRole.Admin)
             {

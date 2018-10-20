@@ -32,8 +32,8 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => query.Execute()).Result;
             Assert.AreEqual(ErrorCodes.InvalidTeamId, exception.ErrorCode);
-            Assert.AreEqual("Invalid team id, or you're not a team.", exception.Message);
-            Assert.IsFalse(exception.IsBadRequest);
+            Assert.AreEqual("Invalid TeamId.", exception.Message);
+            Assert.IsTrue(exception.IsBadRequest);
         }
 
 
@@ -64,9 +64,12 @@ namespace Pubquiz.Domain.Tests
 
             // act
             var user = command.Execute().Result;
+            UnitOfWork.Commit();
 
             // assert
-            Assert.IsNotNull(user);
+            var updatedUser = UnitOfWork.GetCollection<User>().GetAsync(actorId).Result;
+            Assert.IsNotNull(updatedUser);
+            Assert.AreEqual(Game.Id, updatedUser.CurrentGameId);
         }
 
         [TestMethod]
@@ -79,7 +82,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual(ErrorCodes.InvalidGameId, exception.ErrorCode);
-            Assert.AreEqual("Invalid game id.", exception.Message);
+            Assert.AreEqual("Invalid GameId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -93,7 +96,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual(ErrorCodes.InvalidUserId, exception.ErrorCode);
-            Assert.AreEqual("Invalid user id.", exception.Message);
+            Assert.AreEqual("Invalid ActorId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
 

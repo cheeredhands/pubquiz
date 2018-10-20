@@ -1,7 +1,9 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pubquiz.Domain.ViewModels;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
@@ -19,6 +21,8 @@ namespace Pubquiz.WebApi.Controllers
         {
             _unitOfWork = unitOfWork;
         }
+
+        #region Team actions
 
         [HttpGet("teamlobby")]
         [Authorize(Roles = "Team")]
@@ -45,6 +49,28 @@ namespace Pubquiz.WebApi.Controllers
             return Ok(new {Code = SuccessCodes.InteractionResponseSubmitted, Message = "Response submitted ok."});
         }
 
+        #endregion
+
+        #region Admin and quiz master actions
+
+        [HttpGet("quizmasterlobby")]
+        [Authorize(Roles = "Admin, QuizMaster")]
+        public async Task<IActionResult> GetQuizMasterLobby()
+        {
+            var query = new QuizMasterLobbyViewModelQuery(_unitOfWork) {UserId = User.GetId()};
+            var result = await query.Execute();
+            return Ok(result);
+        }
+
+        [HttpGet("games")]
+        [Authorize(Roles = "Admin, QuizMaster")]
+        public async Task<IActionResult> GetGames()
+        {
+            var query = new GetGamesQuery(_unitOfWork) {UserId = User.GetId()};
+            var result = await query.Execute();
+            return Ok(result);
+        }
+
         [HttpPost("setgamestate")]
         [Authorize(Roles = "Admin, QuizMaster")]
         public async Task<IActionResult> SetGameState(SetGameStateNotification notification)
@@ -64,5 +90,7 @@ namespace Pubquiz.WebApi.Controllers
                 Message = $"Game state changed to {notification.NewGameState}."
             });
         }
+
+        #endregion
     }
 }

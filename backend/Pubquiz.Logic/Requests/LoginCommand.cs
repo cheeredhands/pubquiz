@@ -8,6 +8,9 @@ using Rebus.Handlers;
 
 namespace Pubquiz.Logic.Requests
 {
+    /// <summary>
+    /// Command to login to the system.
+    /// </summary>
     public class LoginCommand : Command<User>
     {
         public string UserName { get; set; }

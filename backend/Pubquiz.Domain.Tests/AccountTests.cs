@@ -113,9 +113,9 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
-            Assert.AreEqual("Invalid team id.", exception.Message);
+            Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.AreEqual(3, exception.ErrorCode);
-            Assert.IsFalse(exception.IsBadRequest);
+            Assert.IsTrue(exception.IsBadRequest);
         }
 
         [TestCategory("Team registration")]
@@ -144,9 +144,9 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual("Invalid team id.", exception.Message);
+            Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.AreEqual(3, exception.ErrorCode);
-            Assert.IsFalse(exception.IsBadRequest);
+            Assert.IsTrue(exception.IsBadRequest);
         }
 
         [TestCategory("Team registration")]
@@ -178,8 +178,8 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
             Assert.AreEqual(ErrorCodes.InvalidTeamId, exception.ErrorCode);
-            Assert.AreEqual("Invalid team id.", exception.Message);
-            Assert.IsFalse(exception.IsBadRequest);
+            Assert.AreEqual("Invalid TeamId.", exception.Message);
+            Assert.IsTrue(exception.IsBadRequest);
         }
 
         [TestCategory("Team registration")]
@@ -194,7 +194,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
             Assert.AreEqual(ErrorCodes.InvalidUserId, exception.ErrorCode);
-            Assert.AreEqual("Invalid actor id.", exception.Message);
+            Assert.AreEqual("Invalid ActorId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
 

@@ -25,7 +25,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
             Assert.AreEqual(ErrorCodes.InvalidTeamId, exception.ErrorCode);
-            Assert.AreEqual("Invalid team id.", exception.Message);
+            Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -45,7 +45,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
             Assert.AreEqual(ErrorCodes.InvalidQuestionId, exception.ErrorCode);
-            Assert.AreEqual("Invalid question id.", exception.Message);
+            Assert.AreEqual("Invalid QuestionId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -106,7 +106,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
             Assert.AreEqual(ErrorCodes.InvalidInteractionId, exception.ErrorCode);
-            Assert.AreEqual("Invalid interaction id.", exception.Message);
+            Assert.AreEqual("Invalid InteractionId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
     }
