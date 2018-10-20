@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -31,6 +32,13 @@ namespace Pubquiz.Persistence.Decorators
             var items = await base.GetAsync(ids);
             return items.Where(d => d != null && d.IsDeleted == false);
         }
+
+        /// <inheritdoc />
+        public override Task<bool> AnyAsync() => Task.FromResult(base.AsQueryable().Any(o => o.IsDeleted == false));
+
+        /// <inheritdoc />
+        public override Task<bool> AnyAsync(Expression<Func<T, bool>> filter) =>
+            Task.FromResult(base.AsQueryable().Where(filter).Any(o => o.IsDeleted == false));
 
         /// <inheritdoc />
         public override IQueryable<T> AsQueryable() =>

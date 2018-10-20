@@ -1,9 +1,7 @@
 using System;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Pubquiz.Domain.ViewModels;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;

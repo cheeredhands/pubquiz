@@ -29,20 +29,37 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpGet("whoami")]
         [AllowAnonymous]
-        public IActionResult WhoAmI()
+        public async Task<IActionResult> WhoAmI()
         {
-            if (User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated) return Ok(new {UserName = ""});
+
+            // Check if user/team still exists, otherwise sign out
+            var userRole = User.GetUserRole();
+            var userId = User.GetId();
+            Team team = null;
+            User user = null;
+            if (userRole == UserRole.Team)
             {
-                return Ok(new
-                {
-                    UserName = User.Identity.Name,
-                    UserId = User.GetId(),
-                    CurrentGameId = User.GetCurrentGameId(),
-                    UserRole = User.GetUserRole()
-                });
+                team = await new TeamQuery(_unitOfWork) {TeamId = userId}.Execute();
+            }
+            else
+            {
+                user = await new UserQuery(_unitOfWork) {UserId = userId}.Execute();
             }
 
-            return Ok(new {UserName = ""});
+            if (team == null && user == null)
+            {
+                await SignOut();
+                return Ok(new {UserName = ""});
+            }
+
+            return Ok(new
+            {
+                UserName = User.Identity.Name,
+                UserId = User.GetId(),
+                CurrentGameId = User.GetCurrentGameId(),
+                UserRole = User.GetUserRole()
+            });
         }
 
         [HttpPost("register")]
