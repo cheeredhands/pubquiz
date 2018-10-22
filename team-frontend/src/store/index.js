@@ -31,25 +31,57 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    initTeam({ commit }, team) {
+    initTeam({ dispatch, commit }, team) {
       commit("setTeam", team);
 
       // init signalR
       // initialize signalR connection here
       const connection = new SignalR.HubConnectionBuilder()
         .withUrl("https://localhost:5001/gamehub")
+        .configureLogging(SignalR.LogLevel.Information)
         .build();
-      connection.start().then(() => {
+      connect(connection).then(() => {
         // save it
         commit("saveSignalRConnection", connection);
       });
+
+      function connect(conn) {
+        return conn.start().catch(e => {
+          sleep(5000);
+          console.log("Reconnecting Socket because of " + e); // eslint-disable-line no-console
+          connect(conn);
+        });
+      }
+
+      connection.onclose(function() {
+        connect(connection);
+      });
+
+      function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+          if (new Date().getTime() - start > milliseconds) {
+            break;
+          }
+        }
+      }
       // todo set up the server callbacks
       // connection.on("send", data => {
       //   console.log(data);
       // });
+      connection.on("TeamRegistered", data =>
+        dispatch("processTeamRegistered", data)
+      );
 
       // send something to the backend
       // connection.start().then(() => connection.invoke("send", "Hello"));
+    },
+    processTeamRegistered({ commit }, teamRegistered) {
+      const addedTeam = {
+        teamId: teamRegistered.teamId,
+        name: teamRegistered.teamName
+      };
+      commit("addTeam", addedTeam);
     }
   }
 });

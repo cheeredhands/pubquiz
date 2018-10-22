@@ -6,7 +6,7 @@
     <p>Er zijn nu {{ otherTeams.length }} team(s) aan het wachten:</p>
     <ul>
       <li v-for="(team, index) in otherTeams" :key="index">
-        {{ item.name }}
+        {{ team.name }}
       </li>
     </ul>
 </div>
