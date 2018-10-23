@@ -9,16 +9,17 @@ export default {
       .withUrl("https://localhost:5001/gamehub")
       .build();
 
+    // define methods for each server-side call first before starting the hub.
+    connection.on('NotifyTeamRegistered', message => {
+      store.dispatch("addTeam", message)
+    });
+
     connection
       .start()
       .then(() => {
-        // save it.
+        // save it. No idea why though...
         store.commit("saveSignalRConnection", connection);
       });
 
-    // define methods for each server-side call.
-    connection.on('NotifyTeamRegistered', message => {
-
-    });
   }
 };
