@@ -39,8 +39,8 @@ export default {
       store.dispatch("processTeamRegistered", data);
     });
 
-    connection.start().then(() => {
-      // save it. No idea why though...
+    connect(connection).then(() => {
+      // save it
       store.commit("saveSignalRConnection", connection);
     });
   }
