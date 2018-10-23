@@ -58,7 +58,7 @@ namespace Pubquiz.Logic.Handlers
 
             // notify teams
             // todo: pass the connection id in the TeamRegistered message?
-            await _gameHubContext.Clients.All.TeamRegistered(message);
+            await _gameHubContext.Clients.Group(teamGroupId).TeamRegistered(message);
         }
 
         public async Task Handle(GameStateChanged message)

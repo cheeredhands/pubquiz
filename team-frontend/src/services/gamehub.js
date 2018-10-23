@@ -8,11 +8,6 @@ export default {
       .configureLogging(SignalR.LogLevel.Information)
       .build();
 
-    connect(connection).then(() => {
-      // save it
-      store.commit("saveSignalRConnection", connection);
-    });
-
     function connect(conn) {
       return conn.start().catch(e => {
         sleep(5000);
