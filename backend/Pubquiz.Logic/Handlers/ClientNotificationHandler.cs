@@ -84,8 +84,8 @@ namespace Pubquiz.Logic.Handlers
 
             // notify other teams
             // todo: pass the connection id in the TeamRegistered message? or use this message to confirm the change on the caller?
-            // var clients = _gameHubContext.Clients as IHubCallerClients<IGameHub>;
-            // await clients.OthersInGroup(teamGroupId).TeamNameUpdated(message);
+//            var clients = _gameHubContext.Clients as IHubCallerClients<IGameHub>;
+//            await clients.OthersInGroup(teamGroupId).TeamNameUpdated(message);
         }
     }
 }

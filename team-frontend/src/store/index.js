@@ -19,6 +19,7 @@ export default new Vuex.Store({
   },
   getters: {},
   mutations: {
+    // mutatiosn are sync store updates
     setTeam(state, team) {
       // called when the current team registers succesfully
       state.quiz.team = team;
@@ -27,23 +28,37 @@ export default new Vuex.Store({
       // called by the signalr stuff when a new team registers
       state.quiz.teams.push(team);
     },
+    setOwnTeamName(state, newName) {
+      state.quiz.team.teamName = newName;
+    },
+    renameOtherTeam(state, teamId, newName) {
+      var team = state.quiz.teams.find(team => team.teamId === teamId);
+      team.teamName = newName;
+    },
     saveSignalRConnection(state, signalrconnection) {
       state.signalrconnection = signalrconnection;
     }
   },
   actions: {
+    // actions are async store updates and use the commit method to delegate
+    // the action to the mutation as actions are not allowed to change the state directly.
     initTeam({ commit }, team) {
       commit("setTeam", team);
-
-      // todo init gamehub
       gamehub.init();
+    },
+    renameOtherTeam({ commit }, teamId, newName) {
+      commit('renameOtherTeam', teamId, newName);
     },
     processTeamRegistered({ commit }, teamRegistered) {
       const addedTeam = {
         teamId: teamRegistered.teamId,
         name: teamRegistered.teamName
       };
-      commit("addTeam", addedTeam);
+      if (addedTeam.teamId !== this.state.quiz.team.teamId) {
+        // because the hub is not (yet) capable of notifying other teams
+        // we receive our own teamRegistered notification as well.
+        commit("addTeam", addedTeam);
+      }
     }
   }
 });

@@ -16,7 +16,7 @@ export default {
       });
     }
 
-    connection.onclose(function() {
+    connection.onclose(function () {
       connect(connection);
     });
 
@@ -33,6 +33,10 @@ export default {
     connection.on("TeamRegistered", data => {
       store.dispatch("processTeamRegistered", data);
     });
+
+    connection.on("TeamNameUpdated", data => {
+      store.dispatch("renameOtherTeam",  data.teamId, data.teamName);
+    })
 
     connect(connection).then(() => {
       // save it
