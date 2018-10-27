@@ -34,34 +34,36 @@ export default {
     }
   },
   created() {
-      this.newName = this.team.teamName,
-      this.teamId = this.team.teamId
+    this.newName = this.team.teamName;
+    this.teamId = this.team.teamId;
   },
   methods: {
     toggleEdit() {
       if (this.inEdit) {
         // call api that team name changed.
         this.$axios
-        .post('/api/account/changeteamname', {
-          teamId: this.teamId,
-          newName: this.newName
-        })
-        // then save it locally
-        .then(() => this.$store.commit("setOwnTeamName", this.newName));
-      }
+          .post("/api/account/changeteamname", {
+            teamId: this.teamId,
+            newName: this.newName
+          })
+          .then(() => {
+            // only save it to the store if api call is successful!
+            this.$store.commit("setOwnTeamName", this.newName);
+          });
 
-      this.inEdit = !this.inEdit;
-    }
-  },
-  computed: {
-    team() {
-      return this.$store.state.quiz.team || "";
+        this.inEdit = !this.inEdit;
+      }
     },
-    otherTeams() {
-      return this.$store.state.quiz.teams;
-    },
-    isInEdit() {
-      return this.inEdit;
+    computed: {
+      team() {
+        return this.$store.state.quiz.team || "";
+      },
+      otherTeams() {
+        return this.$store.state.quiz.teams;
+      },
+      isInEdit() {
+        return this.inEdit;
+      }
     }
   }
 };

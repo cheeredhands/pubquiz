@@ -48,6 +48,7 @@ export default {
           // and goto lobby
           this.$router.push("Lobby");
         })
+        // TODO: put catch above then???
         .catch(error => (this.msg = error.response.data[0].message));
     }
   }
