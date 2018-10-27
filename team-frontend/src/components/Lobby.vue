@@ -7,7 +7,7 @@
         <input v-model="newName" id="teamName" />
      </div>
      <div v-else>
-        {{ team.name }}
+        {{ team.teamName }}
      </div>
       <button @click="toggleEdit()">
         <span v-if="isInEdit">OK</span>
@@ -18,7 +18,7 @@
     <p>Jullie gaan het opnemen tegen:</p>
     <ul>
       <li v-for="(team, index) in otherTeams" :key="index">
-        {{ team.name }}
+        {{ team.teamName }}
       </li>
     </ul>
 </div>
@@ -33,7 +33,7 @@ export default {
       teamId: ""
     }
   },
-  mounted() {
+  created() {
       this.newName = this.team.teamName,
       this.teamId = this.team.teamId
   },
@@ -41,15 +41,13 @@ export default {
     toggleEdit() {
       if (this.inEdit) {
         // call api that team name changed.
-        this.$axios.post('/api/account/changeteamname', {
+        this.$axios
+        .post('/api/account/changeteamname', {
           teamId: this.teamId,
           newName: this.newName
         })
-        .then(response => {
-          this.$store.commit("setOwnTeamName", {
-            newName: this.newName
-          });
-        })
+        // then save it locally
+        .then(() => this.$store.commit("setOwnTeamName", this.newName));
       }
 
       this.inEdit = !this.inEdit;

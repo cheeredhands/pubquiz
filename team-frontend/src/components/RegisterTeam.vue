@@ -42,7 +42,7 @@ export default {
           // disco. init team (add team to store, start signalr)
           this.$store.dispatch("initTeam", {
             teamId: response.data.teamId,
-            name: this.teamName
+            teamName: this.teamName
           });
 
           // and goto lobby

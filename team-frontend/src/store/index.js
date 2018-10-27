@@ -19,7 +19,7 @@ export default new Vuex.Store({
   },
   getters: {},
   mutations: {
-    // mutatiosn are sync store updates
+    // mutations are sync store updates
     setTeam(state, team) {
       // called when the current team registers succesfully
       state.quiz.team = team;
@@ -52,7 +52,7 @@ export default new Vuex.Store({
     processTeamRegistered({ commit }, teamRegistered) {
       const addedTeam = {
         teamId: teamRegistered.teamId,
-        name: teamRegistered.teamName
+        teamName: teamRegistered.teamName
       };
       if (addedTeam.teamId !== this.state.quiz.team.teamId) {
         // because the hub is not (yet) capable of notifying other teams
