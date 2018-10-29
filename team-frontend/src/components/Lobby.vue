@@ -31,7 +31,7 @@ export default {
       inEdit: false,
       newName: "",
       teamId: ""
-    }
+    };
   },
   created() {
     this.newName = this.team.teamName;
@@ -40,19 +40,23 @@ export default {
   methods: {
     toggleEdit() {
       if (this.inEdit) {
-        // call api that team name changed.
-        this.$axios
-          .post("/api/account/changeteamname", {
-            teamId: this.teamId,
-            newName: this.newName
-          })
-          .then(() => {
-            // only save it to the store if api call is successful!
-            this.$store.commit("setOwnTeamName", this.newName);
-          });
-
-        this.inEdit = !this.inEdit;
+        // call api that team name changed but only if team name has not changed!
+        if (this.team.teamName !== this.newName) {
+          this.$axios
+            .post("/api/account/changeteamname", {
+              teamId: this.teamId,
+              newName: this.newName
+            })
+            .catch(error => {
+              // TODO
+            })
+            .then(() => {
+              // only save it to the store if api call is successful!
+              this.$store.commit("setOwnTeamName", this.newName);
+            });
+        }
       }
+      this.inEdit = !this.inEdit;
     }
   },
   computed: {
