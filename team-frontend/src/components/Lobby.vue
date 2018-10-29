@@ -53,17 +53,17 @@ export default {
 
         this.inEdit = !this.inEdit;
       }
+    }
+  },
+  computed: {
+    team() {
+      return this.$store.state.quiz.team || "";
     },
-    computed: {
-      team() {
-        return this.$store.state.quiz.team || "";
-      },
-      otherTeams() {
-        return this.$store.state.quiz.teams;
-      },
-      isInEdit() {
-        return this.inEdit;
-      }
+    otherTeams() {
+      return this.$store.state.quiz.teams;
+    },
+    isInEdit() {
+      return this.inEdit;
     }
   }
 };
