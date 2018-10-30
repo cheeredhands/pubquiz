@@ -31,9 +31,11 @@ export default new Vuex.Store({
     setOwnTeamName(state, newName) {
       state.quiz.team.teamName = newName;
     },
-    renameOtherTeam(state, teamId, newName) {
-      var team = state.quiz.teams.find(team => team.teamId === teamId);
-      team.teamName = newName;
+    setOtherTeam(state, team) {
+      console.log('setOtherTeam: ' + team); // eslint-disable-line no-console
+
+      var teamInStore = state.quiz.teams.find(item => item.teamId === team.teamId);
+      teamInStore.teamName = team.teamName; // throws error in console...
     },
     saveSignalRConnection(state, signalrconnection) {
       state.signalrconnection = signalrconnection;
@@ -46,8 +48,9 @@ export default new Vuex.Store({
       commit("setTeam", team);
       gamehub.init();
     },
-    renameOtherTeam({ commit }, teamId, newName) {
-      commit('renameOtherTeam', teamId, newName);
+    renameOtherTeam({ commit }, team) {
+      console.log('renameOtherTeam: ' + team); // eslint-disable-line no-console
+      commit('setOtherTeam', team);
     },
     processTeamRegistered({ commit }, teamRegistered) {
       const addedTeam = {

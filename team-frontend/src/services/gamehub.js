@@ -36,7 +36,8 @@ export default {
     });
 
     connection.on("TeamNameUpdated", data => {
-      store.dispatch("renameOtherTeam",  data.teamId, data.teamName);
+      console.log(data);
+      store.dispatch("renameOtherTeam",  data);
     })
 
     connect(connection).then(() => {
