@@ -1,5 +1,5 @@
 import * as SignalR from "@aspnet/signalr";
-import store from "./../store/index.js";
+import store from "./../store/index";
 
 export default {
   init() {
@@ -8,7 +8,7 @@ export default {
       .configureLogging(SignalR.LogLevel.Information)
       .build();
 
-    function connect(conn) {
+    function connect(conn: SignalR.HubConnection) {
       return conn.start().catch(e => {
         sleep(5000);
         console.log("Reconnecting Socket because of " + e); // eslint-disable-line no-console
@@ -16,12 +16,12 @@ export default {
       });
     }
 
-    connection.onclose(function () {
+    connection.onclose(function() {
       connect(connection);
     });
 
     // TODO: rafactor this into helper class.
-    function sleep(milliseconds) {
+    function sleep(milliseconds: number) {
       var start = new Date().getTime();
       for (var i = 0; i < 1e7; i++) {
         if (new Date().getTime() - start > milliseconds) {
@@ -36,8 +36,9 @@ export default {
     });
 
     connection.on("TeamNameUpdated", data => {
-      store.dispatch("renameOtherTeam",  data.teamId, data.teamName);
-    })
+      console.log(data); // eslint-disable-line no-console
+      store.dispatch("renameOtherTeam", data);
+    });
 
     connect(connection).then(() => {
       // save it

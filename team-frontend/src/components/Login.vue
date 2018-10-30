@@ -12,10 +12,12 @@
  </div>
 </template>
 
-<script>
-export default {
-  name: "Login"
-};
+<script lang="ts">
+import Vue from "vue";
+
+export default class Login extends Vue {
+  name: string = "Login";
+}
 </script>
 
 <style>

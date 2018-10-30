@@ -12,47 +12,46 @@
  </div>
 </template>
 
-<script>
-//import Axios from "axios";
+<script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Prop } from "vue-property-decorator";
+import { AxiosResponse } from "axios";
+import { TeamInfo } from "../models/models";
 
-export default {
-  name: "RegisterTeam",
-  props: {
-    msg: String
-  },
-  data() {
-    return {
-      teamName: "",
-      code: "JOINME"
-    };
-  },
-  methods: {
-    register() {
-      // register!
-      this.$axios
-        .post(
-          "/api/account/register",
-          {
-            teamName: this.teamName,
-            code: this.code
-          },
-          { withCredentials: true }
-        )
-        .then(response => {
-          // disco. init team (add team to store, start signalr)
-          this.$store.dispatch("initTeam", {
-            teamId: response.data.teamId,
-            teamName: this.teamName
-          });
+@Component({})
+export default class RegisterTeam extends Vue {
+  @Prop()
+  private msg!: string;
+  name: string = "RegisterTeam";
+  teamName: string = "";
+  code: string = "JOINME";
 
-          // and goto lobby
-          this.$router.push("Lobby");
-        })
-        // TODO: put catch above then???
-        .catch(error => (this.msg = error.response.data[0].message));
-    }
+  register() {
+    // register!
+    this.$axios
+      .post(
+        "/api/account/register",
+        {
+          teamName: this.teamName,
+          code: this.code
+        },
+        { withCredentials: true }
+      )
+      .then((response: AxiosResponse<TeamInfo>) => {
+        // disco. init team (add team to store, start signalr)
+        this.$store.dispatch("initTeam", {
+          teamId: response.data.teamId,
+          teamName: this.teamName
+        });
+
+        // and goto lobby
+        this.$router.push("Lobby");
+      })
+      // TODO: put catch above then???
+      .catch(error => (this.msg = error.response.data[0].message));
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
