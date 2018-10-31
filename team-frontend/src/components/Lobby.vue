@@ -3,16 +3,14 @@
     <h1>Welkom in de lobby!</h1>
     <span>Sit back and relax...</span>
     <hr />
-     <div v-if="isInEdit">
-        <input v-model="newName" id="teamName" />
-     </div>
-     <div v-else>
-        {{ team.teamName }}
-     </div>
-      <button @click="toggleEdit()">
-        <span v-if="isInEdit">OK</span>
-        <span v-else>Wijzig naam</span>
-      </button>
+    <input v-if="isInEdit" v-model="newName" id="teamName" />
+    <div v-else>
+      {{ team.teamName }}
+    </div>
+    <button @click="toggleEdit()">
+      <span v-if="isInEdit">OK</span>
+      <span v-else>Wijzig naam</span>
+    </button>
 
    <hr />
     <p>Jullie gaan het opnemen tegen:</p>

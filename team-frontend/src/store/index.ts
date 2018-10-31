@@ -6,18 +6,16 @@ import { HubConnection } from "@aspnet/signalr";
 
 Vue.use(Vuex);
 
-const store: StoreOptions<RootState> = {
-  state: {
-    quiz: { team: undefined, teams: [] },
-    signalrconnection: undefined
-  }
-};
 export interface RootState {
   quiz: Quiz;
   signalrconnection?: HubConnection;
 }
 
-export default new Vuex.Store<RootState>({
+const store: StoreOptions<RootState> = {
+  state: {
+    quiz: { team: undefined, teams: [] },
+    signalrconnection: undefined
+  },
   getters: {},
   mutations: {
     // mutations are sync store updates
@@ -25,7 +23,7 @@ export default new Vuex.Store<RootState>({
       // called when the current team registers succesfully
       state.quiz.team = team;
     },
-    addTeam(state, team) {
+    addTeam(state, team: TeamInfo) {
       // called by the signalr stuff when a new team registers
       state.quiz.teams.push(team);
     },
@@ -50,7 +48,7 @@ export default new Vuex.Store<RootState>({
   actions: {
     // actions are async store updates and use the commit method to delegate
     // the action to the mutation as actions are not allowed to change the state directly.
-    initTeam({ commit }, team) {
+    initTeam({ commit }, team: TeamInfo) {
       commit("setTeam", team);
       gamehub.init();
     },
@@ -69,4 +67,6 @@ export default new Vuex.Store<RootState>({
       }
     }
   }
-});
+};
+
+export default new Vuex.Store<RootState>(store);

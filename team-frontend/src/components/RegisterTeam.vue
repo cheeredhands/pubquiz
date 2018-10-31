@@ -1,6 +1,6 @@
 <template>
   <div id="content">
-    <h1>{{ msg }}</h1>
+    <h1>{{ message }}</h1>
     <div class="login">
     <p><label for="teamName">Team name</label><input v-model="teamName" id="teamName" /> </p>
     <p> <label for="code">Code</label> <input v-model="code" id="code"/></p>
@@ -26,8 +26,13 @@ export default class RegisterTeam extends Vue {
   name: string = "RegisterTeam";
   teamName: string = "";
   code: string = "JOINME";
+  message: string = "";
 
+  mounted() {
+    this.message = this.msg;
+  }
   register() {
+    //this.$store.commit("setTeam", { teamId: "derp", teamName: "herp" });
     // register!
     this.$axios
       .post(
@@ -44,12 +49,11 @@ export default class RegisterTeam extends Vue {
           teamId: response.data.teamId,
           teamName: this.teamName
         });
-
         // and goto lobby
         this.$router.push("Lobby");
       })
       // TODO: put catch above then???
-      .catch(error => (this.msg = error.response.data[0].message));
+      .catch(error => (this.message = error.response.data[0].message));
   }
 }
 </script>
