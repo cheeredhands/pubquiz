@@ -33,12 +33,12 @@ const store: StoreOptions<RootState> = {
       }
     },
     setOtherTeam(state, team: TeamInfo) {
-      console.log(`setOtherTeam: ${team}`); // eslint-disable-line no-console
+      console.log(`setOtherTeam: ${team}`); // tslint-disable-line no-console
       const teamInStore = state.quiz.teams.find(
         item => item.teamId === team.teamId
       );
       if (teamInStore !== undefined) {
-        teamInStore.teamName = team.teamName; // throws error in console...
+        teamInStore.teamName = team.teamName; 
       }
     },
     saveSignalRConnection(state, signalrconnection) {
@@ -53,7 +53,7 @@ const store: StoreOptions<RootState> = {
       gamehub.init();
     },
     renameOtherTeam({ commit }, team: TeamInfo) {
-      console.log(`renameOtherTeam: ${team}`); // eslint-disable-line no-console
+      console.log(`renameOtherTeam: ${team}`); // tslint-disable-line no-console
       commit('setOtherTeam', team);
     },
     processTeamRegistered({ commit, state }, teamRegistered: TeamInfo) {

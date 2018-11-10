@@ -80,6 +80,7 @@ namespace Pubquiz.Logic.Handlers
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
             // notify quiz master 
+            await _gameHubContext.Clients.Group(teamGroupId).TeamNameUpdated(message);
             await _gameHubContext.Clients.Group(quizMasterGroupId).TeamNameUpdated(message);
 
             // notify other teams
