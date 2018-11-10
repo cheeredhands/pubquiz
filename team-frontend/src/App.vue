@@ -6,38 +6,42 @@
     </div>
     <router-view/>
     <footer class="footer">{{message}}</footer>
-  </div>      
+  </div>
 </template>
 
-<script>
-export default {
-  name: "app",
-  data() {
-    return {
-      message: ""
-    };
-  },
-  created() {
+<script lang="ts">
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { AxiosResponse } from 'axios';
+import { WhoAmIResponse } from '@/models/models';
+
+@Component
+export default class App extends Vue {
+  name: string = "app";
+
+  message: string = "";
+
+  mounted() {
     this.$axios
-      .get("/api/account/whoami", { withCredentials: true })
-      .then(response => {
-        if (response.data.userName === "") {
+      .get('/api/account/whoami', { withCredentials: true })
+      .then((response: AxiosResponse<WhoAmIResponse>) => {
+        if (response.data.userName === '') {
           return;
         }
         // disco. init team (add team to store, start signalr)
         this.$store
-          .dispatch("initTeam", {
+          .dispatch('initTeam', {
             teamId: response.data.userId,
-            teamName: response.data.userName
+            teamName: response.data.userName,
           })
           .then(() => {
             // and goto lobby
-            this.$router.replace("Lobby");
+            this.$router.replace('Lobby');
           });
       })
       .catch(error => (this.message = error.response));
   }
-};
+}
 </script>
 
 <style>
@@ -76,6 +80,7 @@ body {
 
 footer {
   background-color: aliceblue;
+  font-size: 10px;
 }
 
 #content {

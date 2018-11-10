@@ -1,8 +1,8 @@
-import Vue from "vue";
-import Vuex, { StoreOptions } from "vuex";
-import gamehub from "../services/gamehub";
-import { Quiz, TeamInfo } from "@/models/models";
-import { HubConnection } from "@aspnet/signalr";
+import Vue from 'vue';
+import Vuex, { StoreOptions } from 'vuex';
+import { HubConnection } from '@aspnet/signalr';
+import gamehub from '../services/gamehub';
+import { Quiz, TeamInfo } from '../models/models';
 
 Vue.use(Vuex);
 
@@ -33,8 +33,8 @@ const store: StoreOptions<RootState> = {
       }
     },
     setOtherTeam(state, team: TeamInfo) {
-      console.log("setOtherTeam: " + team); // eslint-disable-line no-console
-      var teamInStore = state.quiz.teams.find(
+      console.log(`setOtherTeam: ${team}`); // eslint-disable-line no-console
+      const teamInStore = state.quiz.teams.find(
         item => item.teamId === team.teamId
       );
       if (teamInStore !== undefined) {
@@ -49,12 +49,12 @@ const store: StoreOptions<RootState> = {
     // actions are async store updates and use the commit method to delegate
     // the action to the mutation as actions are not allowed to change the state directly.
     initTeam({ commit }, team: TeamInfo) {
-      commit("setTeam", team);
+      commit('setTeam', team);
       gamehub.init();
     },
     renameOtherTeam({ commit }, team: TeamInfo) {
-      console.log("renameOtherTeam: " + team); // eslint-disable-line no-console
-      commit("setOtherTeam", team);
+      console.log(`renameOtherTeam: ${team}`); // eslint-disable-line no-console
+      commit('setOtherTeam', team);
     },
     processTeamRegistered({ commit, state }, teamRegistered: TeamInfo) {
       if (state.quiz.team === undefined) {
@@ -63,7 +63,7 @@ const store: StoreOptions<RootState> = {
       if (teamRegistered.teamId !== state.quiz.team.teamId) {
         // because the hub is not (yet) capable of notifying other teams
         // we receive our own teamRegistered notification as well.
-        commit("addTeam", teamRegistered);
+        commit('addTeam', teamRegistered);
       }
     }
   }

@@ -13,13 +13,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-import { AxiosResponse } from "axios";
-import { TeamInfo } from "../models/models";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { AxiosResponse } from 'axios';
+import { TeamInfo } from '../models/models';
 
-@Component({})
+@Component
 export default class RegisterTeam extends Vue {
   @Prop()
   private msg!: string;
@@ -31,26 +29,27 @@ export default class RegisterTeam extends Vue {
   mounted() {
     this.message = this.msg;
   }
+
   register() {
-    //this.$store.commit("setTeam", { teamId: "derp", teamName: "herp" });
+    // this.$store.commit("setTeam", { teamId: "derp", teamName: "herp" });
     // register!
     this.$axios
       .post(
-        "/api/account/register",
+        '/api/account/register',
         {
           teamName: this.teamName,
-          code: this.code
+          code: this.code,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       )
       .then((response: AxiosResponse<TeamInfo>) => {
         // disco. init team (add team to store, start signalr)
-        this.$store.dispatch("initTeam", {
+        this.$store.dispatch('initTeam', {
           teamId: response.data.teamId,
-          teamName: this.teamName
+          teamName: this.teamName,
         });
         // and goto lobby
-        this.$router.push("Lobby");
+        this.$router.push('Lobby');
       })
       // TODO: put catch above then???
       .catch(error => (this.message = error.response.data[0].message));

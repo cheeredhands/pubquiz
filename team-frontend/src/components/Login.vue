@@ -7,13 +7,13 @@
  <p><button type="submit" @click="login()">Login</button></p>
  </div>
  <div>
-  
+
   </div>
  </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default class Login extends Vue {
   name: string = "Login";
