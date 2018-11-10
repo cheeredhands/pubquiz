@@ -15,13 +15,14 @@ import Component from 'vue-class-component';
 import { AxiosResponse } from 'axios';
 import { WhoAmIResponse } from '@/models/models';
 
+
 @Component
 export default class App extends Vue {
-  name: string = "app";
+  public name: string = 'app';
 
-  message: string = "";
+  public message: string = '';
 
-  mounted() {
+  public mounted() {
     this.$axios
       .get('/api/account/whoami', { withCredentials: true })
       .then((response: AxiosResponse<WhoAmIResponse>) => {
