@@ -12,9 +12,9 @@ const config = {
   // withCredentials: true, // Check cross-site Access-Control
 };
 
-const _axios = axios.create(config);
+const axiosInstance = axios.create(config);
 
-_axios.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   cfg => {
     // Do something before request is sent
     return cfg;
@@ -26,7 +26,7 @@ _axios.interceptors.request.use(
 );
 
 // Add a response interceptor
-_axios.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   res => {
     // Do something with response data
     return res;
@@ -39,16 +39,16 @@ _axios.interceptors.response.use(
 
 const Plugin: PluginObject<any> = {
   install: Vue => {
-    Vue.$axios = _axios;
+    Vue.$axios = axiosInstance;
   }
 };
 Plugin.install = Vue => {
-  Vue.$axios = _axios;
-  window.axios = _axios;
+  Vue.$axios = axiosInstance;
+  window.axios = axiosInstance;
   Object.defineProperties(Vue.prototype, {
     $axios: {
       get() {
-        return _axios;
+        return axiosInstance;
       }
     }
   });

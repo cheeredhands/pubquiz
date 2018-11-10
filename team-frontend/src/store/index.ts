@@ -33,7 +33,7 @@ const store: StoreOptions<RootState> = {
       }
     },
     setOtherTeam(state, team: TeamInfo) {
-      console.log(`setOtherTeam: ${team}`); // tslint-disable-line no-console
+      console.log(`setOtherTeam: ${team}`); // tslint:disable-line no-console
       const teamInStore = state.quiz.teams.find(
         item => item.teamId === team.teamId
       );
@@ -53,7 +53,7 @@ const store: StoreOptions<RootState> = {
       gamehub.init();
     },
     renameOtherTeam({ commit }, team: TeamInfo) {
-      console.log(`renameOtherTeam: ${team}`); // tslint-disable-line no-console
+      console.log(`renameOtherTeam: ${team}`); // tslint:disable-line no-console
       commit('setOtherTeam', team);
     },
     processTeamRegistered({ commit, state }, teamRegistered: TeamInfo) {

@@ -16,7 +16,7 @@
 import Vue from 'vue';
 
 export default class Login extends Vue {
-  name: string = "Login";
+  public name: string = 'Login';
 }
 </script>
 

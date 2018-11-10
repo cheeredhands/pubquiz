@@ -26,20 +26,20 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 @Component({})
 export default class Lobby extends Vue {
-  name: string = "Lobby";
+  public name: string = 'Lobby';
 
-  inEdit: boolean = false;
+  public inEdit: boolean = false;
 
-  newName: string = "";
+  public newName: string = '';
 
-  teamId: string = "";
+  public teamId: string = '';
 
-  created() {
+  public created() {
     this.newName = this.team.teamName;
     this.teamId = this.team.teamId;
   }
 
-  toggleEdit() {
+  public toggleEdit() {
     if (this.inEdit) {
       // call api that team name changed but only if team name has not changed!
       if (this.team.teamName !== this.newName) {

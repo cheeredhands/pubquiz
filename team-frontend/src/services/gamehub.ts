@@ -11,7 +11,7 @@ export default {
     function connect(conn: SignalR.HubConnection) {
       return conn.start().catch(e => {
         sleep(5000);
-        console.log(`Reconnecting Socket because of ${e}`); // tslint-disable-line no-console
+        console.log(`Reconnecting Socket because of ${e}`); // tslint:disable-line no-console
         connect(conn);
       });
     }
@@ -36,7 +36,7 @@ export default {
     });
 
     connection.on('TeamNameUpdated', data => {
-      console.log(data); // tslint-disable-line no-console
+      console.log(data); // tslint:disable-line no-console
       store.dispatch('renameOtherTeam', data);
     });
 

@@ -19,18 +19,19 @@ import { TeamInfo } from '../models/models';
 
 @Component
 export default class RegisterTeam extends Vue {
+  
+  public name: string = 'RegisterTeam';
+  public teamName: string = '';
+  public code: string = 'JOINME';
+  public message: string = '';
   @Prop()
   private msg!: string;
-  name: string = "RegisterTeam";
-  teamName: string = "";
-  code: string = "JOINME";
-  message: string = "";
 
-  mounted() {
+  public mounted() {
     this.message = this.msg;
   }
 
-  register() {
+  public register() {
     // this.$store.commit("setTeam", { teamId: "derp", teamName: "herp" });
     // register!
     this.$axios
