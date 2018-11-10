@@ -6,14 +6,20 @@ import { Quiz, TeamInfo } from '../models/models';
 
 Vue.use(Vuex);
 
-export interface RootState {
-  quiz: Quiz;
+interface RootState {
+  isLoggedIn: boolean;
+  team?: TeamInfo;
+  otherTeams: TeamInfo[];
+  quiz?: Quiz;
   signalrconnection?: HubConnection;
 }
 
 const store: StoreOptions<RootState> = {
   state: {
-    quiz: { team: undefined, teams: [] },
+    isLoggedIn: false,
+    team: undefined,
+    otherTeams: [],
+    quiz: undefined,
     signalrconnection: undefined
   },
   getters: {},
@@ -21,24 +27,28 @@ const store: StoreOptions<RootState> = {
     // mutations are sync store updates
     setTeam(state, team: TeamInfo) {
       // called when the current team registers succesfully
-      state.quiz.team = team;
+      state.team = team;
+      state.isLoggedIn = true;
     },
     addTeam(state, team: TeamInfo) {
       // called by the signalr stuff when a new team registers
-      state.quiz.teams.push(team);
+      state.otherTeams.push(team);
+    },
+    setOtherTeams(state, otherTeams: TeamInfo[]){
+      state.otherTeams=otherTeams;
     },
     setOwnTeamName(state, newName) {
-      if (state.quiz.team !== undefined) {
-        state.quiz.team.teamName = newName;
+      if (state.team !== undefined) {
+        state.team.teamName = newName;
       }
     },
     setOtherTeam(state, team: TeamInfo) {
       console.log(`setOtherTeam: ${team}`); // tslint:disable-line no-console
-      const teamInStore = state.quiz.teams.find(
+      const teamInStore = state.otherTeams.find(
         item => item.teamId === team.teamId
       );
       if (teamInStore !== undefined) {
-        teamInStore.teamName = team.teamName; 
+        teamInStore.teamName = team.teamName;
       }
     },
     saveSignalRConnection(state, signalrconnection) {
@@ -57,10 +67,10 @@ const store: StoreOptions<RootState> = {
       commit('setOtherTeam', team);
     },
     processTeamRegistered({ commit, state }, teamRegistered: TeamInfo) {
-      if (state.quiz.team === undefined) {
+      if (state.team === undefined) {
         return;
       }
-      if (teamRegistered.teamId !== state.quiz.team.teamId) {
+      if (teamRegistered.teamId !== state.team.teamId) {
         // because the hub is not (yet) capable of notifying other teams
         // we receive our own teamRegistered notification as well.
         commit('addTeam', teamRegistered);

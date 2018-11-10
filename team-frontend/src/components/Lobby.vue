@@ -24,7 +24,24 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-@Component({})
+import { Route } from 'vue-router';
+import store from '../store';
+import { AxiosResponse, AxiosError } from 'axios';
+import { TeamLobbyViewModel } from '../models/models';
+
+@Component({
+  beforeRouteEnter(to: Route, from: Route, next: any) {
+    // called before the route that renders this component is confirmed.
+    // does NOT have access to `this` component instance,
+    // because it has not been created yet when this guard is called!
+
+    if (!store.state.isLoggedIn) { 
+      next('/');
+    }
+    // todo also check the state of the game, you might want to go straight back into the game.
+    next(); 
+  }
+})
 export default class Lobby extends Vue {
   public name: string = 'Lobby';
 
@@ -34,9 +51,20 @@ export default class Lobby extends Vue {
 
   public teamId: string = '';
 
-  public created() {
+   public created() {
     this.newName = this.team.teamName;
     this.teamId = this.team.teamId;
+
+    // get team lobby view model
+    this.$axios
+      .get('/api/game/teamlobby')
+      .then((response: AxiosResponse<TeamLobbyViewModel>)=>{
+        this.$store.commit('setTeam',response.data.team);
+        this.$store.commit('setOtherTeams', response.data.otherTeamsInGame);
+      })
+      .catch((error: AxiosError)=>{
+        // todo
+      });
   }
 
   public toggleEdit() {
@@ -46,14 +74,14 @@ export default class Lobby extends Vue {
         this.$axios
           .post('/api/account/changeteamname', {
             teamId: this.teamId,
-            newName: this.newName,
-          })
-          .catch((error) => {
-            // TODO
-          })
+            newName: this.newName
+          })         
           .then(() => {
             // only save it to the store if api call is successful!
             this.$store.commit('setOwnTeamName', this.newName);
+          })
+           .catch((error: AxiosError) => {
+            // TODO
           });
       }
     }
@@ -61,11 +89,11 @@ export default class Lobby extends Vue {
   }
 
   get team() {
-    return this.$store.state.quiz.team || '';
+    return this.$store.state.team || '';
   }
 
   get otherTeams() {
-    return this.$store.state.quiz.teams;
+    return this.$store.state.otherTeams;
   }
 
   get isInEdit() {

@@ -3,6 +3,8 @@ export interface TeamInfo {
   teamId: string;
   /** The Team Name */
   teamName: string;
+  /** Team member names */
+  memberNames: string;
 }
 
 export interface WhoAmIResponse {
@@ -12,10 +14,15 @@ export interface WhoAmIResponse {
   userRole: UserRole;
 }
 
+export interface TeamLobbyViewModel {
+  userId: string;
+  team: TeamInfo;
+  otherTeamsInGame: TeamInfo[];
+}
+
 /** The quiz object used  */
 export interface Quiz {
-  team?: TeamInfo;
-  teams: TeamInfo[];
+  title: string;
 }
 
 export enum UserRole {
