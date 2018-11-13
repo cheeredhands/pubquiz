@@ -14,6 +14,11 @@ export interface WhoAmIResponse {
   userRole: UserRole;
 }
 
+export interface ApiResponse {
+  code: number;
+  message: string;
+}
+
 export interface TeamLobbyViewModel {
   userId: string;
   team: TeamInfo;

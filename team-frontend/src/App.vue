@@ -7,6 +7,7 @@
     <transition>
       <router-view/>
     </transition>
+    <vue-snotify></vue-snotify>
     <footer class="footer">{{message}}</footer>
   </div>
 </template>
@@ -16,7 +17,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { AxiosResponse } from 'axios';
 import { WhoAmIResponse } from '@/models/models';
-
 
 @Component
 export default class App extends Vue {
@@ -42,12 +42,13 @@ export default class App extends Vue {
             this.$router.replace('Lobby');
           });
       })
-      .catch(error => (this.message = error.response));
+      .catch(error => this.$snotify.error(error.message));
   }
 }
 </script>
 
 <style>
+@import "~vue-snotify/styles/material.css";
 html,
 body {
   height: 100%;

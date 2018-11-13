@@ -11,7 +11,11 @@
       <span v-if="isInEdit">OK</span>
       <span v-else>Wijzig naam</span>
     </button>
-
+    <div>
+      Geef hier de namen van je teamleden op (een per regel): <br/>
+      <textarea rows="4" cols="30" v-model="members"></textarea>
+      <button v-click="saveMembers">Opslaan</button>
+    </div>
    <hr />
     <p>Jullie gaan het opnemen tegen:</p>
     <ul>
@@ -27,7 +31,7 @@ import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import store from '../store';
 import { AxiosResponse, AxiosError } from 'axios';
-import { TeamLobbyViewModel } from '../models/models';
+import { TeamLobbyViewModel, ApiResponse } from '../models/models';
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -51,9 +55,12 @@ export default class Lobby extends Vue {
 
   public teamId: string = '';
 
+  public memberNames: string = '';
+
    public created() {
     this.newName = this.team.teamName;
     this.teamId = this.team.teamId;
+    this.memberNames = this.team.memberNames;
 
     // get team lobby view model
     this.$axios
@@ -65,6 +72,15 @@ export default class Lobby extends Vue {
       .catch((error: AxiosError)=>{
         // todo
       });
+  }
+
+  public saveMembers() {
+    this.$axios.post('api/account/changeteammembers',{
+      teamId: this.team.teamId,
+      teamMembers: this.memberNames
+    })
+    .then((response: AxiosResponse<ApiResponse>)=> this.$snotify.success(response.data.message))
+    .catch((error: AxiosError)=> this.$snotify.error(error.message))
   }
 
   public toggleEdit() {

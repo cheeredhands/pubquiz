@@ -32,7 +32,6 @@ export default class RegisterTeam extends Vue {
   }
 
   public register() {
-    // this.$store.commit("setTeam", { teamId: "derp", teamName: "herp" });
     // register!
     this.$axios
       .post(
@@ -50,10 +49,10 @@ export default class RegisterTeam extends Vue {
           teamName: this.teamName,
         });
         // and goto lobby
+        this.$snotify.success("Welkom!");
         this.$router.push('Lobby');
       })
-      // TODO: put catch above then???
-      .catch(error => (this.message = error.response.data[0].message));
+      .catch(error => this.$snotify.error(error.response.data[0].message));
   }
 }
 </script>

@@ -4,8 +4,6 @@ import { HubConnection } from '@aspnet/signalr';
 import gamehub from '../services/gamehub';
 import { Quiz, TeamInfo } from '../models/models';
 
-Vue.use(Vuex);
-
 interface RootState {
   isLoggedIn: boolean;
   team?: TeamInfo;
@@ -34,8 +32,8 @@ const store: StoreOptions<RootState> = {
       // called by the signalr stuff when a new team registers
       state.otherTeams.push(team);
     },
-    setOtherTeams(state, otherTeams: TeamInfo[]){
-      state.otherTeams=otherTeams;
+    setOtherTeams(state, otherTeams: TeamInfo[]) {
+      state.otherTeams = otherTeams;
     },
     setOwnTeamName(state, newName) {
       if (state.team !== undefined) {
