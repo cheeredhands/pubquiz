@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import Vuex, { StoreOptions } from 'vuex';
 import './plugins/axios';
 import App from './App.vue';
 import router from './router/index';
@@ -13,8 +12,6 @@ Vue.config.productionTip = false;
 // });
 
 Vue.use(Snotify);
-
-Vue.use(Vuex);
 
 new Vue({
   router,

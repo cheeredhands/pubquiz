@@ -4,6 +4,8 @@ import { HubConnection } from '@aspnet/signalr';
 import gamehub from '../services/gamehub';
 import { Quiz, TeamInfo } from '../models/models';
 
+Vue.use(Vuex);
+
 interface RootState {
   isLoggedIn: boolean;
   team?: TeamInfo;
