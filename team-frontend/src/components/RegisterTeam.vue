@@ -43,7 +43,7 @@ export default class RegisterTeam extends Vue {
         { withCredentials: true },
       )
       .then((response: AxiosResponse<TeamInfo>) => {
-        // disco. init team (add team to store, start signalr)
+               // disco. init team (add team to store, start signalr)
         this.$store.dispatch('initTeam', {
           teamId: response.data.teamId,
           teamName: this.teamName,
