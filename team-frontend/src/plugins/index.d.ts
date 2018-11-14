@@ -11,15 +11,10 @@ declare global {
 declare module 'vue/types/vue' {
   interface Vue {
     $axios: AxiosInstance;
+    $snotify: SnotifyService;
   }
   interface VueConstructor {
     $axios: AxiosInstance;
   }
 }
 
-// https://github.com/artemsky/vue-snotify/issues/60
-declare module 'vue/types/vue' {
-  interface Vue {
-    $snotify: SnotifyService;
-  }
-}

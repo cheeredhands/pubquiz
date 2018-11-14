@@ -1,31 +1,32 @@
 <template>
-<div class="lobby">
+<div class='lobby'>
     <h1>Welkom in de lobby!</h1>
     <span>Sit back and relax...</span>
     <hr />
-    <input v-if="isInEdit" v-model="newName" id="teamName" />
+    <input v-if='isInEdit' v-model='newName' id='teamName' />
     <div v-else>
       {{ team.teamName }}
     </div>
-    <button @click="toggleEdit()">
-      <span v-if="isInEdit">OK</span>
+    <button @click='toggleEdit()'>
+      <span v-if='isInEdit'>OK</span>
       <span v-else>Wijzig naam</span>
     </button>
     <div>
       Geef hier de namen van je teamleden op (een per regel): <br/>
-      <textarea rows="4" cols="30" v-model="members"></textarea>
-      <button v-click="saveMembers">Opslaan</button>
+      <textarea rows='4' cols='30' v-model='memberNames'></textarea>
+      <button @click='saveMembers()'>Opslaan</button>
     </div>
    <hr />
     <p>Jullie gaan het opnemen tegen:</p>
     <ul>
-      <li v-for="(team, index) in otherTeams" :key="index">
+      <li v-for='(team, index) in otherTeams' :key='index'>
         {{ team.teamName }}
       </li>
     </ul>
 </div>
 </template>
-<script lang="ts">
+
+<script lang='ts'>
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
@@ -39,11 +40,11 @@ import { TeamLobbyViewModel, ApiResponse } from '../models/models';
     // does NOT have access to `this` component instance,
     // because it has not been created yet when this guard is called!
 
-    if (!store.state.isLoggedIn) { 
+    if (!store.state.isLoggedIn) {
       next('/');
     }
     // todo also check the state of the game, you might want to go straight back into the game.
-    next(); 
+    next();
   }
 })
 export default class Lobby extends Vue {
@@ -57,7 +58,7 @@ export default class Lobby extends Vue {
 
   public memberNames: string = '';
 
-   public created() {
+  public created() {
     this.newName = this.team.teamName;
     this.teamId = this.team.teamId;
     this.memberNames = this.team.memberNames;
@@ -65,22 +66,25 @@ export default class Lobby extends Vue {
     // get team lobby view model
     this.$axios
       .get('/api/game/teamlobby')
-      .then((response: AxiosResponse<TeamLobbyViewModel>)=>{
-        this.$store.commit('setTeam',response.data.team);
+      .then((response: AxiosResponse<TeamLobbyViewModel>) => {
+        this.$store.commit('setTeam', response.data.team);
         this.$store.commit('setOtherTeams', response.data.otherTeamsInGame);
       })
-      .catch((error: AxiosError)=>{
+      .catch((error: AxiosError) => {
         // todo
       });
   }
 
   public saveMembers() {
-    this.$axios.post('api/account/changeteammembers',{
-      teamId: this.team.teamId,
-      teamMembers: this.memberNames
-    })
-    .then((response: AxiosResponse<ApiResponse>)=> this.$snotify.success(response.data.message))
-    .catch((error: AxiosError)=> this.$snotify.error(error.message))
+    this.$axios
+      .post('api/account/changeteammembers', {
+        teamId: this.team.teamId,
+        teamMembers: this.memberNames
+      })
+      .then((response: AxiosResponse<ApiResponse>) =>
+        this.$snotify.success(response.data.message)
+      )
+      .catch((error: AxiosError) => this.$snotify.error(error.message));
   }
 
   public toggleEdit() {
@@ -91,12 +95,13 @@ export default class Lobby extends Vue {
           .post('/api/account/changeteamname', {
             teamId: this.teamId,
             newName: this.newName
-          })         
-          .then(() => {
+          })
+          .then((response: AxiosResponse<ApiResponse>) => {
             // only save it to the store if api call is successful!
             this.$store.commit('setOwnTeamName', this.newName);
+            this.$snotify.success(response.data.message);
           })
-           .catch((error: AxiosError) => {
+          .catch((error: AxiosError) => {
             // TODO
           });
       }

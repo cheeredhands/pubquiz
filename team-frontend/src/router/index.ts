@@ -4,7 +4,7 @@ import Router from 'vue-router';
 import Home from '../components/Home.vue';
 import RegisterTeam from '../components/RegisterTeam.vue';
 import Lobby from '../components/Lobby.vue';
-import Login from '../components/Login.vue';
+// import Login from '../components/Login.vue';
 
 Vue.use(Router);
 
@@ -25,11 +25,6 @@ export default new Router({
       path: '/lobby',
       name: 'Lobby',
       component: Lobby
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login
     }
   ]
 });

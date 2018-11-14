@@ -7,11 +7,9 @@ import Snotify, { SnotifyToastConfig } from 'vue-snotify';
 
 Vue.config.productionTip = false;
 
-// Vue.use(Snotify, (options: SnotifyToastConfig) => {
-//   options.showProgressBar = false;
-// });
-
-Vue.use(Snotify);
+Vue.use(Snotify, (options: SnotifyToastConfig) => {
+  options.showProgressBar = false;
+});
 
 new Vue({
   router,

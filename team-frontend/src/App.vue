@@ -4,42 +4,40 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <transition>
-      <router-view/>
-    </transition>
-    <vue-snotify></vue-snotify>
+    <router-view/>
     <footer class="footer">{{message}}</footer>
-  </div>
+     <vue-snotify></vue-snotify>
+ </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { AxiosResponse } from 'axios';
-import { WhoAmIResponse } from '@/models/models';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { AxiosResponse } from "axios";
+import { WhoAmIResponse } from "@/models/models";
 
 @Component
 export default class App extends Vue {
-  public name: string = 'app';
+  public name: string = "app";
 
-  public message: string = '';
+  public message: string = "";
 
   public mounted() {
     this.$axios
-      .get('/api/account/whoami', { withCredentials: true })
+      .get("/api/account/whoami", { withCredentials: true })
       .then((response: AxiosResponse<WhoAmIResponse>) => {
-        if (response.data.userName === '') {
+        if (response.data.userName === "") {
           return;
         }
         // disco. init team (add team to store, start signalr)
         this.$store
-          .dispatch('initTeam', {
+          .dispatch("initTeam", {
             teamId: response.data.userId,
-            teamName: response.data.userName,
+            teamName: response.data.userName
           })
           .then(() => {
             // and goto lobby
-            this.$router.replace('Lobby');
+            this.$router.replace("Lobby");
           });
       })
       .catch(error => this.$snotify.error(error.message));
