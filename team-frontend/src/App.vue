@@ -78,14 +78,6 @@ body {
   grid-template-rows: 50px 1fr 50px;
   height: 100%;
 }
-/* #nav {
-  background-color: lightblue;
-  display: flex;
-  flex-direction: row;
-  padding: 5px;
-  text-align: center;
-  height: 100%;
-} */
 
 nav a {
   font-weight: bold;
@@ -96,10 +88,6 @@ nav a:hover {
   color: white;
   text-decoration: none;
 }
-
-/* #nav > last-child {
-  margin-left: auto;
-} */
 
 nav a.router-link-exact-active {
   color: white;
