@@ -2,9 +2,9 @@
   <div id="content">
     <h1>{{ message }}</h1>
     <div class="login">
-    <p><label for="teamName">Team name</label><input v-model="teamName" id="teamName" /> </p>
-    <p> <label for="code">Code</label> <input v-model="code" id="code"/></p>
- <p><button type="submit" @click="register()">Register</button></p>
+    <p><label for="teamName">Team name</label><b-input v-model="teamName" id="teamName" /> </p>
+    <p> <label for="code">Code</label> <b-input v-model="code" id="code"/></p>
+ <p><b-button variant="primary" type="submit" @click="register()">Register</b-button></p>
  </div>
  <div>
   <!-- <router-link to="Login">Admin</router-link> -->
