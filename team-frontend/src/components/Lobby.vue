@@ -1,5 +1,5 @@
 <template>
-<div id='content'>
+<div id="content">
     <h1>Welkom in de lobby!</h1>
     <span>Sit back and relax...</span>
     <hr />
