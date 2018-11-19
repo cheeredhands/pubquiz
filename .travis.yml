@@ -18,6 +18,7 @@ matrix:
       #before_script:
       #  - npm install
       script:
+        - cd team-frontend
         - npm run build
       notifications:
         slack: thtm88:k10a1Ibdj8sdbDbAh8H1pAji
