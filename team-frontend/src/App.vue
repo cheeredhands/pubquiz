@@ -1,43 +1,52 @@
 <template>
-  <div id="app">    
-    <nav class="nav"></nav>
+  <div id="app">
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </div>
     <router-view/>
     <footer class="footer">{{message}}</footer>
-  </div>
+     <vue-snotify></vue-snotify>
+ </div>
 </template>
 
-<script>
-export default {
-  name: "app",
-  data() {
-    return {
-      message: ""
-    };
-  },
-  created() {
+<script lang="ts">
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { AxiosResponse } from 'axios';
+import { WhoAmIResponse } from './models/models';
+
+@Component
+export default class App extends Vue {
+  public name: string = 'app';
+
+  public message: string = '';
+
+  public mounted() {
     this.$axios
-      .get("/api/account/whoami", { withCredentials: true })
-      .then(response => {
-        if (response.data.userName === "") {
+      .get('/api/account/whoami', { withCredentials: true })
+      .then((response: AxiosResponse<WhoAmIResponse>) => {
+        if (response.data.userName === '') {
           return;
         }
         // disco. init team (add team to store, start signalr)
         this.$store
-          .dispatch("initTeam", {
+          .dispatch('initTeam', {
             teamId: response.data.userId,
-            name: response.data.userName
+            teamName: response.data.userName
           })
           .then(() => {
             // and goto lobby
-            this.$router.replace("Lobby");
+            this.$router.replace('Lobby');
           });
       })
-      .catch(error => (this.message = error.response));
+      .catch(error => this.$snotify.error(error.message));
   }
-};
+}
 </script>
 
 <style>
+@import '~vue-snotify/styles/material.css';
 html,
 body {
   height: 100%;
@@ -45,9 +54,8 @@ body {
 body {
   margin: 0;
 }
-
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -58,11 +66,23 @@ body {
   grid-template-rows: 50px 1fr 50px;
   height: 100%;
 }
-nav {
+#nav {
   background-color: aliceblue;
+  padding: 30px;
 }
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+
 footer {
   background-color: aliceblue;
+  font-size: 10px;
 }
 
 #content {
