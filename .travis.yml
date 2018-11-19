@@ -15,10 +15,10 @@ matrix:
       branches:
       only:
         - master
-      #before_script:
-      #  - npm install
-      script:
+      before_script:
         - cd team-frontend
+      script:
+        - npm i
         - npm run build
       notifications:
         slack: thtm88:k10a1Ibdj8sdbDbAh8H1pAji
