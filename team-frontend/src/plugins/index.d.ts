@@ -17,4 +17,3 @@ declare module 'vue/types/vue' {
     $axios: AxiosInstance;
   }
 }
-
