@@ -1,9 +1,18 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <b-navbar toggleable="md" type="dark" variant="dark">
+      <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+      <b-navbar-brand href="#">Quizr</b-navbar-brand>
+      <b-collapse is-nav id="nav_collapse">
+      <b-navbar-nav>
+        <b-nav-item><router-link to="/">Home</router-link></b-nav-item>
+      </b-navbar-nav>     
+       <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <b-nav-item><router-link to="/about">About</router-link></b-nav-item>
+      </b-navbar-nav>
+      </b-collapse>     
+    </b-navbar>
     <router-view/>
     <footer class="footer">{{message}}</footer>
      <vue-snotify></vue-snotify>
@@ -47,6 +56,9 @@ export default class App extends Vue {
 
 <style>
 @import '~vue-snotify/styles/material.css';
+@import '~bootstrap/dist/css/bootstrap.css';
+@import '~bootstrap-vue/dist/bootstrap-vue.css';
+
 html,
 body {
   height: 100%;
@@ -58,7 +70,7 @@ body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
   color: #2c3e50;
   /* margin: 0px; */
   display: grid;
@@ -66,27 +78,41 @@ body {
   grid-template-rows: 50px 1fr 50px;
   height: 100%;
 }
-#nav {
-  background-color: aliceblue;
-  padding: 30px;
-}
+/* #nav {
+  background-color: lightblue;
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  text-align: center;
+  height: 100%;
+} */
 
-#nav a {
+nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: gainsboro;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+nav a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+/* #nav > last-child {
+  margin-left: auto;
+} */
+
+nav a.router-link-exact-active {
+  color: white;
 }
 
 footer {
-  background-color: aliceblue;
+  background-color: lightblue;
   font-size: 10px;
 }
 
 #content {
-  display: grid;
-  grid-template-rows: 1fr 2fr 20px;
+  padding: 10px;
+  /* display: grid;
+  grid-template-rows: 1fr 2fr 20px; */
 }
 </style>
