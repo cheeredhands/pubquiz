@@ -14,7 +14,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { AxiosResponse } from 'axios';
-import { WhoAmIResponse } from '@/models/models';
+import { WhoAmIResponse } from './models/models';
 
 @Component
 export default class App extends Vue {

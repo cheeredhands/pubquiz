@@ -38,14 +38,14 @@ axiosInstance.interceptors.response.use(
 );
 
 const Plugin: PluginObject<any> = {
-  install: Vue => {
-    Vue.$axios = axiosInstance;
+  install: vue => {
+    vue.$axios = axiosInstance;
   }
 };
-Plugin.install = Vue => {
-  Vue.$axios = axiosInstance;
+Plugin.install = vue => {
+  vue.$axios = axiosInstance;
   window.axios = axiosInstance;
-  Object.defineProperties(Vue.prototype, {
+  Object.defineProperties(vue.prototype, {
     $axios: {
       get() {
         return axiosInstance;
