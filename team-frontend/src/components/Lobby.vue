@@ -1,16 +1,20 @@
 <template>
-<div class='lobby'>
+<div id='content'>
     <h1>Welkom in de lobby!</h1>
     <span>Sit back and relax...</span>
     <hr />
-    <input v-if='isInEdit' v-model='newName' id='teamName' />
+    <b-form  inline>
+      <b-input-group class="w-50" prepend="Teamnaam" >
+        <b-input  id="nameInput" v-model="newName"></b-input>
+      <b-input-group-append>
+        <b-button variant="primary" @click="applyTeamNameChange()">Aanpassen</b-button>
+      </b-input-group-append>
+      </b-input-group>
+    </b-form>
+    <!-- <input v-if='isInEdit' v-model='newName' id='teamName' />
     <div v-else>
       {{ team.teamName }}
-    </div>
-    <button @click='toggleEdit()'>
-      <span v-if='isInEdit'>OK</span>
-      <span v-else>Wijzig naam</span>
-    </button>
+    </div> -->
     <div>
       Geef hier de namen van je teamleden op (een per regel): <br/>
       <textarea rows='4' cols='30' v-model='memberNames'></textarea>
@@ -87,26 +91,23 @@ export default class Lobby extends Vue {
       .catch((error: AxiosError) => this.$snotify.error(error.message));
   }
 
-  public toggleEdit() {
-    if (this.inEdit) {
-      // call api that team name changed but only if team name has not changed!
-      if (this.team.teamName !== this.newName) {
-        this.$axios
-          .post('/api/account/changeteamname', {
-            teamId: this.teamId,
-            newName: this.newName
-          })
-          .then((response: AxiosResponse<ApiResponse>) => {
-            // only save it to the store if api call is successful!
-            this.$store.commit('setOwnTeamName', this.newName);
-            this.$snotify.success(response.data.message);
-          })
-          .catch((error: AxiosError) => {
-            // TODO
-          });
-      }
+  public applyTeamNameChange() {
+    // call api that team name changed but only if team name has not changed!
+    if (this.team.teamName !== this.newName) {
+      this.$axios
+        .post('/api/account/changeteamname', {
+          teamId: this.teamId,
+          newName: this.newName
+        })
+        .then((response: AxiosResponse<ApiResponse>) => {
+          // only save it to the store if api call is successful!
+          this.$store.commit('setOwnTeamName', this.newName);
+          this.$snotify.success(response.data.message);
+        })
+        .catch((error: AxiosError) => {
+          // TODO
+        });
     }
-    this.inEdit = !this.inEdit;
   }
 
   get team() {
