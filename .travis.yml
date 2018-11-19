@@ -1,9 +1,23 @@
-language: csharp
-mono: none
-dotnet: 2.1.402
-script:
- - cd backend
- - dotnet restore
- - dotnet test Pubquiz.Domain.Tests /p:CollectCoverage=true
-notifications:
-   slack: thtm88:k10a1Ibdj8sdbDbAh8H1pAji
+matrix:
+  include:
+    - language: csharp
+      mono: none
+      dotnet: 2.1.402
+      script:
+        - cd backend
+        - dotnet restore
+        - dotnet test Pubquiz.Domain.Tests /p:CollectCoverage=true
+      notifications:
+        slack: thtm88:k10a1Ibdj8sdbDbAh8H1pAji
+    - language: node_js
+      node_js:
+        - "8.11.3"
+      branches:
+      only:
+        - master
+      #before_script:
+      #  - npm install
+      script:
+        - npm run build
+      notifications:
+        slack: thtm88:k10a1Ibdj8sdbDbAh8H1pAji
