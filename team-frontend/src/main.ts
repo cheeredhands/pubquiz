@@ -4,6 +4,7 @@ import App from './App.vue';
 import router from './router/index';
 import store from './store/index';
 import Snotify, { SnotifyDefaults } from 'vue-snotify';
+import BootstrapVue from 'bootstrap-vue';
 
 Vue.config.productionTip = false;
 
@@ -15,6 +16,8 @@ const options = {
 } as SnotifyDefaults;
 
 Vue.use(Snotify, options);
+
+Vue.use(BootstrapVue);
 
 new Vue({
   router,
