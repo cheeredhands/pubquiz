@@ -3,13 +3,18 @@ import './plugins/axios';
 import App from './App.vue';
 import router from './router/index';
 import store from './store/index';
-import Snotify, { SnotifyToastConfig } from 'vue-snotify';
+import Snotify, { SnotifyDefaults } from 'vue-snotify';
 
 Vue.config.productionTip = false;
 
-Vue.use(Snotify, (options: SnotifyToastConfig) => {
-  options.showProgressBar = false;
-});
+// tslint:disable-next-line:no-object-literal-type-assertion
+const options = {
+  toast: {
+    showProgressBar: false
+  }
+} as SnotifyDefaults;
+
+Vue.use(Snotify, options);
 
 new Vue({
   router,
