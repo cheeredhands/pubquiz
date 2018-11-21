@@ -42,7 +42,7 @@ const store: StoreOptions<RootState> = {
         state.team.teamName = newName;
       }
     },
-    setOtherTeam(state, team: TeamInfo) {
+    setOtherTeamName(state, team: TeamInfo) {
       console.log(`setOtherTeam: ${team}`); // tslint:disable-line no-console
       const teamInStore = state.otherTeams.find(
         item => item.teamId === team.teamId
@@ -64,7 +64,7 @@ const store: StoreOptions<RootState> = {
     },
     renameOtherTeam({ commit }, team: TeamInfo) {
       console.log(`renameOtherTeam: ${team}`); // tslint:disable-line no-console
-      commit('setOtherTeam', team);
+      commit('setOtherTeamName', team);
     },
     processTeamRegistered({ commit, state }, teamRegistered: TeamInfo) {
       if (state.team === undefined) {
