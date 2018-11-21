@@ -1,5 +1,6 @@
 {
-"eslint.enable": false,
-"prettier.tslintIntegration": true,
-"prettier.singleQuote": true
+  "eslint.enable": false,
+  "prettier.eslintIntegration": false,
+  "prettier.tslintIntegration": false,
+  "prettier.singleQuote": true
 }
