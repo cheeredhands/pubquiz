@@ -75,7 +75,7 @@ export default class Lobby extends Vue {
         this.$store.commit('setOtherTeams', response.data.otherTeamsInGame);
       })
       .catch((error: AxiosError) => {
-        // todo
+        this.$snotify.error(error.message);
       });
   }
 
@@ -88,7 +88,9 @@ export default class Lobby extends Vue {
       .then((response: AxiosResponse<ApiResponse>) =>
         this.$snotify.success(response.data.message)
       )
-      .catch((error: AxiosError) => this.$snotify.error(error.message));
+      .catch((error: AxiosError) => {
+        this.$snotify.error(error.message);
+      });
   }
 
   public applyTeamNameChange() {
@@ -105,7 +107,7 @@ export default class Lobby extends Vue {
           this.$snotify.success(response.data.message);
         })
         .catch((error: AxiosError) => {
-          // TODO
+          this.$snotify.error(error.message);
         });
     }
   }
