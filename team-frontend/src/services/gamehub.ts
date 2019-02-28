@@ -4,9 +4,11 @@ import store from '../store/index';
 export default {
   close() {
     const connection = store.state.signalrconnection;
-    connection.stop().then(() => {
-      store.commit('clearSignalRConnection');
-    });
+    if (connection !== undefined) {
+      connection.stop().then(() => {
+        store.commit('clearSignalRConnection');
+      });        
+    }
   },
   init() {
     const connection = new SignalR.HubConnectionBuilder()
