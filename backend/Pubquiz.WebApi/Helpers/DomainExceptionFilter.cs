@@ -43,7 +43,7 @@ namespace Pubquiz.WebApi.Helpers
                 foreach (var domainException in domainExceptions)
                 {
                     _logger.LogWarning(0,
-                        $"A domain exception (${domainException.ErrorCode}) was thrown: {domainException.Message}. The request that caused it was {(domainException.IsBadRequest ? "malformed" : "not malformed")}",
+                        $"A domain exception ({domainException.ErrorCode}) was thrown: {domainException.Message}. The request that caused it was {(domainException.IsBadRequest ? "malformed" : "not malformed")}",
                         domainException);
                 }
 
