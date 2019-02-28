@@ -31,25 +31,18 @@ namespace Pubquiz.Persistence.MongoDb
             _logger = loggerFactory.CreateLogger(GetType());
             try
             {
-                MongoClient client;
-                try
-                {
-                    var mongoClientSettings = new MongoClientSettings
-                    {
-                        Server = MongoServerAddress.Parse(mongoOptions.ConnectionString)
-                    };
-                    client = new MongoClient(mongoClientSettings);
-                }
-                catch
-                {
-                    client = new MongoClient(mongoOptions.ConnectionString);
-                }
-
                 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 if (string.IsNullOrWhiteSpace(environment))
                 {
                     environment = "Development";
                 }
+
+                var mongoClientSettings =
+                    MongoClientSettings.FromConnectionString(
+                        $"{mongoOptions.ConnectionString}/{mongoOptions.DatabaseName}-{environment}");
+                mongoClientSettings.MaxConnectionIdleTime = TimeSpan.FromMinutes(1);
+
+                var client = new MongoClient(mongoClientSettings);
 
                 _mongoDatabase = client.GetDatabase($"{mongoOptions.DatabaseName}-{environment}");
                 _clientSession = _mongoDatabase.Client.StartSession();
