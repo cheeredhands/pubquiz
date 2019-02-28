@@ -2,6 +2,12 @@ import * as SignalR from '@aspnet/signalr';
 import store from '../store/index';
 
 export default {
+  close() {
+    const connection = store.state.signalrconnection;
+    connection.stop().then(() => {
+      store.commit('clearSignalRConnection');
+    });
+  },
   init() {
     const connection = new SignalR.HubConnectionBuilder()
       .withUrl('https://localhost:5001/gamehub')
@@ -10,15 +16,15 @@ export default {
 
     function connect(conn: SignalR.HubConnection) {
       return conn.start().catch(e => {
-        sleep(5000);
-        console.log(`Reconnecting Socket because of ${e}`); // tslint:disable-line no-console
-        connect(conn);
+        //sleep(5000);
+        //console.log(`Reconnecting Socket because of ${e}`); // tslint:disable-line no-console
+        //connect(conn);
       });
     }
 
-    connection.onclose(() => {
-      connect(connection);
-    });
+    //connection.onclose(() => {
+    //connect(connection);
+    //});
 
     // TODO: refactor this into helper class.
     function sleep(milliseconds: number) {

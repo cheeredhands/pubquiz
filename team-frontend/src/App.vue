@@ -4,32 +4,57 @@
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
       <b-navbar-brand href="#">Quizr</b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
-      <b-navbar-nav>
-        <b-nav-item><router-link to="/">Home</router-link></b-nav-item>
-      </b-navbar-nav>     
-       <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
-        <b-nav-item><router-link to="/about">About</router-link></b-nav-item>
-      </b-navbar-nav>
-      </b-collapse>     
+        <b-navbar-nav>
+          <b-nav-item>
+            <router-link to="/">Home</router-link>
+          </b-nav-item>
+        </b-navbar-nav>
+        <!-- Right aligned nav items -->
+        <b-navbar-nav v-if="isLoggedIn" class="ml-auto">
+          <b-nav-item-dropdown :text="team.teamName" right>
+            <b-dropdown-item @click="logout()">Uitloggen</b-dropdown-item>
+            <b-dropdown-item>Help</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
     </b-navbar>
     <router-view/>
     <footer class="footer">{{message}}</footer>
-     <vue-snotify></vue-snotify>
- </div>
+    <vue-snotify></vue-snotify>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { AxiosResponse } from 'axios';
-import { WhoAmIResponse } from './models/models';
+import { WhoAmIResponse, ApiResponse } from './models/models';
 
 @Component
 export default class App extends Vue {
   public name: string = 'app';
 
   public message: string = '';
+
+  get isLoggedIn() {
+    return this.$store.state.isLoggedIn || false;
+  }
+
+  get team() {
+    return this.$store.state.team || '';
+  }
+
+  public logout() {
+    this.$axios
+      .post('/api/account/logout', { withCredentials: true })
+      .then((response: AxiosResponse<ApiResponse>) => {
+        if (response.data.code === 2) {
+          this.$store.dispatch('logout');
+          this.$router.replace('/');
+          this.$snotify.success('Uitgelogd');
+        }
+      });
+  }
 
   public mounted() {
     this.$axios
@@ -55,9 +80,9 @@ export default class App extends Vue {
 </script>
 
 <style>
-@import '~vue-snotify/styles/material.css';
-@import '~bootstrap/dist/css/bootstrap.css';
-@import '~bootstrap-vue/dist/bootstrap-vue.css';
+@import "~vue-snotify/styles/material.css";
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~bootstrap-vue/dist/bootstrap-vue.css";
 
 html,
 body {
@@ -67,7 +92,7 @@ body {
   margin: 0;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */

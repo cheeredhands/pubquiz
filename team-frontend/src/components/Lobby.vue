@@ -1,33 +1,32 @@
 <template>
-<div id="content">
+  <div id="content">
     <h1>Welkom in de lobby!</h1>
     <span>Sit back and relax...</span>
-    <hr />
-    <b-form  inline>
-      <b-input-group class="w-50" prepend="Teamnaam" >
-        <b-input  id="nameInput" v-model="newName"></b-input>
-      <b-input-group-append>
-        <b-button variant="primary" @click="applyTeamNameChange()">Aanpassen</b-button>
-      </b-input-group-append>
+    <hr>
+    <b-form inline>
+      <b-input-group class="w-50" prepend="Teamnaam">
+        <b-input id="nameInput" v-model="newName"></b-input>
+        <b-input-group-append>
+          <b-button variant="primary" @click="applyTeamNameChange()">Aanpassen</b-button>
+        </b-input-group-append>
       </b-input-group>
     </b-form>
     <!-- <input v-if="isInEdit" v-model="newName" id="teamName" />
     <div v-else>
       {{ team.teamName }}
-    </div> -->
+    </div>-->
     <div>
-      Geef hier de namen van je teamleden op (een per regel): <br/>
+      Geef hier de namen van je teamleden op (een per regel):
+      <br>
       <textarea rows="4" cols="30" v-model="memberNames"></textarea>
       <button @click="saveMembers()">Opslaan</button>
     </div>
-   <hr />
+    <hr>
     <p>Jullie gaan het opnemen tegen:</p>
     <ul>
-      <li v-for="(team, index) in otherTeams" :key="index">
-        {{ team.teamName }}
-      </li>
+      <li v-for="(team, index) in otherTeams" :key="index">{{ team.teamName }}</li>
     </ul>
-</div>
+  </div>
 </template>
 
 <script lang="ts">

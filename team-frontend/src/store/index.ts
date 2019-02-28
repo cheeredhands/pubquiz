@@ -51,8 +51,16 @@ const store: StoreOptions<RootState> = {
         teamInStore.teamName = team.teamName;
       }
     },
+    logout(state) {
+      state.team = undefined;
+      state.isLoggedIn = false;
+      state.otherTeams = [];
+    },
     saveSignalRConnection(state, signalrconnection) {
       state.signalrconnection = signalrconnection;
+    },
+    clearSignalRConnection(state) {
+      state.signalrconnection = undefined;
     }
   },
   actions: {
@@ -61,6 +69,10 @@ const store: StoreOptions<RootState> = {
     initTeam({ commit }, team: TeamInfo) {
       commit('setTeam', team);
       gamehub.init();
+    },
+    logout({ commit }) {
+      commit('logout');
+      gamehub.close();
     },
     renameOtherTeam({ commit }, team: TeamInfo) {
       console.log(`renameOtherTeam: ${team}`); // tslint:disable-line no-console

@@ -2,14 +2,22 @@
   <div id="content">
     <h1>{{ message }}</h1>
     <div class="login">
-    <p><label for="teamName">Team name</label><b-input v-model="teamName" id="teamName" /> </p>
-    <p> <label for="code">Code</label> <b-input v-model="code" id="code"/></p>
- <p><b-button variant="primary" type="submit" @click="register()">Register</b-button></p>
- </div>
- <div>
-  <!-- <router-link to="Login">Admin</router-link> -->
+      <p>
+        <label for="teamName">Team name</label>
+        <b-input v-model="teamName" id="teamName"/>
+      </p>
+      <p>
+        <label for="code">Code</label>
+        <b-input v-model="code" id="code"/>
+      </p>
+      <p>
+        <b-button variant="primary" type="submit" @click="register()">Register</b-button>
+      </p>
+    </div>
+    <div>
+      <!-- <router-link to="Login">Admin</router-link> -->
+    </div>
   </div>
- </div>
 </template>
 
 <script lang="ts">
@@ -45,7 +53,8 @@ export default class RegisterTeam extends Vue {
         // disco. init team (add team to store, start signalr)
         this.$store.dispatch('initTeam', {
           teamId: response.data.teamId,
-          teamName: this.teamName
+          teamName: response.data.teamName,
+          memberNames: response.data.memberNames
         });
         // and goto lobby
         this.$snotify.success('Welkom!'); // TODO: get message from response
