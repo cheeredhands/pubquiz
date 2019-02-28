@@ -64,7 +64,8 @@ namespace Pubquiz.WebApi
                 builder.AddConsole();
                 builder.AddDebug();
             });
-            services.AddInMemoryPersistence();
+            //services.AddInMemoryPersistence();
+            services.AddMongoDbPersistence("Quizr", Configuration.GetConnectionString("MongoDB"));
             services.AddRequests(Assembly.Load("Pubquiz.Logic"));
             services.AddMvcCore(options =>
                 {
@@ -162,10 +163,10 @@ namespace Pubquiz.WebApi
             });
 
             // Seed the test data
-            var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
-            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
-            var seeder = new TestSeeder(unitOfWork, loggerFactory);
-            seeder.SeedTestSet();
+//            var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+//            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
+//            var seeder = new TestSeeder(unitOfWork, loggerFactory);
+//            seeder.SeedTestSet();
         }
     }
 }
