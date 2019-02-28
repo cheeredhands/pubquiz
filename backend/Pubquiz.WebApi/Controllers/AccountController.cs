@@ -73,7 +73,9 @@ namespace Pubquiz.WebApi.Controllers
             {
                 Code = SuccessCodes.TeamRegisteredAndLoggedIn,
                 Message = $"Team {team.Name} registered and logged in.",
-                TeamId = team.Id
+                TeamId = team.Id,
+                TeamName = team.Name,
+                team.MemberNames
             });
         }
 
