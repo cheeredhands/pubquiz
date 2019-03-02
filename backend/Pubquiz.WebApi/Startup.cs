@@ -64,7 +64,7 @@ namespace Pubquiz.WebApi
                 builder.AddConsole();
                 builder.AddDebug();
             });
-            switch (Configuration.GetValue<string>("Database"))
+            switch (Configuration.GetValue<string>("AppSettings:Database"))
             {
                 case "Memory":
                     services.AddInMemoryPersistence();
@@ -168,7 +168,7 @@ namespace Pubquiz.WebApi
             app.UseSignalR(route => { route.MapHub<GameHub>("/gamehub"); });
 
             // Seed the test data when using in-memory-database
-            if (Configuration.GetValue<string>("Database") == "Memory")
+            if (Configuration.GetValue<string>("AppSettings:Database") == "Memory")
             {
                 var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
                 var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
