@@ -64,8 +64,16 @@ namespace Pubquiz.WebApi
                 builder.AddConsole();
                 builder.AddDebug();
             });
-            //services.AddInMemoryPersistence();
-            services.AddMongoDbPersistence("Quizr", Configuration.GetConnectionString("MongoDB"));
+            switch (Configuration.GetValue<string>("Database"))
+            {
+                case "Memory":
+                    services.AddInMemoryPersistence();
+                    break;
+                case "MongoDB":
+                    services.AddMongoDbPersistence("Quizr", Configuration.GetConnectionString("MongoDB"));
+                    break;
+            }
+
             services.AddRequests(Assembly.Load("Pubquiz.Logic"));
             services.AddMvcCore(options =>
                 {
@@ -97,7 +105,7 @@ namespace Pubquiz.WebApi
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new Info { Title = "Pubquiz backend", Version = "v1" });
+                options.SwaggerDoc("v1", new Info {Title = "Pubquiz backend", Version = "v1"});
             });
 
             services.ConfigureSwaggerGen(options =>
@@ -157,16 +165,16 @@ namespace Pubquiz.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
 
-            app.UseSignalR(route =>
-            {
-                route.MapHub<GameHub>("/gamehub");
-            });
+            app.UseSignalR(route => { route.MapHub<GameHub>("/gamehub"); });
 
-            // Seed the test data
-//            var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
-//            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
-//            var seeder = new TestSeeder(unitOfWork, loggerFactory);
-//            seeder.SeedTestSet();
+            // Seed the test data when using in-memory-database
+            if (Configuration.GetValue<string>("Database") == "Memory")
+            {
+                var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+                var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
+                var seeder = new TestSeeder(unitOfWork, loggerFactory);
+                seeder.SeedTestSet();
+            }
         }
     }
 }
