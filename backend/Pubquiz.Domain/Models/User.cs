@@ -12,8 +12,9 @@ namespace Pubquiz.Domain.Models
         public UserRole UserRole { get; set; }
         public List<Guid> GameIds { get; set; }
         public Guid CurrentGameId { get; set; }
+        public bool IsLoggedIn { get; set; }
 
-        public User() 
+        public User()
         {
             GameIds = new List<Guid>();
         }

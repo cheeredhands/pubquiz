@@ -56,7 +56,8 @@ namespace Pubquiz.Logic.Requests
                 UserName = userName,
                 GameId = game.Id,
                 RecoveryCode = recoveryCode,
-                UserRole = UserRole.Team
+                UserRole = UserRole.Team,
+                IsLoggedIn = true
             };
 
             game.TeamIds.Add(newTeam.Id);

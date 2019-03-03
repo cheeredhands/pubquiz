@@ -12,6 +12,7 @@ using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Helpers;
+using Rebus.Bus;
 
 
 namespace Pubquiz.WebApi.Controllers
@@ -21,10 +22,12 @@ namespace Pubquiz.WebApi.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IBus _bus;
 
-        public AccountController(IUnitOfWork unitOfWork)
+        public AccountController(IUnitOfWork unitOfWork, IBus bus)
         {
             _unitOfWork = unitOfWork;
+            _bus = bus;
         }
 
         [HttpGet("whoami")]
@@ -192,6 +195,20 @@ namespace Pubquiz.WebApi.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
+            var actorId = User.GetId();
+            var actorRole = User.GetUserRole();
+
+            if (actorRole == UserRole.Team)
+            {
+                var notification = new LogoutTeamNotification(_unitOfWork, _bus);
+                await notification.Execute();
+            }
+            else
+            {
+                var notification = new LogoutUserNotification(_unitOfWork, _bus);
+                await notification.Execute();
+            }
+
             await SignOut();
             return Ok(new {Code = SuccessCodes.LoggedOut, Message = "Successfully logged out."});
         }
