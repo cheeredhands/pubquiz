@@ -12,7 +12,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav v-if="isLoggedIn" class="ml-auto">
           <b-nav-item-dropdown :text="team.teamName" right>
-            <b-dropdown-item @click="logout()">Uitloggen</b-dropdown-item>
+            <b-dropdown-item @click="logout()">Spel verlaten</b-dropdown-item>
             <b-dropdown-item>Help</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
