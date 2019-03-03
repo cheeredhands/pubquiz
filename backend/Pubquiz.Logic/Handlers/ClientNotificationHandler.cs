@@ -11,7 +11,7 @@ namespace Pubquiz.Logic.Handlers
     public class ClientNotificationHandler :
         IHandleMessages<AnswerScored>, IHandleMessages<InteractionResponseAdded>, IHandleMessages<TeamMembersChanged>,
         IHandleMessages<ErrorOccurred>, IHandleMessages<TeamRegistered>, IHandleMessages<GameStateChanged>,
-        IHandleMessages<TeamNameUpdated>
+        IHandleMessages<TeamNameUpdated>, IHandleMessages<TeamLoggedOut>, IHandleMessages<UserLoggedOut>
     {
         private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
         private readonly ILogger _logger;
@@ -27,7 +27,7 @@ namespace Pubquiz.Logic.Handlers
             await Task.CompletedTask;
         }
 
-        public async Task Handle(InteractionResponseAdded message) 
+        public async Task Handle(InteractionResponseAdded message)
         {
             await Task.CompletedTask;
             // notify clients via hub
@@ -59,6 +59,30 @@ namespace Pubquiz.Logic.Handlers
             // notify teams
             // todo: pass the connection id in the TeamRegistered message?
             await _gameHubContext.Clients.Group(teamGroupId).TeamRegistered(message);
+        }
+
+        public async Task Handle(TeamLoggedOut message)
+        {
+            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).TeamLoggedOut(message);
+
+            // notify teams
+            await _gameHubContext.Clients.Group(teamGroupId).TeamLoggedOut(message);
+        }
+        
+        public async Task Handle(UserLoggedOut message)
+        {
+            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).UserLoggedOut(message);
+
+            // notify teams
+            await _gameHubContext.Clients.Group(teamGroupId).UserLoggedOut(message);
         }
 
         public async Task Handle(GameStateChanged message)

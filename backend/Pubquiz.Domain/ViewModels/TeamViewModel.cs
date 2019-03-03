@@ -7,5 +7,6 @@ namespace Pubquiz.Domain.ViewModels
         public Guid TeamId { get; set; }
         public string TeamName { get; set; }
         public string MemberNames { get; set; }
+        public bool IsLoggedIn { get; set; }
     }
 }

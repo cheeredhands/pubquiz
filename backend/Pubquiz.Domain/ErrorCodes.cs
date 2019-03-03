@@ -18,5 +18,6 @@ namespace Pubquiz.Domain
         public const int NoRoleClaimForUser = 14;
         public const int NoCurrentGameIdClaimForUser = 15;
         public const int UnauthorizedRole = 16;
+        public const int TeamAlreadyLoggedIn = 17;
     }
 }

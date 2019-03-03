@@ -15,6 +15,22 @@ namespace Pubquiz.Logic.Hubs
         Task TeamRegistered(TeamRegistered message);
 
         /// <summary>
+        /// Called when a team logs out (leaves the game). Notifies other teams and the quizmaster
+        /// within the current game.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task TeamLoggedOut(TeamLoggedOut message);
+        
+        /// <summary>
+        /// Called when a user logs out (leaves the game). Notifies other teams and the quizmaster
+        /// within the current game.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task UserLoggedOut(UserLoggedOut message);
+
+        /// <summary>
         /// Called when a team updates its name.
         /// </summary>
         /// <param name="message"></param>

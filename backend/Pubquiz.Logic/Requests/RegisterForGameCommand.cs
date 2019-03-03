@@ -28,16 +28,21 @@ namespace Pubquiz.Logic.Requests
 
             // check validity of invite code, otherwise throw DomainException
             var game = gameCollection.AsQueryable().FirstOrDefault(g => g.InviteCode == Code);
+            Team team = null;
             if (game == null)
             {
                 // check if it's a recovery code for a team
-                var team = teamCollection.AsQueryable().FirstOrDefault(t => t.RecoveryCode == Code);
-                if (team != null)
+                team = teamCollection.AsQueryable().FirstOrDefault(t => t.RecoveryCode == Code);
+                if (team == null)
                 {
-                    return team;
+                    throw new DomainException(ErrorCodes.InvalidCode, "Invalid code.", false);
                 }
 
-                throw new DomainException(ErrorCodes.InvalidCode, "Invalid code.", false);
+                if (team.IsLoggedIn)
+                {
+                    throw new DomainException(ErrorCodes.TeamAlreadyLoggedIn,
+                        "Team is already logged in on another device.", true);
+                }
             }
 
             // check if team name is taken, otherwise throw DomainException
@@ -47,27 +52,34 @@ namespace Pubquiz.Logic.Requests
                 throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
             }
 
-            // register team and return team object
-            var userName = TeamName.Trim();
-            var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
-            var newTeam = new Team
+            if (team == null)
             {
-                Name = userName,
-                UserName = userName,
-                GameId = game.Id,
-                RecoveryCode = recoveryCode,
-                UserRole = UserRole.Team,
-                IsLoggedIn = true
-            };
+                // register team and return team object
+                var userName = TeamName.Trim();
+                var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
+                team = new Team
+                {
+                    Name = userName,
+                    UserName = userName,
+                    GameId = game.Id,
+                    RecoveryCode = recoveryCode,
+                    UserRole = UserRole.Team,
+                    IsLoggedIn = true
+                };
+                game.TeamIds.Add(team.Id);
+                await teamCollection.AddAsync(team);
+                await gameCollection.UpdateAsync(game);
+            }
+            else
+            {
+                team.IsLoggedIn = true;
+                team.Name = string.IsNullOrWhiteSpace(TeamName) ? team.Name : TeamName;
+                await teamCollection.UpdateAsync(team);
+            }
 
-            game.TeamIds.Add(newTeam.Id);
+            await Bus.Publish(new TeamRegistered(team.Id, team.Name, team.GameId));
 
-            await teamCollection.AddAsync(newTeam);
-            await gameCollection.UpdateAsync(game);
-
-            await Bus.Publish(new TeamRegistered(newTeam.Id, newTeam.Name, game.Id));
-
-            return newTeam;
+            return team;
         }
     }
 }

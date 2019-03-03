@@ -31,6 +31,11 @@ namespace Pubquiz.WebApi.Helpers
                 quiz.QuizSections[0].Id);
             users.First(u => u.UserName == "Quiz master 1").GameIds.Add(game.Id);
             var teams = TestTeams.GetTeams(teamCollection, game.Id);
+            foreach (var team in teams)
+            {
+                _logger.LogInformation($"{team.Name}: {team.RecoveryCode}");
+            }
+
             game.QuizId = quiz.Id;
             game.TeamIds = teams.Select(t => t.Id).ToList();
 

@@ -39,15 +39,17 @@ namespace Pubquiz.Logic.Requests
                 .Select(t => new TeamViewModel
                 {
                     TeamId = t.Id,
-                    TeamName = t.Name, 
-                    MemberNames = t.MemberNames
+                    TeamName = t.Name,
+                    MemberNames = t.MemberNames,
+                    IsLoggedIn = t.IsLoggedIn
                 })
                 .ToList();
 
             var model = new TeamLobbyViewModel
             {
                 TeamId = TeamId,
-                Team = new TeamViewModel { TeamName = team.Name, MemberNames = team.MemberNames},
+                Team = new TeamViewModel
+                    {TeamName = team.Name, MemberNames = team.MemberNames, IsLoggedIn = team.IsLoggedIn},
                 OtherTeamsInGame = otherTeamsInGame
             };
             return model;

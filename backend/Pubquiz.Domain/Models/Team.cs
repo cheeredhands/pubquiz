@@ -31,8 +31,10 @@ namespace Pubquiz.Domain.Models
         {
             return new TeamViewModel
             {
+                TeamId = Id,
                 TeamName = Name,
-                MemberNames = MemberNames
+                MemberNames = MemberNames,
+                IsLoggedIn = IsLoggedIn
             };
         }
 

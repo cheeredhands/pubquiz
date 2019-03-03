@@ -200,12 +200,12 @@ namespace Pubquiz.WebApi.Controllers
 
             if (actorRole == UserRole.Team)
             {
-                var notification = new LogoutTeamNotification(_unitOfWork, _bus);
+                var notification = new LogoutTeamNotification(_unitOfWork, _bus) {TeamId = actorId};
                 await notification.Execute();
             }
             else
             {
-                var notification = new LogoutUserNotification(_unitOfWork, _bus);
+                var notification = new LogoutUserNotification(_unitOfWork, _bus) {UserId = actorId};
                 await notification.Execute();
             }
 
