@@ -3,8 +3,21 @@ export interface TeamInfo {
   teamId: string;
   /** The Team Name */
   teamName: string;
+  /** false when the team has logged out / left game */
+  isLoggedIn: boolean;
   /** Team member names */
   memberNames: string;
+}
+
+export interface UserInfo {
+  /** The team Id (Guid) */
+  userId: string;
+  /** The Team Name */
+  userName: string;
+  /** false when the team has logged out / left game */
+  isLoggedIn: boolean;
+  /** the game Id */
+  gameId: string;
 }
 
 export interface WhoAmIResponse {

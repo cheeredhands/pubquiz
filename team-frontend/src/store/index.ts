@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@aspnet/signalr';
 import gamehub from '../services/gamehub';
-import { Quiz, TeamInfo } from '../models/models';
+import { Quiz, TeamInfo, UserInfo } from '../models/models';
 
 Vue.use(Vuex);
 
@@ -32,7 +32,20 @@ const store: StoreOptions<RootState> = {
     },
     addTeam(state, team: TeamInfo) {
       // called by the signalr stuff when a new team registers
-      state.otherTeams.push(team);
+      team.isLoggedIn = true;
+      const teamInStore = state.otherTeams.find(i => i.teamId === team.teamId);
+      if (teamInStore !== undefined) {
+        teamInStore.isLoggedIn = true;
+      } else {
+        state.otherTeams.push(team);
+      }
+    },
+    setTeamLoggedOut(state, team: TeamInfo) {
+      console.log(`setOtherTeamLoggedOut: ${team}`);
+      const teamInStore = state.otherTeams.find(i => i.teamId === team.teamId);
+      if (teamInStore !== undefined) {
+        teamInStore.isLoggedIn = false;
+      }
     },
     setOtherTeams(state, otherTeams: TeamInfo[]) {
       state.otherTeams = otherTeams;
@@ -54,6 +67,7 @@ const store: StoreOptions<RootState> = {
     logout(state) {
       state.team = undefined;
       state.isLoggedIn = false;
+      state.quiz = undefined;
       state.otherTeams = [];
     },
     saveSignalRConnection(state, signalrconnection) {
@@ -70,9 +84,9 @@ const store: StoreOptions<RootState> = {
       commit('setTeam', team);
       await gamehub.init();
     },
-    logout({ commit }) {
+    async logout({ commit }) {
       commit('logout');
-      gamehub.close();
+      await gamehub.close();
     },
     renameOtherTeam({ commit }, team: TeamInfo) {
       console.log(`renameOtherTeam: ${team}`); // tslint:disable-line no-console
@@ -87,6 +101,17 @@ const store: StoreOptions<RootState> = {
         // we receive our own teamRegistered notification as well.
         commit('addTeam', teamRegistered);
       }
+    },
+    processTeamLoggedOut({ commit, state }, teamLoggedOut: TeamInfo) {
+      if (state.team === undefined) {
+        return;
+      }
+      if (teamLoggedOut.teamId !== state.team.teamId) {
+        commit('setTeamLoggedOut', teamLoggedOut);
+      }
+    },
+    processUserLoggedOut({ commit, state }, userLoggedOut: UserInfo) {
+      // todo notify teams that the quizmaster left?
     }
   }
 };

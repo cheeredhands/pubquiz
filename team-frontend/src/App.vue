@@ -128,4 +128,8 @@ footer {
   /* display: grid;
   grid-template-rows: 1fr 2fr 20px; */
 }
+
+.strong {
+  font-style: italic;
+}
 </style>

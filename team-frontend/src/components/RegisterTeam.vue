@@ -21,16 +21,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { AxiosResponse } from 'axios';
-import { TeamInfo } from '../models/models';
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { AxiosResponse } from "axios";
+import { TeamInfo } from "../models/models";
 
 @Component
 export default class RegisterTeam extends Vue {
-  public name: string = 'RegisterTeam';
-  public teamName: string = '';
-  public code: string = 'JOINME';
-  public message: string = '';
+  public name: string = "RegisterTeam";
+  public teamName: string = "";
+  public code: string = "JOINME";
+  public message: string = "";
   @Prop()
   private msg!: string;
 
@@ -42,7 +42,7 @@ export default class RegisterTeam extends Vue {
     // register!
     this.$axios
       .post(
-        '/api/account/register',
+        "/api/account/register",
         {
           teamName: this.teamName,
           code: this.code
@@ -51,14 +51,18 @@ export default class RegisterTeam extends Vue {
       )
       .then((response: AxiosResponse<TeamInfo>) => {
         // disco. init team (add team to store, start signalr)
-        this.$store.dispatch('initTeam', {
-          teamId: response.data.teamId,
-          teamName: response.data.teamName,
-          memberNames: response.data.memberNames
-        });
-        // and goto lobby
-        this.$snotify.success('Welkom!'); // TODO: get message from response
-        this.$router.push('Lobby');
+        this.$store
+          .dispatch("initTeam", {
+            teamId: response.data.teamId,
+            teamName: response.data.teamName,
+            memberNames: response.data.memberNames,
+            isLoggedIn: true
+          })
+          .then(() => {
+            // and goto lobby
+            this.$snotify.success("Welkom!"); // TODO: get message from response
+            this.$router.push("Lobby");
+          });
       })
       .catch(error => this.$snotify.error(error.response.data[0].message));
   }

@@ -2,21 +2,22 @@ import * as SignalR from '@aspnet/signalr';
 import store from '../store/index';
 
 export default {
-
-  close() {
+  closing: false,
+  async close() {
     const connection = store.state.signalrconnection;
     if (connection !== undefined) {
-      connection.stop().then(() => {
+      this.closing = true;
+      await connection.stop().then(() => {
         store.commit('clearSignalRConnection');
       });
     }
   },
   init() {
     const connection = new SignalR.HubConnectionBuilder()
-      .withUrl('https://localhost:5001/gamehub')
+      .withUrl('http://localhost:5000/gamehub')
       .configureLogging(SignalR.LogLevel.Information)
       .build();
-
+    this.closing = false;
     async function start() {
       try {
         await connection.start();
@@ -29,7 +30,9 @@ export default {
     };
 
     connection.onclose(async () => {
-      await start();
+      if (!this.closing) {
+        await start();
+      }
     });
 
     // function connect(conn: SignalR.HubConnection) {
@@ -58,6 +61,10 @@ export default {
     connection.on('TeamRegistered', data => {
       store.dispatch('processTeamRegistered', data);
     });
+
+    connection.on('TeamLoggedOut', data => {
+      store.dispatch('processTeamLoggedOut', data)
+    })
 
     connection.on('TeamNameUpdated', data => {
       console.log(data); // tslint:disable-line no-console
