@@ -5,6 +5,7 @@ import router from './router/index';
 import store from './store/index';
 import Snotify, { SnotifyDefaults } from 'vue-snotify';
 import BootstrapVue from 'bootstrap-vue';
+import VeeValidate from 'vee-validate';
 
 Vue.config.productionTip = false;
 
@@ -18,6 +19,19 @@ const options = {
 Vue.use(Snotify, options);
 
 Vue.use(BootstrapVue);
+
+//Vue.use(VeeValidate);
+// Vue.use(VeeValidate, {
+//   validity: true
+// });
+Vue.use(VeeValidate, {
+  validity: true,
+  classes: true,
+  classNames: {
+    valid: 'is-valid',
+    invalid: 'is-invalid'
+  }
+});
 
 new Vue({
   router,

@@ -12,6 +12,7 @@
     "@types/node": "^11.10.4",
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.13",
+    "vee-validate": "^2.1.7",
     "vue": "^2.6.8",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.3.0",
