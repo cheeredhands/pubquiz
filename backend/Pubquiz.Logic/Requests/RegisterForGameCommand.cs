@@ -2,10 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
-using TeamRegistered = Pubquiz.Logic.Messages.TeamRegistered;
 
 namespace Pubquiz.Logic.Requests
 {
@@ -13,7 +13,7 @@ namespace Pubquiz.Logic.Requests
     /// Command to register for a <see cref="Game"/>.
     /// </summary>
     public class RegisterForGameCommand : Command<Team>
-    {
+    {        
         public string TeamName;
         public string Code;
 
@@ -46,7 +46,8 @@ namespace Pubquiz.Logic.Requests
             }
 
             // check if team name is taken, otherwise throw DomainException
-            var isTeamNameTaken = await teamCollection.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
+            var isTeamNameTaken = !string.IsNullOrWhiteSpace(TeamName) &&
+                                  await teamCollection.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
             if (isTeamNameTaken)
             {
                 throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
