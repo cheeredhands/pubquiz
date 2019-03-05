@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
@@ -167,10 +168,13 @@ namespace Pubquiz.WebApi
 
             app.UseSignalR(route => { route.MapHub<GameHub>("/gamehub"); });
 
+            var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+            var mongoDbIsEmpty = Configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
+                                 unitOfWork.GetCollection<Team>().GetCountAsync().Result == 0;
             // Seed the test data when using in-memory-database
-            if (Configuration.GetValue<string>("AppSettings:Database") == "Memory")
+            if (mongoDbIsEmpty || Configuration.GetValue<string>("AppSettings:Database") == "Memory")
             {
-                var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+                //var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
                 var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
                 var seeder = new TestSeeder(unitOfWork, loggerFactory);
                 seeder.SeedTestSet();
