@@ -20,10 +20,6 @@ namespace Pubquiz.Logic.Requests
         {
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
-            if (team == null)
-            {
-                throw new DomainException(ErrorCodes.InvalidTeamId, "Invalid Team id", false);
-            }
 
             team.IsLoggedIn = false;
 

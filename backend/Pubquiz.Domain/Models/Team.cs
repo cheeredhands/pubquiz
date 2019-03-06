@@ -27,17 +27,6 @@ namespace Pubquiz.Domain.Models
             ScorePerQuizSection = new Dictionary<Guid, int>();
         }
 
-        public TeamViewModel ToViewModel()
-        {
-            return new TeamViewModel
-            {
-                TeamId = Id,
-                TeamName = Name,
-                MemberNames = MemberNames,
-                IsLoggedIn = IsLoggedIn
-            };
-        }
-
         public void UpdateScore()
         {
             ScorePerQuizSection = new Dictionary<Guid, int>();

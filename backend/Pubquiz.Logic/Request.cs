@@ -44,9 +44,7 @@ namespace Pubquiz.Logic
             }
         }
 
-        private void CheckEntity<TEntity>(string entityIdPropertyName,
-            int errorCode)
-            where TEntity : Model, new()
+        private void CheckEntity<TEntity>(string entityIdPropertyName, int errorCode) where TEntity : Model, new()
         {
             // get the property or field
             var property = GetType().GetProperty(entityIdPropertyName);

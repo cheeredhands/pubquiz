@@ -28,7 +28,7 @@ namespace Pubquiz.Logic.Requests
             var game = await gameCollection.GetAsync(user.CurrentGameId);
             var teamCollection = UnitOfWork.GetCollection<Team>();
 
-            var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.Select(t => t.ToViewModel());
+            var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.Select(t => new TeamViewModel(t));
 
             var model = new QuizMasterLobbyViewModel
             {

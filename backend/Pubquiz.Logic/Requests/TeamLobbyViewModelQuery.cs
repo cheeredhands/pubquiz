@@ -36,21 +36,15 @@ namespace Pubquiz.Logic.Requests
 
             var otherTeamsInGame = teamCollection.AsQueryable()
                 .Where(t => t.Id != TeamId && game.TeamIds.Contains(t.Id))
-                .Select(t => new TeamViewModel
-                {
-                    TeamId = t.Id,
-                    TeamName = t.Name,
-                    MemberNames = t.MemberNames,
-                    IsLoggedIn = t.IsLoggedIn
-                })
-                .ToList();
+                .ToList()
+                .Select(t => new TeamViewModel(t));
+
 
             var model = new TeamLobbyViewModel
             {
                 TeamId = TeamId,
-                Team = new TeamViewModel
-                    {TeamName = team.Name, MemberNames = team.MemberNames, IsLoggedIn = team.IsLoggedIn},
-                OtherTeamsInGame = otherTeamsInGame
+                Team = new TeamViewModel(team),
+                OtherTeamsInGame = otherTeamsInGame.ToList()
             };
             return model;
         }

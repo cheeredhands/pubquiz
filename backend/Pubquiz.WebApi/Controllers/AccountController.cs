@@ -163,18 +163,18 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("changeteammembers")]
-        public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembersNotification notification)
+        public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembersCommand command)
         {
             var teamId = User.GetId();
-            if (notification.TeamId != Guid.Empty && notification.TeamId != teamId)
+            if (command.TeamId != Guid.Empty && command.TeamId != teamId)
             {
                 return Forbid();
             }
 
-            notification.TeamId = teamId;
+            command.TeamId = teamId;
 
-            await notification.Execute();
-            return Ok(new {Code = SuccessCodes.TeamMembersChanged, Message = "Team members changed."});
+            var teamMembers = await command.Execute();
+            return Ok(new {Code = SuccessCodes.TeamMembersChanged, teamMembers, Message = "Team members changed."});
         }
 
         [HttpPost("deleteteam")]
