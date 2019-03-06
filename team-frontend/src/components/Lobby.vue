@@ -6,27 +6,41 @@
       <hr>
       <b-row>
         <b-col>
-          <b-form>
-            <b-form-group label="Teamnaam:" label-for="nameInput">
+          <b-form @submit="applyTeamNameChange" novalidate>
+            <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="nameInput">
               <b-input-group>
-                <b-form-input id="nameInput" v-model="newName" type="text"></b-form-input>
+                <b-form-input
+                  id="nameInput"
+                  v-model="newName"
+                  type="text"
+                  name="nameInput"
+                  required
+                  minlength="5"
+                  maxlength="30"
+                ></b-form-input>
                 <b-input-group-append>
-                  <b-button variant="primary" @click="applyTeamNameChange()">Aanpassen</b-button>
+                  <b-button variant="primary" type="submit">Aanpassen</b-button>
                 </b-input-group-append>
+                <b-form-invalid-feedback>Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.</b-form-invalid-feedback>
               </b-input-group>
             </b-form-group>
           </b-form>
-          <b-form>
+          <b-form @submit="saveMembers" novalidate>
             <b-form-group
-              class="w-50"
               label="Teamleden:"
               label-for="memberNamesInput"
               description="Geef hier de namen van je teamleden op (een per regel)."
             >
               <b-input-group>
-                <b-form-textarea rows="4" v-model="memberNames" id="memberNamesInput"></b-form-textarea>
+                <b-form-textarea
+                  rows="4"
+                  v-model="memberNames"
+                  id="memberNamesInput"
+                  name="membersNamesInput"
+                  maxlength="140"
+                ></b-form-textarea>
                 <b-input-group-append>
-                  <b-button variant="primary" @click="saveMembers()">Opslaan</b-button>
+                  <b-button variant="primary" type="submit">Opslaan</b-button>
                 </b-input-group-append>
               </b-input-group>
             </b-form-group>
@@ -103,37 +117,43 @@ export default class Lobby extends Vue {
       });
   }
 
-  public saveMembers() {
+  public saveMembers(evt: Event) {
+    if (!this.$quizrhelpers.formIsValid(evt)) return;
+    if (this.team.memberNames === this.memberNames) return;
+
     this.$axios
       .post("api/account/changeteammembers", {
         teamId: this.team.teamId,
         teamMembers: this.memberNames
       })
-      .then((response: AxiosResponse<ApiResponse>) =>
-        this.$snotify.success(response.data.message)
-      )
+      .then((response: AxiosResponse<ApiResponse>) => {
+        this.$store.commit("setOwnTeamMembers", this.memberNames);
+        this.$snotify.success(response.data.message);
+      })
       .catch((error: AxiosError) => {
         this.$snotify.error(error.message);
       });
   }
 
-  public applyTeamNameChange() {
+  public applyTeamNameChange(evt: Event) {
+    if (!this.$quizrhelpers.formIsValid(evt)) return;
+
     // call api that team name changed but only if team name has not changed!
-    if (this.team.teamName !== this.newName) {
-      this.$axios
-        .post("/api/account/changeteamname", {
-          teamId: this.teamId,
-          newName: this.newName
-        })
-        .then((response: AxiosResponse<ApiResponse>) => {
-          // only save it to the store if api call is successful!
-          this.$store.commit("setOwnTeamName", this.newName);
-          this.$snotify.success(response.data.message);
-        })
-        .catch((error: AxiosError) => {
-          this.$snotify.error(error.message);
-        });
-    }
+    if (this.team.teamName === this.newName) return;
+
+    this.$axios
+      .post("/api/account/changeteamname", {
+        teamId: this.teamId,
+        newName: this.newName
+      })
+      .then((response: AxiosResponse<ApiResponse>) => {
+        // only save it to the store if api call is successful!
+        this.$store.commit("setOwnTeamName", this.newName);
+        this.$snotify.success(response.data.message);
+      })
+      .catch((error: AxiosError) => {
+        this.$snotify.error(error.message);
+      });
   }
 
   get team() {

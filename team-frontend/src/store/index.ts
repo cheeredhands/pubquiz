@@ -55,6 +55,11 @@ const store: StoreOptions<RootState> = {
         state.team.teamName = newName;
       }
     },
+    setOwnTeamMembers(state, newMemberNames) {
+      if (state.team !== undefined) {
+        state.team.memberNames = newMemberNames;
+      }
+    },
     setOtherTeamName(state, team: TeamInfo) {
       console.log(`setOtherTeam: ${team}`); // tslint:disable-line no-console
       const teamInStore = state.otherTeams.find(

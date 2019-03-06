@@ -6,15 +6,17 @@
       </b-row>
       <hr>
       <b-row>
-        <b-form @submit="submitForm">
+        <b-form @submit="register" novalidate>
           <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="teamNameInput">
             <b-form-input
-              v-validate="'required|min:5|max:30'"
               type="text"
               size="lg"
               v-model="teamName"
               id="teamNameInput"
-              name="teamNameInput" required minlength="5"
+              name="teamNameInput"
+              required
+              minlength="5"
+              maxlength="30"
             />
             <b-form-invalid-feedback>Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.</b-form-invalid-feedback>
           </b-form-group>
@@ -24,12 +26,13 @@
             description="De code krijg je van de quizmaster."
           >
             <b-form-input
-              v-validate="'required|min:4'"
               type="text"
               size="lg"
               v-model="code"
               id="codeInput"
               name="codeInput"
+              required
+              minlength="4"
             />
             <b-form-invalid-feedback>Een code is minimaal 4 tekens.</b-form-invalid-feedback>
           </b-form-group>
@@ -44,43 +47,32 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { AxiosResponse } from "axios";
 import { TeamInfo } from "../models/models";
-import { Form } from 'bootstrap-vue';
+import { Form } from "bootstrap-vue";
 
 @Component
 export default class RegisterTeam extends Vue {
   public name: string = "RegisterTeam";
   public teamName: string = "";
   public code: string = "";
-  private submitted: boolean = false;
-
-  get teamNameValidation() {
-    if (!this.submitted) return "null";
-    return this.teamName.length > 4 && this.teamName.length < 31;
-  }
-
-  get codeValidation() {
-    if (!this.submitted) return "null";
-    return this.code.length > 3;
-  }
 
   public mounted() {}
 
-  public submitForm(evt: Event) {
-    evt.preventDefault();
-    const form = evt.srcElement as HTMLFormElement;
-    form.classList.add('was-validated');
-    form.reportValidity();
-    
-   // form.validated = '';
-    if (form.checkValidity()) {
-      alert(form.checkValidity());
-    }
-    
-  }
+  public register(evt: Event) {
+    if (!this.$quizrhelpers.formIsValid(evt)) return;
+    // // check validation
+    // evt.preventDefault();
+    // evt.stopPropagation();
 
-  public register() {
-    // validate
-    this.submitted = true;
+    // const form = evt.srcElement as HTMLFormElement;
+
+    // if (form.checkValidity() === false) {
+    //   // https://getbootstrap.com/docs/4.3/components/forms/#custom-styles
+    //   form.classList.add("was-validated");
+    //   console.log("invalid, canceling.");
+    //   return;
+    // }
+    // console.log("valid, registering.");
+
     // register!
     this.$axios
       .post(
