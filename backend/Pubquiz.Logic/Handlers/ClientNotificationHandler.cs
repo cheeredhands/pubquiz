@@ -24,11 +24,13 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(AnswerScored message)
         {
+            // todo implement
             await Task.CompletedTask;
         }
 
         public async Task Handle(InteractionResponseAdded message)
         {
+            // todo implement
             await Task.CompletedTask;
             // notify clients via hub
             // something like:
@@ -37,10 +39,14 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(TeamMembersChanged message)
         {
+            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
             // notify quiz master 
             await _gameHubContext.Clients.Group(quizMasterGroupId).TeamMembersChanged(message);
+            
+            // notify teams
+            await _gameHubContext.Clients.Group(teamGroupId).TeamMembersChanged(message);
         }
 
         public async Task Handle(ErrorOccurred message)
@@ -57,7 +63,6 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(quizMasterGroupId).TeamRegistered(message);
 
             // notify teams
-            // todo: pass the connection id in the TeamRegistered message?
             await _gameHubContext.Clients.Group(teamGroupId).TeamRegistered(message);
         }
 
@@ -87,15 +92,11 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(GameStateChanged message)
         {
-            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
+            //var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
             // notify quiz master 
             await _gameHubContext.Clients.Group(quizMasterGroupId).GameStateChanged(message);
-
-            // notify other teams
-            // todo: pass the connection id in the TeamRegistered message? or use this message to confirm the change on the caller?
-            //await clients.OthersInGroup(teamGroupId).GameStateChanged(message);
         }
 
         public async Task Handle(TeamNameUpdated message)
@@ -105,12 +106,9 @@ namespace Pubquiz.Logic.Handlers
 
             // notify quiz master 
             await _gameHubContext.Clients.Group(teamGroupId).TeamNameUpdated(message);
-            await _gameHubContext.Clients.Group(quizMasterGroupId).TeamNameUpdated(message);
-
+            
             // notify other teams
-            // todo: pass the connection id in the TeamRegistered message? or use this message to confirm the change on the caller?
-//            var clients = _gameHubContext.Clients as IHubCallerClients<IGameHub>;
-//            await clients.OthersInGroup(teamGroupId).TeamNameUpdated(message);
+            await _gameHubContext.Clients.Group(quizMasterGroupId).TeamNameUpdated(message);
         }
     }
 }

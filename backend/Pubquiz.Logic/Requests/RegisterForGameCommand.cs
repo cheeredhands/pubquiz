@@ -13,7 +13,7 @@ namespace Pubquiz.Logic.Requests
     /// Command to register for a <see cref="Game"/>.
     /// </summary>
     public class RegisterForGameCommand : Command<Team>
-    {        
+    {
         public string TeamName;
         public string Code;
 
@@ -45,16 +45,16 @@ namespace Pubquiz.Logic.Requests
                 }
             }
 
-            // check if team name is taken, otherwise throw DomainException
-            var isTeamNameTaken = !string.IsNullOrWhiteSpace(TeamName) &&
-                                  await teamCollection.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
-            if (isTeamNameTaken)
-            {
-                throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
-            }
-
             if (team == null)
             {
+                // check if team name is taken, otherwise throw DomainException
+                var isTeamNameTaken = !string.IsNullOrWhiteSpace(TeamName) &&
+                                      await teamCollection.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
+                if (isTeamNameTaken)
+                {
+                    throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
+                }
+            
                 // register team and return team object
                 var userName = TeamName.Trim();
                 var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
@@ -78,7 +78,7 @@ namespace Pubquiz.Logic.Requests
                 await teamCollection.UpdateAsync(team);
             }
 
-            await Bus.Publish(new TeamRegistered(team.Id, team.Name, team.GameId));
+            await Bus.Publish(new TeamRegistered(team.Id, team.Name, team.GameId, team.MemberNames));
 
             return team;
         }

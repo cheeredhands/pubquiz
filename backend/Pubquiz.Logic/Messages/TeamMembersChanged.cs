@@ -7,14 +7,14 @@ namespace Pubquiz.Logic.Messages
         public Guid GameId { get; }
         public Guid TeamId { get; }
         public string TeamName { get; }
-        public string TeamMembers { get; }
+        public string MemberNames { get; }
 
-        public TeamMembersChanged(Guid gameId, Guid teamId, string teamName, string teamMembers)
+        public TeamMembersChanged(Guid gameId, Guid teamId, string teamName, string memberNames)
         {
             GameId = gameId;
             TeamId = teamId;
             TeamName = teamName;
-            TeamMembers = teamMembers;
+            MemberNames = memberNames;
         }
     }
 }

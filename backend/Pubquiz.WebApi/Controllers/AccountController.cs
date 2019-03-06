@@ -158,7 +158,7 @@ namespace Pubquiz.WebApi.Controllers
 
             var team = await command.Execute();
             await SignOut();
-            await SignIn(team);
+            await SignIn(team, team.GameId);
             return Ok(new {Code = SuccessCodes.TeamRenamed, Message = "Team renamed.", TeamName = team.Name});
         }
 
