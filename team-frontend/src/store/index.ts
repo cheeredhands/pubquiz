@@ -33,15 +33,15 @@ const store: StoreOptions<RootState> = {
     addTeam(state, team: TeamInfo) {
       // called by the signalr stuff when a new team registers
       team.isLoggedIn = true;
-      const teamInStore = state.otherTeams.find(i => i.teamId === team.teamId);
-      if (teamInStore !== undefined) {
-        teamInStore.isLoggedIn = true;
+      const teamIndex = state.otherTeams.findIndex(i => i.teamId === team.teamId);
+      if (teamIndex !== -1) {
+        state.otherTeams[teamIndex] = team;
       } else {
         state.otherTeams.push(team);
       }
     },
     setTeamLoggedOut(state, team: TeamInfo) {
-      console.log(`setOtherTeamLoggedOut: ${team}`);
+      console.log(`setOtherTeamLoggedOut: ${team.teamName}`);
       const teamInStore = state.otherTeams.find(i => i.teamId === team.teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = false;
@@ -61,12 +61,21 @@ const store: StoreOptions<RootState> = {
       }
     },
     setOtherTeamName(state, team: TeamInfo) {
-      console.log(`setOtherTeam: ${team}`); // tslint:disable-line no-console
+      console.log(`setOtherTeamName: ${team.teamName}`);
       const teamInStore = state.otherTeams.find(
         item => item.teamId === team.teamId
       );
       if (teamInStore !== undefined) {
         teamInStore.teamName = team.teamName;
+      }
+    },
+    setOtherTeamMembers(state, team: TeamInfo) {
+      console.log(`setOtherTeam: ${team.memberNames}`);
+      const teamInStore = state.otherTeams.find(
+        item => item.teamId === team.teamId
+      );
+      if (teamInStore !== undefined) {
+        teamInStore.memberNames = team.memberNames;
       }
     },
     logout(state) {
@@ -93,9 +102,13 @@ const store: StoreOptions<RootState> = {
       commit('logout');
       await gamehub.close();
     },
-    renameOtherTeam({ commit }, team: TeamInfo) {
-      console.log(`renameOtherTeam: ${team}`); // tslint:disable-line no-console
+    processTeamNameUpdated({ commit }, team: TeamInfo) {
+      console.log(`processTeamNameUpdated: ${team.teamName}`);
       commit('setOtherTeamName', team);
+    },
+    processTeamMembersChanged({ commit }, team: TeamInfo) {
+      console.log(`processTeamMembersChanged: ${team.memberNames}`);
+      commit('setOtherTeamMembers', team);
     },
     processTeamRegistered({ commit, state }, teamRegistered: TeamInfo) {
       if (state.team === undefined) {

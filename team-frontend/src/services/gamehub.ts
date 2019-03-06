@@ -63,13 +63,19 @@ export default {
     });
 
     connection.on('TeamLoggedOut', data => {
+      console.log(data);
       store.dispatch('processTeamLoggedOut', data)
     })
 
     connection.on('TeamNameUpdated', data => {
       console.log(data); // tslint:disable-line no-console
-      store.dispatch('renameOtherTeam', data);
+      store.dispatch('processTeamNameUpdated', data);
     });
+
+    connection.on('TeamMembersChanged', data =>{
+      console.log(data);
+      store.dispatch('processTeamMembersChanged', data);
+    })
 
     return start().catch(function (err) {
       return console.error(err.toString());

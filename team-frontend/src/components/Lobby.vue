@@ -50,12 +50,12 @@
           <p>Jullie gaan het opnemen tegen:</p>
           <b-list-group>
             <b-list-group-item
-              v-for="(team, index) in otherTeams"
+              v-for="(otherTeam, index) in otherTeams"
               :key="index"
-              :disabled="!team.isLoggedIn"
+              :title="otherTeam.memberNames"
             >
-              {{ team.teamName }}
-              <span v-if="!team.isLoggedIn">(uitgelogd)</span>
+              {{ otherTeam.teamName }}
+              <span v-if="!otherTeam.isLoggedIn">(uitgelogd)</span>
             </b-list-group-item>
           </b-list-group>
         </b-col>
@@ -159,7 +159,8 @@ export default class Lobby extends Vue {
       })
       .catch((error: AxiosError) => {
         this.$snotify.error(error.message);
-      }).finally(() => {
+      })
+      .finally(() => {
         this.newName = this.teamName;
       });
   }
