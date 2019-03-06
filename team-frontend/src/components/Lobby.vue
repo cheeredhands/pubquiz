@@ -34,7 +34,7 @@
               <b-input-group>
                 <b-form-textarea
                   rows="4"
-                  v-model="memberNames"
+                  v-model="newMemberNames"
                   id="memberNamesInput"
                   name="membersNamesInput"
                   maxlength="140"
@@ -74,7 +74,11 @@ import { Component } from "vue-property-decorator";
 import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
-import { TeamLobbyViewModel, ApiResponse } from "../models/models";
+import {
+  TeamLobbyViewModel,
+  ApiResponse,
+  SaveTeamMembersResponse
+} from "../models/models";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -98,19 +102,18 @@ export default class Lobby extends Vue {
 
   public teamId: string = "";
 
-  public memberNames: string = "";
+  public newMemberNames: string = "";
 
   public created() {
-    this.newName = this.team.teamName;
-    this.teamId = this.team.teamId;
-    this.memberNames = this.team.memberNames;
-
     // get team lobby view model
     this.$axios
       .get("/api/game/teamlobby")
       .then((response: AxiosResponse<TeamLobbyViewModel>) => {
         this.$store.commit("setTeam", response.data.team);
         this.$store.commit("setOtherTeams", response.data.otherTeamsInGame);
+        this.teamId = this.$store.state.team.teamId;
+        this.newName = this.teamName;
+        this.newMemberNames = this.memberNames;
       })
       .catch((error: AxiosError) => {
         this.$snotify.error(error.message);
@@ -119,19 +122,22 @@ export default class Lobby extends Vue {
 
   public saveMembers(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) return;
-    if (this.team.memberNames === this.memberNames) return;
+    if (this.memberNames === this.newMemberNames) return;
 
     this.$axios
       .post("api/account/changeteammembers", {
-        teamId: this.team.teamId,
-        teamMembers: this.memberNames
+        teamId: this.teamId,
+        teamMembers: this.newMemberNames
       })
-      .then((response: AxiosResponse<ApiResponse>) => {
-        this.$store.commit("setOwnTeamMembers", this.memberNames);
+      .then((response: AxiosResponse<SaveTeamMembersResponse>) => {
+        this.$store.commit("setOwnTeamMembers", response.data.teamMembers);
         this.$snotify.success(response.data.message);
       })
       .catch((error: AxiosError) => {
         this.$snotify.error(error.message);
+      })
+      .finally(() => {
+        this.newMemberNames = this.memberNames;
       });
   }
 
@@ -139,7 +145,7 @@ export default class Lobby extends Vue {
     if (!this.$quizrhelpers.formIsValid(evt)) return;
 
     // call api that team name changed but only if team name has not changed!
-    if (this.team.teamName === this.newName) return;
+    if (this.teamName === this.newName) return;
 
     this.$axios
       .post("/api/account/changeteamname", {
@@ -153,11 +159,17 @@ export default class Lobby extends Vue {
       })
       .catch((error: AxiosError) => {
         this.$snotify.error(error.message);
+      }).finally(() => {
+        this.newName = this.teamName;
       });
   }
 
-  get team() {
-    return this.$store.state.team || "";
+  get teamName() {
+    return this.$store.state.team.teamName || "";
+  }
+
+  get memberNames() {
+    return this.$store.state.team.memberNames || "";
   }
 
   get otherTeams() {

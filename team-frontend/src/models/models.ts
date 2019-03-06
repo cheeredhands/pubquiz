@@ -20,6 +20,11 @@ export interface UserInfo {
   gameId: string;
 }
 
+export interface ApiResponse {
+  code: number;
+  message: string;
+}
+
 export interface WhoAmIResponse {
   userName: string;
   userId: string;
@@ -27,9 +32,8 @@ export interface WhoAmIResponse {
   userRole: UserRole;
 }
 
-export interface ApiResponse {
-  code: number;
-  message: string;
+export interface SaveTeamMembersResponse extends ApiResponse {
+  teamMembers: string;
 }
 
 export interface TeamLobbyViewModel {
