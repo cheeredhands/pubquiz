@@ -139,11 +139,11 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty;
-            var notification = new ChangeTeamMembersNotification(UnitOfWork, Bus)
+            var command = new ChangeTeamMembersCommand(UnitOfWork, Bus)
                 {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.AreEqual(3, exception.ErrorCode);
             Assert.IsTrue(exception.IsBadRequest);
@@ -155,11 +155,11 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var notification = new ChangeTeamMembersNotification(UnitOfWork, Bus)
+            var command = new ChangeTeamMembersCommand(UnitOfWork, Bus)
                 {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act
-            notification.Execute().Wait();
+            command.Execute().Wait();
             UnitOfWork.Commit();
 
             var team = UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
