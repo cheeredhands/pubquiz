@@ -1,9 +1,4 @@
 {
-  "eslint.enable": false,
-  "prettier.eslintIntegration": false,
-  "prettier.tslintIntegration": false,
-  "prettier.singleQuote": true,
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
-  "prettier.jsxSingleQuote": true
 }
