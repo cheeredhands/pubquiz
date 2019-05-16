@@ -22,7 +22,7 @@ export default {
       try {
         await connection.start();
         store.commit('saveSignalRConnection', connection);
-        console.log("connected");
+        console.log('connected');
       } catch (err) {
         console.log(err);
         setTimeout(() => start(), 5000);
@@ -43,9 +43,9 @@ export default {
     //   });
     // }
 
-    //connection.onclose(() => {
-    //connect(connection);
-    //});
+    // connection.onclose(() => {
+    // connect(connection);
+    // });
 
     // TODO: refactor this into helper class.
     // function sleep(milliseconds: number) {
@@ -68,7 +68,7 @@ export default {
     })
 
     connection.on('TeamNameUpdated', data => {
-      console.log(data); // tslint:disable-line no-console
+      console.log(data); 
       store.dispatch('processTeamNameUpdated', data);
     });
 
@@ -77,7 +77,7 @@ export default {
       store.dispatch('processTeamMembersChanged', data);
     })
 
-    return start().catch(function (err) {
+    return start().catch(err => {
       return console.error(err.toString());
     });
 
