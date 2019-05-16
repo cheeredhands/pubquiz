@@ -174,7 +174,7 @@ export default class Lobby extends Vue {
   }
 
   get otherTeams() {
-    return this.$store.state.otherTeams;
+    return this.$store.state.otherTeams || [];
   }
 
   get isInEdit() {

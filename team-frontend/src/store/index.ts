@@ -32,10 +32,13 @@ const store: StoreOptions<RootState> = {
     },
     addTeam(state, team: TeamInfo) {
       // called by the signalr stuff when a new team registers
+      console.log(`addTeam: ${team.teamName}`);
       team.isLoggedIn = true;
-      const teamIndex = state.otherTeams.findIndex(i => i.teamId === team.teamId);
-      if (teamIndex !== -1) {
-        state.otherTeams[teamIndex] = team;
+      const teamInStore = state.otherTeams.find(i => i.teamId === team.teamId);
+      if (teamInStore !== undefined) {
+        teamInStore.isLoggedIn = true;
+        teamInStore.teamName = team.teamName;
+        teamInStore.memberNames = team.memberNames;
       } else {
         state.otherTeams.push(team);
       }
