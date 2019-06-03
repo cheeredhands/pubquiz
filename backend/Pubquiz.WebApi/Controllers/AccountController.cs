@@ -12,6 +12,7 @@ using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Helpers;
+using Pubquiz.WebApi.Models;
 using Rebus.Bus;
 
 
@@ -32,7 +33,7 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpGet("whoami")]
         [AllowAnonymous]
-        public async Task<IActionResult> WhoAmI()
+        public async Task<ActionResult<WhoAmiResponse>> WhoAmI()
         {
             if (!User.Identity.IsAuthenticated) return Ok(new {UserName = ""});
 
@@ -53,11 +54,18 @@ namespace Pubquiz.WebApi.Controllers
             if (team == null && user == null)
             {
                 await SignOut();
-                return Ok(new {UserName = ""});
+                return Ok(new WhoAmiResponse
+                {
+                    Code = SuccessCodes.ThatsYou,
+                    Message = "",
+                    UserName = ""
+                });
             }
 
-            return Ok(new
+            return Ok(new WhoAmiResponse
             {
+                Code = SuccessCodes.ThatsYou,
+                Message = "",
                 UserName = User.Identity.Name,
                 UserId = User.GetId(),
                 CurrentGameId = User.GetCurrentGameId(),
@@ -67,39 +75,40 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult> RegisterForGame([FromBody] RegisterForGameCommand command)
+        public async Task<ActionResult<RegisterForGameResponse>> RegisterForGame(
+            [FromBody] RegisterForGameCommand command)
         {
             var team = await command.Execute();
             await SignIn(team, team.GameId);
 
-            return Ok(new
+            return Ok(new RegisterForGameResponse
             {
                 Code = SuccessCodes.TeamRegisteredAndLoggedIn,
                 Message = $"Team {team.Name} registered and logged in.",
                 TeamId = team.Id,
                 TeamName = team.Name,
-                team.MemberNames
+                MemberNames = team.MemberNames
             });
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginCommand command)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginCommand command)
         {
             var user = await command.Execute();
             await SignIn(user);
-            return Ok(new
+            return Ok(new LoginResponse
             {
                 Code = SuccessCodes.UserLoggedIn,
                 Message = $"User {user.UserName} logged in.",
                 UserId = user.Id,
-                user.GameIds
+                GameIds = user.GameIds
             });
         }
 
         [HttpPost("selectgame")]
         [Authorize(Roles = "QuizMaster")]
-        public async Task<IActionResult> SelectGame([FromBody] SelectGameCommand command)
+        public async Task<ActionResult<SelectGameResponse>> SelectGame([FromBody] SelectGameCommand command)
         {
             var userId = User.GetId();
             if (command.ActorId != Guid.Empty && userId != command.ActorId)
@@ -112,7 +121,12 @@ namespace Pubquiz.WebApi.Controllers
             await SignOut();
             await SignIn(user, command.GameId);
 
-            return Ok(new {Code = SuccessCodes.GameSelected, Message = "Game selected", command.GameId});
+            return Ok(new SelectGameResponse
+            {
+                Code = SuccessCodes.GameSelected,
+                Message = "Game selected",
+                GameId = command.GameId
+            });
         }
 
         private async Task SignIn(User user, Guid currentGame = default(Guid))
@@ -132,12 +146,12 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("testauth")]
         [Authorize(Roles = "Admin")]
-        public ActionResult TestAuth()
+        public ActionResult<TestAuthResponse> TestAuth()
         {
             var teamCollection = _unitOfWork.GetCollection<Team>();
             var teams = teamCollection.AsQueryable().ToList();
 
-            return Ok(new
+            return Ok(new TestAuthResponse
             {
                 Code = SuccessCodes.AuthSuccesfullyTested,
                 Message = $"Test ok. {User.Identity.Name} - {User.GetId()}",
@@ -146,7 +160,7 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("changeteamname")]
-        public async Task<IActionResult> ChangeTeamName(ChangeTeamNameCommand command)
+        public async Task<ActionResult<ChangeTeamNameResponse>> ChangeTeamName(ChangeTeamNameCommand command)
         {
             var teamId = User.GetId();
             if (command.TeamId != Guid.Empty && teamId != command.TeamId)
@@ -159,11 +173,16 @@ namespace Pubquiz.WebApi.Controllers
             var team = await command.Execute();
             await SignOut();
             await SignIn(team, team.GameId);
-            return Ok(new {Code = SuccessCodes.TeamRenamed, Message = "Team renamed.", TeamName = team.Name});
+            return Ok(new ChangeTeamNameResponse
+            {
+                Code = SuccessCodes.TeamRenamed,
+                Message = "Team renamed.",
+                TeamName = team.Name
+            });
         }
 
         [HttpPost("changeteammembers")]
-        public async Task<IActionResult> ChangeTeamMembers(ChangeTeamMembersCommand command)
+        public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(ChangeTeamMembersCommand command)
         {
             var teamId = User.GetId();
             if (command.TeamId != Guid.Empty && command.TeamId != teamId)
@@ -174,12 +193,17 @@ namespace Pubquiz.WebApi.Controllers
             command.TeamId = teamId;
 
             var teamMembers = await command.Execute();
-            return Ok(new {Code = SuccessCodes.TeamMembersChanged, teamMembers, Message = "Team members changed."});
+            return Ok(new ChangeTeamMembersResponse
+            {
+                Code = SuccessCodes.TeamMembersChanged,
+                Message = "Team members changed.",
+                TeamMembers = teamMembers
+            });
         }
 
         [HttpPost("deleteteam")]
         [Authorize(Roles = "QuizMaster, Admin")]
-        public async Task<IActionResult> DeleteTeam(DeleteTeamNotification notification)
+        public async Task<ActionResult<ApiResponse>> DeleteTeam(DeleteTeamNotification notification)
         {
             var actorId = User.GetId();
             if (notification.ActorId != Guid.Empty && notification.ActorId != actorId)
@@ -189,11 +213,15 @@ namespace Pubquiz.WebApi.Controllers
 
             notification.ActorId = actorId;
             await notification.Execute();
-            return Ok(new {Code = SuccessCodes.TeamDeleted, Message = $"Team with id {notification.TeamId} deleted"});
+            return Ok(new ApiResponse
+            {
+                Code = SuccessCodes.TeamDeleted,
+                Message = $"Team with id {notification.TeamId} deleted"
+            });
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public async Task<ActionResult<ApiResponse>> Logout()
         {
             var actorId = User.GetId();
             var actorRole = User.GetUserRole();
@@ -210,7 +238,11 @@ namespace Pubquiz.WebApi.Controllers
             }
 
             await SignOut();
-            return Ok(new {Code = SuccessCodes.LoggedOut, Message = "Successfully logged out."});
+            return Ok(new ApiResponse
+            {
+                Code = SuccessCodes.LoggedOut,
+                Message = "Successfully logged out."
+            });
         }
 
         private async Task SignOut()

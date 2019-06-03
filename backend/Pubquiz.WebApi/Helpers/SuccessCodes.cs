@@ -2,6 +2,7 @@ namespace Pubquiz.WebApi.Helpers
 {
     public struct SuccessCodes
     {
+        public const int ThatsYou = 0;
         public const int TeamRegisteredAndLoggedIn = 1;
         public const int LoggedOut = 2;
         public const int TeamRenamed = 4;
