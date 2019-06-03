@@ -92,11 +92,14 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(GameStateChanged message)
         {
-            //var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
+            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
             // notify quiz master 
             await _gameHubContext.Clients.Group(quizMasterGroupId).GameStateChanged(message);
+            
+            // notify teams
+            await _gameHubContext.Clients.Group(teamGroupId).GameStateChanged(message);
         }
 
         public async Task Handle(TeamNameUpdated message)
