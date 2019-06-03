@@ -47,7 +47,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { AxiosResponse } from "axios";
 import { TeamInfo } from "../models/models";
-import { Form } from "bootstrap-vue";
 
 @Component
 export default class RegisterTeam extends Vue {
