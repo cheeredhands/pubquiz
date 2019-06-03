@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@aspnet/signalr';
 import gamehub from '../services/gamehub';
-import { Quiz, TeamInfo, UserInfo } from '../models/models';
+import { Quiz, TeamInfo, UserInfo, GameStateChanged, GameState } from '../models/models';
 
 Vue.use(Vuex);
 
@@ -10,6 +10,7 @@ interface RootState {
   isLoggedIn: boolean;
   team?: TeamInfo;
   otherTeams: TeamInfo[];
+  gameState: GameState;
   quiz?: Quiz;
   signalrconnection?: HubConnection;
 }
@@ -19,6 +20,7 @@ const store: StoreOptions<RootState> = {
     isLoggedIn: false,
     team: undefined,
     otherTeams: [],
+    gameState: GameState.Closed,
     quiz: undefined,
     signalrconnection: undefined
   },
@@ -29,6 +31,7 @@ const store: StoreOptions<RootState> = {
       // called when the current team registers succesfully
       state.team = team;
       state.isLoggedIn = true;
+      state.gameState = team.gameState;
     },
     addTeam(state, team: TeamInfo) {
       // called by the signalr stuff when a new team registers
@@ -80,6 +83,10 @@ const store: StoreOptions<RootState> = {
       if (teamInStore !== undefined) {
         teamInStore.memberNames = team.memberNames;
       }
+    },
+    setGameState(state, newGameState: GameState) {
+      console.log(`set game state: ${newGameState}`);
+      state.gameState = newGameState;
     },
     logout(state) {
       state.team = undefined;
@@ -133,6 +140,16 @@ const store: StoreOptions<RootState> = {
     },
     processUserLoggedOut({ commit, state }, userLoggedOut: UserInfo) {
       // todo notify teams that the quizmaster left?
+    },
+    processGameStateChanged({ commit, state }, gameStateChanged: GameStateChanged) {
+      if (state.gameState === undefined) {
+        return;
+      }
+      if (state.gameState !== gameStateChanged.oldGameState) {
+        console.log(`Old game state ${state.gameState} doesn't match old game state in the gameStateChanged message (${gameStateChanged.oldGameState})`);
+        return;
+      }
+      commit('setGameState', gameStateChanged.newGameState);
     }
   }
 };

@@ -7,6 +7,8 @@ export interface TeamInfo {
   isLoggedIn: boolean;
   /** Team member names */
   memberNames: string;
+  /** The current game state */
+  gameState: GameState;
 }
 
 export interface UserInfo {
@@ -20,12 +22,27 @@ export interface UserInfo {
   gameId: string;
 }
 
+export enum GameState {
+  Closed,
+  Open,
+  Running,
+  Paused,
+  Finished
+}
+
+export interface GameStateChanged {
+  /** The old game state */
+  oldGameState: GameState;
+  /** The new game state */
+  newGameState: GameState;
+}
+
 export interface ApiResponse {
   code: number;
   message: string;
 }
 
-export interface WhoAmIResponse {
+export interface WhoAmIResponse extends ApiResponse {
   userName: string;
   userId: string;
   currentGameId: string;

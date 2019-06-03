@@ -77,6 +77,11 @@ export default {
       store.dispatch('processTeamMembersChanged', data);
     })
 
+    connection.on('GameStateChanged', data => {
+      console.log(data);
+      store.dispatch('processGameStateChanged', data);
+    })
+
     return start().catch(err => {
       return console.error(err.toString());
     });
