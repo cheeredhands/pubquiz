@@ -1,22 +1,48 @@
 <template>
-   <div id="content">
-    <h1>Quiz master / admin login</h1>
-    <div class="login">
-    <p><label for="userName">User name</label><input v-model="userName" id="userName" /> </p>
-    <p> <label for="password">Password</label> <input v-model="password" id="password"/></p>
- <p><button type="submit" @click="login()">Login</button></p>
- </div>
- <div>
-
+  <div id="content">
+    <b-container>
+      <b-row>
+        <h1>Quiz master / admin login</h1>
+      </b-row>
+      <hr />
+      <b-row>
+        <b-form @submit="register" novalidate>
+          <b-form-group label="username:" label-for="userNameInput">
+            <b-form-input
+              type="text"
+              size="lg"
+              v-model="userName"
+              id="userNameInput"
+              name="userNameInput"
+              required
+              minlength="5"
+              maxlength="30"
+            />
+          </b-form-group>
+          <b-form-group label="Password:" label-for="passwordInput">
+            <b-form-input
+              type="password"
+              size="lg"
+              v-model="password"
+              id="passwordInput"
+              name="passwordInput"
+              required
+              minlength="4"
+            />
+          </b-form-group>
+          <b-button type="submit" @click="login()" variant="primary">Inloggen</b-button>
+        </b-form>
+      </b-row>
+    </b-container>
+    <div></div>
   </div>
- </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 
 export default class Login extends Vue {
-  public name: string = 'Login';
+  public name: string = "Login";
 }
 </script>
 
