@@ -11,68 +11,85 @@
         </b-navbar-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav v-if="isLoggedIn" class="ml-auto">
-          <b-nav-item-dropdown :text="team.teamName" right>
+          <b-nav-item-dropdown :text="userName" right>
             <b-dropdown-item @click="logout()">Spel verlaten</b-dropdown-item>
             <b-dropdown-item>Help</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <router-view/>
+    <router-view></router-view>
     <footer class="footer">{{message}}</footer>
     <vue-snotify></vue-snotify>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { AxiosResponse } from 'axios';
-import { WhoAmIResponse, ApiResponse } from './models/models';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { AxiosResponse } from "axios";
+import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
 
 @Component
 export default class App extends Vue {
-  public name: string = 'app';
+  public name: string = "app";
 
-  public message: string = 'Welkom bij QuizrRegisterteam';
+  public message: string = "Welkom bij QuizrRegisterteam";
 
   get isLoggedIn() {
     return this.$store.state.isLoggedIn || false;
   }
 
   get team() {
-    return this.$store.state.team || '';
+    return this.$store.state.team || "";
+  }
+
+  get user() {
+    return this.$store.state.user || "";
+  }
+
+  get userName() {
+    return this.team.teamName || this.user.userName;
   }
 
   public logout() {
     this.$axios
-      .post('/api/account/logout', { withCredentials: true })
+      .post("/api/account/logout", { withCredentials: true })
       .then((response: AxiosResponse<ApiResponse>) => {
         if (response.data.code === 2) {
-          this.$store.dispatch('logout');
-          this.$router.replace('/');
-          this.$snotify.success('Uitgelogd');
+          this.$store.dispatch("logout");
+          this.$router.replace("/");
+          this.$snotify.success("Uitgelogd");
         }
       });
   }
 
   public mounted() {
     this.$axios
-      .get('/api/account/whoami', { withCredentials: true })
+      .get("/api/account/whoami", { withCredentials: true })
       .then((response: AxiosResponse<WhoAmIResponse>) => {
-        if (response.data.userName === '') {
+        if (response.data.userName === "") {
           return;
         }
-        // disco. init team (add team to store, start signalr)
-        this.$store
-          .dispatch('initTeam', {
-            teamId: response.data.userId,
-            teamName: response.data.userName
-          })
-          .then(() => {
-            // and goto lobby
-            this.$router.replace('Lobby');
-          });
+        if (response.data.userRole === UserRole.Team) {
+          this.$store
+            .dispatch("initTeam", {
+              teamId: response.data.userId,
+              teamName: response.data.userName
+            })
+            .then(() => {
+              this.$router.replace({ name: "TeamLobby" });
+            });
+        } else {
+          this.$store
+            .dispatch("initQuizMaster", {
+              userId: response.data.userId,
+              userName: response.data.userName
+            })
+            .then(() => {
+              this.$router.replace({ name: "QuizMasterLobby" });
+            });
+        }
       })
       .catch(error => this.$snotify.error(error.message));
   }

@@ -94,7 +94,7 @@ export default class RegisterTeam extends Vue {
           .then(() => {
             // and goto lobby
             this.$snotify.success("Welkom!"); // TODO: get message from response
-            this.$router.push("Lobby");
+            this.$router.push({name:"TeamLobby"});
           });
       })
       .catch(error => this.$snotify.error(error.response.data[0].message));

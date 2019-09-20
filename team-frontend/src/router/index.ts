@@ -3,8 +3,9 @@ import Router from 'vue-router';
 
 import Home from '../components/Home.vue';
 import RegisterTeam from '../components/RegisterTeam.vue';
-import Lobby from '../components/Lobby.vue';
-import Login from '../components/Login.vue';
+import TeamLobby from '../components/TeamLobby.vue';
+import QuizMasterLogin from '../components/QuizMasterLogin.vue';
+import QuizMasterLobby from '../components/QuizMasterLobby.vue';
 
 Vue.use(Router);
 
@@ -23,13 +24,18 @@ export default new Router({
     },
     {
       path: '/lobby',
-      name: 'Lobby',
-      component: Lobby
+      name: 'TeamLobby',
+      component: TeamLobby
     },
     {
-      path: '/login',
-      name: 'Login',
-      component: Login
+      path: '/qm/login',
+      name: 'QuizMasterLogin',
+      component: QuizMasterLogin
+    },
+    {
+      path: '/qm/lobby',
+      name: 'QuizMasterLobby',
+      component: QuizMasterLobby
     }
   ]
 });

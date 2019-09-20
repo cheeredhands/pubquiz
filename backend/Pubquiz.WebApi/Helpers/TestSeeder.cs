@@ -30,6 +30,7 @@ namespace Pubquiz.WebApi.Helpers
             var game = TestGame.GetGame(users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), 0,
                 quiz.QuizSections[0].Id);
             users.First(u => u.UserName == "Quiz master 1").GameIds.Add(game.Id);
+            users.First(u => u.UserName == "Quiz master 1").CurrentGameId = game.Id;
             var teams = TestTeams.GetTeams(teamCollection, game.Id);
             foreach (var team in teams)
             {

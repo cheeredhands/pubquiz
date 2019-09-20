@@ -18,8 +18,10 @@ export interface UserInfo {
   userName: string;
   /** false when the team has logged out / left game */
   isLoggedIn: boolean;
-  /** the game Id */
+  /** the current game Id */
   gameId: string;
+  /** the game ids this user is involved in */
+  gameIds: string[];
 }
 
 export enum GameState {
@@ -42,6 +44,12 @@ export interface ApiResponse {
   message: string;
 }
 
+export interface LoginResponse extends ApiResponse {
+  userId: string;
+  userName: string;
+  gameIds: string[];
+}
+
 export interface WhoAmIResponse extends ApiResponse {
   userName: string;
   userId: string;
@@ -59,8 +67,20 @@ export interface TeamLobbyViewModel {
   otherTeamsInGame: TeamInfo[];
 }
 
+export interface QuizMasterLobbyViewModel {
+  userId: string;
+  currentGame: GameViewModel;
+  teamsInGame: TeamInfo[];
+}
+
+export interface GameViewModel {
+  gameId: string;
+  gameTitle: string;
+  state: GameState;
+}
+
 /** The quiz object used  */
-export interface Quiz {
+export interface Game {
   title: string;
 }
 

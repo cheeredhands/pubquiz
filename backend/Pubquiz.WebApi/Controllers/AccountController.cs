@@ -96,12 +96,13 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginCommand command)
         {
             var user = await command.Execute();
-            await SignIn(user);
+            await SignIn(user, user.CurrentGameId);
             return Ok(new LoginResponse
             {
                 Code = SuccessCodes.UserLoggedIn,
                 Message = $"User {user.UserName} logged in.",
                 UserId = user.Id,
+                UserName = user.UserName,
                 GameIds = user.GameIds
             });
         }

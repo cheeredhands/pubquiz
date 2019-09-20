@@ -2,31 +2,46 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@aspnet/signalr';
 import gamehub from '../services/gamehub';
-import { Quiz, TeamInfo, UserInfo, GameStateChanged, GameState } from '../models/models';
+import { Game, TeamInfo, UserInfo, GameStateChanged, GameState } from '../models/models';
 
 Vue.use(Vuex);
 
 interface RootState {
   isLoggedIn: boolean;
   team?: TeamInfo;
-  otherTeams: TeamInfo[];
+  teams: TeamInfo[];
   gameState: GameState;
-  quiz?: Quiz;
+  game?: Game;
   signalrconnection?: HubConnection;
+
+  user?: UserInfo;
+  currentGameId: string;
+  gameIds: string[];
 }
 
 const store: StoreOptions<RootState> = {
   state: {
     isLoggedIn: false,
     team: undefined,
-    otherTeams: [],
+    teams: [],
     gameState: GameState.Closed,
-    quiz: undefined,
-    signalrconnection: undefined
+    game: undefined,
+    signalrconnection: undefined,
+
+    user: undefined,
+    currentGameId: '',
+    gameIds: []
   },
   getters: {},
   mutations: {
     // mutations are sync store updates
+    setUser(state, user: UserInfo) {
+      // called when a quizmaster logs in succesfully
+      state.user = user;
+      state.isLoggedIn = true;
+      state.currentGameId = user.gameId;
+      state.gameIds = user.gameIds;
+    },
     setTeam(state, team: TeamInfo) {
       // called when the current team registers succesfully
       state.team = team;
@@ -37,24 +52,24 @@ const store: StoreOptions<RootState> = {
       // called by the signalr stuff when a new team registers
       console.log(`addTeam: ${team.teamName}`);
       team.isLoggedIn = true;
-      const teamInStore = state.otherTeams.find(i => i.teamId === team.teamId);
+      const teamInStore = state.teams.find(i => i.teamId === team.teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = true;
         teamInStore.teamName = team.teamName;
         teamInStore.memberNames = team.memberNames;
       } else {
-        state.otherTeams.push(team);
+        state.teams.push(team);
       }
     },
     setTeamLoggedOut(state, team: TeamInfo) {
       console.log(`setOtherTeamLoggedOut: ${team.teamName}`);
-      const teamInStore = state.otherTeams.find(i => i.teamId === team.teamId);
+      const teamInStore = state.teams.find(i => i.teamId === team.teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = false;
       }
     },
-    setOtherTeams(state, otherTeams: TeamInfo[]) {
-      state.otherTeams = otherTeams;
+    setTeams(state, teams: TeamInfo[]) {
+      state.teams = teams;
     },
     setOwnTeamName(state, newName) {
       if (state.team !== undefined) {
@@ -68,7 +83,7 @@ const store: StoreOptions<RootState> = {
     },
     setOtherTeamName(state, team: TeamInfo) {
       console.log(`setOtherTeamName: ${team.teamName}`);
-      const teamInStore = state.otherTeams.find(
+      const teamInStore = state.teams.find(
         item => item.teamId === team.teamId
       );
       if (teamInStore !== undefined) {
@@ -77,7 +92,7 @@ const store: StoreOptions<RootState> = {
     },
     setOtherTeamMembers(state, team: TeamInfo) {
       console.log(`setOtherTeam: ${team.memberNames}`);
-      const teamInStore = state.otherTeams.find(
+      const teamInStore = state.teams.find(
         item => item.teamId === team.teamId
       );
       if (teamInStore !== undefined) {
@@ -91,8 +106,8 @@ const store: StoreOptions<RootState> = {
     logout(state) {
       state.team = undefined;
       state.isLoggedIn = false;
-      state.quiz = undefined;
-      state.otherTeams = [];
+      state.game = undefined;
+      state.teams = [];
     },
     saveSignalRConnection(state, signalrconnection) {
       state.signalrconnection = signalrconnection;
@@ -106,6 +121,10 @@ const store: StoreOptions<RootState> = {
     // the action to the mutation as actions are not allowed to change the state directly.
     async initTeam({ commit }, team: TeamInfo) {
       commit('setTeam', team);
+      await gamehub.init();
+    },
+    async initQuizMaster({ commit }, user: UserInfo) {
+      commit('setUser', user);
       await gamehub.init();
     },
     async logout({ commit }) {

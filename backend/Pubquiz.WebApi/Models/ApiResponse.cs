@@ -28,6 +28,7 @@ namespace Pubquiz.WebApi.Models
     public class LoginResponse : ApiResponse
     {
         public Guid UserId { get; set; }
+        public string UserName { get; set; }
         public List<Guid> GameIds { get; set; }
     }
 

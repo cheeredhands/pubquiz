@@ -93,8 +93,8 @@ import {
     next();
   }
 })
-export default class Lobby extends Vue {
-  public name: string = "Lobby";
+export default class TeamLobby extends Vue {
+  public name: string = "TeamLobby";
 
   public inEdit: boolean = false;
 
@@ -110,7 +110,7 @@ export default class Lobby extends Vue {
       .get("/api/game/teamlobby")
       .then((response: AxiosResponse<TeamLobbyViewModel>) => {
         this.$store.commit("setTeam", response.data.team);
-        this.$store.commit("setOtherTeams", response.data.otherTeamsInGame);
+        this.$store.commit("setTeams", response.data.otherTeamsInGame);
         this.teamId = this.$store.state.team.teamId;
         this.newName = this.teamName;
         this.newMemberNames = this.memberNames;
