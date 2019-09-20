@@ -34,7 +34,7 @@ import { WhoAmIResponse, ApiResponse } from './models/models';
 export default class App extends Vue {
   public name: string = 'app';
 
-  public message: string = '';
+  public message: string = 'Welkom bij QuizrRegisterteam';
 
   get isLoggedIn() {
     return this.$store.state.isLoggedIn || false;
