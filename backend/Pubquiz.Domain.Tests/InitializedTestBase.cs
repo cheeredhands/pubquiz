@@ -35,6 +35,7 @@ namespace Pubquiz.Domain.Tests
         private InMemorySubscriberStore _inMemorySubscriberStore;
 
         [TestInitialize]
+        [System.Obsolete]
         public void Initialize()
         {
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
