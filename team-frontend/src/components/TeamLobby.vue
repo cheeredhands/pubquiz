@@ -50,7 +50,7 @@
           <p>Jullie gaan het opnemen tegen:</p>
           <b-list-group>
             <b-list-group-item
-              v-for="(otherTeam, index) in otherTeams"
+              v-for="(otherTeam, index) in teams"
               :key="index"
               :title="otherTeam.memberNames"
             >
@@ -173,8 +173,8 @@ export default class TeamLobby extends Vue {
     return this.$store.state.team.memberNames || "";
   }
 
-  get otherTeams() {
-    return this.$store.state.otherTeams || [];
+  get teams() {
+    return this.$store.state.teams || [];
   }
 
   get isInEdit() {
