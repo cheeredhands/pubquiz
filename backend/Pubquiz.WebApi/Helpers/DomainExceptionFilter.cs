@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain;
 using Pubquiz.Persistence;
@@ -27,7 +25,7 @@ namespace Pubquiz.WebApi.Helpers
             var domainExceptions = new List<DomainException>();
             if (context.Exception is DomainException)
             {
-                domainExceptions.Add((DomainException)context.Exception);
+                domainExceptions.Add((DomainException) context.Exception);
             }
 
             if (context.Exception is AggregateException exception)
@@ -38,7 +36,7 @@ namespace Pubquiz.WebApi.Helpers
 
             if (domainExceptions.Any())
             {
-                var messages = domainExceptions.Select(e => new { ErrorCode = e.ErrorCode, Message = e.Message });
+                var messages = domainExceptions.Select(e => new {e.ErrorCode, e.Message});
                 var badRequest = domainExceptions.Any(e => e.IsBadRequest);
                 foreach (var domainException in domainExceptions)
                 {

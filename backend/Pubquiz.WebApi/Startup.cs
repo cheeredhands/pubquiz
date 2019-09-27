@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
@@ -30,10 +30,10 @@ namespace Pubquiz.WebApi
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ILoggerFactory _loggerFactory;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment,
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment,
             ILoggerFactory loggerFactory)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -85,13 +85,13 @@ namespace Pubquiz.WebApi
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddApiExplorer()
-                .AddJsonFormatters()
+                //.AddJsonFormatters()
                 .AddCacheTagHelper()
                 .AddAuthorization();
 
-            services.AddSingleton<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
+           // services.AddSingleton<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
                 options =>
@@ -135,7 +135,7 @@ namespace Pubquiz.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors(builder =>
             {
