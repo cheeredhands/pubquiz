@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace Pubquiz.Persistence
 {
@@ -19,7 +18,7 @@ namespace Pubquiz.Persistence
         /// <summary>
         ///     Unique identifier.
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
+        [System.Text.Json.]
         public Guid Id { get; set; }
 
         /// <summary>
