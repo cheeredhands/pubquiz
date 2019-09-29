@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -31,13 +32,10 @@ namespace Pubquiz.WebApi
     public class Startup
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly ILoggerFactory _loggerFactory;
-
-        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment,
-            ILoggerFactory loggerFactory)
+     
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
-            _loggerFactory = loggerFactory;
             Configuration = configuration;
         }
 
@@ -46,13 +44,31 @@ namespace Pubquiz.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
+                .AddMvcOptions(options =>
+                {
+                    options.Filters.Add(typeof(DomainExceptionFilter));
+                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
+                    var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            //.AddApiExplorer()
+            //.AddJsonFormatters()
+            //.AddCacheTagHelper()
+            //.AddAuthorization();;
+
             services.AddCors();
             services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
-            // needed so the inmemory subscription store will be centralized
+            // needed so the in memory subscription store will be centralized
             var inMemorySubscriberStore = new InMemorySubscriberStore();
             services.AddSingleton(inMemorySubscriberStore);
             services.AddRebus(configure =>
-                configure.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
+                configure//.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
                     .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
                     .Subscriptions(s => s.StoreInMemory(inMemorySubscriberStore))
                     .Routing(r => r.TypeBased().MapAssemblyOf<InteractionResponseAdded>("Messages")));
@@ -76,22 +92,22 @@ namespace Pubquiz.WebApi
             }
 
             services.AddRequests(Assembly.Load("Pubquiz.Logic"));
-            services.AddMvcCore(options =>
-                {
-                    options.Filters.Add(typeof(DomainExceptionFilter));
-                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
-                    var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
-                        .RequireAuthenticatedUser()
-                        .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-                .AddApiExplorer()
-                //.AddJsonFormatters()
-                .AddCacheTagHelper()
-                .AddAuthorization();
+//            services.AddMvcCore(options =>
+//                {
+//                    options.Filters.Add(typeof(DomainExceptionFilter));
+//                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
+//                    var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
+//                        .RequireAuthenticatedUser()
+//                        .Build();
+//                    options.Filters.Add(new AuthorizeFilter(policy));
+//                })
+//                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+//                .AddApiExplorer()
+//                //.AddJsonFormatters()
+//                .AddCacheTagHelper()
+//                .AddAuthorization();
 
-           // services.AddSingleton<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
+            // services.AddSingleton<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
                 options =>
@@ -137,6 +153,8 @@ namespace Pubquiz.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseStaticFiles();
+            app.UseRouting();
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:8080", "*")
@@ -145,6 +163,14 @@ namespace Pubquiz.WebApi
                     .AllowCredentials();
             });
             app.UseAuthentication();
+            app.UseAuthorization();
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<GameHub>("/gamehub");
+                endpoints.MapControllers();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -159,14 +185,17 @@ namespace Pubquiz.WebApi
             //            {
             //                var bus = app.ApplicationServices.GetRequiredService<IBus>();
             //            });
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            //app.UseDefaultFiles();
+
+
             //app.UseHttpsRedirection();
-            app.UseMvc();
+            //app.UseMvc();
+
+           
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
 
-            app.UseSignalR(route => { route.MapHub<GameHub>("/gamehub"); });
+            //app.UseSignalR(route => { route.MapHub<GameHub>("/gamehub"); });
 
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
             var mongoDbIsEmpty = Configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&

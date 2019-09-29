@@ -7,7 +7,7 @@ namespace Pubquiz.Domain.ViewModels
 {
     public class GameViewModel
     {
-        public Guid GameId { get; set; }
+        public string GameId { get; set; }
         public string GameTitle { get; set; }
         public GameState State { get; set; }
     }

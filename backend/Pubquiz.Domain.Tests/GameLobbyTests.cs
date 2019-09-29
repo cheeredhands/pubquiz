@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
+using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Domain.Tests
 {
@@ -27,7 +28,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_TeamLobbyWithInvalidTeamId_ThrowsException()
         {
             // arrange
-            var query = new TeamLobbyViewModelQuery(UnitOfWork) {TeamId = Guid.Empty};
+            var query = new TeamLobbyViewModelQuery(UnitOfWork) {TeamId = Guid.Empty.ToShortGuidString()};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => query.Execute()).Result;
@@ -77,7 +78,8 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Users.First(u => u.UserName == "Quiz master 1").Id;
-            var command = new SelectGameCommand(UnitOfWork, Bus) {GameId = Guid.Empty, ActorId = actorId};
+            var command = new SelectGameCommand(UnitOfWork, Bus)
+                {GameId = Guid.Empty.ToShortGuidString(), ActorId = actorId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -90,7 +92,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_InvalidQuizMasterSelectsGame_ThrowsException()
         {
             // arrange
-            var actorId = Guid.Empty;
+            var actorId = Guid.Empty.ToShortGuidString();
             var command = new SelectGameCommand(UnitOfWork, Bus) {GameId = Game.Id, ActorId = actorId};
 
             // act & assert

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Logic.Tools
 {
@@ -32,7 +33,7 @@ namespace Pubquiz.Logic.Tools
             return result;
         }
 
-        public static Guid GetCurrentGameId(this ClaimsPrincipal claimsPrincipal)
+        public static string GetCurrentGameId(this ClaimsPrincipal claimsPrincipal)
         {
             var claim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "CurrentGame");
             if (claim == null)
@@ -41,14 +42,14 @@ namespace Pubquiz.Logic.Tools
                     "The user doesn't have a Current Game claim.", true);
             }
 
-            if (!Guid.TryParse(claim.Value, out var result))
+            if (!claim.Value.TryDecodeToGuid(out _))//  !Guid.TryParse(claim.Value, out var result))
             {
                 throw new DomainException(ErrorCodes.NoCurrentGameIdClaimForUser,
                     "The user doesn't have a valid Current Game claim.",
                     true);
             }
 
-            return result;
+            return claim.Value;
         }
 
         /// <summary>
@@ -56,19 +57,19 @@ namespace Pubquiz.Logic.Tools
         /// </summary>
         /// <param name="claimsPrincipal">The logged in user.</param>
         /// <returns>The guid of the user if the claim exists, otherwise <see cref="Guid.Empty"/></returns>
-        public static Guid GetId(this ClaimsPrincipal claimsPrincipal)
+        public static string GetId(this ClaimsPrincipal claimsPrincipal)
         {
             var idClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (idClaim != null)
             {
                 var idString = idClaim.Value;
-                if (Guid.TryParse(idString, out Guid id))
+                if (idString.TryDecodeToGuid(out _))
                 {
-                    return id;
+                    return idString;
                 }
             }
 
-            return Guid.Empty;
+            return string.Empty;
         }
     }
 }

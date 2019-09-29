@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Pubquiz.Domain.Models;
+using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Logic.Tools
 {
@@ -10,7 +11,7 @@ namespace Pubquiz.Logic.Tools
         {
             var mcQuestion = new Question
             {
-                Id = Guid.Parse("EB42AF2C-DD76-4470-8480-8EC6DD8203DA"),
+                Id = Guid.Parse("EB42AF2C-DD76-4470-8480-8EC6DD8203DA").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Multiple choice",
                 MaxScore = 1,
@@ -39,7 +40,7 @@ namespace Pubquiz.Logic.Tools
         {
             var mrQuestion = new Question
             {
-                Id = Guid.Parse("F39D1BD5-60E9-4615-8512-553149CDC28C"),
+                Id = Guid.Parse("F39D1BD5-60E9-4615-8512-553149CDC28C").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Multiple response",
                 MaxScore = 1,
@@ -68,7 +69,7 @@ namespace Pubquiz.Logic.Tools
         {
             var mrQuestion = new Question
             {
-                Id = Guid.Parse("6423EA00-9984-40DC-8D76-499447C3EA3B"),
+                Id = Guid.Parse("6423EA00-9984-40DC-8D76-499447C3EA3B").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Short answer with one solution",
                 MaxScore = 1,
@@ -90,7 +91,7 @@ namespace Pubquiz.Logic.Tools
         {
             var mrQuestion = new Question
             {
-                Id = Guid.Parse("DD550891-8EF3-4313-BF0F-871D96A3BFC5"),
+                Id = Guid.Parse("DD550891-8EF3-4313-BF0F-871D96A3BFC5").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Short answer with multiple solutions",
                 MaxScore = 1,
@@ -112,7 +113,7 @@ namespace Pubquiz.Logic.Tools
         {
             var multipleSAQuestion = new Question
             {
-                Id = Guid.Parse("4B431B8E-9C58-4849-AB0E-3070767CFC81"),
+                Id = Guid.Parse("4B431B8E-9C58-4849-AB0E-3070767CFC81").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Test question",
                 MaxScore = 3,
@@ -141,7 +142,7 @@ namespace Pubquiz.Logic.Tools
         {
             var etQuestion = new Question
             {
-                Id = Guid.Parse("88681DFF-61E7-4289-8CCD-835D02BF0FA8"),
+                Id = Guid.Parse("88681DFF-61E7-4289-8CCD-835D02BF0FA8").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Extended text (no solution, manually corrected)",
                 MaxScore = 1,
@@ -175,7 +176,7 @@ namespace Pubquiz.Logic.Tools
         {
             var quizSection1 = new QuizSection
             {
-                Id = Guid.Parse("CFD8977B-4F15-4F7C-9E18-DE1238B97327"),
+                Id = Guid.Parse("CFD8977B-4F15-4F7C-9E18-DE1238B97327").ToShortGuidString(),
                 Title = "First quiz section",
                 QuizItems = new List<QuizItem>
                 {
@@ -187,7 +188,7 @@ namespace Pubquiz.Logic.Tools
 
             var quizSection2 = new QuizSection
             {
-                Id = Guid.Parse("41E0F686-CEF2-493E-A5FD-1D1DD75BAEEB"),
+                Id = Guid.Parse("41E0F686-CEF2-493E-A5FD-1D1DD75BAEEB").ToShortGuidString(),
                 Title = "Second quiz section",
                 QuizItems = new List<QuizItem>
                 {
@@ -199,7 +200,7 @@ namespace Pubquiz.Logic.Tools
 
             var quiz = new Quiz
             {
-                Id = Guid.Parse("ACC39DF3-B1A5-4F97-BC12-AA59BC580418"),
+                Id = Guid.Parse("ACC39DF3-B1A5-4F97-BC12-AA59BC580418").ToShortGuidString(),
                 Title = "Testquiz"
             };
             quiz.QuizSections.Add(quizSection1);

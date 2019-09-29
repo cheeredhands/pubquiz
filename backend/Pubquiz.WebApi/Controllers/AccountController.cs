@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -112,7 +111,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<SelectGameResponse>> SelectGame([FromBody] SelectGameCommand command)
         {
             var userId = User.GetId();
-            if (command.ActorId != Guid.Empty && userId != command.ActorId)
+            if (!string.IsNullOrWhiteSpace(command.ActorId) && userId != command.ActorId)
             {
                 return Forbid();
             }
@@ -130,14 +129,14 @@ namespace Pubquiz.WebApi.Controllers
             });
         }
 
-        private async Task SignIn(User user, Guid currentGame = default(Guid))
+        private async Task SignIn(User user, string currentGameId = "")
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Role, user.UserRole.ToString()),
-                new Claim("CurrentGame", currentGame.ToString())
+                new Claim("CurrentGame", currentGameId)
             };
 
             var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -164,7 +163,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<ChangeTeamNameResponse>> ChangeTeamName(ChangeTeamNameCommand command)
         {
             var teamId = User.GetId();
-            if (command.TeamId != Guid.Empty && teamId != command.TeamId)
+            if (!string.IsNullOrWhiteSpace(command.TeamId) && teamId != command.TeamId)
             {
                 return Forbid();
             }
@@ -186,7 +185,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(ChangeTeamMembersCommand command)
         {
             var teamId = User.GetId();
-            if (command.TeamId != Guid.Empty && command.TeamId != teamId)
+            if (!string.IsNullOrWhiteSpace(command.TeamId) && command.TeamId != teamId)
             {
                 return Forbid();
             }
@@ -207,7 +206,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<ApiResponse>> DeleteTeam(DeleteTeamNotification notification)
         {
             var actorId = User.GetId();
-            if (notification.ActorId != Guid.Empty && notification.ActorId != actorId)
+            if (!string.IsNullOrWhiteSpace(notification.ActorId) && notification.ActorId != actorId)
             {
                 return Forbid();
             }

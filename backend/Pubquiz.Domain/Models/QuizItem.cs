@@ -9,10 +9,15 @@ namespace Pubquiz.Domain.Models
     {
         public ItemType ItemType { get; set; }
 
-        public QuizItem(Guid id, ItemType itemType)
+        public QuizItem(string id, ItemType itemType)
         {
             Id = id;
             ItemType = itemType;
+        }
+
+        public QuizItem()
+        {
+            
         }
     }
 

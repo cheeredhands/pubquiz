@@ -1,10 +1,8 @@
 using System;
-using System.Reflection.Metadata;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
+using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Domain.Tests
 {
@@ -97,7 +95,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var game = new Game {State = GameState.Open};
-            game.TeamIds.Add(Guid.NewGuid());
+            game.TeamIds.Add(Guid.NewGuid().ToShortGuidString());
 
             // act 
             game.SetState(GameState.Running);
@@ -194,7 +192,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var game = new Game {State = GameState.Paused};
-            game.TeamIds.Add(Guid.NewGuid());
+            game.TeamIds.Add(Guid.NewGuid().ToShortGuidString());
 
             // act 
             game.SetState(GameState.Running);
@@ -229,7 +227,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var game = new Game {State = GameState.Paused};
-            game.TeamIds.Add(Guid.NewGuid());
+            game.TeamIds.Add(Guid.NewGuid().ToShortGuidString());
 
             // act 
             game.SetState(GameState.Finished);

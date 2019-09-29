@@ -63,7 +63,7 @@ namespace Pubquiz.Logic
                     $"Could not get the property or field value of {entityIdPropertyName} on {GetType().Name}");
             }
 
-            var entityId = (Guid) value;
+            var entityId = (string) value;
             var entityCollection = UnitOfWork.GetCollection<TEntity>();
             var entity = entityCollection.GetAsync(entityId).Result;
             if (entity == null)

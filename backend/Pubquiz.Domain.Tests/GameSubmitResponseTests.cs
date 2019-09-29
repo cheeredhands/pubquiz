@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Logic.Requests;
+using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Domain.Tests
 {
@@ -15,7 +16,7 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var notification = new SubmitInteractionResponseNotification(UnitOfWork, Bus)
             {
-                TeamId = Guid.Empty,
+                TeamId = Guid.Empty.ToShortGuidString(),
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = 1,
                 Response = string.Empty,
@@ -39,7 +40,7 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = 1,
                 Response = string.Empty,
-                QuestionId = Guid.Empty
+                QuestionId = Guid.Empty.ToShortGuidString()
             };
 
             // act & assert

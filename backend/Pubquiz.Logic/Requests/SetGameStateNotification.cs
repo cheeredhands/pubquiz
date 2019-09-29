@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
@@ -17,8 +16,8 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
     public class SetGameStateNotification : Notification
     {
-        public Guid ActorId { get; set; }
-        public Guid GameId { get; set; }
+        public string ActorId { get; set; }
+        public string GameId { get; set; }
         public GameState NewGameState { get; set; }
 
         public SetGameStateNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)

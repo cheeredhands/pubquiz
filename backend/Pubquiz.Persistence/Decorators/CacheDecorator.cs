@@ -62,7 +62,7 @@ namespace Pubquiz.Persistence.Decorators
         }
 
         /// <inheritdoc />
-        public override async Task<T> GetAsync(Guid id)
+        public override async Task<T> GetAsync(string id)
         {
             if (MemoryCache == null) return await base.GetAsync(id);
             var ret = MemoryCache.TryGetValue($"{typeof(T)}-{id}", out T returnValue)
@@ -72,7 +72,7 @@ namespace Pubquiz.Persistence.Decorators
         }
 
         /// <inheritdoc />
-        public override async Task<IEnumerable<T>> GetAsync(params Guid[] ids)
+        public override async Task<IEnumerable<T>> GetAsync(params string[] ids)
         {
             if (MemoryCache == null) return await base.GetAsync(ids);
             var result = new List<T>();
@@ -138,7 +138,7 @@ namespace Pubquiz.Persistence.Decorators
             return await base.UpdateAsync(document);
         }
 
-        public override async Task<bool> DeleteAsync(Guid id)
+        public override async Task<bool> DeleteAsync(string id)
         {
             if (MemoryCache == null) return await base.DeleteAsync(id);
             var key = $"{typeof(T)}-{id}";

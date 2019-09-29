@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -43,10 +42,10 @@ namespace Pubquiz.Persistence.MongoDb
         public IQueryable<T> AsQueryable() => Collection.AsQueryable();
 
         /// <inheritdoc />
-        public Task<T> GetAsync(Guid id) => Collection.FindAsync(o => o.Id == id).Result?.SingleOrDefaultAsync();
+        public Task<T> GetAsync(string id) => Collection.FindAsync(o => o.Id == id).Result?.SingleOrDefaultAsync();
 
         /// <inheritdoc />
-        public Task<IEnumerable<T>> GetAsync(params Guid[] ids) =>
+        public Task<IEnumerable<T>> GetAsync(params string[] ids) =>
             Task.FromResult(Collection.FindAsync(o => ids.Contains(o.Id)).Result?.ToEnumerable());
         
         /// <inheritdoc />
@@ -62,7 +61,7 @@ namespace Pubquiz.Persistence.MongoDb
         }
 
         /// <inheritdoc />
-        public async Task<bool> DeleteAsync(Guid id) =>
+        public async Task<bool> DeleteAsync(string id) =>
             await Collection.FindOneAndDeleteAsync(i => i.Id == id) != null;
 
 

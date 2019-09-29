@@ -5,11 +5,11 @@ namespace Pubquiz.Logic.Messages
 {
     public class GameStateChanged
     {
-        public Guid GameId { get; }
+        public string GameId { get; }
         public GameState OldGameState { get; }
         public GameState NewGameState { get; }
 
-        public GameStateChanged(Guid gameId, GameState oldGameState, GameState newGameState)
+        public GameStateChanged(string gameId, GameState oldGameState, GameState newGameState)
         {
             GameId = gameId;
             OldGameState = oldGameState;

@@ -10,13 +10,13 @@ namespace Pubquiz.Domain.Models
         public string Password { get; set; }
         public string RecoveryCode { get; set; }
         public UserRole UserRole { get; set; }
-        public List<Guid> GameIds { get; set; }
-        public Guid CurrentGameId { get; set; }
+        public List<string> GameIds { get; set; }
+        public string CurrentGameId { get; set; }
         public bool IsLoggedIn { get; set; }
 
         public User()
         {
-            GameIds = new List<Guid>();
+            GameIds = new List<string>();
         }
     }
 
