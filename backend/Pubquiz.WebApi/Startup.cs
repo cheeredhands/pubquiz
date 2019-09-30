@@ -9,10 +9,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
@@ -25,7 +29,6 @@ using Rebus.Persistence.InMem;
 using Rebus.Routing.TypeBased;
 using Rebus.ServiceProvider;
 using Rebus.Transport.InMem;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace Pubquiz.WebApi
 {
@@ -56,11 +59,14 @@ namespace Pubquiz.WebApi
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 })
+                .AddNewtonsoftJson()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             //.AddApiExplorer()
             //.AddJsonFormatters()
             //.AddCacheTagHelper()
             //.AddAuthorization();;
+            
+            services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
 
             services.AddCors();
             services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
@@ -122,12 +128,12 @@ namespace Pubquiz.WebApi
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new Info {Title = "Pubquiz backend", Version = "v1"});
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Pubquiz backend", Version = "v1"});
             });
 
             services.ConfigureSwaggerGen(options =>
             {
-                options.DescribeAllEnumsAsStrings();
+                //options.DescribeAllEnumsAsStrings();
                 var baseDirectory = _hostingEnvironment.ContentRootPath;
                 var commentsFileName = Assembly.GetEntryAssembly().GetName().Name + ".XML";
                 var commentsFile = Path.Combine(baseDirectory, commentsFileName);
@@ -153,6 +159,7 @@ namespace Pubquiz.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors(builder =>
