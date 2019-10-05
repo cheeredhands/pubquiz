@@ -42,9 +42,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosResponse } from 'axios';
-import { LoginResponse } from '../models/models';
-import Component from 'vue-class-component';
+import { AxiosResponse } from "axios";
+import { LoginResponse } from "../models/models";
+import Component from "vue-class-component";
 
 @Component
 export default class QuizMasterLogin extends Vue {
@@ -56,7 +56,6 @@ export default class QuizMasterLogin extends Vue {
 
   public login(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) return;
-
 
     // register!
     this.$axios
@@ -78,11 +77,28 @@ export default class QuizMasterLogin extends Vue {
           })
           .then(() => {
             // and goto lobby
-            this.$snotify.success(`Welkom quizmaster!\n(${response.data.message})`);
-            this.$router.push({name:"QuizMasterLobby"});
+            //  this.$snotify.success(`Welkom quizmaster!\n(${response.data.message})`);
+            this.$bvToast.toast(`Welkom quizmaster!\n(${response.data.message})`,
+              {
+                solid: true,
+                toaster: "b-toaster-bottom-right",
+                title: "todo",
+                variant: "info"
+              }
+            );
+            this.$router.push({ name: "QuizMasterLobby" });
           });
       })
-      .catch(error => this.$snotify.error(error.response.data[0].message));
+      .catch(error => {
+        // this.$snotify.error(error.response.data[0].message);
+          this.$bvToast.toast(error.response.data[0].message,
+          {
+          solid: true,
+          toaster: "b-toaster-bottom-right",
+          title: "oops",
+          variant: "error"
+          }
+          });
   }
 }
 </script>

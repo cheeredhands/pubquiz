@@ -4,7 +4,7 @@
       <b-row>
         <h1>Registreer hier!</h1>
       </b-row>
-      <hr>
+      <hr />
       <b-row>
         <b-form @submit="register" novalidate>
           <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="teamNameInput">
@@ -93,11 +93,26 @@ export default class RegisterTeam extends Vue {
           })
           .then(() => {
             // and goto lobby
-            this.$snotify.success("Welkom!"); // TODO: get message from response
+             this.$bvToast.toast(`Welkom!`,
+              {
+                solid: true,
+                toaster: "b-toaster-bottom-right",
+                title: "todo",
+                variant: "info"
+              }
+            );           
             this.$router.push({name:"TeamLobby"});
           });
       })
-      .catch(error => this.$snotify.error(error.response.data[0].message));
+      .catch(error => {
+        this.$bvToast.toast(error.response.data[0].message,
+        {
+          solid: true,
+          toaster: "b-toaster-bottom-right",
+          title: "oops",
+          variant: "error"
+        };
+  });
   }
 }
 </script>

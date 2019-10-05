@@ -73,8 +73,17 @@ export default class QuizMasterLobby extends Vue {
         this.$store.commit("setTeams", response.data.teamsInGame);
       })
       .catch((error: AxiosError) => {
-        this.$snotify.warning(error.message);
+        this.errorMessage(error.message);
       });
+  }
+
+  errorMessage(message) {
+    this.$bvToast.toast(message, {
+      solid: true,
+      toaster: "b-toaster-bottom-right",
+      title: "oops",
+      variant: "error"
+    });
   }
 
   kickTeam() {
