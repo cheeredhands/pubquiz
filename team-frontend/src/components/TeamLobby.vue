@@ -3,7 +3,7 @@
     <h1>Welkom in de lobby!</h1>
     <b-container fluid>
       <b-row>Sit back and relax..</b-row>
-      <hr>
+      <hr />
       <b-row>
         <b-col>
           <b-form @submit="applyTeamNameChange" novalidate>
@@ -116,8 +116,15 @@ export default class TeamLobby extends Vue {
         this.newMemberNames = this.memberNames;
       })
       .catch((error: AxiosError) => {
-        this.$snotify.error(error.message);
-      });
+          this.$bvToast.toast(error.response.data[0].message,
+          {
+          solid: true,
+          toaster: "b-toaster-bottom-right",
+          title: "oops",
+          variant: "error"
+          }
+          });
+                });
   }
 
   public saveMembers(evt: Event) {
@@ -131,10 +138,20 @@ export default class TeamLobby extends Vue {
       })
       .then((response: AxiosResponse<SaveTeamMembersResponse>) => {
         this.$store.commit("setOwnTeamMembers", response.data.teamMembers);
-        this.$snotify.success(response.data.message);
+        this.$bvToast.toast(response.data.message, {
+          solid: true,
+          toaster: "b-toaster-bottom-right",
+          title: "todo",
+          variant: "info"
+        });     
       })
       .catch((error: AxiosError) => {
-        this.$snotify.error(error.message);
+        this.$bvToast.toast(error.message, {
+          solid: true,
+          toaster: "b-toaster-bottom-right",
+          title: "oops",
+          variant: "error"
+        });
       })
       .finally(() => {
         this.newMemberNames = this.memberNames;
@@ -155,10 +172,20 @@ export default class TeamLobby extends Vue {
       .then((response: AxiosResponse<ApiResponse>) => {
         // only save it to the store if api call is successful!
         this.$store.commit("setOwnTeamName", this.newName);
-        this.$snotify.success(response.data.message);
+        this.$bvToast.toast(response.data.message, {
+          solid: true,
+          toaster: "b-toaster-bottom-right",
+          title: "yosop",
+          variant: "info"
+        });     
       })
       .catch((error: AxiosError) => {
-        this.$snotify.error(error.message);
+        this.$bvToast.toast(error.message, {
+          solid: true,
+          toaster: "b-toaster-bottom-right",
+          title: "oops",
+          variant: "error"
+        }); 
       })
       .finally(() => {
         this.newName = this.teamName;
