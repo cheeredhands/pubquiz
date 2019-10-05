@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
@@ -23,11 +28,13 @@ namespace Pubquiz.WebApi.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBus _bus;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(IUnitOfWork unitOfWork, IBus bus)
+        public AccountController(IUnitOfWork unitOfWork, IBus bus, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _bus = bus;
+            _configuration = configuration;
         }
 
         [HttpGet("whoami")]
@@ -142,6 +149,29 @@ namespace Pubquiz.WebApi.Controllers
             var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(userIdentity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        }
+
+        private async Task<string> SignInAndGetJwt(User user, string currentGameId = "")
+        {
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["AppSettings:JwtSecret"]);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Role, user.UserRole.ToString()),
+                new Claim("CurrentGame", currentGameId)
+            };
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         [HttpPost("testauth")]
