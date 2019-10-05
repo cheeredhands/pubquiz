@@ -45,69 +45,13 @@ namespace Pubquiz.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
-                .AddMvcOptions(options =>
-                {
-                    options.Filters.Add(typeof(DomainExceptionFilter));
-                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
-                    var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
-                        .RequireAuthenticatedUser()
-                        .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
-                })
-                .AddNewtonsoftJson()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            //.AddApiExplorer()
-            //.AddJsonFormatters()
-            //.AddCacheTagHelper()
-            //.AddAuthorization();;
-            
-            services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
+            AddDefaultWebApiStuff(services);
+            AddQuizrSpecificStuff(services);
+            AddSwagger(services);
+        }
 
-            services.AddCors();
-            services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
-            // needed so the in memory subscription store will be centralized
-            var inMemorySubscriberStore = new InMemorySubscriberStore();
-            services.AddSingleton(inMemorySubscriberStore);
-            services.AddRebus(configure =>
-                configure//.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
-                    .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
-                    .Subscriptions(s => s.StoreInMemory(inMemorySubscriberStore))
-                    .Routing(r => r.TypeBased().MapAssemblyOf<InteractionResponseAdded>("Messages")));
-
-            services.AddResponseCompression();
-            services.AddMemoryCache();
-            services.AddLogging(builder =>
-            {
-                builder.AddConfiguration(Configuration.GetSection("Logging"));
-                builder.AddConsole();
-                builder.AddDebug();
-            });
-            switch (Configuration.GetValue<string>("AppSettings:Database"))
-            {
-                case "Memory":
-                    services.AddInMemoryPersistence();
-                    break;
-                case "MongoDB":
-                    services.AddMongoDbPersistence("Quizr", Configuration.GetConnectionString("MongoDB"));
-                    break;
-            }
-
-            services.AddRequests(Assembly.Load("Pubquiz.Logic"));
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
-                options =>
-                {
-                    options.LoginPath = new PathString("/swagger");
-                    options.Events.OnRedirectToLogin = context =>
-                    {
-                        context.Response.StatusCode = StatusCodes.Status404NotFound;
-                        return Task.CompletedTask;
-                    };
-                });
-
+        private void AddSwagger(IServiceCollection services)
+        {
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo {Title = "Pubquiz backend", Version = "v1"});
@@ -131,10 +75,71 @@ namespace Pubquiz.WebApi
 
                 options.CustomSchemaIds(x => x.FullName);
             });
+        }
 
+        private void AddQuizrSpecificStuff(IServiceCollection services)
+        {
+            services.AddMemoryCache();
+            services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
+            // needed so the in memory subscription store will be centralized
+            var inMemorySubscriberStore = new InMemorySubscriberStore();
+            services.AddSingleton(inMemorySubscriberStore);
+            services.AddRebus(configure =>
+                configure //.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
+                    .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
+                    .Subscriptions(s => s.StoreInMemory(inMemorySubscriberStore))
+                    .Routing(r => r.TypeBased().MapAssemblyOf<InteractionResponseAdded>("Messages")));
+
+            switch (Configuration.GetValue<string>("AppSettings:Database"))
+            {
+                case "Memory":
+                    services.AddInMemoryPersistence();
+                    break;
+                case "MongoDB":
+                    services.AddMongoDbPersistence("Quizr", Configuration.GetConnectionString("MongoDB"));
+                    break;
+            }
+
+            services.AddRequests(Assembly.Load("Pubquiz.Logic"));
             services.AddSignalR();
+        }
 
+        private void AddDefaultWebApiStuff(IServiceCollection services)
+        {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
+                .AddMvcOptions(options =>
+                {
+                    options.Filters.Add(typeof(DomainExceptionFilter));
+                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
+                    var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                })
+                .AddNewtonsoftJson()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
+                options =>
+                {
+                    options.LoginPath = new PathString("/swagger");
+                    options.Events.OnRedirectToLogin = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status404NotFound;
+                        return Task.CompletedTask;
+                    };
+                });
+            services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
+            services.AddCors();
+            services.AddResponseCompression();
+            services.AddLogging(builder =>
+            {
+                builder.AddConfiguration(Configuration.GetSection("Logging"));
+                builder.AddConsole();
+                builder.AddDebug();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -163,28 +168,17 @@ namespace Pubquiz.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                //app.UseHsts();
-            }
 
             app.UseRebus(bus => bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic")));
-            //            app.UseRebus().Run(async context =>
-            //            {
-            //                var bus = app.ApplicationServices.GetRequiredService<IBus>();
-            //            });
-            //app.UseDefaultFiles();
-
-
-            //app.UseHttpsRedirection();
-            //app.UseMvc();
-
            
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
 
-            //app.UseSignalR(route => { route.MapHub<GameHub>("/gamehub"); });
+            SeedStuff(app);
+        }
 
+        private void SeedStuff(IApplicationBuilder app)
+        {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
             var mongoDbIsEmpty = Configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
                                  unitOfWork.GetCollection<Team>().GetCountAsync().Result == 0;
