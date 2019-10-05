@@ -16,7 +16,7 @@ export interface UserInfo {
   userId: string;
   /** The Team Name */
   userName: string;
-  /** false when the team has logged out / left game */
+  /** false when the user has logged out / left game */
   isLoggedIn: boolean;
   /** the current game Id */
   gameId: string;

@@ -9,14 +9,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Serialization;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
@@ -98,22 +96,6 @@ namespace Pubquiz.WebApi
             }
 
             services.AddRequests(Assembly.Load("Pubquiz.Logic"));
-//            services.AddMvcCore(options =>
-//                {
-//                    options.Filters.Add(typeof(DomainExceptionFilter));
-//                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
-//                    var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
-//                        .RequireAuthenticatedUser()
-//                        .Build();
-//                    options.Filters.Add(new AuthorizeFilter(policy));
-//                })
-//                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-//                .AddApiExplorer()
-//                //.AddJsonFormatters()
-//                .AddCacheTagHelper()
-//                .AddAuthorization();
-
-            // services.AddSingleton<IConfigureOptions<MvcJsonOptions>, JsonOptionsSetup>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
                 options =>
@@ -133,7 +115,6 @@ namespace Pubquiz.WebApi
 
             services.ConfigureSwaggerGen(options =>
             {
-                //options.DescribeAllEnumsAsStrings();
                 var baseDirectory = _hostingEnvironment.ContentRootPath;
                 var commentsFileName = Assembly.GetEntryAssembly().GetName().Name + ".XML";
                 var commentsFile = Path.Combine(baseDirectory, commentsFileName);
