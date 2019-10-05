@@ -1,19 +1,20 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Hubs;
@@ -33,14 +34,18 @@ namespace Pubquiz.WebApi
     public class Startup
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
-     
+        private readonly IConfiguration _configuration;
+        private readonly string _secretKey;
+        private readonly SymmetricSecurityKey _signingKey;
+
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
-            Configuration = configuration;
+            _configuration = configuration;
+            _secretKey = _configuration.GetValue<string>("AppSettings:JwtSecret");
+            _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_secretKey));
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -48,98 +53,6 @@ namespace Pubquiz.WebApi
             AddDefaultWebApiStuff(services);
             AddQuizrSpecificStuff(services);
             AddSwagger(services);
-        }
-
-        private void AddSwagger(IServiceCollection services)
-        {
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Pubquiz backend", Version = "v1"});
-            });
-
-            services.ConfigureSwaggerGen(options =>
-            {
-                var baseDirectory = _hostingEnvironment.ContentRootPath;
-                var commentsFileName = Assembly.GetEntryAssembly().GetName().Name + ".XML";
-                var commentsFile = Path.Combine(baseDirectory, commentsFileName);
-                if (File.Exists(commentsFile))
-                {
-                    options.IncludeXmlComments(commentsFile);
-                }
-
-                var xmlDocPath = Configuration["Swagger:Path"];
-                if (File.Exists(xmlDocPath))
-                {
-                    options.IncludeXmlComments(xmlDocPath);
-                }
-
-                options.CustomSchemaIds(x => x.FullName);
-            });
-        }
-
-        private void AddQuizrSpecificStuff(IServiceCollection services)
-        {
-            services.AddMemoryCache();
-            services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
-            // needed so the in memory subscription store will be centralized
-            var inMemorySubscriberStore = new InMemorySubscriberStore();
-            services.AddSingleton(inMemorySubscriberStore);
-            services.AddRebus(configure =>
-                configure //.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
-                    .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
-                    .Subscriptions(s => s.StoreInMemory(inMemorySubscriberStore))
-                    .Routing(r => r.TypeBased().MapAssemblyOf<InteractionResponseAdded>("Messages")));
-
-            switch (Configuration.GetValue<string>("AppSettings:Database"))
-            {
-                case "Memory":
-                    services.AddInMemoryPersistence();
-                    break;
-                case "MongoDB":
-                    services.AddMongoDbPersistence("Quizr", Configuration.GetConnectionString("MongoDB"));
-                    break;
-            }
-
-            services.AddRequests(Assembly.Load("Pubquiz.Logic"));
-            services.AddSignalR();
-        }
-
-        private void AddDefaultWebApiStuff(IServiceCollection services)
-        {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            services.AddControllers()
-                .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
-                .AddMvcOptions(options =>
-                {
-                    options.Filters.Add(typeof(DomainExceptionFilter));
-                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
-                    var policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
-                        .RequireAuthenticatedUser()
-                        .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
-                })
-                .AddNewtonsoftJson()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
-                options =>
-                {
-                    options.LoginPath = new PathString("/swagger");
-                    options.Events.OnRedirectToLogin = context =>
-                    {
-                        context.Response.StatusCode = StatusCodes.Status404NotFound;
-                        return Task.CompletedTask;
-                    };
-                });
-            services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
-            services.AddCors();
-            services.AddResponseCompression();
-            services.AddLogging(builder =>
-            {
-                builder.AddConfiguration(Configuration.GetSection("Logging"));
-                builder.AddConsole();
-                builder.AddDebug();
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -157,7 +70,7 @@ namespace Pubquiz.WebApi
             });
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<GameHub>("/gamehub");
@@ -170,20 +83,163 @@ namespace Pubquiz.WebApi
             }
 
             app.UseRebus(bus => bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic")));
-           
+
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
 
             SeedStuff(app);
         }
 
+        private void AddDefaultWebApiStuff(IServiceCollection services)
+        {
+            // controllers, authentication, authorization and such
+
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
+                .AddMvcOptions(options =>
+                {
+                    options.Filters.Add(typeof(DomainExceptionFilter));
+                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
+                })
+                .AddNewtonsoftJson()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = _signingKey,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+            // api user claim policy
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Team",
+                    policy => policy.RequireClaim(ClaimTypes.Role, "Team")
+                        .RequireAuthenticatedUser());
+                options.AddPolicy("Admin",
+                    policy => policy.RequireClaim(ClaimTypes.Role, "Admin")
+                        .RequireAuthenticatedUser());
+                options.AddPolicy("QuizMaster",
+                    policy => policy.RequireClaim(ClaimTypes.Role, "QuizMaster")
+                        .RequireAuthenticatedUser());
+            });
+            services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
+            services.AddResponseCompression();
+
+            // CORS
+            var corsAllowedOrigins = _configuration.GetValue<string>("AppSettings:corsAllowedOrigins")?.Split(',');
+            var corsPolicy = new CorsPolicyBuilder(corsAllowedOrigins)
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .Build();
+            services.AddCors(options => options.AddDefaultPolicy(corsPolicy));
+
+            // logging
+            services.AddLogging(builder =>
+            {
+                builder.AddConfiguration(_configuration.GetSection("Logging"));
+                builder.AddConsole();
+                builder.AddDebug();
+            });
+        }
+
+        private void AddQuizrSpecificStuff(IServiceCollection services)
+        {
+            services.AddMemoryCache();
+            services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
+            // needed so the in memory subscription store will be centralized
+            var inMemorySubscriberStore = new InMemorySubscriberStore();
+            services.AddSingleton(inMemorySubscriberStore);
+            services.AddRebus(configure =>
+                configure //.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
+                    .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
+                    .Subscriptions(s => s.StoreInMemory(inMemorySubscriberStore))
+                    .Routing(r => r.TypeBased().MapAssemblyOf<InteractionResponseAdded>("Messages")));
+
+            switch (_configuration.GetValue<string>("AppSettings:Database"))
+            {
+                case "Memory":
+                    services.AddInMemoryPersistence();
+                    break;
+                case "MongoDB":
+                    services.AddMongoDbPersistence("Quizr", _configuration.GetConnectionString("MongoDB"));
+                    break;
+            }
+
+            services.AddRequests(Assembly.Load("Pubquiz.Logic"));
+            services.AddSignalR();
+        }
+
+        private void AddSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Pubquiz backend", Version = "v1"});
+                var securityScheme = new OpenApiSecurityScheme
+                {
+                    Description =
+                        "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                };
+                options.AddSecurityDefinition("Bearer", securityScheme);
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer", //The name of the previously defined security scheme.
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        new List<string>()
+                    }
+                });
+            });
+
+            services.ConfigureSwaggerGen(options =>
+            {
+                var baseDirectory = _hostingEnvironment.ContentRootPath;
+                var commentsFileName = Assembly.GetEntryAssembly().GetName().Name + ".XML";
+                var commentsFile = Path.Combine(baseDirectory, commentsFileName);
+                if (File.Exists(commentsFile))
+                {
+                    options.IncludeXmlComments(commentsFile);
+                }
+
+                var xmlDocPath = _configuration["Swagger:Path"];
+                if (File.Exists(xmlDocPath))
+                {
+                    options.IncludeXmlComments(xmlDocPath);
+                }
+
+                options.CustomSchemaIds(x => x.FullName);
+            });
+        }
+
+
         private void SeedStuff(IApplicationBuilder app)
         {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
-            var mongoDbIsEmpty = Configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
+            var mongoDbIsEmpty = _configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
                                  unitOfWork.GetCollection<Team>().GetCountAsync().Result == 0;
             // Seed the test data when using in-memory-database
-            if (mongoDbIsEmpty || Configuration.GetValue<string>("AppSettings:Database") == "Memory")
+            if (mongoDbIsEmpty || _configuration.GetValue<string>("AppSettings:Database") == "Memory")
             {
                 //var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
                 var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
