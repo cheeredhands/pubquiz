@@ -21,7 +21,6 @@ namespace Pubquiz.Domain.Models
 
         public Question()
         {
-            Id = Guid.NewGuid();
             Media = new List<Media>();
             Interactions = new List<Interaction>();
         }
@@ -102,6 +101,11 @@ namespace Pubquiz.Domain.Models
             Id = id;
             ChoiceOptions = new List<ChoiceOption>();
         }
+
+        public Interaction()
+        {
+            
+        }
     }
 
     public class Solution
@@ -140,6 +144,11 @@ namespace Pubquiz.Domain.Models
             Id = id;
             Text = text;
         }
+
+        public ChoiceOption()
+        {
+            
+        }
     }
 
     public enum QuestionType
@@ -176,6 +185,11 @@ namespace Pubquiz.Domain.Models
             Id = Guid.NewGuid();
             Uri = uri;
             MediaType = mediaType;
+        }
+
+        public Media()
+        {
+            
         }
     }
 

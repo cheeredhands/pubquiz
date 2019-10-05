@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence;
 
@@ -7,7 +6,7 @@ namespace Pubquiz.Logic.Requests
 {
     public class TeamQuery : Query<Team>
     {
-        public Guid TeamId { get; set; }
+        public string TeamId { get; set; }
 
         public TeamQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {

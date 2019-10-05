@@ -23,14 +23,14 @@ namespace Pubquiz.Persistence
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<T> GetAsync(Guid id);
+        Task<T> GetAsync(string id);
 
         /// <summary>
         /// Gets one or more documents identified by the supplied ids.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        Task<IEnumerable<T>> GetAsync(params Guid[] ids);
+        Task<IEnumerable<T>> GetAsync(params string[] ids);
 
         /// <summary>
         ///     Update a document.
@@ -51,7 +51,7 @@ namespace Pubquiz.Persistence
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<bool> DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(string id);
 
         /// <summary>
         ///     Gets the number of documents in the collection

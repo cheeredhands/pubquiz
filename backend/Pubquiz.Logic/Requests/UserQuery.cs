@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence;
 
@@ -9,7 +6,7 @@ namespace Pubquiz.Logic.Requests
 {
     public class UserQuery : Query<User>
     {
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         public UserQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {

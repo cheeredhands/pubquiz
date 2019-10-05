@@ -140,20 +140,18 @@ const store: StoreOptions<RootState> = {
       commit('setOtherTeamMembers', team);
     },
     processTeamRegistered({ commit, state }, teamRegistered: TeamInfo) {
-      if (state.team === undefined) {
-        return;
-      }
-      if (teamRegistered.teamId !== state.team.teamId) {
-        // because the hub is not (yet) capable of notifying other teams
-        // we receive our own teamRegistered notification as well.
+      console.log(`processTeamRegistered: ${teamRegistered.teamName}`);
+      if (state.user !== undefined) {
+        commit('addTeam', teamRegistered);
+      } else if (state.team !== undefined && teamRegistered.teamId !== state.team.teamId) {
         commit('addTeam', teamRegistered);
       }
     },
     processTeamLoggedOut({ commit, state }, teamLoggedOut: TeamInfo) {
-      if (state.team === undefined) {
-        return;
-      }
-      if (teamLoggedOut.teamId !== state.team.teamId) {
+      console.log(`processTeamLoggedOut: ${teamLoggedOut.teamName}`);
+      if (state.user !== undefined) {
+        commit('setTeamLoggedOut', teamLoggedOut);
+      } else if (state.team !== undefined && teamLoggedOut.teamId !== state.team.teamId) {
         commit('setTeamLoggedOut', teamLoggedOut);
       }
     },

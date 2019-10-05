@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Pubquiz.Domain.Models;
+using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Logic.Tools
 {
     public static class TestTeams
     {
-        public static List<Team> GetTeams(Persistence.ICollection<Team> teamCollection, Guid gameId)
+        public static List<Team> GetTeams(Persistence.ICollection<Team> teamCollection, string gameId)
         {
             var team1Name = "Team 1";
             var team2Name = "Team 2";
@@ -16,7 +17,7 @@ namespace Pubquiz.Logic.Tools
             {
                 new Team
                 {
-                    Id = Guid.Parse("76507EEE-21AB-4185-AD5C-52C242BA0EFE"),
+                    Id = Guid.Parse("76507EEE-21AB-4185-AD5C-52C242BA0EFE").ToShortGuidString(),
                     Name = team1Name,
                     UserName = team1Name.ReplaceSpaces(),
                     GameId = gameId,
@@ -25,7 +26,7 @@ namespace Pubquiz.Logic.Tools
                 },
                 new Team
                 {
-                    Id = Guid.Parse("1E0F5C65-8557-42D2-B401-CC005B851566"),
+                    Id = Guid.Parse("1E0F5C65-8557-42D2-B401-CC005B851566").ToShortGuidString(),
                     Name = team2Name,
                     UserName = team2Name.ReplaceSpaces(),
                     GameId = gameId,
@@ -34,7 +35,7 @@ namespace Pubquiz.Logic.Tools
                 },
                 new Team
                 {
-                    Id = Guid.Parse("20208592-D834-47FD-9241-88A6AB5046AC"),
+                    Id = Guid.Parse("20208592-D834-47FD-9241-88A6AB5046AC").ToShortGuidString(),
                     Name = team3Name,
                     UserName = team3Name.ReplaceSpaces(),
                     GameId = gameId,

@@ -4,11 +4,11 @@ namespace Pubquiz.Logic.Messages
 {
     public class TeamLoggedOut
     {
-        public Guid TeamId { get; }
-        public Guid GameId { get; }
+        public string TeamId { get; }
+        public string GameId { get; }
         public string TeamName { get; }
 
-        public TeamLoggedOut(Guid teamId, string teamName, Guid gameId)
+        public TeamLoggedOut(string teamId, string teamName, string gameId)
         {
             TeamId = teamId;
             TeamName = teamName;

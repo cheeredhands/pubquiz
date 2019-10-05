@@ -1,14 +1,12 @@
-using System;
-
 namespace Pubquiz.Logic.Messages
 {
     public class UserLoggedOut
     {
-        public Guid UserId { get; }
-        public Guid GameId { get; }
+        public string UserId { get; }
+        public string GameId { get; }
         public string UserName { get; }
 
-        public UserLoggedOut(Guid userId, string userName, Guid gameId)
+        public UserLoggedOut(string userId, string userName, string gameId)
         {
             UserId = userId;
             UserName = userName;

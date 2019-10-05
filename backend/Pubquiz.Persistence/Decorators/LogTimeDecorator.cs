@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -26,7 +25,7 @@ namespace Pubquiz.Persistence.Decorators
             return Task.FromResult(result);
         }
 
-        public override Task<T> GetAsync(Guid id)
+        public override Task<T> GetAsync(string id)
         {
             _stopwatch.Restart();
             var result = base.GetAsync(id).Result;
@@ -35,7 +34,7 @@ namespace Pubquiz.Persistence.Decorators
             return Task.FromResult(result);
         }
 
-        public override Task<IEnumerable<T>> GetAsync(params Guid[] ids)
+        public override Task<IEnumerable<T>> GetAsync(params string[] ids)
         {
             _stopwatch.Restart();
             var result = base.GetAsync(ids).Result;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pubquiz.Domain.ViewModels;
 using Pubquiz.Persistence;
+using Pubquiz.Persistence.Extensions;
 
 // ReSharper disable CollectionNeverUpdated.Global
 
@@ -20,23 +21,22 @@ namespace Pubquiz.Domain.Models
     {
         public string Title { get; set; }
         public GameState State { get; set; }
-        public Guid QuizId { get; set; }
-        public List<Guid> TeamIds { get; set; }
-        public List<Guid> QuizMasterIds { get; set; }
+        public string QuizId { get; set; }
+        public List<string> TeamIds { get; set; }
+        public List<string> QuizMasterIds { get; set; }
         public string InviteCode { get; set; }
 
         public Question CurrentQuestion { get; set; }
         public int CurrentQuestionIndex { get; set; }
-        public Guid CurrentQuestionId { get; set; }
+        public string CurrentQuestionId { get; set; }
         public int CurrentQuizSectionIndex { get; set; }
-        public Guid CurrentQuizSectionId { get; set; }
+        public string CurrentQuizSectionId { get; set; }
 
         public Game()
         {
-            Id = Guid.NewGuid();
             State = GameState.Closed;
-            QuizId = Guid.Empty;
-            TeamIds = new List<Guid>();
+            QuizId = Guid.Empty.ToShortGuidString();
+            TeamIds = new List<string>();
         }
 
         public void SetState(GameState newGameState)
@@ -58,7 +58,7 @@ namespace Pubquiz.Domain.Models
                             "Can only open the game from the closed state.", true);
                     }
 
-                    if (State == GameState.Closed && (QuizId == Guid.Empty || string.IsNullOrWhiteSpace(Title)))
+                    if (State == GameState.Closed && (QuizId == Guid.Empty.ToShortGuidString() || string.IsNullOrWhiteSpace(Title)))
                     {
                         throw new DomainException(ErrorCodes.InvalidGameStateTransition,
                             "Can't open the game without a quiz and/or a title.", true);

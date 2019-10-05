@@ -16,7 +16,7 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
     public class ChangeTeamMembersCommand : Command<string>
     {
-        public Guid TeamId { get; set; }
+        public string TeamId { get; set; }
         public string TeamMembers { get; set; }
 
         public ChangeTeamMembersCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)

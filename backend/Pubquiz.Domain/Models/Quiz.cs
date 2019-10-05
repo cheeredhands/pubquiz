@@ -19,7 +19,6 @@ namespace Pubquiz.Domain.Models
 
         public Quiz()
         {
-            Id = Guid.NewGuid();
             QuizSections = new List<QuizSection>();
         }
     }

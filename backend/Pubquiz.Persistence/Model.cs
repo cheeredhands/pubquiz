@@ -1,5 +1,6 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Persistence
 {
@@ -13,19 +14,19 @@ namespace Pubquiz.Persistence
         /// </summary>
         protected Model()
         {
-            Id = Guid.NewGuid();
+            Id = Guid.NewGuid().ToShortGuidString();
         }
 
         /// <summary>
         ///     Unique identifier.
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public Guid Id { get; set; }
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
 
         /// <summary>
         ///     User identifier of the author of this item.
         /// </summary>
-        public Guid CreatedByUserId { get; set; }
+        public string CreatedByUserId { get; set; }
 
         /// <summary>
         ///     Date and time this item was created.
@@ -40,7 +41,7 @@ namespace Pubquiz.Persistence
         /// <summary>
         ///     User identifier of the person that last modified this item.
         /// </summary>
-        public Guid LastModifiedByUserId { get; set; }
+        public string LastModifiedByUserId { get; set; }
 
         /// <summary>
         ///     Flag indicating if the object is deleted.

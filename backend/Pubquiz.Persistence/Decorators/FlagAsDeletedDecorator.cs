@@ -20,14 +20,14 @@ namespace Pubquiz.Persistence.Decorators
         }
 
         /// <inheritdoc />
-        public override async Task<T> GetAsync(Guid id)
+        public override async Task<T> GetAsync(string id)
         {
             var document = await base.GetAsync(id);
             return (document != null && document.IsDeleted == false) ? document : null;
         }
 
         /// <inheritdoc />
-        public override async Task<IEnumerable<T>> GetAsync(params Guid[] ids)
+        public override async Task<IEnumerable<T>> GetAsync(params string[] ids)
         {
             var items = await base.GetAsync(ids);
             return items.Where(d => d != null && d.IsDeleted == false);
@@ -45,7 +45,7 @@ namespace Pubquiz.Persistence.Decorators
             base.AsQueryable().Where(o => o.IsDeleted == false);
 
         /// <inheritdoc />
-        public override async Task<bool> DeleteAsync(Guid id)
+        public override async Task<bool> DeleteAsync(string id)
         {
             var document = await base.GetAsync(id);
             if (document == null) return false;

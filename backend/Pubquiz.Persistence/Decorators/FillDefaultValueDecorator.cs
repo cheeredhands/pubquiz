@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Pubquiz.Persistence.Extensions;
 using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Persistence.Decorators
@@ -11,10 +12,10 @@ namespace Pubquiz.Persistence.Decorators
     /// <typeparam name="T"></typeparam>
     public class FillDefaultValueDecorator<T> : CollectionDecoratorBase<T> where T : Model, new()
     {
-        private readonly Guid? _actorId;
+        private readonly string _actorId;
 
         /// <inheritdoc />
-        public FillDefaultValueDecorator(IMemoryCache memoryCache, ICollection<T> decoree, Guid? actorId)
+        public FillDefaultValueDecorator(IMemoryCache memoryCache, ICollection<T> decoree, string actorId)
             : base(memoryCache, decoree)
         {
             _actorId = actorId;
@@ -23,20 +24,20 @@ namespace Pubquiz.Persistence.Decorators
         /// <inheritdoc />
         public override async Task<T> AddAsync(T document)
         {
-            var userId = document.CreatedByUserId == Guid.Empty
+            var userId = document.CreatedByUserId == Guid.Empty.ToShortGuidString()
                 ? _actorId
                 : document.CreatedByUserId;
-            if (document.Id == default(Guid)) document.Id = Guid.NewGuid();
-            if (userId.HasValue)
+            if (document.Id == Guid.Empty.ToShortGuidString()) document.Id = Guid.NewGuid().ToShortGuidString();
+            if (!string.IsNullOrWhiteSpace(userId))
             {
                 document.CreatedByUserId =
-                    !OverrideDefaultValues.FillDefaulValues && document.CreatedByUserId != default(Guid)
+                    !OverrideDefaultValues.FillDefaulValues && document.CreatedByUserId != Guid.Empty.ToShortGuidString()
                         ? document.CreatedByUserId
-                        : userId.Value;
+                        : userId;
                 document.LastModifiedByUserId =
-                    !OverrideDefaultValues.FillDefaulValues && document.LastModifiedByUserId != default(Guid)
+                    !OverrideDefaultValues.FillDefaulValues && document.LastModifiedByUserId != Guid.Empty.ToShortGuidString()
                         ? document.LastModifiedByUserId
-                        : userId.Value;
+                        : userId;
             }
             var dateNow = !OverrideDefaultValues.FillDefaulValues && document.Created != default(DateTime)
                 ? document.Created
@@ -52,11 +53,11 @@ namespace Pubquiz.Persistence.Decorators
         {
             var userId = _actorId;
 
-            if (userId.HasValue)
+            if (!string.IsNullOrWhiteSpace(userId))
                 document.LastModifiedByUserId =
-                    !OverrideDefaultValues.FillDefaulValues && document.LastModifiedByUserId != default(Guid)
+                    !OverrideDefaultValues.FillDefaulValues && document.LastModifiedByUserId != Guid.Empty.ToShortGuidString()
                         ? document.LastModifiedByUserId
-                        : userId.Value;
+                        : userId;
 
             var dateNow = !OverrideDefaultValues.FillDefaulValues && document.LastModified != default(DateTime)
                 ? document.LastModified

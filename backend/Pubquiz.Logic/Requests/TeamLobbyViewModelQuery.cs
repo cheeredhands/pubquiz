@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
@@ -15,7 +14,7 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
     public class TeamLobbyViewModelQuery : Query<TeamLobbyViewModel>
     {
-        public Guid TeamId { get; set; }
+        public string TeamId { get; set; }
 
         public TeamLobbyViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {

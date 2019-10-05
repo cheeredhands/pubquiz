@@ -19,11 +19,11 @@ namespace Pubquiz.Persistence.NoAction
     public class NoActionCollection<T> : ICollection<T> where T : Model, new()
     {
         public IQueryable<T> AsQueryable() => new ConcurrentBag<T>().Clone().AsQueryable();
-        public async Task<T> GetAsync(Guid id) => null;
-        public async Task<IEnumerable<T>> GetAsync(params Guid[] ids) => new ConcurrentBag<T>().Clone().AsQueryable();
+        public async Task<T> GetAsync(string id) => null;
+        public async Task<IEnumerable<T>> GetAsync(params string[] ids) => new ConcurrentBag<T>().Clone().AsQueryable();
         public async Task<bool> UpdateAsync(T document) => true;
         public async Task<T> AddAsync(T document) => document.Clone();
-        public async Task<bool> DeleteAsync(Guid id) => true;
+        public async Task<bool> DeleteAsync(string id) => true;
         public async Task<long> GetCountAsync() => 0;
         public async Task<long> GetCountAsync(Expression<Func<T, bool>> filter) => 0;
         public async Task<bool> AnyAsync() => false;
