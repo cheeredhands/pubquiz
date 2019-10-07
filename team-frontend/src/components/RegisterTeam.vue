@@ -49,11 +49,13 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { AxiosResponse, AxiosError } from "axios";
-import { TeamInfo } from "../models/models";
 import VueI18n from "vue-i18n";
+import { TeamInfo, RegisterForGameResponse } from "../models/models";
+import { mixins } from "vue-class-component";
+import AccountServiceMixin from "../services/accountservice";
 
 @Component
-export default class RegisterTeam extends Vue {
+export default class RegisterTeam extends mixins(AccountServiceMixin) {
   public name: string = "RegisterTeam";
   public teamName: string = "";
   public code: string = "";
@@ -64,26 +66,23 @@ export default class RegisterTeam extends Vue {
     if (!this.$quizrhelpers.formIsValid(evt)) return;
 
     // register!
-    this.$axios
-      .post(
-        "/api/account/register",
-        {
-          teamName: this.teamName,
-          code: this.code
-        },
-        { withCredentials: true }
-      )
-      .then((response: AxiosResponse<TeamInfo>) => {
-        // disco. init team (add team to store, start signalr)
+    this.registerForGame(this.teamName, this.code)
+      .then((response: AxiosResponse<RegisterForGameResponse>) => {
         this.$store
-          .dispatch("initTeam", {
-            teamId: response.data.teamId,
-            teamName: response.data.teamName,
-            memberNames: response.data.memberNames,
-            isLoggedIn: true
-          })
+          .dispatch("storeToken", response.data.jwt)
           .then(() => {
-            this.$router.push({ name: "TeamLobby" });
+            // disco. init team (add team to store, start signalr)
+            this.$store
+              .dispatch("initTeam", {
+                teamId: response.data.teamId,
+                teamName: response.data.teamName,
+                memberNames: response.data.memberNames,
+                isLoggedIn: true
+              })
+              .then(() => {
+                // and goto lobby
+                this.$router.push({ name: "TeamLobby" });
+              });
           });
       })
       .catch((error: AxiosError) => {

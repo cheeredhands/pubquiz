@@ -20,6 +20,7 @@ namespace Pubquiz.WebApi.Models
 
     public class RegisterForGameResponse : ApiResponse
     {
+        public string Jwt { get; set; }
         public string TeamId { get; set; }
         public string TeamName { get; set; }
         public string MemberNames { get; set; }
@@ -27,6 +28,7 @@ namespace Pubquiz.WebApi.Models
 
     public class LoginResponse : ApiResponse
     {
+        public string Jwt { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
         public List<string> GameIds { get; set; }
