@@ -119,6 +119,9 @@ const store: StoreOptions<RootState> = {
   actions: {
     // actions are async store updates and use the commit method to delegate
     // the action to the mutation as actions are not allowed to change the state directly.
+    async storeToken({ commit }, jwt: string) {
+      localStorage.setItem('token', jwt);
+    },
     async initTeam({ commit }, team: TeamInfo) {
       commit('setTeam', team);
       await gamehub.init();
@@ -130,6 +133,7 @@ const store: StoreOptions<RootState> = {
     async logout({ commit }) {
       commit('logout');
       await gamehub.close();
+      localStorage.removeItem('token'); 
     },
     processTeamNameUpdated({ commit }, team: TeamInfo) {
       console.log(`processTeamNameUpdated: ${team.teamName}`);

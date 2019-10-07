@@ -85,12 +85,13 @@ namespace Pubquiz.WebApi.Controllers
             [FromBody] RegisterForGameCommand command)
         {
             var team = await command.Execute();
-            await SignIn(team, team.GameId);
+            var jwt= SignInAndGetJwt(team, team.GameId);
 
             return Ok(new RegisterForGameResponse
             {
                 Code = SuccessCodes.TeamRegisteredAndLoggedIn,
-                Message = $"Team {team.Name} registered and logged in.",
+                Message = $"Team '{team.Name}' registered and logged in.",
+                Jwt = jwt,
                 TeamId = team.Id,
                 TeamName = team.Name,
                 MemberNames = team.MemberNames
@@ -151,7 +152,7 @@ namespace Pubquiz.WebApi.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
 
-        private async Task<string> SignInAndGetJwt(User user, string currentGameId = "")
+        private string SignInAndGetJwt(User user, string currentGameId = "")
         {
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -267,7 +268,7 @@ namespace Pubquiz.WebApi.Controllers
                 await notification.Execute();
             }
 
-            await SignOut();
+            //await SignOut();
             return Ok(new ApiResponse
             {
                 Code = SuccessCodes.LoggedOut,
