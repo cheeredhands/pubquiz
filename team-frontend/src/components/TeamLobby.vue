@@ -116,13 +116,12 @@ export default class TeamLobby extends Vue {
         this.newMemberNames = this.memberNames;
       })
       .catch((error: AxiosError) => {
-          this.$bvToast.toast(error.response.data[0].message,
+          this.$bvToast.toast(error.message,
           {
           solid: true,
           toaster: "b-toaster-bottom-right",
           title: "oops",
           variant: "error"
-          }
           });
                 });
   }

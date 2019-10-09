@@ -97,8 +97,8 @@ export default class QuizMasterLogin extends Vue {
           toaster: "b-toaster-bottom-right",
           title: "oops",
           variant: "error"
-          }
           });
+      });
   }
 }
 </script>

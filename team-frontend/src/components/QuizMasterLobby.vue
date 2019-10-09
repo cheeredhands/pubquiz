@@ -77,7 +77,7 @@ export default class QuizMasterLobby extends Vue {
       });
   }
 
-  errorMessage(message) {
+  errorMessage(message: string) {
     this.$bvToast.toast(message, {
       solid: true,
       toaster: "b-toaster-bottom-right",

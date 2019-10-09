@@ -93,26 +93,23 @@ export default class RegisterTeam extends Vue {
           })
           .then(() => {
             // and goto lobby
-             this.$bvToast.toast(`Welkom!`,
-              {
-                solid: true,
-                toaster: "b-toaster-bottom-right",
-                title: "todo",
-                variant: "info"
-              }
-            );           
-            this.$router.push({name:"TeamLobby"});
+            this.$bvToast.toast(`Welkom!`, {
+              solid: true,
+              toaster: "b-toaster-bottom-right",
+              title: "todo",
+              variant: "info"
+            });
+            this.$router.push({ name: "TeamLobby" });
           });
       })
       .catch(error => {
-        this.$bvToast.toast(error.response.data[0].message,
-        {
+        this.$bvToast.toast(error.response.data[0].message, {
           solid: true,
           toaster: "b-toaster-bottom-right",
           title: "oops",
           variant: "error"
-        };
-  });
+        });
+      });
   }
 }
 </script>
