@@ -29,11 +29,10 @@ import Vue from "vue";
 import Component, { mixins } from "vue-class-component";
 import { AxiosResponse } from "axios";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
-import AccountServiceMixin from './services/accountservice';
+import AccountServiceMixin from "@/services/accountservice";
 
 @Component
 export default class App extends mixins(AccountServiceMixin) {
-
   public name: string = "app";
 
   public message: string = "Welkom bij Quizr";
@@ -55,14 +54,13 @@ export default class App extends mixins(AccountServiceMixin) {
   }
 
   public logOut() {
-    this.logOutCurrentUser()
-      .then((response: AxiosResponse<ApiResponse>) => {
-        if (response.data.code === 2) {
-          this.$store.dispatch("logout");
-          this.$router.replace("/");
-          this.$snotify.success("Uitgelogd");
-        }
-      });
+    this.logOutCurrentUser().then((response: AxiosResponse<ApiResponse>) => {
+      if (response.data.code === 2) {
+        this.$store.dispatch("logout");
+        this.$router.replace("/");
+        this.$snotify.success("Uitgelogd");
+      }
+    });
   }
 
   public mounted() {

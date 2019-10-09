@@ -48,6 +48,8 @@ import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
 import { QuizMasterLobbyViewModel, ApiResponse } from "../models/models";
+import { mixins } from "vue-class-component";
+import AccountServiceMixin from "@/services/accountservice";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -62,7 +64,7 @@ import { QuizMasterLobbyViewModel, ApiResponse } from "../models/models";
     next();
   }
 })
-export default class QuizMasterLobby extends Vue {
+export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   public name: string = "QuizMasterLobby";
 
   public created() {

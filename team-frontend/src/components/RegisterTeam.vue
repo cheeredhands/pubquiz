@@ -77,23 +77,21 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
     // register!
     this.registerForGame(this.teamName, this.code)
       .then((response: AxiosResponse<RegisterForGameResponse>) => {
-        this.$store
-          .dispatch("storeToken", response.data.jwt)
-          .then(() => {
-            // disco. init team (add team to store, start signalr)
-            this.$store
-              .dispatch("initTeam", {
-                teamId: response.data.teamId,
-                teamName: response.data.teamName,
-                memberNames: response.data.memberNames,
-                isLoggedIn: true
-              })
-              .then(() => {
-                // and goto lobby
-                this.$snotify.success("Welkom!"); // TODO: get message from response
-                this.$router.push({ name: "TeamLobby" });
-              });
-          });
+        this.$store.dispatch("storeToken", response.data.jwt).then(() => {
+          // disco. init team (add team to store, start signalr)
+          this.$store
+            .dispatch("initTeam", {
+              teamId: response.data.teamId,
+              teamName: response.data.teamName,
+              memberNames: response.data.memberNames,
+              isLoggedIn: true
+            })
+            .then(() => {
+              // and goto lobby
+              this.$router.push({ name: "TeamLobby" });
+              this.$snotify.success("Welkom!"); // TODO: get message from response
+            });
+        });
       })
       .catch(error => this.$snotify.error(error.response.data[0].message));
   }
