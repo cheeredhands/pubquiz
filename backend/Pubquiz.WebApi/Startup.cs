@@ -25,6 +25,7 @@ using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
 using Pubquiz.Persistence.Helpers;
 using Pubquiz.WebApi.Helpers;
+using Pubquiz.WebApi.Models;
 using Rebus.Persistence.InMem;
 using Rebus.Routing.TypeBased;
 using Rebus.ServiceProvider;
@@ -98,8 +99,6 @@ namespace Pubquiz.WebApi
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             services.AddControllers()
-                .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
                 .AddMvcOptions(options =>
                 {
                     options.Filters.Add(typeof(DomainExceptionFilter));
@@ -110,8 +109,8 @@ namespace Pubquiz.WebApi
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
+                    //options.RequireHttpsMetadata = false;
+                    //options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -119,8 +118,8 @@ namespace Pubquiz.WebApi
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
-                    
-                    
+
+
                     // We have to hook the OnMessageReceived event in order to
                     // allow the JWT authentication handler to read the access
                     // token from the query string when a WebSocket or 
@@ -133,28 +132,27 @@ namespace Pubquiz.WebApi
 
                             // If the request is for our hub...
                             var path = context.HttpContext.Request.Path;
-                            if (!string.IsNullOrEmpty(accessToken) &&
-                                (path.StartsWithSegments("/gamehub")))
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/gamehub"))
                             {
                                 // Read the token out of the query string
                                 context.Token = accessToken;
                             }
+
                             return Task.CompletedTask;
                         }
                     };
-                    
                 });
             // api user claim policy
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Team",
+                options.AddPolicy(AuthPolicy.Team,
                     policy => policy.RequireClaim(ClaimTypes.Role, "Team")
                         .RequireAuthenticatedUser());
-                options.AddPolicy("Admin",
+                options.AddPolicy(AuthPolicy.Admin,
                     policy => policy.RequireClaim(ClaimTypes.Role, "Admin")
                         .RequireAuthenticatedUser());
-                options.AddPolicy("QuizMaster",
-                    policy => policy.RequireClaim(ClaimTypes.Role, "QuizMaster")
+                options.AddPolicy(AuthPolicy.QuizMaster,
+                    policy => policy.RequireClaim(ClaimTypes.Role, "QuizMaster", "Admin")
                         .RequireAuthenticatedUser());
             });
             services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
@@ -256,7 +254,7 @@ namespace Pubquiz.WebApi
                 options.CustomSchemaIds(x => x.FullName);
             });
         }
-        
+
         private void SeedStuff(IApplicationBuilder app)
         {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
