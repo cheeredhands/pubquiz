@@ -20,7 +20,6 @@
     </b-navbar>
     <router-view></router-view>
     <footer class="footer">{{message}}</footer>
-    <vue-snotify></vue-snotify>
   </div>
 </template>
 
