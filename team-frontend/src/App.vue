@@ -58,7 +58,7 @@ export default class App extends Vue {
         if (response.data.code === 2) {
           this.$store.dispatch("logout");
           this.$router.replace("/");
-          this.$snotify.success("Uitgelogd");
+          // this.$snotify.success("Uitgelogd");
         }
       });
   }
@@ -90,7 +90,9 @@ export default class App extends Vue {
             });
         }
       })
-      .catch(error => this.$snotify.error(error.message));
+      .catch(error => {
+        // this.$snotify.error(error.message);
+      });
   }
 }
 </script>
