@@ -128,7 +128,6 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
 
     this.$axios
       .post("api/account/changeteammembers", {
-        teamId: this.teamId,
         teamMembers: this.newMemberNames
       })
       .then((response: AxiosResponse<SaveTeamMembersResponse>) => {

@@ -12,16 +12,16 @@ namespace Pubquiz.Logic.Requests
     /// Command to change the <see cref="Team"/> name.
     /// </summary>
     [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
-    public class ChangeTeamNameCommand : Command<Team>
+    public class ChangeTeamNameNotification : Notification
     {
         public string TeamId;
         public string NewName;
 
-        public ChangeTeamNameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public ChangeTeamNameNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
-        protected override async Task<Team> DoExecute()
+        protected override async Task DoExecute()
         {
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
@@ -38,10 +38,7 @@ namespace Pubquiz.Logic.Requests
             team.Name = NewName.Trim();
             team.UserName = NewName.Trim();
             await teamCollection.UpdateAsync(team);
-
             await Bus.Publish(new TeamNameUpdated(TeamId, team.GameId, oldTeamName, NewName));
-
-            return team;
         }
     }
 }
