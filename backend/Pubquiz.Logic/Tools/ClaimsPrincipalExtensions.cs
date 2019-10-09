@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence.Extensions;
@@ -31,25 +29,6 @@ namespace Pubquiz.Logic.Tools
             }
 
             return result;
-        }
-
-        public static string GetCurrentGameId(this ClaimsPrincipal claimsPrincipal)
-        {
-            var claim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "CurrentGame");
-            if (claim == null)
-            {
-                throw new DomainException(ErrorCodes.NoCurrentGameIdClaimForUser,
-                    "The user doesn't have a Current Game claim.", true);
-            }
-
-            if (!claim.Value.TryDecodeToGuid(out _))//  !Guid.TryParse(claim.Value, out var result))
-            {
-                throw new DomainException(ErrorCodes.NoCurrentGameIdClaimForUser,
-                    "The user doesn't have a valid Current Game claim.",
-                    true);
-            }
-
-            return claim.Value;
         }
 
         /// <summary>

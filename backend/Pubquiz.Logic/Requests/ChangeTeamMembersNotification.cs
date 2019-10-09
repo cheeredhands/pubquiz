@@ -1,6 +1,6 @@
-using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
@@ -14,16 +14,17 @@ namespace Pubquiz.Logic.Requests
     /// Notification to change the <see cref="Team"/> members.
     /// </summary>
     [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
-    public class ChangeTeamMembersCommand : Command<string>
+    public class ChangeTeamMembersNotification : Notification
     {
+        [JsonIgnore]
         public string TeamId { get; set; }
         public string TeamMembers { get; set; }
 
-        public ChangeTeamMembersCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public ChangeTeamMembersNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
-        protected override async Task<string> DoExecute()
+        protected override async Task DoExecute()
         {
             if (TeamMembers.Length > ValidationValues.MaxTeamMembersLength)
             {
@@ -38,7 +39,6 @@ namespace Pubquiz.Logic.Requests
 
             await teamCollection.UpdateAsync(team);
             await Bus.Publish(new TeamMembersChanged(team.GameId, TeamId, team.Name, TeamMembers));
-            return TeamMembers;
         }
 
         private string SanitizeTeamMembers(string teamMembers)

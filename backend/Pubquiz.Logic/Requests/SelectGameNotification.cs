@@ -12,16 +12,16 @@ namespace Pubquiz.Logic.Requests
     /// </summary>
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
     [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
-    public class SelectGameCommand : Command<User>
+    public class SelectGameNotification : Notification
     {
         public string ActorId { get; set; }
         public string GameId { get; set; }
 
-        public SelectGameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public SelectGameNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
-        protected override async Task<User> DoExecute()
+        protected override async Task DoExecute()
         {
             var userCollection = UnitOfWork.GetCollection<User>();
             var user = await userCollection.GetAsync(ActorId);
@@ -37,8 +37,7 @@ namespace Pubquiz.Logic.Requests
             }
 
             user.CurrentGameId = GameId;
-            await userCollection.UpdateAsync(user);
-            return user;
+            await userCollection.UpdateAsync(user); 
         }
     }
 }
