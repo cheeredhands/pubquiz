@@ -28,11 +28,10 @@ import Vue from "vue";
 import { AxiosResponse, AxiosError } from "axios";
 import Component, { mixins } from "vue-class-component";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
-import AccountServiceMixin from './services/accountservice';
+import AccountServiceMixin from "./services/accountservice";
 
 @Component
 export default class App extends mixins(AccountServiceMixin) {
-
   public name: string = "app";
 
   public message: string = "Welkom bij Quizr";

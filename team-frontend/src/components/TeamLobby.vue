@@ -76,7 +76,7 @@ import {
   ApiResponse,
   SaveTeamMembersResponse
 } from "../models/models";
-import AccountServiceMixin from '@/services/accountservice';
+import AccountServiceMixin from "@/services/accountservice";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {

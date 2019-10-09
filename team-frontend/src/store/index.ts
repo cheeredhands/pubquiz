@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
-import { HubConnection } from '@aspnet/signalr';
+import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { Game, TeamInfo, UserInfo, GameStateChanged, GameState } from '../models/models';
 
@@ -133,7 +133,7 @@ const store: StoreOptions<RootState> = {
     async logout({ commit }) {
       commit('logout');
       await gamehub.close();
-      localStorage.removeItem('token'); 
+      localStorage.removeItem('token');
     },
     processTeamNameUpdated({ commit }, team: TeamInfo) {
       console.log(`processTeamNameUpdated: ${team.teamName}`);
