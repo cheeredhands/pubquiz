@@ -1,7 +1,4 @@
-using System;
-using System.Data;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
@@ -18,8 +15,8 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
     public class DeleteTeamNotification : Notification
     {
-        public Guid ActorId { get; set; }
-        public Guid TeamId { get; set; }
+        public string ActorId { get; set; }
+        public string TeamId { get; set; }
 
         public DeleteTeamNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {

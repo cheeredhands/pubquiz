@@ -14,22 +14,21 @@ namespace Pubquiz.Domain.Models
         public string Name { get; set; }
         public string MemberNames { get; set; }
         public int TotalScore { get; set; }
-        public Dictionary<Guid, int> ScorePerQuizSection { get; set; }
+        public Dictionary<string, int> ScorePerQuizSection { get; set; }
 
-        public Guid GameId { get; set; }
+        public string GameId { get; set; }
 
         public List<Answer> Answers { get; set; }
 
         public Team()
         {
-            Id = Guid.NewGuid();
             Answers = new List<Answer>();
-            ScorePerQuizSection = new Dictionary<Guid, int>();
+            ScorePerQuizSection = new Dictionary<string, int>();
         }
 
         public void UpdateScore()
         {
-            ScorePerQuizSection = new Dictionary<Guid, int>();
+            ScorePerQuizSection = new Dictionary<string, int>();
 
             foreach (var answer in Answers)
             {

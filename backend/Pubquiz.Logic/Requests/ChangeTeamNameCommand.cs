@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
@@ -15,7 +14,7 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
     public class ChangeTeamNameCommand : Command<Team>
     {
-        public Guid TeamId;
+        public string TeamId;
         public string NewName;
 
         public ChangeTeamNameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)

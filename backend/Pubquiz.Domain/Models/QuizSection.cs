@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pubquiz.Persistence.Extensions;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
@@ -13,7 +14,7 @@ namespace Pubquiz.Domain.Models
     /// </summary>
     public class QuizSection
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Title { get; set; }
         public List<QuizItem> QuizItems { get; set; }
 
@@ -24,7 +25,7 @@ namespace Pubquiz.Domain.Models
 
         public QuizSection()
         {
-            Id = Guid.NewGuid();
+            Id = Guid.NewGuid().ToShortGuidString();
             QuizItems = new List<QuizItem>();
         }
     }

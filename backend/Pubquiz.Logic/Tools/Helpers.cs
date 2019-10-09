@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Tools
 {
@@ -33,7 +31,7 @@ namespace Pubquiz.Logic.Tools
             "schapen"
         };
 
-        public static string GenerateSessionRecoveryCode(Persistence.ICollection<Team> teamCollection, Guid gameId)
+        public static string GenerateSessionRecoveryCode(Persistence.ICollection<Team> teamCollection, string gameId)
         {
             string result;
             do
@@ -53,13 +51,13 @@ namespace Pubquiz.Logic.Tools
             return result;
         }
 
-        public static string GetTeamsGroupId(Guid gameId)
+        public static string GetTeamsGroupId(string gameId)
         {
             // TODO: add as method to Team class?
             return $"teams-{gameId}";
         }
 
-        public static string GetQuizMasterGroupId(Guid gameId)
+        public static string GetQuizMasterGroupId(string gameId)
         {
             // TODO: add as method to Game class?
             return $"quizmaster-{gameId}";

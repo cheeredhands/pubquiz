@@ -13,28 +13,28 @@ namespace Pubquiz.WebApi.Models
     public class WhoAmiResponse : ApiResponse
     {
         public string UserName { get; set; }
-        public Guid UserId { get; set; }
-        public Guid CurrentGameId { get; set; }
+        public string UserId { get; set; }
+        public string CurrentGameId { get; set; }
         public UserRole UserRole { get; set; }
     }
 
     public class RegisterForGameResponse : ApiResponse
     {
-        public Guid TeamId { get; set; }
+        public string TeamId { get; set; }
         public string TeamName { get; set; }
         public string MemberNames { get; set; }
     }
 
     public class LoginResponse : ApiResponse
     {
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public string UserName { get; set; }
-        public List<Guid> GameIds { get; set; }
+        public List<string> GameIds { get; set; }
     }
 
     public class SelectGameResponse : ApiResponse
     {
-        public Guid GameId { get; set; }
+        public string GameId { get; set; }
     }
 
     public class TestAuthResponse : ApiResponse

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Pubquiz.Persistence
@@ -9,7 +8,7 @@ namespace Pubquiz.Persistence
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
-        public Guid? ActorId { get; set; }
+        public string ActorId { get; set; }
         protected readonly ILoggerFactory LoggerFactory;
         protected readonly bool LogTime;
         protected readonly IMemoryCache MemoryCache;

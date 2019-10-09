@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
@@ -17,8 +14,8 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
     public class SelectGameCommand : Command<User>
     {
-        public Guid ActorId { get; set; }
-        public Guid GameId { get; set; }
+        public string ActorId { get; set; }
+        public string GameId { get; set; }
 
         public SelectGameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {

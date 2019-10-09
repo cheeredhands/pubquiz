@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
@@ -38,8 +39,10 @@ namespace Pubquiz.Domain.Tests
         public void Initialize()
         {
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            _loggerFactory = new LoggerFactory();
-            _loggerFactory.AddConsole();
+            var serviceProvider = new ServiceCollection()
+                .AddLogging(builder => builder.AddConsole()).BuildServiceProvider();
+            _loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            
             ICollectionOptions inMemoryCollectionOptions = new InMemoryDatabaseOptions();
             UnitOfWork = new NoActionUnitOfWork(memoryCache, _loggerFactory, inMemoryCollectionOptions);
 

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +36,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<IActionResult> SubmitInteractionResponse(SubmitInteractionResponseNotification notification)
         {
             var teamId = User.GetId();
-            if (notification.TeamId != Guid.Empty && teamId != notification.TeamId)
+            if (!string.IsNullOrWhiteSpace(notification.TeamId) && teamId != notification.TeamId)
             {
                 return Forbid();
             }
@@ -74,7 +73,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<IActionResult> SetGameState(SetGameStateNotification notification)
         {
             var teamId = User.GetId();
-            if (notification.ActorId != Guid.Empty && teamId != notification.ActorId)
+            if (!string.IsNullOrWhiteSpace(notification.ActorId) && teamId != notification.ActorId)
             {
                 return Forbid();
             }

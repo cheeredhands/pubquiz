@@ -1,11 +1,10 @@
-﻿using System;
-using Pubquiz.Domain.Models;
+﻿using Pubquiz.Domain.Models;
 
 namespace Pubquiz.Domain.ViewModels
 {
     public class TeamViewModel
     {
-        public Guid TeamId { get; set; }
+        public string TeamId { get; set; }
         public string TeamName { get; set; }
         public string MemberNames { get; set; }
         public bool IsLoggedIn { get; set; }

@@ -10,17 +10,22 @@ namespace Pubquiz.Domain.Models
 {
     public class Answer
     {
-        public Guid QuizSectionId { get; set; }
-        public Guid QuestionId { get; set; }
+        public string QuizSectionId { get; set; }
+        public string QuestionId { get; set; }
         public List<InteractionResponse> InteractionResponses { get; set; }
         public int TotalScore { get; set; }
         public bool FlaggedForManualCorrection { get; set; }
 
-        public Answer(Guid quizSectionId, Guid questionId)
+        public Answer(string quizSectionId, string questionId)
         {
             QuizSectionId = quizSectionId;
             QuestionId = questionId;
             InteractionResponses = new List<InteractionResponse>();
+        }
+
+        public Answer()
+        {
+            
         }
 
         public void SetInteractionResponse(int interactionId, IEnumerable<int> choiceOptionIds, string response)
@@ -111,6 +116,10 @@ namespace Pubquiz.Domain.Models
         public bool ManualCorrectionOutcome { get; set; }
         public int AwardedScore { get; set; }
 
+        public InteractionResponse()
+        {
+            
+        }
         public InteractionResponse(int interactionId)
         {
             InteractionId = interactionId;

@@ -1,15 +1,13 @@
-﻿using System;
-
-namespace Pubquiz.Logic.Messages
+﻿namespace Pubquiz.Logic.Messages
 {
     public class TeamNameUpdated
     {
-        public Guid TeamId { get; }
-        public Guid GameId { get; }
+        public string TeamId { get; }
+        public string GameId { get; }
         public string OldTeamName { get; }
         public string TeamName { get; }
 
-        public TeamNameUpdated(Guid teamId, Guid gameId, string oldTeamName, string teamName)
+        public TeamNameUpdated(string teamId, string gameId, string oldTeamName, string teamName)
         {
             TeamId = teamId;
             GameId = gameId;

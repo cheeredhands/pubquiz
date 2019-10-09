@@ -32,7 +32,7 @@ namespace Pubquiz.Persistence.Decorators
         public virtual async Task<T> AddAsync(T document) =>
             await _decoree.AddAsync(document);
 
-        public virtual async Task<bool> DeleteAsync(Guid id) =>
+        public virtual async Task<bool> DeleteAsync(string id) =>
             await _decoree.DeleteAsync(id);
 
         public virtual IQueryable<T> AsQueryable() =>
@@ -41,10 +41,10 @@ namespace Pubquiz.Persistence.Decorators
         public virtual async Task<bool> UpdateAsync(T document) =>
             await _decoree.UpdateAsync(document);
 
-        public virtual async Task<T> GetAsync(Guid id) =>
+        public virtual async Task<T> GetAsync(string id) =>
             await _decoree.GetAsync(id);
 
-        public virtual async Task<IEnumerable<T>> GetAsync(params Guid[] ids) =>
+        public virtual async Task<IEnumerable<T>> GetAsync(params string[] ids) =>
             await _decoree.GetAsync(ids);
         
         public virtual async Task<long> GetCountAsync() =>

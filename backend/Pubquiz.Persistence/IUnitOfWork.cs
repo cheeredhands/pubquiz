@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Pubquiz.Persistence
+﻿namespace Pubquiz.Persistence
 {
     /// <summary>
     ///     Interface for Unit of Work
@@ -10,7 +8,7 @@ namespace Pubquiz.Persistence
         /// <summary>
         /// ActorId 
         /// </summary>
-        Guid? ActorId { get; set; }
+        string ActorId { get; set; }
 
         /// <summary>
         ///     Get the collection

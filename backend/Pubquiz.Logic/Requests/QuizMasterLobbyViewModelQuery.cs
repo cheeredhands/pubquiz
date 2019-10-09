@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.ViewModels;
 using Pubquiz.Logic.Tools;
@@ -15,7 +13,7 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "UserId")]
     public class QuizMasterLobbyViewModelQuery : Query<QuizMasterLobbyViewModel>
     {
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public QuizMasterLobbyViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }

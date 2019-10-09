@@ -1,6 +1,4 @@
-using System;
 using System.Threading.Tasks;
-using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Persistence;
@@ -10,7 +8,7 @@ namespace Pubquiz.Logic.Requests
 {
     public class LogoutTeamNotification : Notification
     {
-        public Guid TeamId { get; set; }
+        public string TeamId { get; set; }
 
         public LogoutTeamNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {

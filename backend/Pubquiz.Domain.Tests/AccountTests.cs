@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
+using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Domain.Tests
 {
@@ -108,7 +109,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_ChangeTeamNameForInvalidTeam_ThrowsException()
         {
             // arrange
-            var teamId = Guid.Empty;
+            var teamId = Guid.Empty.ToShortGuidString();
             var command = new ChangeTeamNameCommand(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
 
             // act & assert
@@ -138,7 +139,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_ChangeTeamMembersForInvalidTeam_ThrowsException()
         {
             // arrange
-            var teamId = Guid.Empty;
+            var teamId = Guid.Empty.ToShortGuidString();
             var command = new ChangeTeamMembersCommand(UnitOfWork, Bus)
                 {TeamMembers = "a,b,c", TeamId = teamId};
 
@@ -171,7 +172,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_DeleteTeamWithInvalidTeamId_ThrowsException()
         {
             // arrange
-            var teamId = Guid.Empty;
+            var teamId = Guid.Empty.ToShortGuidString();
             var user = Users.First(u => u.UserName == "Quiz master 1");
             var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = user.Id, TeamId = teamId};
 
@@ -188,7 +189,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var actorId = Guid.Empty;
+            var actorId = Guid.Empty.ToShortGuidString();
             var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = actorId, TeamId = teamId};
 
             // act & assert

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +17,8 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(Question), IdPropertyName = "QuestionId")]
     public class SubmitInteractionResponseNotification : Notification
     {
-        public Guid TeamId { get; set; }
-        public Guid QuestionId { get; set; }
+        public string TeamId { get; set; }
+        public string QuestionId { get; set; }
         public int InteractionId { get; set; }
         public List<int> ChoiceOptionIds { get; set; }
         public string Response { get; set; }
@@ -31,9 +30,9 @@ namespace Pubquiz.Logic.Requests
         protected override async Task DoExecute()
         {
             var teamCollection = UnitOfWork.GetCollection<Team>();
-            var team = await teamCollection.GetAsync(TeamId);          
+            var team = await teamCollection.GetAsync(TeamId);
             var questionCollection = UnitOfWork.GetCollection<Question>();
-            var question = await questionCollection.GetAsync(QuestionId);       
+            var question = await questionCollection.GetAsync(QuestionId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(team.GameId);
             var quizId = game.QuizId;
@@ -43,13 +42,13 @@ namespace Pubquiz.Logic.Requests
 
             var quizSectionId = quiz.QuizSections
                 .FirstOrDefault(qs => qs.QuestionItems.Any(q => q.Id == QuestionId))?.Id;
-            if (!quizSectionId.HasValue)
+            if (string.IsNullOrWhiteSpace(quizSectionId))
             {
                 throw new DomainException(ErrorCodes.QuestionNotInQuiz, "This question doesn't belong to the quiz.",
                     true);
             }
 
-            if (game.CurrentQuizSectionId != quizSectionId.Value)
+            if (game.CurrentQuizSectionId != quizSectionId)
             {
                 throw new DomainException(ErrorCodes.QuestionNotInCurrentQuizSection,
                     "This question doesn't belong to the current quiz section.", true);
@@ -65,7 +64,7 @@ namespace Pubquiz.Logic.Requests
             var answer = team.Answers.FirstOrDefault(a => a.QuestionId == QuestionId);
             if (answer == null)
             {
-                answer = new Answer(quizSectionId.Value, QuestionId);
+                answer = new Answer(quizSectionId, QuestionId);
                 team.Answers.Add(answer);
             }
 
@@ -77,7 +76,7 @@ namespace Pubquiz.Logic.Requests
             // - a client notification handler
             var response = string.IsNullOrEmpty(Response) ? GetChoiceOptionTexts(question, ChoiceOptionIds) : Response;
             await Bus.Publish(
-                new InteractionResponseAdded(TeamId, team.Name, quizSectionId.Value, QuestionId, response));
+                new InteractionResponseAdded(TeamId, team.Name, quizSectionId, QuestionId, response));
             //answer.Score(question);
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Pubquiz.Persistence.MongoDb;
 using Pubquiz.Persistence.NoAction;
 
@@ -18,7 +18,8 @@ namespace Pubquiz.Persistence.Extensions
             return services;
         }
 
-      public static IServiceCollection AddMongoDbPersistence(this IServiceCollection services, string databaseName, string connectionString)
+        public static IServiceCollection AddMongoDbPersistence(this IServiceCollection services, string databaseName,
+            string connectionString)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
             services.AddMemoryCache();
@@ -27,7 +28,7 @@ namespace Pubquiz.Persistence.Extensions
             services.AddScoped<IUnitOfWork, MongoDbUnitOfWork>();
             return services;
         }
-        
+
         /// <summary>
         ///     Deep clone using JSON serialization.
         /// </summary>
@@ -35,6 +36,36 @@ namespace Pubquiz.Persistence.Extensions
         /// <param name="toClone"></param>
         /// <returns></returns>
         public static T Clone<T>(this T toClone) where T : class =>
-            JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(toClone));
+            JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(toClone));
+
+        public static string ToShortGuidString(this Guid guid)
+        {
+            string enc = Convert.ToBase64String(guid.ToByteArray());
+            enc = enc.Replace("/", "_");
+            enc = enc.Replace("+", "-");
+            return enc.Substring(0, 22);
+        }
+
+        public static bool TryDecodeToGuid(this string input, out Guid decoded)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    decoded = Guid.Empty;
+                    return true;
+                }
+                input = input.Replace("_", "/");
+                input = input.Replace("-", "+");
+                byte[] buffer = Convert.FromBase64String(input + "==");
+                decoded = new Guid(buffer);
+                return true;
+            }
+            catch (Exception)
+            {
+                decoded = Guid.Empty;
+                return false;
+            }
+        }
     }
 }

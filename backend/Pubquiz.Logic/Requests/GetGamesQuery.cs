@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.ViewModels;
@@ -16,7 +14,7 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "UserId")]
     public class GetGamesQuery : Query<List<GameViewModel>>
     {
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         public GetGamesQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
