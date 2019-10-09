@@ -5,6 +5,7 @@ using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Helpers;
+using Pubquiz.WebApi.Models;
 
 namespace Pubquiz.WebApi.Controllers
 {
@@ -22,7 +23,7 @@ namespace Pubquiz.WebApi.Controllers
         #region Team actions
 
         [HttpGet("teamlobby")]
-        [Authorize(Roles = "Team")]
+        [Authorize(AuthPolicy.Team)]
         public async Task<IActionResult> GetTeamLobby()
         {
             var teamId = User.GetId();
@@ -32,7 +33,7 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("submitresponse")]
-        [Authorize(Roles = "Team")]
+        [Authorize(AuthPolicy.Team)]
         public async Task<IActionResult> SubmitInteractionResponse(SubmitInteractionResponseNotification notification)
         {
             var teamId = User.GetId();
@@ -51,7 +52,7 @@ namespace Pubquiz.WebApi.Controllers
         #region Admin and quiz master actions
 
         [HttpGet("quizmasterlobby")]
-        [Authorize(Roles = "Admin, QuizMaster")]
+        [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> GetQuizMasterLobby()
         {
             var query = new QuizMasterLobbyViewModelQuery(_unitOfWork) {UserId = User.GetId()};
@@ -60,7 +61,7 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpGet("games")]
-        [Authorize(Roles = "Admin, QuizMaster")]
+        [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> GetGames()
         {
             var query = new GetGamesQuery(_unitOfWork) {UserId = User.GetId()};
@@ -69,7 +70,7 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("setgamestate")]
-        [Authorize(Roles = "Admin, QuizMaster")]
+        [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> SetGameState(SetGameStateNotification notification)
         {
             var teamId = User.GetId();
