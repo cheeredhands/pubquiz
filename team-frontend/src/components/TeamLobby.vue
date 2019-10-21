@@ -116,14 +116,13 @@ export default class TeamLobby extends Vue {
         this.newMemberNames = this.memberNames;
       })
       .catch((error: AxiosError) => {
-          this.$bvToast.toast(error.message,
-          {
+        this.$bvToast.toast(error.message, {
           solid: true,
           toaster: "b-toaster-bottom-right",
           title: "oops",
           variant: "error"
-          });
-                });
+        });
+      });
   }
 
   public saveMembers(evt: Event) {
@@ -142,7 +141,7 @@ export default class TeamLobby extends Vue {
           toaster: "b-toaster-bottom-right",
           title: "todo",
           variant: "info"
-        });     
+        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
@@ -174,9 +173,9 @@ export default class TeamLobby extends Vue {
         this.$bvToast.toast(response.data.message, {
           solid: true,
           toaster: "b-toaster-bottom-right",
-          title: "yosop",
+          title: "Team naam succesvol veranderd.",
           variant: "info"
-        });     
+        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
@@ -184,7 +183,7 @@ export default class TeamLobby extends Vue {
           toaster: "b-toaster-bottom-right",
           title: "oops",
           variant: "error"
-        }); 
+        });
       })
       .finally(() => {
         this.newName = this.teamName;

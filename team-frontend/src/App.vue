@@ -98,7 +98,6 @@ export default class App extends Vue {
 </script>
 
 <style>
-@import "~vue-snotify/styles/material.css";
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~bootstrap-vue/dist/bootstrap-vue.css";
 

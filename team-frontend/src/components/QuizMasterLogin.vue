@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import { LoginResponse } from "../models/models";
 import Component from "vue-class-component";
 
@@ -78,26 +78,22 @@ export default class QuizMasterLogin extends Vue {
           .then(() => {
             // and goto lobby
             //  this.$snotify.success(`Welkom quizmaster!\n(${response.data.message})`);
-            this.$bvToast.toast(`Welkom quizmaster!\n(${response.data.message})`,
-              {
-                solid: true,
-                toaster: "b-toaster-bottom-right",
-                title: "todo",
-                variant: "info"
-              }
-            );
+            this.$bvToast.toast("Welkom quizmaster!", {
+              solid: true,
+              toaster: "b-toaster-bottom-right",
+              title: "todo",
+              variant: "info"
+            });
             this.$router.push({ name: "QuizMasterLobby" });
           });
       })
-      .catch(error => {
-        // this.$snotify.error(error.response.data[0].message);
-          this.$bvToast.toast(error.response.data[0].message,
-          {
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
           solid: true,
           toaster: "b-toaster-bottom-right",
           title: "oops",
           variant: "error"
-          });
+        });
       });
   }
 }

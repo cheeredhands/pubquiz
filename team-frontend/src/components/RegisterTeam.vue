@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import { TeamInfo } from "../models/models";
 
 @Component
@@ -102,8 +102,8 @@ export default class RegisterTeam extends Vue {
             this.$router.push({ name: "TeamLobby" });
           });
       })
-      .catch(error => {
-        this.$bvToast.toast(error.response.data[0].message, {
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
           solid: true,
           toaster: "b-toaster-bottom-right",
           title: "oops",
