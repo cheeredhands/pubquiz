@@ -88,8 +88,6 @@ export default class QuizMasterLogin extends Vue {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          solid: true,
-          toaster: "b-toaster-bottom-right",
           title: "Oops",
           variant: "error"
         });

@@ -14,7 +14,10 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue, {
+  solid: false,
+  toaster: 'b-toaster-bottom-right'
+});
 
 new Vue({
   router,

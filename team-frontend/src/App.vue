@@ -59,8 +59,6 @@ export default class App extends Vue {
           this.$store.dispatch("logout");
           this.$router.replace("/");
           this.$bvToast.toast("Sucesvol uitgelogd.", {
-            solid: true,
-            toaster: "b-toaster-bottom-right",
             title: "info",
             variant: "info"
           });
@@ -97,8 +95,6 @@ export default class App extends Vue {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          solid: true,
-          toaster: "b-toaster-bottom-right",
           title: "oops",
           variant: "error"
         });

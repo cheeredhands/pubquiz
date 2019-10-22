@@ -94,8 +94,6 @@ export default class RegisterTeam extends Vue {
           .then(() => {
             // and goto lobby
             this.$bvToast.toast(`Welkom!`, {
-              solid: true,
-              toaster: "b-toaster-bottom-right",
               title: "todo",
               variant: "info"
             });
@@ -104,8 +102,6 @@ export default class RegisterTeam extends Vue {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          solid: true,
-          toaster: "b-toaster-bottom-right",
           title: "oops",
           variant: "error"
         });
