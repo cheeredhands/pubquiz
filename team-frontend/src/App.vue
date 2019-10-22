@@ -26,7 +26,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
 
 @Component
@@ -58,7 +58,12 @@ export default class App extends Vue {
         if (response.data.code === 2) {
           this.$store.dispatch("logout");
           this.$router.replace("/");
-          // this.$snotify.success("Uitgelogd");
+          this.$bvToast.toast("Sucesvol uitgelogd.", {
+            solid: true,
+            toaster: "b-toaster-bottom-right",
+            title: "info",
+            variant: "info"
+          });
         }
       });
   }
@@ -90,8 +95,13 @@ export default class App extends Vue {
             });
         }
       })
-      .catch(error => {
-        // this.$snotify.error(error.message);
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
+          solid: true,
+          toaster: "b-toaster-bottom-right",
+          title: "oops",
+          variant: "error"
+        });
       });
   }
 }

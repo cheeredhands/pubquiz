@@ -77,11 +77,10 @@ export default class QuizMasterLogin extends Vue {
           })
           .then(() => {
             // and goto lobby
-            //  this.$snotify.success(`Welkom quizmaster!\n(${response.data.message})`);
             this.$bvToast.toast("Welkom quizmaster!", {
               solid: true,
               toaster: "b-toaster-bottom-right",
-              title: "todo",
+              title: "Welkom!",
               variant: "info"
             });
             this.$router.push({ name: "QuizMasterLobby" });
@@ -91,7 +90,7 @@ export default class QuizMasterLogin extends Vue {
         this.$bvToast.toast(error.message, {
           solid: true,
           toaster: "b-toaster-bottom-right",
-          title: "oops",
+          title: "Oops",
           variant: "error"
         });
       });
