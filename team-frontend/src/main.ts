@@ -23,12 +23,6 @@ Vue.use(BootstrapVue, {
   }
 });
 
-// const i18n = new VueI18n({
-//   locale: 'nl'
-// });
-
-Vue.use(VueI18n);
-
 new Vue({
   router,
   store,
