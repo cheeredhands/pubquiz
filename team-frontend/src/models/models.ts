@@ -29,11 +29,11 @@ export interface GameInfo {
 }
 
 export enum GameState {
-  Closed,
-  Open,
-  Running,
-  Paused,
-  Finished
+  Closed = 'Closed', 
+  Open = 'Open',
+  Running = 'Running',
+  Paused = 'Paused',
+  Finished = 'Finished'
 }
 
 export interface GameStateChanged {
