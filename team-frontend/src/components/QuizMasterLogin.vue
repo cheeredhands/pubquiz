@@ -78,8 +78,6 @@ export default class QuizMasterLogin extends Vue {
           .then(() => {
             // and goto lobby
             this.$bvToast.toast("Welkom quizmaster!", {
-              solid: true,
-              toaster: "b-toaster-bottom-right",
               title: "Welkom!",
               variant: "info"
             });
