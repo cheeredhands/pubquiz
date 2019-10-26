@@ -2,7 +2,7 @@
   <div id="content">
     <h1>Welkom in de lobby, {{userName}}!</h1>
     <b-container fluid>
-      <b-row>&lt;ondertitel&gt;</b-row>
+      <b-row>{{game.gameTitle}} ({{gameState}})</b-row>
       <hr />
       <b-row>
         <b-col>
@@ -47,9 +47,9 @@ import { Component } from "vue-property-decorator";
 import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
-import { QuizMasterLobbyViewModel, ApiResponse } from "../models/models";
 import { mixins } from "vue-class-component";
-import AccountServiceMixin from "@/services/accountservice";
+import AccountServiceMixin from "../services/accountservice";
+import { QuizMasterLobbyViewModel, ApiResponse, GameState } from "../models/models";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -73,6 +73,7 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       .get("/api/game/quizmasterlobby")
       .then((response: AxiosResponse<QuizMasterLobbyViewModel>) => {
         this.$store.commit("setTeams", response.data.teamsInGame);
+        this.$store.commit("setGame", response.data.currentGame);
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
@@ -107,6 +108,33 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
 
   get teams() {
     return this.$store.state.teams || [];
+  }
+
+  get game() {
+    return this.$store.state.game;
+  }
+
+  get gameState() {
+    switch (this.$store.state.game.state){
+      case 0: 
+        return "Closed";
+        break;
+      case 1:
+        return "Open";
+        break;
+      case 2:
+        return "Running";
+        break;
+      case 3:
+        return "Paused";
+        break;
+      case 4:
+        return "Finished";
+        break;
+      default:
+        return "Geen state";
+        break;
+    }
   }
 
   get userName() {

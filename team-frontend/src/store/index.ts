@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import { Game, TeamInfo, UserInfo, GameStateChanged, GameState } from '../models/models';
+import {GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState} from '../models/models';
 
 Vue.use(Vuex);
 
@@ -10,8 +10,7 @@ interface RootState {
   isLoggedIn: boolean;
   team?: TeamInfo;
   teams: TeamInfo[];
-  gameState: GameState;
-  game?: Game;
+  game?: GameInfo;
   signalrconnection?: HubConnection;
 
   user?: UserInfo;
@@ -24,7 +23,6 @@ const store: StoreOptions<RootState> = {
     isLoggedIn: false,
     team: undefined,
     teams: [],
-    gameState: GameState.Closed,
     game: undefined,
     signalrconnection: undefined,
 
@@ -46,7 +44,6 @@ const store: StoreOptions<RootState> = {
       // called when the current team registers succesfully
       state.team = team;
       state.isLoggedIn = true;
-      state.gameState = team.gameState;
     },
     addTeam(state, team: TeamInfo) {
       // called by the signalr stuff when a new team registers
@@ -101,7 +98,13 @@ const store: StoreOptions<RootState> = {
     },
     setGameState(state, newGameState: GameState) {
       console.log(`set game state: ${newGameState}`);
-      state.gameState = newGameState;
+      if (state.game === undefined) {
+        return;
+      }
+     state.game.state = newGameState;
+    },
+    setGame(state, currentGame : GameInfo){
+      state.game = currentGame;
     },
     logout(state) {
       state.team = undefined;
@@ -163,11 +166,11 @@ const store: StoreOptions<RootState> = {
       // todo notify teams that the quizmaster left?
     },
     processGameStateChanged({ commit, state }, gameStateChanged: GameStateChanged) {
-      if (state.gameState === undefined) {
+      if (state.game === undefined) {
         return;
       }
-      if (state.gameState !== gameStateChanged.oldGameState) {
-        console.log(`Old game state ${state.gameState} doesn't match old game state in the gameStateChanged message (${gameStateChanged.oldGameState})`);
+      if (state.game.state !== gameStateChanged.oldGameState) {
+        console.log(`Old game state ${state.game.state} doesn't match old game state in the gameStateChanged message (${gameStateChanged.oldGameState})`);
         return;
       }
       commit('setGameState', gameStateChanged.newGameState);

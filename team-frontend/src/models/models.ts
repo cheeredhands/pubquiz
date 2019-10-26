@@ -7,8 +7,6 @@ export interface TeamInfo {
   isLoggedIn: boolean;
   /** Team member names */
   memberNames: string;
-  /** The current game state */
-  gameState: GameState;
 }
 
 export interface UserInfo {
@@ -22,6 +20,12 @@ export interface UserInfo {
   gameId: string;
   /** the game ids this user is involved in */
   gameIds: string[];
+}
+
+export interface GameInfo {
+  gameId: string; 
+  gameTitle: string;
+  state: GameState;
 }
 
 export enum GameState {
@@ -84,11 +88,6 @@ export interface GameViewModel {
   gameId: string;
   gameTitle: string;
   state: GameState;
-}
-
-/** The quiz object used  */
-export interface Game {
-  title: string;
 }
 
 export enum UserRole {
