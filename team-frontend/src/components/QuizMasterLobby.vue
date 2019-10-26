@@ -113,26 +113,7 @@ export default class QuizMasterLobby extends Vue {
   }
 
   get gameState() {
-    switch (this.$store.state.game.state){
-      case 0: 
-        return "Closed";
-        break;
-      case 1:
-        return "Open";
-        break;
-      case 2:
-        return "Running";
-        break;
-      case 3:
-        return "Paused";
-        break;
-      case 4:
-        return "Finished";
-        break;
-      default:
-        return "Geen state";
-        break;
-    }
+    return this.$store.state.game.state || "";
   }
 
   get userName() {
