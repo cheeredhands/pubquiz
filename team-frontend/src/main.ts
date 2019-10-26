@@ -4,7 +4,6 @@ import './plugins/quizr-helpers';
 import App from './App.vue';
 import router from './router/index';
 import store from './store/index';
-import Snotify, { SnotifyDefaults } from 'vue-snotify';
 import BootstrapVue from 'bootstrap-vue';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
@@ -15,16 +14,11 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-// tslint:disable-next-line:no-object-literal-type-assertion
-const options = {
-  toast: {
-    showProgressBar: false
+Vue.use(BootstrapVue, {
+  BToast: {
+    toaster: 'b-toaster-bottom-right'
   }
-} as SnotifyDefaults;
-
-Vue.use(Snotify, options);
-
-Vue.use(BootstrapVue);
+});
 
 new Vue({
   router,

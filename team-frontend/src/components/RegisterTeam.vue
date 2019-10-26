@@ -4,7 +4,7 @@
       <b-row>
         <h1>Registreer hier!</h1>
       </b-row>
-      <hr>
+      <hr />
       <b-row>
         <b-form @submit="register" novalidate>
           <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="teamNameInput">
@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import { TeamInfo } from "../models/models";
 
 @Component
@@ -93,11 +93,19 @@ export default class RegisterTeam extends Vue {
           })
           .then(() => {
             // and goto lobby
-            this.$snotify.success("Welkom!"); // TODO: get message from response
-            this.$router.push({name:"TeamLobby"});
+            this.$bvToast.toast(`Welkom!`, {
+              title: "todo",
+              variant: "info"
+            });
+            this.$router.push({ name: "TeamLobby" });
           });
       })
-      .catch(error => this.$snotify.error(error.response.data[0].message));
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
+          title: "oops",
+          variant: "error"
+        });
+      });
   }
 }
 </script>
