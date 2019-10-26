@@ -10,6 +10,7 @@ import BootstrapVue from 'bootstrap-vue';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import i18n from './plugins/i18n'
 
 library.add(faSignOutAlt, faComment);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
@@ -22,14 +23,15 @@ Vue.use(BootstrapVue, {
   }
 });
 
-const i18n = new VueI18n({
-  locale: 'nl'
-});
+// const i18n = new VueI18n({
+//   locale: 'nl'
+// });
 
 Vue.use(VueI18n);
 
 new Vue({
   router,
   store,
+  i18n,
   render: h => h(App)
 }).$mount('#app');
