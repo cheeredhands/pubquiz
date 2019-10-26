@@ -11,5 +11,13 @@ module.exports = {
         changeOrigin: true
       }
     }
+  },
+  pluginOptions: {
+    i18n: {
+      locale: 'nl',             // The locale of project localization
+      fallbackLocale: 'en',     // The fallback locale of project localization
+      localeDir: 'locales',     // The directory where store localization messages of project
+      enableInSFC: false        // Enable locale messages in Single file components
+    }
   }
 };
