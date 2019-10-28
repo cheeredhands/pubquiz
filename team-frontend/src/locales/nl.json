@@ -1,11 +1,13 @@
 {
-  "REGISTER": "Registreren",
   "components": {
     "home": {
       "WELCOME": "Welkom bij Quizr!",
       "REGISTERHERE": "Registreer hier",
-      "QUIZMASTERLOGIN" : "Quizmaster login",
-      "GREETING" : "Hallo!"
+      "QUIZMASTERLOGIN": "Quizmaster login",
+      "GREETING": "Hallo!"
+    },
+    "registerTeam": {
+      "REGISTER": "Registreren"
     }
   }
 }
