@@ -2,7 +2,7 @@
   <div id="content">
     <b-container>
       <b-row>
-        <h1>{{$t('REGISTER')}}</h1>
+        <h1>{{$t('components.registerTeam.REGISTER')}}</h1>
       </b-row>
       <hr />
       <b-row>
