@@ -1,4 +1,5 @@
 {
+  "TEAMNAME": "Teamnaam",
   "components": {
     "home": {
       "WELCOME": "Welkom bij Quizr!",
@@ -6,8 +7,15 @@
       "QUIZMASTERLOGIN": "Quizmaster login",
       "GREETING": "Hallo!"
     },
+
     "registerTeam": {
-      "REGISTER": "Registreren"
+      "CODE": "Code",
+      "REGISTER": "Registreren",
+      "KEEP_IT_CLEAN": "Houd het netjes!",
+      "TEAMNAME_LENGTH": "Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.",
+      "CODE_ORIGIN": "De code krijg je van de quizmaster.",
+      "CODE_LENGTH": "Een code is minimaal 4 tekens.",
+      "REGISTER_SUCCES": "Welkom!"
     }
   }
 }

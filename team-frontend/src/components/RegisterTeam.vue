@@ -2,12 +2,16 @@
   <div id="content">
     <b-container>
       <b-row>
-        <h1>{{$t('REGISTER')}}</h1>
+        <h1>{{$t('components.registerTeam.REGISTER')}}</h1>
       </b-row>
       <hr />
       <b-row>
         <b-form @submit="register" novalidate>
-          <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="teamNameInput">
+          <b-form-group
+            :label="$t('TEAMNAME')"
+            :description="$t('components.registerTeam.KEEP_IT_CLEAN')"
+            label-for="teamNameInput"
+          >
             <b-form-input
               type="text"
               size="lg"
@@ -18,12 +22,12 @@
               minlength="5"
               maxlength="30"
             />
-            <b-form-invalid-feedback>Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.</b-form-invalid-feedback>
+            <b-form-invalid-feedback>{{ $t('components.registerTeam.TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
           <b-form-group
-            label="Code:"
+            :label="$t('components.registerTeam.CODE')"
             label-for="codeInput"
-            description="De code krijg je van de quizmaster."
+            :description="$t('components.registerTeam.CODE_ORIGIN')"
           >
             <b-form-input
               type="text"
@@ -34,9 +38,9 @@
               required
               minlength="4"
             />
-            <b-form-invalid-feedback>Een code is minimaal 4 tekens.</b-form-invalid-feedback>
+            <b-form-invalid-feedback>{{ $t('components.registerTeam.CODE_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
-          <b-button type="submit" variant="primary">Registreren</b-button>
+          <b-button type="submit" variant="primary">{{ $t('components.registerTeam.REGISTER') }}</b-button>
         </b-form>
       </b-row>
     </b-container>
@@ -47,6 +51,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { AxiosResponse, AxiosError } from "axios";
 import { TeamInfo } from "../models/models";
+import VueI18n from "vue-i18n";
 
 @Component
 export default class RegisterTeam extends Vue {
@@ -58,19 +63,6 @@ export default class RegisterTeam extends Vue {
 
   public register(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) return;
-    // // check validation
-    // evt.preventDefault();
-    // evt.stopPropagation();
-
-    // const form = evt.srcElement as HTMLFormElement;
-
-    // if (form.checkValidity() === false) {
-    //   // https://getbootstrap.com/docs/4.3/components/forms/#custom-styles
-    //   form.classList.add("was-validated");
-    //   console.log("invalid, canceling.");
-    //   return;
-    // }
-    // console.log("valid, registering.");
 
     // register!
     this.$axios
@@ -93,7 +85,7 @@ export default class RegisterTeam extends Vue {
           })
           .then(() => {
             // and goto lobby
-            this.$bvToast.toast(`Welkom!`, {
+            this.$bvToast.toast("Welkom", {
               title: "todo",
               variant: "info"
             });
