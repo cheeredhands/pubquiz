@@ -2,7 +2,10 @@
   <div id="content">
     <h1>Welkom in de lobby, {{userName}}!</h1>
     <b-container fluid>
-      <b-row>{{game.gameTitle}} ({{gameState}})</b-row>
+      <b-row>
+        <b-col>{{game.gameTitle}} ({{game.state}})</b-col>
+        <b-col><b-button v-on:disabled="game.state==GameState.Running" v-on:click="startGame" variant="success">Start Game</b-button></b-col>
+      </b-row>  
       <hr />
       <b-row>
         <b-col>
@@ -47,7 +50,7 @@ import { Component } from "vue-property-decorator";
 import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
-import { QuizMasterLobbyViewModel, ApiResponse, GameState } from "../models/models";
+import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -90,6 +93,25 @@ export default class QuizMasterLobby extends Vue {
   //   });
   // }
 
+  startGame() {
+    this.$axios
+      .post("api/game/setgamestate", {
+        actorId: this.userId,
+        gameId: this.game.gameId,
+        newGameState: GameState.Running
+      })
+      .then (() => {
+        //go to gameComponent
+        this.$router.push({ name: "QuizMasterGame" });
+      })
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
+          title: "oops",
+          variant: "error"
+        });
+      });
+  }
+
   kickTeam() {
     this.$bvToast.toast("todo: implement kick team", {
       title: "todo",
@@ -109,11 +131,7 @@ export default class QuizMasterLobby extends Vue {
   }
 
   get game() {
-    return this.$store.state.game;
-  }
-
-  get gameState() {
-    return this.$store.state.game.state || "";
+    return this.$store.state.game || {};
   }
 
   get userName() {

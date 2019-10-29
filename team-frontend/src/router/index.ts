@@ -6,6 +6,7 @@ import RegisterTeam from '../components/RegisterTeam.vue';
 import TeamLobby from '../components/TeamLobby.vue';
 import QuizMasterLogin from '../components/QuizMasterLogin.vue';
 import QuizMasterLobby from '../components/QuizMasterLobby.vue';
+import QuizMasterGame from '../components/QuizMasterGame.vue';
 
 Vue.use(Router);
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/qm/lobby',
       name: 'QuizMasterLobby',
       component: QuizMasterLobby
+    },
+    {
+      path: '/qm/game',
+      name: 'QuizMasterGame',
+      component: QuizMasterGame
     }
   ]
 });
