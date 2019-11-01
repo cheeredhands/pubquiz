@@ -31,7 +31,7 @@ instanceUserApi.interceptors.request.use(
   cfg => {
     // Do something before request is sent
     if (localStorage.getItem('token')) {
-      instanceUserApi.defaults.headers.common.Authorization = 'Bearer ' + localStorage.getItem('token');
+      cfg.headers.common.Authorization = 'Bearer ' + localStorage.getItem('token');
     }
     // else {
     //   instanceUserApi.defaults.headers.common.Authorization = undefined;
