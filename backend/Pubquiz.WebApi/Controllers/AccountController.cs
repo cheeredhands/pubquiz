@@ -41,7 +41,12 @@ namespace Pubquiz.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<WhoAmiResponse>> WhoAmI()
         {
-            if (!User.Identity.IsAuthenticated) return Ok(new {UserName = ""});
+            if (!User.Identity.IsAuthenticated) return Ok(new WhoAmiResponse
+            {
+                UserName = "",
+                Code = SuccessCodes.ThatsYou,
+                Message = "You're not logged in",
+            });
 
             // Check if user/team still exists, otherwise sign out
             var userRole = User.GetUserRole();
