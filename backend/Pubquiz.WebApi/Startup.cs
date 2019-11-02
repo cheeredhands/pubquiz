@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

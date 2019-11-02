@@ -2,7 +2,10 @@
   <div id="content">
     <h1>Welkom in de lobby, {{userName}}!</h1>
     <b-container fluid>
-      <b-row>&lt;ondertitel&gt;</b-row>
+      <b-row>
+        <b-col>{{game.gameTitle}} ({{game.state}})</b-col>
+        <b-col><b-button v-on:disabled="game.state==GameState.Running" v-on:click="startGame" variant="success">Start Game</b-button></b-col>
+      </b-row>
       <hr />
       <b-row>
         <b-col>
@@ -47,6 +50,7 @@ import { Component } from "vue-property-decorator";
 import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
+import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
 import { QuizMasterLobbyViewModel, ApiResponse } from "../models/models";
 import { mixins } from "vue-class-component";
 import AccountServiceMixin from "@/services/accountservice";
@@ -73,16 +77,46 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       .get("/api/game/quizmasterlobby")
       .then((response: AxiosResponse<QuizMasterLobbyViewModel>) => {
         this.$store.commit("setTeams", response.data.teamsInGame);
+        this.$store.commit("setGame", response.data.currentGame);
       })
       .catch((error: AxiosError) => {
-        this.$snotify.warning(error.message);
+        this.$bvToast.toast(error.message, {
+          title: "oops",
+          variant: "error"
+        });
+      });
+  }
+
+  // errorMessage(message: string) {
+  //   this.$bvToast.toast(message, {
+  //     solid: true,
+  //     toaster: "b-toaster-bottom-right",
+  //     title: "oops",
+  //     variant: "error"
+  //   });
+  // }
+
+  startGame() {
+    this.$axios
+      .post("api/game/setgamestate", {
+        actorId: this.userId,
+        gameId: this.game.gameId,
+        newGameState: GameState.Running
+      })
+      .then (() => {
+        //go to gameComponent
+        this.$router.push({ name: "QuizMasterGame" });
+      })
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
+          title: "oops",
+          variant: "error"
+        });
       });
   }
 
   kickTeam() {
     this.$bvToast.toast("todo: implement kick team", {
-      solid: true,
-      toaster: "b-toaster-bottom-right",
       title: "todo",
       variant: "warning"
     });
@@ -90,8 +124,6 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
 
   messageTeam() {
     this.$bvToast.toast("todo: send message to team", {
-      solid: true,
-      toaster: "b-toaster-bottom-right",
       title: "todo",
       variant: "warning"
     });
@@ -99,6 +131,10 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
 
   get teams() {
     return this.$store.state.teams || [];
+  }
+
+  get game() {
+    return this.$store.state.game || {};
   }
 
   get userName() {

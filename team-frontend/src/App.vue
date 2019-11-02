@@ -20,7 +20,6 @@
     </b-navbar>
     <router-view></router-view>
     <footer class="footer">{{message}}</footer>
-    <vue-snotify></vue-snotify>
   </div>
 </template>
 
@@ -28,6 +27,7 @@
 import Vue from "vue";
 import Component, { mixins } from "vue-class-component";
 import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
 import AccountServiceMixin from "@/services/accountservice";
 
@@ -58,7 +58,10 @@ export default class App extends mixins(AccountServiceMixin) {
       if (response.data.code === 2) {
         this.$store.dispatch("logout");
         this.$router.replace("/");
-        this.$snotify.success("Uitgelogd");
+          this.$bvToast.toast("Sucesvol uitgelogd.", {
+              title: "info",
+              variant: "info"
+          });
       }
     });
   }
@@ -89,13 +92,17 @@ export default class App extends mixins(AccountServiceMixin) {
             });
         }
       })
-      .catch(error => this.$snotify.error(error.message));
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
+          title: "oops",
+          variant: "error"
+        });
+      });
   }
 }
 </script>
 
 <style>
-@import "~vue-snotify/styles/material.css";
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~bootstrap-vue/dist/bootstrap-vue.css";
 

@@ -7,8 +7,6 @@ export interface TeamInfo {
   isLoggedIn: boolean;
   /** Team member names */
   memberNames: string;
-  /** The current game state */
-  gameState: GameState;
 }
 
 export interface UserInfo {
@@ -24,12 +22,18 @@ export interface UserInfo {
   gameIds: string[];
 }
 
+export interface GameInfo {
+  gameId: string; 
+  gameTitle: string;
+  state: GameState;
+}
+
 export enum GameState {
-  Closed,
-  Open,
-  Running,
-  Paused,
-  Finished
+  Closed = 'Closed', 
+  Open = 'Open',
+  Running = 'Running',
+  Paused = 'Paused',
+  Finished = 'Finished'
 }
 
 export interface GameStateChanged {
@@ -84,11 +88,6 @@ export interface GameViewModel {
   gameId: string;
   gameTitle: string;
   state: GameState;
-}
-
-/** The quiz object used  */
-export interface Game {
-  title: string;
 }
 
 export enum UserRole {

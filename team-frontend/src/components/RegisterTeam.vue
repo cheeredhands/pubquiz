@@ -2,9 +2,9 @@
   <div id="content">
     <b-container>
       <b-row>
-        <h1>Registreer hier!</h1>
+        <h1>{{$t('REGISTER')}}</h1>
       </b-row>
-      <hr />
+      <hr>
       <b-row>
         <b-form @submit="register" novalidate>
           <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="teamNameInput">
@@ -45,10 +45,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { AxiosResponse } from "axios";
-import { TeamInfo, RegisterForGameResponse } from "../models/models";
 import { mixins } from "vue-class-component";
 import AccountServiceMixin from "@/services/accountservice";
+import { AxiosResponse, AxiosError } from "axios";
+import { TeamInfo } from "../models/models";
 
 @Component
 export default class RegisterTeam extends mixins(AccountServiceMixin) {
@@ -88,12 +88,20 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
             })
             .then(() => {
               // and goto lobby
+                this.$bvToast.toast(`Welkom!`, {
+                    title: "todo",
+                    variant: "info"
+                });
               this.$router.push({ name: "TeamLobby" });
-              this.$snotify.success("Welkom!"); // TODO: get message from response
             });
         });
       })
-      .catch(error => this.$snotify.error(error.response.data[0].message));
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
+          title: "oops",
+          variant: "error"
+        });
+      });
   }
 }
 </script>

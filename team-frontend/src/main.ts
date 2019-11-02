@@ -4,28 +4,24 @@ import './plugins/quizr-helpers';
 import App from './App.vue';
 import router from './router/index';
 import store from './store/index';
-import Snotify, { SnotifyDefaults } from 'vue-snotify';
+import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import axios from 'axios';
+import i18n from './plugins/i18n'
 
 library.add(faSignOutAlt, faComment);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-// tslint:disable-next-line:no-object-literal-type-assertion
-const options = {
-  toast: {
-    showProgressBar: false
+Vue.use(BootstrapVue, {
+  BToast: {
+    toaster: 'b-toaster-bottom-right'
   }
-} as SnotifyDefaults;
-
-Vue.use(Snotify, options);
-
-Vue.use(BootstrapVue);
+});
 
 const instanceUserApi = axios.create({
   baseURL: 'https://localhost:5001/'
@@ -53,5 +49,6 @@ Vue.prototype.$axios = instanceUserApi;
 new Vue({
   router,
   store,
+  i18n,
   render: h => h(App)
 }).$mount('#app');

@@ -42,9 +42,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosResponse } from 'axios';
-import { LoginResponse } from '../models/models';
-import Component from 'vue-class-component';
+import { AxiosResponse, AxiosError } from "axios";
+import { LoginResponse } from "../models/models";
+import Component from "vue-class-component";
 
 @Component
 export default class QuizMasterLogin extends Vue {
@@ -57,7 +57,6 @@ export default class QuizMasterLogin extends Vue {
   public login(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) return;
 
-
     // register!
     this.$axios
       .post(
@@ -69,20 +68,30 @@ export default class QuizMasterLogin extends Vue {
         { withCredentials: true }
       )
       .then((response: AxiosResponse<LoginResponse>) => {
-        this.$store
-          .dispatch("initQuizMaster", {
-            userId: response.data.userId,
-            userName: response.data.userName,
-            gameIds: response.data.gameIds,
-            isLoggedIn: true
-          })
-          .then(() => {
-            // and goto lobby
-            this.$snotify.success(`Welkom quizmaster!\n(${response.data.message})`);
-            this.$router.push({name:"QuizMasterLobby"});
-          });
+        this.$store.dispatch("storeToken", response.data.jwt).then(() => {
+          this.$store
+            .dispatch("initQuizMaster", {
+              userId: response.data.userId,
+              userName: response.data.userName,
+              gameIds: response.data.gameIds,
+              isLoggedIn: true
+            })
+            .then(() => {
+              // and goto lobby
+              this.$bvToast.toast("Welkom quizmaster!", {
+                title: "Welkom!",
+                variant: "info"
+              });
+              this.$router.push({ name: "QuizMasterLobby" });
+            });
+        });
       })
-      .catch(error => this.$snotify.error(error.response.data[0].message));
+      .catch((error: AxiosError) => {
+        this.$bvToast.toast(error.message, {
+          title: "Oops",
+          variant: "error"
+        });
+      });
   }
 }
 </script>
