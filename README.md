@@ -5,7 +5,9 @@
  - team-frontend - vue.js frontend for participating teams
 
 # Startup info:
-in frontend folder vue ui -> serve -> start task -> start app
-in backend/Pubquiz.Webapi dotnet run
+- team-frontend: in frontend folder vue ui -> serve -> start task -> start app
+- backend: in `backend/Pubquiz.Webapi`: `dotnet run`
 
-#inlog quizmaster: Quiz master 1 / qm1 
+# Seeded users / games
+- quizmaster: username `Quiz master 1` password `qm1`
+- Startcode for the default game: `JOINME`
