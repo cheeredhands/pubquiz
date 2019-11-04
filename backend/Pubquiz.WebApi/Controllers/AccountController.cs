@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -199,11 +199,6 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(ChangeTeamMembersNotification notification)
         {
             var teamId = User.GetId();
-//            if (!string.IsNullOrWhiteSpace(notification.TeamId) && notification.TeamId != teamId)
-//            {
-//                return Forbid();
-//            }
-
             notification.TeamId = teamId;
 
             await notification.Execute();
