@@ -32,6 +32,6 @@ export default class AccountServiceMixin extends Vue {
     }
 
     public deleteTeam(teamId: string): Promise<AxiosResponse> {
-        return this.$axios.post('api/game/deleteteam', { teamId });
+        return this.$axios.post('api/account/deleteteam', { teamId });
     }
 }

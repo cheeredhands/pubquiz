@@ -18,7 +18,6 @@
           <p>De volgende teams zitten in de teamlobby:</p>
           <b-list-group>
             <b-list-group-item
-              :disabled="!team.isLoggedIn"
               v-for="(team, index) in teams"
               :key="index"
             >
@@ -27,7 +26,7 @@
               <b-badge v-if="!team.isLoggedIn">uitgelogd</b-badge>
               <font-awesome-icon
                 icon="sign-out-alt"
-                @click="kickTeam"
+                @click="kickTeam(team.teamId)"
                 pull="right"
                 style="cursor:pointer;"
                 title="Kick this team from the game"
