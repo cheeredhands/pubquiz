@@ -82,6 +82,11 @@ export default {
       store.dispatch('processGameStateChanged', data);
     })
 
+    connection.on('TeamDeleted', data => {
+      console.log(data);
+      store.dispatch('processTeamDeleted', data);
+    })
+
     return start().catch(err => {
       return console.error(err.toString());
     });
