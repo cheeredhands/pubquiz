@@ -51,7 +51,6 @@ import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
 import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
-import { QuizMasterLobbyViewModel, ApiResponse } from "../models/models";
 import { mixins } from "vue-class-component";
 import AccountServiceMixin from "@/services/accountservice";
 
