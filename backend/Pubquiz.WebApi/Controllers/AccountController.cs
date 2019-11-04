@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -71,7 +71,7 @@ namespace Pubquiz.WebApi.Controllers
             {
                 Code = SuccessCodes.ThatsYou,
                 Message = "",
-                UserName = User.Identity.Name,
+                UserName = user.UserName,
                 UserId = User.GetId(),
                 CurrentGameId = user.CurrentGameId,
                 UserRole = User.GetUserRole()
