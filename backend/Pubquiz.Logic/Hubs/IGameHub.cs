@@ -38,6 +38,12 @@ namespace Pubquiz.Logic.Hubs
         Task TeamNameUpdated(TeamNameUpdated message);
 
         /// <summary>
+        /// Called when a team is deleted.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task TeamDeleted(TeamDeleted message);
+        /// <summary>
         /// Called when a team changes its team members.
         /// </summary>
         /// <param name="message"></param>

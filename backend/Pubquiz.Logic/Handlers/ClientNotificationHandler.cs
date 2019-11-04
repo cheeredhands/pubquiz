@@ -11,7 +11,8 @@ namespace Pubquiz.Logic.Handlers
     public class ClientNotificationHandler :
         IHandleMessages<AnswerScored>, IHandleMessages<InteractionResponseAdded>, IHandleMessages<TeamMembersChanged>,
         IHandleMessages<ErrorOccurred>, IHandleMessages<TeamRegistered>, IHandleMessages<GameStateChanged>,
-        IHandleMessages<TeamNameUpdated>, IHandleMessages<TeamLoggedOut>, IHandleMessages<UserLoggedOut>
+        IHandleMessages<TeamNameUpdated>, IHandleMessages<TeamLoggedOut>, IHandleMessages<UserLoggedOut>,
+        IHandleMessages<TeamDeleted>
     {
         private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
         private readonly ILogger _logger;
@@ -44,7 +45,7 @@ namespace Pubquiz.Logic.Handlers
 
             // notify quiz master 
             await _gameHubContext.Clients.Group(quizMasterGroupId).TeamMembersChanged(message);
-            
+
             // notify teams
             await _gameHubContext.Clients.Group(teamGroupId).TeamMembersChanged(message);
         }
@@ -77,7 +78,7 @@ namespace Pubquiz.Logic.Handlers
             // notify teams
             await _gameHubContext.Clients.Group(teamGroupId).TeamLoggedOut(message);
         }
-        
+
         public async Task Handle(UserLoggedOut message)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
@@ -97,7 +98,7 @@ namespace Pubquiz.Logic.Handlers
 
             // notify quiz master 
             await _gameHubContext.Clients.Group(quizMasterGroupId).GameStateChanged(message);
-            
+
             // notify teams
             await _gameHubContext.Clients.Group(teamGroupId).GameStateChanged(message);
         }
@@ -109,9 +110,21 @@ namespace Pubquiz.Logic.Handlers
 
             // notify quiz master 
             await _gameHubContext.Clients.Group(quizMasterGroupId).TeamNameUpdated(message);
-            
+
             // notify other teams
             await _gameHubContext.Clients.Group(teamGroupId).TeamNameUpdated(message);
+        }
+
+        public async Task Handle(TeamDeleted message)
+        {
+            var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).TeamDeleted(message);
+
+            // notify other teams
+            await _gameHubContext.Clients.Group(teamGroupId).TeamDeleted(message);
         }
     }
 }
