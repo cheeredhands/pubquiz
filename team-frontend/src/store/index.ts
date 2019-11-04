@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import {GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState} from '../models/models';
+import { GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState } from '../models/models';
 
 Vue.use(Vuex);
 
@@ -58,6 +58,13 @@ const store: StoreOptions<RootState> = {
         state.teams.push(team);
       }
     },
+    removeTeam(state, team: TeamInfo) {
+      console.log(`removeTeam: ${team.teamId}`);
+      const teamInStore = state.teams.find(i => i.teamId === team.teamId);
+      if (teamInStore !== undefined) {
+        state.teams = state.teams.filter(t => t.teamId !== team.teamId);
+      }
+    },
     setTeamLoggedOut(state, team: TeamInfo) {
       console.log(`setOtherTeamLoggedOut: ${team.teamName}`);
       const teamInStore = state.teams.find(i => i.teamId === team.teamId);
@@ -101,9 +108,9 @@ const store: StoreOptions<RootState> = {
       if (state.game === undefined) {
         return;
       }
-     state.game.state = newGameState;
+      state.game.state = newGameState;
     },
-    setGame(state, currentGame : GameInfo){
+    setGame(state, currentGame: GameInfo) {
       state.game = currentGame;
     },
     logout(state) {
@@ -174,6 +181,12 @@ const store: StoreOptions<RootState> = {
         return;
       }
       commit('setGameState', gameStateChanged.newGameState);
+    },
+    processTeamDeleted({ commit, state }, deletedTeam: TeamInfo) {
+      if (state.game === undefined) {
+        return;
+      }
+      commit('removeTeam', deletedTeam);
     }
   }
 };
