@@ -1,7 +1,10 @@
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Driver;
+using Newtonsoft.Json;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
@@ -15,6 +18,7 @@ namespace Pubquiz.Logic.Requests
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
     public class DeleteTeamNotification : Notification
     {
+        [JsonIgnore]
         public string ActorId { get; set; }
         public string TeamId { get; set; }
 
@@ -42,6 +46,8 @@ namespace Pubquiz.Logic.Requests
             game.TeamIds.Remove(team.Id);
             await gameCollection.UpdateAsync(game);
             await teamCollection.DeleteAsync(TeamId);
+
+            await Bus.Publish(new TeamDeleted(TeamId, game.Id));
         }
     }
 }

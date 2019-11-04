@@ -4,7 +4,13 @@
     <b-container fluid>
       <b-row>
         <b-col>{{game.gameTitle}} ({{game.state}})</b-col>
-        <b-col><b-button v-on:disabled="game.state==GameState.Running" v-on:click="startGame" variant="success">Start Game</b-button></b-col>
+        <b-col>
+          <b-button
+            v-on:disabled="game.state==GameState.Running"
+            v-on:click="startGame"
+            variant="success"
+          >Start Game</b-button>
+        </b-col>
       </b-row>
       <hr />
       <b-row>
@@ -19,14 +25,14 @@
               <strong>{{ team.teamName }}</strong> -
               <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
               <b-badge v-if="!team.isLoggedIn">uitgelogd</b-badge>
+              <font-awesome-icon
+                icon="sign-out-alt"
+                @click="kickTeam"
+                pull="right"
+                style="cursor:pointer;"
+                title="Kick this team from the game"
+              />
               <span v-if="team.isLoggedIn">
-                <font-awesome-icon
-                  icon="sign-out-alt"
-                  @click="kickTeam"
-                  pull="right"
-                  style="cursor:pointer;"
-                  title="Kick this team from the game"
-                />
                 <font-awesome-icon
                   icon="comment"
                   @click="messageTeam"
@@ -50,7 +56,12 @@ import { Component } from "vue-property-decorator";
 import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
-import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
+import {
+  QuizMasterLobbyViewModel,
+  ApiResponse,
+  GameState,
+  GameStateChanged
+} from "../models/models";
 import { mixins } from "vue-class-component";
 import AccountServiceMixin from "@/services/accountservice";
 
@@ -96,13 +107,8 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   // }
 
   startGame() {
-    this.$axios
-      .post("api/game/setgamestate", {
-        actorId: this.userId,
-        gameId: this.game.gameId,
-        newGameState: GameState.Running
-      })
-      .then (() => {
+    this.setGameState(this.userId, this.game.gameId, GameState.Running)
+      .then(() => {
         //go to gameComponent
         this.$router.push({ name: "QuizMasterGame" });
       })
@@ -114,11 +120,20 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       });
   }
 
-  kickTeam() {
-    this.$bvToast.toast("todo: implement kick team", {
-      title: "todo",
-      variant: "warning"
-    });
+  kickTeam(teamId: string) {
+    this.deleteTeam(teamId)
+      .then(() => {       
+        this.$bvToast.toast("Team removed from the game.", {
+          title: "Team removed",
+          variant: "warning"
+        });
+      })
+      .catch((error: AxiosError) => {
+         this.$bvToast.toast(error.message, {
+          title: "oops",
+          variant: "error"
+        });
+      });
   }
 
   messageTeam() {
