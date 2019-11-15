@@ -48,7 +48,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
 import AccountServiceMixin from "@/services/accountservice";
 import { AxiosResponse, AxiosError } from "axios";
-import { TeamInfo } from "../models/models";
+import { TeamInfo, RegisterForGameResponse } from "../models/models";
 
 @Component
 export default class RegisterTeam extends mixins(AccountServiceMixin) {
