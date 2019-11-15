@@ -49,7 +49,7 @@ namespace Pubquiz.Logic.Requests
             {
                 // check if team name is taken, otherwise throw DomainException
                 var isTeamNameTaken = !string.IsNullOrWhiteSpace(TeamName) &&
-                                      await teamCollection.AnyAsync(t => t.Name == TeamName && t.GameId == game.Id);
+                                      await teamCollection.AnyAsync(t => t.Name == TeamName && t.CurrentGameId == game.Id);
                 if (isTeamNameTaken)
                 {
                     throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
@@ -62,7 +62,7 @@ namespace Pubquiz.Logic.Requests
                 {
                     Name = userName,
                     UserName = userName,
-                    GameId = game.Id,
+                    CurrentGameId = game.Id,
                     RecoveryCode = recoveryCode,
                     UserRole = UserRole.Team,
                     IsLoggedIn = true
@@ -78,7 +78,7 @@ namespace Pubquiz.Logic.Requests
                 await teamCollection.UpdateAsync(team);
             }
 
-            await Bus.Publish(new TeamRegistered(team.Id, team.Name, team.GameId, team.MemberNames));
+            await Bus.Publish(new TeamRegistered(team.Id, team.Name, team.CurrentGameId, team.MemberNames));
 
             return team;
         }

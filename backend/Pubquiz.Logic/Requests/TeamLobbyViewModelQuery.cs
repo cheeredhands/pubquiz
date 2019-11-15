@@ -25,7 +25,7 @@ namespace Pubquiz.Logic.Requests
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var game = await gameCollection.GetAsync(team.GameId);
+            var game = await gameCollection.GetAsync(team.CurrentGameId);
 
             if (game.State != GameState.Open)
             {

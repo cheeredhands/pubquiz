@@ -33,7 +33,7 @@ namespace Pubquiz.Logic.Requests
             var user = await UnitOfWork.GetCollection<User>().GetAsync(ActorId);
 
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var game = await gameCollection.GetAsync(team.GameId);
+            var game = await gameCollection.GetAsync(team.CurrentGameId);
             if (user.UserRole != UserRole.Admin)
             {
                 if (game.QuizMasterIds.All(i => i != ActorId))
