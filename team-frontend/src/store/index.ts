@@ -14,7 +14,7 @@ interface RootState {
   signalrconnection?: HubConnection;
 
   user?: UserInfo;
-  currentGameId: string;
+  currentGameId?: string;
   gameIds: string[];
 }
 
@@ -27,7 +27,7 @@ const store: StoreOptions<RootState> = {
     signalrconnection: undefined,
 
     user: undefined,
-    currentGameId: '',
+    currentGameId: undefined,
     gameIds: []
   },
   getters: {},
@@ -37,12 +37,13 @@ const store: StoreOptions<RootState> = {
       // called when a quizmaster logs in succesfully
       state.user = user;
       state.isLoggedIn = true;
-      state.currentGameId = user.gameId;
+      state.currentGameId = user.currentGameId;
       state.gameIds = user.gameIds;
     },
     setTeam(state, team: TeamInfo) {
       // called when the current team registers succesfully
       state.team = team;
+      state.currentGameId = team.currentGameId;
       state.isLoggedIn = true;
     },
     addTeam(state, team: TeamInfo) {
@@ -117,6 +118,7 @@ const store: StoreOptions<RootState> = {
       state.team = undefined;
       state.isLoggedIn = false;
       state.game = undefined;
+      state.currentGameId = undefined;
       state.teams = [];
     },
     saveSignalRConnection(state, signalrconnection) {
@@ -183,9 +185,6 @@ const store: StoreOptions<RootState> = {
       commit('setGameState', gameStateChanged.newGameState);
     },
     processTeamDeleted({ commit, state }, deletedTeam: TeamInfo) {
-      if (state.game === undefined) {
-        return;
-      }
       commit('removeTeam', deletedTeam);
     }
   }
