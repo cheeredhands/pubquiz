@@ -1,6 +1,8 @@
 export interface TeamInfo {
   /** The team Id (Guid) */
   teamId: string;
+  /** The current game Id */
+  currentGameId: string;
   /** The Team Name */
   teamName: string;
   /** false when the team has logged out / left game */
@@ -17,7 +19,7 @@ export interface UserInfo {
   /** false when the user has logged out / left game */
   isLoggedIn: boolean;
   /** the current game Id */
-  gameId: string;
+  currentGameId: string;
   /** the game ids this user is involved in */
   gameIds: string[];
 }
@@ -52,12 +54,14 @@ export interface LoginResponse extends ApiResponse {
   jwt: string;
   userId: string;
   userName: string;
+  currentGameId: string;
   gameIds: string[];
 }
 
 export interface RegisterForGameResponse extends ApiResponse{
     jwt: string;
     teamId: string;
+    gameId: string;
     teamName: string;
     memberNames: string;
 }
