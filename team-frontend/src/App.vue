@@ -65,14 +65,16 @@ export default class App extends mixins(AccountServiceMixin) {
   public mounted() {
     this.getWhoAmI()
       .then((response: AxiosResponse<WhoAmIResponse>) => {
-        if (response.data.userName === "") {
+        if (response.data.code === 2) {
+          this.$store.dispatch("logout");
           return;
         }
         if (response.data.userRole === UserRole.Team) {
           this.$store
             .dispatch("initTeam", {
               teamId: response.data.userId,
-              teamName: response.data.userName
+              teamName: response.data.userName,
+              currentGameId: response.data.currentGameId
             })
             .then(() => {
               this.$router.replace({ name: "TeamLobby" });
