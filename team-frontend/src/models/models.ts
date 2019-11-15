@@ -49,6 +49,7 @@ export interface ApiResponse {
 }
 
 export interface LoginResponse extends ApiResponse {
+  jwt: string;
   userId: string;
   userName: string;
   gameIds: string[];
