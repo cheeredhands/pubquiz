@@ -16,8 +16,6 @@ namespace Pubquiz.Domain.Models
         public int TotalScore { get; set; }
         public Dictionary<string, int> ScorePerQuizSection { get; set; }
 
-        public string GameId { get; set; }
-
         public List<Answer> Answers { get; set; }
 
         public Team()

@@ -34,7 +34,7 @@ namespace Pubquiz.Logic.Requests
             var questionCollection = UnitOfWork.GetCollection<Question>();
             var question = await questionCollection.GetAsync(QuestionId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var game = await gameCollection.GetAsync(team.GameId);
+            var game = await gameCollection.GetAsync(team.CurrentGameId);
             var quizId = game.QuizId;
 
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
