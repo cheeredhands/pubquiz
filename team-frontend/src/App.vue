@@ -26,7 +26,6 @@
 <script lang="ts">
 import Vue from "vue";
 import Component, { mixins } from "vue-class-component";
-import { AxiosResponse } from "axios";
 import { AxiosResponse, AxiosError } from "axios";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
 import AccountServiceMixin from "@/services/accountservice";
