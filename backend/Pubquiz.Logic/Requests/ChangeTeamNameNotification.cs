@@ -27,7 +27,7 @@ namespace Pubquiz.Logic.Requests
             var team = await teamCollection.GetAsync(TeamId);
 
             // check if team name is taken, otherwise throw DomainException
-            var isTeamNameTaken = await teamCollection.AnyAsync(t => t.Name == NewName && t.GameId == team.GameId);
+            var isTeamNameTaken = await teamCollection.AnyAsync(t => t.Name == NewName && t.CurrentGameId == team.CurrentGameId);
             if (isTeamNameTaken)
             {
                 throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
@@ -38,7 +38,7 @@ namespace Pubquiz.Logic.Requests
             team.Name = NewName.Trim();
             team.UserName = NewName.Trim();
             await teamCollection.UpdateAsync(team);
-            await Bus.Publish(new TeamNameUpdated(TeamId, team.GameId, oldTeamName, NewName));
+            await Bus.Publish(new TeamNameUpdated(TeamId, team.CurrentGameId, oldTeamName, NewName));
         }
     }
 }

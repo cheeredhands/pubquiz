@@ -5,8 +5,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -41,29 +39,31 @@ namespace Pubquiz.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<WhoAmiResponse>> WhoAmI()
         {
-            if (!User.Identity.IsAuthenticated) return Ok(new WhoAmiResponse
+            if (!User.Identity.IsAuthenticated)
             {
-                UserName = "",
-                Code = SuccessCodes.ThatsYou,
-                Message = "You're not logged in",
-            });
+                return Ok(new WhoAmiResponse
+                {
+                    UserName = "",
+                    Code = SuccessCodes.LoggedOut,
+                    Message = "You're not logged in",
+                });
+            }
 
             // Check if user/team still exists, otherwise sign out
             var userRole = User.GetUserRole();
             var userId = User.GetId();
-            
+
             var user = userRole == UserRole.Team
                 ? await new TeamQuery(_unitOfWork) {TeamId = userId}.Execute()
                 : await new UserQuery(_unitOfWork) {UserId = userId}.Execute();
 
             if (user == null)
             {
-                await SignOut();
                 return Ok(new WhoAmiResponse
                 {
-                    Code = SuccessCodes.ThatsYou,
-                    Message = "",
-                    UserName = ""
+                    UserName = "",
+                    Code = SuccessCodes.LoggedOut,
+                    Message = "You're not logged in"
                 });
             }
 
@@ -84,7 +84,7 @@ namespace Pubquiz.WebApi.Controllers
             [FromBody] RegisterForGameCommand command)
         {
             var team = await command.Execute();
-            var jwt= SignInAndGetJwt(team);
+            var jwt = SignInAndGetJwt(team);
 
             return Ok(new RegisterForGameResponse
             {
@@ -92,6 +92,7 @@ namespace Pubquiz.WebApi.Controllers
                 Message = $"Team '{team.Name}' registered and logged in.",
                 Jwt = jwt,
                 TeamId = team.Id,
+                GameId =  team.CurrentGameId,
                 TeamName = team.Name,
                 MemberNames = team.MemberNames
             });
@@ -102,8 +103,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginCommand command)
         {
             var user = await command.Execute();
-            //await SignIn(user, user.CurrentGameId);
-           var jwt =  SignInAndGetJwt(user);
+            var jwt = SignInAndGetJwt(user);
             return Ok(new LoginResponse
             {
                 Jwt = jwt,
@@ -111,6 +111,7 @@ namespace Pubquiz.WebApi.Controllers
                 Message = $"User {user.UserName} logged in.",
                 UserId = user.Id,
                 UserName = user.UserName,
+                CurrentGameId = user.CurrentGameId,
                 GameIds = user.GameIds
             });
         }
@@ -185,7 +186,7 @@ namespace Pubquiz.WebApi.Controllers
             notification.TeamId = teamId;
 
             await notification.Execute();
-            
+
             return Ok(new ChangeTeamNameResponse
             {
                 Code = SuccessCodes.TeamRenamed,
@@ -196,7 +197,8 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("changeteammembers")]
         [Authorize(Roles = "Team")]
-        public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(ChangeTeamMembersNotification notification)
+        public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(
+            ChangeTeamMembersNotification notification)
         {
             var teamId = User.GetId();
             notification.TeamId = teamId;
@@ -246,17 +248,11 @@ namespace Pubquiz.WebApi.Controllers
                 await notification.Execute();
             }
 
-            //await SignOut();
             return Ok(new ApiResponse
             {
                 Code = SuccessCodes.LoggedOut,
                 Message = "Successfully logged out."
             });
-        }
-
-        private async Task SignOut()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

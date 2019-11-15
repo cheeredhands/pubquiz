@@ -39,7 +39,7 @@ namespace Pubquiz.Domain.Tests
 
             // assert
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var game = gameCollection.GetAsync(team.GameId).Result;
+            var game = gameCollection.GetAsync(team.CurrentGameId).Result;
             CollectionAssert.Contains(game.TeamIds, team.Id);
             Assert.AreEqual("Team 4", team.Name);
         }
