@@ -35,28 +35,6 @@ export default {
       }
     });
 
-    // function connect(conn: SignalR.HubConnection) {
-    //   return conn.start().catch(e => {
-    //     //sleep(5000);
-    //     //console.log(`Reconnecting Socket because of ${e}`); // tslint:disable-line no-console
-    //     //connect(conn);
-    //   });
-    // }
-
-    // connection.onclose(() => {
-    // connect(connection);
-    // });
-
-    // TODO: refactor this into helper class.
-    // function sleep(milliseconds: number) {
-    //   const start = new Date().getTime();
-    //   for (let i = 0; i < 1e7; i++) {
-    //     if (new Date().getTime() - start > milliseconds) {
-    //       break;
-    //     }
-    //   }
-    // }
-
     // define methods for each server-side call first before starting the hub.
     connection.on('TeamRegistered', data => {
       store.dispatch('processTeamRegistered', data);
@@ -90,11 +68,5 @@ export default {
     return start().catch(err => {
       return console.error(err.toString());
     });
-
-
-    // connect(connection).then(() => {
-    //   // save it
-    //   store.commit('saveSignalRConnection', connection);
-    // });
   }
 };
