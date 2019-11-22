@@ -135,10 +135,6 @@ export default class TeamLobby extends Vue {
       })
       .then((response: AxiosResponse<SaveTeamMembersResponse>) => {
         this.$store.commit("setOwnTeamMembers", response.data.teamMembers);
-        this.$bvToast.toast(response.data.message, {
-          title: "todo",
-          variant: "info"
-        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
@@ -165,10 +161,6 @@ export default class TeamLobby extends Vue {
       .then((response: AxiosResponse<ApiResponse>) => {
         // only save it to the store if api call is successful!
         this.$store.commit("setOwnTeamName", this.newName);
-        this.$bvToast.toast(response.data.message, {
-          title: "Team naam succesvol veranderd.",
-          variant: "info"
-        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {

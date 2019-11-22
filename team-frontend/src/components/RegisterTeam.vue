@@ -83,11 +83,6 @@ export default class RegisterTeam extends Vue {
             isLoggedIn: true
           })
           .then(() => {
-            // and goto lobby
-            this.$bvToast.toast("HELLO", {
-              title: "todo",
-              variant: "info"
-            });
             this.$router.push({ name: "TeamLobby" });
           });
       })

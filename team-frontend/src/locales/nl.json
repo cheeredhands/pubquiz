@@ -1,4 +1,9 @@
 {
+  "APP_TITLE":"Quizr",
+  "MENU_HOME": "Home",
+  "MENU_HELP": "Help",
+  
+  "LEAVE_GAME": "Spel verlaten",
   "TEAMNAME": "Teamnaam",
   "TEAMNAME_LENGTH": "Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.",
   "HOME_WELCOME": "Welkom bij Quizr!",
