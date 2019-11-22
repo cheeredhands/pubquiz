@@ -60,19 +60,6 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
 
   public register(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) return;
-    // // check validation
-    // evt.preventDefault();
-    // evt.stopPropagation();
-
-    // const form = evt.srcElement as HTMLFormElement;
-
-    // if (form.checkValidity() === false) {
-    //   // https://getbootstrap.com/docs/4.3/components/forms/#custom-styles
-    //   form.classList.add("was-validated");
-    //   console.log("invalid, canceling.");
-    //   return;
-    // }
-    // console.log("valid, registering.");
 
     // register!
     this.registerForGame(this.teamName, this.code)
@@ -87,11 +74,6 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
               isLoggedIn: true
             })
             .then(() => {
-              // and goto lobby
-                this.$bvToast.toast(`Welkom!`, {
-                    title: "todo",
-                    variant: "info"
-                });
               this.$router.push({ name: "TeamLobby" });
             });
         });
