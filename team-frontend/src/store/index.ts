@@ -185,7 +185,11 @@ const store: StoreOptions<RootState> = {
       commit('setGameState', gameStateChanged.newGameState);
     },
     processTeamDeleted({ commit, state }, deletedTeam: TeamInfo) {
-      commit('removeTeam', deletedTeam);
+      if (state.team !== undefined && deletedTeam.teamId === state.team.teamId) {
+        commit('logout');
+      } else {
+        commit('removeTeam', deletedTeam);
+      }
     }
   }
 };
