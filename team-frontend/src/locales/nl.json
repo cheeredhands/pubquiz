@@ -1,10 +1,9 @@
 {
-  "APP_TITLE":"Quizr",
+  "APP_TITLE": "Quizr",
   "MENU_HOME": "Home",
   "MENU_HELP": "Help",
   "QUIZMASTER_LOGIN": "Quizmaster / admin login",
-"USERNAME": "Gebruikersnaam",
-
+  "USERNAME": "Gebruikersnaam",
   "LEAVE_GAME": "Spel verlaten",
   "TEAMNAME": "Teamnaam",
   "TEAMNAME_LENGTH": "Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.",
@@ -17,8 +16,7 @@
   "CODE_ORIGIN": "De code krijg je van de quizmaster.",
   "CODE_LENGTH": "Een code is minimaal 4 tekens.",
   "REGISTER_SUCCES": "Welkom!",
-
-  "TEAMLOBBY_WELCOME" : "Welkom in de lobby!",
+  "TEAMLOBBY_WELCOME": "Welkom in de lobby!",
   "TEAMLOBBY_SIT_BACK": "Sit back and relax ...",
   "MEMBERS": "Teamleden",
   "MEMBER_NAMES": "Geef hier de namen van je teamleden op (een per regel).",
