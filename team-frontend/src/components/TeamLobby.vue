@@ -1,13 +1,13 @@
 <template>
   <div id="content">
-    <h1>Welkom in de lobby!</h1>
+    <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
     <b-container fluid>
-      <b-row>Sit back and relax..</b-row>
+      <b-row>{{ $t('TEAMLOBBY_SIT_BACK')}}</b-row>
       <hr />
       <b-row>
         <b-col>
           <b-form @submit="applyTeamNameChange" novalidate>
-            <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="nameInput">
+            <b-form-group :label="$t('TEAMNAME')" :description="$t('KEEP_IT_CLEAN')" label-for="nameInput">
               <b-input-group>
                 <b-form-input
                   id="nameInput"
@@ -19,17 +19,17 @@
                   maxlength="30"
                 ></b-form-input>
                 <b-input-group-append>
-                  <b-button variant="primary" type="submit">Aanpassen</b-button>
+                  <b-button variant="primary" type="submit">{{ $t('ADJUST')}}</b-button>
                 </b-input-group-append>
-                <b-form-invalid-feedback>Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.</b-form-invalid-feedback>
+                <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
               </b-input-group>
             </b-form-group>
           </b-form>
           <b-form @submit="saveMembers" novalidate>
             <b-form-group
-              label="Teamleden:"
+              :label="$t('MEMBERS')"
               label-for="memberNamesInput"
-              description="Geef hier de namen van je teamleden op (een per regel)."
+              :description="$t('MEMBER_NAMES')"
             >
               <b-input-group>
                 <b-form-textarea
@@ -40,30 +40,26 @@
                   maxlength="140"
                 ></b-form-textarea>
                 <b-input-group-append>
-                  <b-button variant="primary" type="submit">Opslaan</b-button>
+                  <b-button variant="primary" type="submit">{{ $t('SAVE')}}</b-button>
                 </b-input-group-append>
               </b-input-group>
             </b-form-group>
           </b-form>
         </b-col>
         <b-col>
-          <p>Jullie gaan het opnemen tegen:</p>
+          <p>{{ $t('COMPETING_TEAMS')}}</p>
           <b-list-group>
             <b-list-group-item
               v-for="(otherTeam, index) in teams"
               :key="index"
-              :title="otherTeam.memberNames"
-            >
+              :title="otherTeam.memberNames">
               {{ otherTeam.teamName }}
-              <span v-if="!otherTeam.isLoggedIn">(uitgelogd)</span>
+              <span v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}} </span>
             </b-list-group-item>
           </b-list-group>
         </b-col>
       </b-row>
-      <!-- <input v-if="isInEdit" v-model="newName" id="teamName" />
-    <div v-else>
-      {{ team.teamName }}
-      </div>-->
+
     </b-container>
   </div>
 </template>
@@ -136,10 +132,6 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .then((response: AxiosResponse<SaveTeamMembersResponse>) => {
         this.$store.commit("setOwnTeamMembers", response.data.teamMembers);
-        this.$bvToast.toast(response.data.message, {
-          title: "todo",
-          variant: "info"
-        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
@@ -166,10 +158,6 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       .then((response: AxiosResponse<ApiResponse>) => {
         // only save it to the store if api call is successful!
         this.$store.commit("setOwnTeamName", this.newName);
-        this.$bvToast.toast(response.data.message, {
-          title: "Team naam succesvol veranderd.",
-          variant: "info"
-        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {

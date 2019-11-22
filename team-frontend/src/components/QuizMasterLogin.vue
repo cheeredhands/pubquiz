@@ -2,12 +2,12 @@
   <div id="content">
     <b-container>
       <b-row>
-        <h1>Quizmaster / admin login</h1>
+        <h1>{{ $t('QUIZMASTER_LOGIN') }}</h1>
       </b-row>
       <hr />
       <b-row>
         <b-form @submit="login" novalidate>
-          <b-form-group label="Gebruikersnaam:" label-for="userNameInput">
+          <b-form-group :label="$t('USERNAME')" label-for="userNameInput">
             <b-form-input
               type="text"
               size="lg"

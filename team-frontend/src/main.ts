@@ -10,6 +10,7 @@ import { faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import axios from 'axios';
 import i18n from './plugins/i18n'
+import axios from 'axios';
 
 library.add(faSignOutAlt, faComment);
 Vue.component('font-awesome-icon', FontAwesomeIcon);

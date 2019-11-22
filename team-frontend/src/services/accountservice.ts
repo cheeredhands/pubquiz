@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import { AxiosResponse } from 'axios';
-import { WhoAmIResponse, ApiResponse, RegisterForGameResponse, TeamLobbyViewModel, GameState } from '@/models/models';
+
+import { WhoAmIResponse, ApiResponse, RegisterForGameResponse, TeamLobbyViewModel, GameState } from '../models/models';
+
 import Component from 'vue-class-component';
 
 @Component

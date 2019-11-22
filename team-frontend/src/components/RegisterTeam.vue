@@ -7,7 +7,10 @@
       <hr>
       <b-row>
         <b-form @submit="register" novalidate>
-          <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="teamNameInput">
+          <b-form-group
+            :label="$t('TEAMNAME')"
+            :description="$t('KEEP_IT_CLEAN')"
+            label-for="teamNameInput">
             <b-form-input
               type="text"
               size="lg"
@@ -18,12 +21,12 @@
               minlength="5"
               maxlength="30"
             />
-            <b-form-invalid-feedback>Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.</b-form-invalid-feedback>
+            <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
           <b-form-group
-            label="Code:"
+            :label="$t('CODE')"
             label-for="codeInput"
-            description="De code krijg je van de quizmaster."
+            :description="$t('CODE_ORIGIN')"
           >
             <b-form-input
               type="text"
@@ -34,9 +37,9 @@
               required
               minlength="4"
             />
-            <b-form-invalid-feedback>Een code is minimaal 4 tekens.</b-form-invalid-feedback>
+            <b-form-invalid-feedback>{{ $t('CODE_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
-          <b-button type="submit" variant="primary">Registreren</b-button>
+          <b-button type="submit" variant="primary">{{ $t('REGISTER') }}</b-button>
         </b-form>
       </b-row>
     </b-container>
@@ -48,7 +51,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
 import AccountServiceMixin from "@/services/accountservice";
 import { AxiosResponse, AxiosError } from "axios";
+import VueI18n from "vue-i18n";
 import { TeamInfo, RegisterForGameResponse } from "../models/models";
+import { mixins } from "vue-class-component";
+import AccountServiceMixin from "../services/accountservice";
 
 @Component
 export default class RegisterTeam extends mixins(AccountServiceMixin) {

@@ -55,14 +55,10 @@ import { Component } from "vue-property-decorator";
 import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
-import {
-  QuizMasterLobbyViewModel,
-  ApiResponse,
-  GameState,
-  GameStateChanged
-} from "../models/models";
 import { mixins } from "vue-class-component";
-import AccountServiceMixin from "@/services/accountservice";
+import AccountServiceMixin from "../services/accountservice";
+import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
+
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {

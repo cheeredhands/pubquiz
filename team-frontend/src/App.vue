@@ -2,18 +2,19 @@
   <div id="app">
     <b-navbar toggleable="md" type="dark" variant="dark">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-navbar-brand href="#">Quizr</b-navbar-brand>
+      <b-navbar-brand href="#">{{ $t('APP_TITLE')}}</b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav>
           <b-nav-item>
-            <router-link to="/">Home</router-link>
+            <router-link to="/">{{ $t('MENU_HOME') }}</router-link>
           </b-nav-item>
         </b-navbar-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav v-if="isLoggedIn" class="ml-auto">
           <b-nav-item-dropdown :text="userName" right>
-            <b-dropdown-item @click="logOut()">Spel verlaten</b-dropdown-item>
-            <b-dropdown-item>Help</b-dropdown-item>
+            <b-dropdown-item @click="logout()">{{ $t('LEAVE_GAME')}}</b-dropdown-item>
+            <b-dropdown-item>{{ $t('MENU_HELP') }}</b-dropdown-item>
+
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -25,10 +26,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Component, { mixins } from "vue-class-component";
 import { AxiosResponse, AxiosError } from "axios";
+import Component, { mixins } from "vue-class-component";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
-import AccountServiceMixin from "@/services/accountservice";
+import AccountServiceMixin from "./services/accountservice";
+
 
 @Component
 export default class App extends mixins(AccountServiceMixin) {
@@ -53,16 +55,14 @@ export default class App extends mixins(AccountServiceMixin) {
   }
 
   public logOut() {
-    this.logOutCurrentUser().then((response: AxiosResponse<ApiResponse>) => {
-      if (response.data.code === 2) {
-        this.$store.dispatch("logout");
-        this.$router.replace("/");
-          this.$bvToast.toast("Sucesvol uitgelogd.", {
-              title: "info",
-              variant: "info"
-          });
-      }
-    });
+    this.logOutCurrentUser()
+      .then((response: AxiosResponse<ApiResponse>) => {
+        if (response.data.code === 2) {
+          this.$store.dispatch("logout");
+          this.$router.replace("/");
+        }
+      });
+
   }
 
   public mounted() {
