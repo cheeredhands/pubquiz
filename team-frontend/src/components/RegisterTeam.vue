@@ -49,11 +49,9 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
-import AccountServiceMixin from "../services/accountservice";
 import { AxiosResponse, AxiosError } from "axios";
 import VueI18n from "vue-i18n";
 import { TeamInfo, RegisterForGameResponse } from "../models/models";
-import { mixins } from "vue-class-component";
 import AccountServiceMixin from "../services/accountservice";
 
 @Component
