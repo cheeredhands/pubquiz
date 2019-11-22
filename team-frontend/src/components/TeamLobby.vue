@@ -70,7 +70,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component} from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
 import { Route } from "vue-router";
 import store from "../store";
@@ -180,6 +180,24 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       .finally(() => {
         this.newName = this.teamName;
       });
+  }
+
+  @Watch("isLoggedIn") OnLoggedInChanged(value: boolean, oldValue: boolean) {
+    if (oldValue && !value) {
+      // we've been kicked!
+      this.$bvModal
+        .msgBoxOk("Jullie zijn verwijderd door de quizmaster. Klik op OK om naar het registratiescherm te gaan.",{
+          title: 'Verwijderd',
+          centered: true
+        })
+        .then(_ => {
+          this.$router.push({ name: "RegisterTeam" });
+        }); 
+    }
+  }
+
+  get isLoggedIn(): boolean {
+    return this.$store.state.isLoggedIn || false;
   }
 
   get teamName() {

@@ -38,7 +38,7 @@ namespace Pubquiz.Logic.Requests
             team.MemberNames = TeamMembers;
 
             await teamCollection.UpdateAsync(team);
-            await Bus.Publish(new TeamMembersChanged(team.GameId, TeamId, team.Name, TeamMembers));
+            await Bus.Publish(new TeamMembersChanged(team.CurrentGameId, TeamId, team.Name, TeamMembers));
         }
 
         private string SanitizeTeamMembers(string teamMembers)

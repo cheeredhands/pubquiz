@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import {GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState} from '../models/models';
+import { GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState } from '../models/models';
 
 Vue.use(Vuex);
 
@@ -14,7 +14,7 @@ interface RootState {
   signalrconnection?: HubConnection;
 
   user?: UserInfo;
-  currentGameId: string;
+  currentGameId?: string;
   gameIds: string[];
 }
 
@@ -27,7 +27,7 @@ const store: StoreOptions<RootState> = {
     signalrconnection: undefined,
 
     user: undefined,
-    currentGameId: '',
+    currentGameId: undefined,
     gameIds: []
   },
   getters: {},
@@ -37,12 +37,13 @@ const store: StoreOptions<RootState> = {
       // called when a quizmaster logs in succesfully
       state.user = user;
       state.isLoggedIn = true;
-      state.currentGameId = user.gameId;
+      state.currentGameId = user.currentGameId;
       state.gameIds = user.gameIds;
     },
     setTeam(state, team: TeamInfo) {
       // called when the current team registers succesfully
       state.team = team;
+      state.currentGameId = team.currentGameId;
       state.isLoggedIn = true;
     },
     addTeam(state, team: TeamInfo) {
@@ -56,6 +57,13 @@ const store: StoreOptions<RootState> = {
         teamInStore.memberNames = team.memberNames;
       } else {
         state.teams.push(team);
+      }
+    },
+    removeTeam(state, team: TeamInfo) {
+      console.log(`removeTeam: ${team.teamId}`);
+      const teamInStore = state.teams.find(i => i.teamId === team.teamId);
+      if (teamInStore !== undefined) {
+        state.teams = state.teams.filter(t => t.teamId !== team.teamId);
       }
     },
     setTeamLoggedOut(state, team: TeamInfo) {
@@ -101,15 +109,16 @@ const store: StoreOptions<RootState> = {
       if (state.game === undefined) {
         return;
       }
-     state.game.state = newGameState;
+      state.game.state = newGameState;
     },
-    setGame(state, currentGame : GameInfo){
+    setGame(state, currentGame: GameInfo) {
       state.game = currentGame;
     },
     logout(state) {
       state.team = undefined;
       state.isLoggedIn = false;
       state.game = undefined;
+      state.currentGameId = undefined;
       state.teams = [];
     },
     saveSignalRConnection(state, signalrconnection) {
@@ -174,6 +183,13 @@ const store: StoreOptions<RootState> = {
         return;
       }
       commit('setGameState', gameStateChanged.newGameState);
+    },
+    processTeamDeleted({ commit, state }, deletedTeam: TeamInfo) {
+      if (state.team !== undefined && deletedTeam.teamId === state.team.teamId) {
+        commit('logout');
+      } else {
+        commit('removeTeam', deletedTeam);
+      }
     }
   }
 };

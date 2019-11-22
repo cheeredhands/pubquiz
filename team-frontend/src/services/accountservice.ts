@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { AxiosResponse } from 'axios';
-import { WhoAmIResponse, ApiResponse, RegisterForGameResponse, TeamLobbyViewModel } from '@/models/models';
+import { WhoAmIResponse, ApiResponse, RegisterForGameResponse, TeamLobbyViewModel, GameState } from '@/models/models';
 import Component from 'vue-class-component';
 
 @Component
@@ -23,5 +23,15 @@ export default class AccountServiceMixin extends Vue {
     }
     public getTeamLobby(): Promise<AxiosResponse<TeamLobbyViewModel>> {
         return this.$axios.get('/api/game/teamlobby', { withCredentials: true });
+    }
+
+    public setGameState(actorId: string, gameId: string, newGameState: GameState): Promise<AxiosResponse> {
+        return this.$axios.post('api/game/setgamestate', {
+            actorId, gameId, newGameState
+        });
+    }
+
+    public deleteTeam(teamId: string): Promise<AxiosResponse> {
+        return this.$axios.post('api/account/deleteteam', { teamId });
     }
 }

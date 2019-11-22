@@ -1,5 +1,4 @@
 import Vue from 'vue';
-// import './plugins/axios';
 import './plugins/quizr-helpers';
 import App from './App.vue';
 import router from './router/index';
@@ -28,13 +27,9 @@ const instanceUserApi = axios.create({
 });
 instanceUserApi.interceptors.request.use(
   cfg => {
-    // Do something before request is sent
     if (localStorage.getItem('token')) {
       cfg.headers.common.Authorization = 'Bearer ' + localStorage.getItem('token');
     }
-    // else {
-    //   instanceUserApi.defaults.headers.common.Authorization = undefined;
-    // }
     return cfg;
   },
   err => {

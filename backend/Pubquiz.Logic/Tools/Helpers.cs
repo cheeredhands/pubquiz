@@ -46,7 +46,7 @@ namespace Pubquiz.Logic.Tools
                 }
 
                 result = string.Join(" ", words);
-            } while (teamCollection.AnyAsync(t => t.RecoveryCode == result && t.GameId == gameId).Result);
+            } while (teamCollection.AnyAsync(t => t.RecoveryCode == result && t.CurrentGameId == gameId).Result);
 
             return result;
         }

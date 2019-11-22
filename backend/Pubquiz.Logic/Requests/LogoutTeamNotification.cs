@@ -23,7 +23,7 @@ namespace Pubquiz.Logic.Requests
 
             await teamCollection.UpdateAsync(team);
             
-            await Bus.Publish(new TeamLoggedOut(team.Id, team.Name, team.GameId));
+            await Bus.Publish(new TeamLoggedOut(team.Id, team.Name, team.CurrentGameId));
         }
     }
 }
