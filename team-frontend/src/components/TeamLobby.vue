@@ -59,10 +59,7 @@
           </b-list-group>
         </b-col>
       </b-row>
-      <!-- <input v-if="isInEdit" v-model="newName" id="teamName" />
-    <div v-else>
-      {{ team.teamName }}
-      </div>-->
+
     </b-container>
   </div>
 </template>
