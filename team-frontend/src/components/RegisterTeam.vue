@@ -4,7 +4,7 @@
       <b-row>
         <h1>{{$t('REGISTER')}}</h1>
       </b-row>
-      <hr />
+      <hr>
       <b-row>
         <b-form @submit="register" novalidate>
           <b-form-group
@@ -48,6 +48,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { mixins } from "vue-class-component";
+import AccountServiceMixin from "@/services/accountservice";
 import { AxiosResponse, AxiosError } from "axios";
 import VueI18n from "vue-i18n";
 import { TeamInfo, RegisterForGameResponse } from "../models/models";
@@ -68,22 +70,19 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
     // register!
     this.registerForGame(this.teamName, this.code)
       .then((response: AxiosResponse<RegisterForGameResponse>) => {
-        this.$store
-          .dispatch("storeToken", response.data.jwt)
-          .then(() => {
-            // disco. init team (add team to store, start signalr)
-            this.$store
-              .dispatch("initTeam", {
-                teamId: response.data.teamId,
-                teamName: response.data.teamName,
-                memberNames: response.data.memberNames,
-                isLoggedIn: true
-              })
-              .then(() => {
-                // and goto lobby
-                this.$router.push({ name: "TeamLobby" });
-              });
-          });
+        this.$store.dispatch("storeToken", response.data.jwt).then(() => {
+          // disco. init team (add team to store, start signalr)
+          this.$store
+            .dispatch("initTeam", {
+              teamId: response.data.teamId,
+              teamName: response.data.teamName,
+              memberNames: response.data.memberNames,
+              isLoggedIn: true
+            })
+            .then(() => {
+              this.$router.push({ name: "TeamLobby" });
+            });
+        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {

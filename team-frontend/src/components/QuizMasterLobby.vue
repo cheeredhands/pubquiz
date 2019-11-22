@@ -59,6 +59,7 @@ import { mixins } from "vue-class-component";
 import AccountServiceMixin from "../services/accountservice";
 import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
 
+
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
     // called before the route that renders this component is confirmed.

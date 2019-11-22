@@ -68,21 +68,23 @@ export default class QuizMasterLogin extends Vue {
         { withCredentials: true }
       )
       .then((response: AxiosResponse<LoginResponse>) => {
-        this.$store
-          .dispatch("initQuizMaster", {
-            userId: response.data.userId,
-            userName: response.data.userName,
-            gameIds: response.data.gameIds,
-            isLoggedIn: true
-          })
-          .then(() => {
-            // and goto lobby
-            this.$bvToast.toast("Welkom quizmaster!", {
-              title: "Welkom!",
-              variant: "info"
+        this.$store.dispatch("storeToken", response.data.jwt).then(() => {
+          this.$store
+            .dispatch("initQuizMaster", {
+              userId: response.data.userId,
+              userName: response.data.userName,
+              gameIds: response.data.gameIds,
+              isLoggedIn: true
+            })
+            .then(() => {
+              // and goto lobby
+              this.$bvToast.toast("Welkom quizmaster!", {
+                title: "Welkom!",
+                variant: "info"
+              });
+              this.$router.push({ name: "QuizMasterLobby" });
             });
-            this.$router.push({ name: "QuizMasterLobby" });
-          });
+        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {

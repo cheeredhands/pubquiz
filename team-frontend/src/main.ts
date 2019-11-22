@@ -3,12 +3,12 @@ import './plugins/quizr-helpers';
 import App from './App.vue';
 import router from './router/index';
 import store from './store/index';
-import VueI18n from 'vue-i18n'
-
+import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSignOutAlt, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import axios from 'axios';
 import i18n from './plugins/i18n'
 import axios from 'axios';
 

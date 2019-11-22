@@ -14,6 +14,7 @@
           <b-nav-item-dropdown :text="userName" right>
             <b-dropdown-item @click="logout()">{{ $t('LEAVE_GAME')}}</b-dropdown-item>
             <b-dropdown-item>{{ $t('MENU_HELP') }}</b-dropdown-item>
+
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -29,6 +30,7 @@ import { AxiosResponse, AxiosError } from "axios";
 import Component, { mixins } from "vue-class-component";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
 import AccountServiceMixin from "./services/accountservice";
+
 
 @Component
 export default class App extends mixins(AccountServiceMixin) {
@@ -60,6 +62,7 @@ export default class App extends mixins(AccountServiceMixin) {
           this.$router.replace("/");
         }
       });
+
   }
 
   public mounted() {
