@@ -2,16 +2,15 @@
   <div id="content">
     <b-container>
       <b-row>
-        <h1>{{$t('components.registerTeam.REGISTER')}}</h1>
+        <h1>{{$t('REGISTER')}}</h1>
       </b-row>
       <hr />
       <b-row>
         <b-form @submit="register" novalidate>
           <b-form-group
             :label="$t('TEAMNAME')"
-            :description="$t('components.registerTeam.KEEP_IT_CLEAN')"
-            label-for="teamNameInput"
-          >
+            :description="$t('KEEP_IT_CLEAN')"
+            label-for="teamNameInput">
             <b-form-input
               type="text"
               size="lg"
@@ -22,12 +21,12 @@
               minlength="5"
               maxlength="30"
             />
-            <b-form-invalid-feedback>{{ $t('components.registerTeam.TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
+            <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
           <b-form-group
-            :label="$t('components.registerTeam.CODE')"
+            :label="$t('CODE')"
             label-for="codeInput"
-            :description="$t('components.registerTeam.CODE_ORIGIN')"
+            :description="$t('CODE_ORIGIN')"
           >
             <b-form-input
               type="text"
@@ -38,9 +37,9 @@
               required
               minlength="4"
             />
-            <b-form-invalid-feedback>{{ $t('components.registerTeam.CODE_LENGTH') }}</b-form-invalid-feedback>
+            <b-form-invalid-feedback>{{ $t('CODE_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
-          <b-button type="submit" variant="primary">{{ $t('components.registerTeam.REGISTER') }}</b-button>
+          <b-button type="submit" variant="primary">{{ $t('REGISTER') }}</b-button>
         </b-form>
       </b-row>
     </b-container>
@@ -85,7 +84,7 @@ export default class RegisterTeam extends Vue {
           })
           .then(() => {
             // and goto lobby
-            this.$bvToast.toast("Welkom", {
+            this.$bvToast.toast("HELLO", {
               title: "todo",
               variant: "info"
             });

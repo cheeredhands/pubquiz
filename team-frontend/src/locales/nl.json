@@ -1,21 +1,22 @@
 {
   "TEAMNAME": "Teamnaam",
-  "components": {
-    "home": {
-      "WELCOME": "Welkom bij Quizr!",
-      "REGISTERHERE": "Registreer hier",
-      "QUIZMASTERLOGIN": "Quizmaster login",
-      "GREETING": "Hallo!"
-    },
+  "TEAMNAME_LENGTH": "Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.",
+  "HOME_WELCOME": "Welkom bij Quizr!",
+  "HOME_REGISTERHERE": "Registreer hier",
+  "HOME_QUIZMASTERLOGIN": "Quizmaster login",
+  "CODE": "Code",
+  "REGISTER": "Registreren",
+  "KEEP_IT_CLEAN": "Houd het netjes!",
+  "CODE_ORIGIN": "De code krijg je van de quizmaster.",
+  "CODE_LENGTH": "Een code is minimaal 4 tekens.",
+  "REGISTER_SUCCES": "Welkom!",
 
-    "registerTeam": {
-      "CODE": "Code",
-      "REGISTER": "Registreren",
-      "KEEP_IT_CLEAN": "Houd het netjes!",
-      "TEAMNAME_LENGTH": "Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.",
-      "CODE_ORIGIN": "De code krijg je van de quizmaster.",
-      "CODE_LENGTH": "Een code is minimaal 4 tekens.",
-      "REGISTER_SUCCES": "Welkom!"
-    }
-  }
+  "TEAMLOBBY_WELCOME" : "Welkom in de lobby!",
+  "TEAMLOBBY_SIT_BACK": "Sit back and relax ...",
+  "MEMBERS": "Teamleden",
+  "MEMBER_NAMES": "Geef hier de namen van je teamleden op (een per regel).",
+  "ADJUST": "Aanpassen",
+  "SAVE": "Opslaan",
+  "COMPETING_TEAMS": "Jullie gaan het opnemen tegen",
+  "LOGGED_OUT": "(Uitgelogd)"
 }
