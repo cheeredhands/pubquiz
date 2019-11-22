@@ -54,6 +54,13 @@ export interface LoginResponse extends ApiResponse {
   gameIds: string[];
 }
 
+export interface RegisterForGameResponse extends ApiResponse{
+    jwt: string;
+    teamId: string;
+    teamName: string;
+    memberNames: string;
+}
+
 export interface WhoAmIResponse extends ApiResponse {
   userName: string;
   userId: string;

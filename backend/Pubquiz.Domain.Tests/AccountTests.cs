@@ -93,13 +93,14 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamNameCommand(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
+            var notification = new ChangeTeamNameNotification(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
 
             // act
-            var team = command.Execute().Result;
+            notification.Execute().Wait();
             UnitOfWork.Commit();
 
             // assert
+            var team = UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
             Assert.AreEqual("Team 1a", team.Name);
             Assert.AreEqual("Team 1a", team.UserName);
         }
@@ -110,7 +111,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty.ToShortGuidString();
-            var command = new ChangeTeamNameCommand(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
+            var command = new ChangeTeamNameNotification(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -125,7 +126,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamNameCommand(UnitOfWork, Bus) {NewName = "Team 2", TeamId = teamId};
+            var command = new ChangeTeamNameNotification(UnitOfWork, Bus) {NewName = "Team 2", TeamId = teamId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -140,7 +141,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty.ToShortGuidString();
-            var command = new ChangeTeamMembersCommand(UnitOfWork, Bus)
+            var command = new ChangeTeamMembersNotification(UnitOfWork, Bus)
                 {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act & assert
@@ -156,7 +157,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamMembersCommand(UnitOfWork, Bus)
+            var command = new ChangeTeamMembersNotification(UnitOfWork, Bus)
                 {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act

@@ -5,7 +5,7 @@
       <b-row>
         <b-col>{{game.gameTitle}} ({{game.state}})</b-col>
         <b-col><b-button v-on:disabled="game.state==GameState.Running" v-on:click="startGame" variant="success">Start Game</b-button></b-col>
-      </b-row>  
+      </b-row>
       <hr />
       <b-row>
         <b-col>
@@ -51,6 +51,9 @@ import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
 import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
+import { QuizMasterLobbyViewModel, ApiResponse } from "../models/models";
+import { mixins } from "vue-class-component";
+import AccountServiceMixin from "@/services/accountservice";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -65,7 +68,7 @@ import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } fr
     next();
   }
 })
-export default class QuizMasterLobby extends Vue {
+export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   public name: string = "QuizMasterLobby";
 
   public created() {

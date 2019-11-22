@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
@@ -23,34 +28,35 @@ namespace Pubquiz.WebApi.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBus _bus;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(IUnitOfWork unitOfWork, IBus bus)
+        public AccountController(IUnitOfWork unitOfWork, IBus bus, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _bus = bus;
+            _configuration = configuration;
         }
 
         [HttpGet("whoami")]
         [AllowAnonymous]
         public async Task<ActionResult<WhoAmiResponse>> WhoAmI()
         {
-            if (!User.Identity.IsAuthenticated) return Ok(new {UserName = ""});
+            if (!User.Identity.IsAuthenticated) return Ok(new WhoAmiResponse
+            {
+                UserName = "",
+                Code = SuccessCodes.ThatsYou,
+                Message = "You're not logged in",
+            });
 
             // Check if user/team still exists, otherwise sign out
             var userRole = User.GetUserRole();
             var userId = User.GetId();
-            Team team = null;
-            User user = null;
-            if (userRole == UserRole.Team)
-            {
-                team = await new TeamQuery(_unitOfWork) {TeamId = userId}.Execute();
-            }
-            else
-            {
-                user = await new UserQuery(_unitOfWork) {UserId = userId}.Execute();
-            }
+            
+            var user = userRole == UserRole.Team
+                ? await new TeamQuery(_unitOfWork) {TeamId = userId}.Execute()
+                : await new UserQuery(_unitOfWork) {UserId = userId}.Execute();
 
-            if (team == null && user == null)
+            if (user == null)
             {
                 await SignOut();
                 return Ok(new WhoAmiResponse
@@ -67,7 +73,7 @@ namespace Pubquiz.WebApi.Controllers
                 Message = "",
                 UserName = User.Identity.Name,
                 UserId = User.GetId(),
-                CurrentGameId = User.GetCurrentGameId(),
+                CurrentGameId = user.CurrentGameId,
                 UserRole = User.GetUserRole()
             });
         }
@@ -78,12 +84,13 @@ namespace Pubquiz.WebApi.Controllers
             [FromBody] RegisterForGameCommand command)
         {
             var team = await command.Execute();
-            await SignIn(team, team.GameId);
+            var jwt= SignInAndGetJwt(team);
 
             return Ok(new RegisterForGameResponse
             {
                 Code = SuccessCodes.TeamRegisteredAndLoggedIn,
-                Message = $"Team {team.Name} registered and logged in.",
+                Message = $"Team '{team.Name}' registered and logged in.",
+                Jwt = jwt,
                 TeamId = team.Id,
                 TeamName = team.Name,
                 MemberNames = team.MemberNames
@@ -95,9 +102,11 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginCommand command)
         {
             var user = await command.Execute();
-            await SignIn(user, user.CurrentGameId);
+            //await SignIn(user, user.CurrentGameId);
+           var jwt =  SignInAndGetJwt(user);
             return Ok(new LoginResponse
             {
+                Jwt = jwt,
                 Code = SuccessCodes.UserLoggedIn,
                 Message = $"User {user.UserName} logged in.",
                 UserId = user.Id,
@@ -108,40 +117,44 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("selectgame")]
         [Authorize(Roles = "QuizMaster")]
-        public async Task<ActionResult<SelectGameResponse>> SelectGame([FromBody] SelectGameCommand command)
+        public async Task<ActionResult<SelectGameResponse>> SelectGame([FromBody] SelectGameNotification notification)
         {
             var userId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(command.ActorId) && userId != command.ActorId)
+            if (!string.IsNullOrWhiteSpace(notification.ActorId) && userId != notification.ActorId)
             {
                 return Forbid();
             }
 
-            command.ActorId = userId;
-            var user = await command.Execute();
-            await SignOut();
-            await SignIn(user, command.GameId);
+            notification.ActorId = userId;
+            await notification.Execute();
 
             return Ok(new SelectGameResponse
             {
                 Code = SuccessCodes.GameSelected,
                 Message = "Game selected",
-                GameId = command.GameId
+                GameId = notification.GameId
             });
         }
 
-        private async Task SignIn(User user, string currentGameId = "")
+        private string SignInAndGetJwt(User user)
         {
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["AppSettings:JwtSecret"]);
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Role, user.UserRole.ToString()),
-                new Claim("CurrentGame", currentGameId)
             };
-
-            var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(userIdentity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         [HttpPost("testauth")]
@@ -160,44 +173,45 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("changeteamname")]
-        public async Task<ActionResult<ChangeTeamNameResponse>> ChangeTeamName(ChangeTeamNameCommand command)
+        [Authorize(Roles = "Team")]
+        public async Task<ActionResult<ChangeTeamNameResponse>> ChangeTeamName(ChangeTeamNameNotification notification)
         {
             var teamId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(command.TeamId) && teamId != command.TeamId)
+            if (!string.IsNullOrWhiteSpace(notification.TeamId) && teamId != notification.TeamId)
             {
                 return Forbid();
             }
 
-            command.TeamId = teamId;
+            notification.TeamId = teamId;
 
-            var team = await command.Execute();
-            await SignOut();
-            await SignIn(team, team.GameId);
+            await notification.Execute();
+            
             return Ok(new ChangeTeamNameResponse
             {
                 Code = SuccessCodes.TeamRenamed,
                 Message = "Team renamed.",
-                TeamName = team.Name
+                TeamName = notification.NewName
             });
         }
 
         [HttpPost("changeteammembers")]
-        public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(ChangeTeamMembersCommand command)
+        [Authorize(Roles = "Team")]
+        public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(ChangeTeamMembersNotification notification)
         {
             var teamId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(command.TeamId) && command.TeamId != teamId)
-            {
-                return Forbid();
-            }
+//            if (!string.IsNullOrWhiteSpace(notification.TeamId) && notification.TeamId != teamId)
+//            {
+//                return Forbid();
+//            }
 
-            command.TeamId = teamId;
+            notification.TeamId = teamId;
 
-            var teamMembers = await command.Execute();
+            await notification.Execute();
             return Ok(new ChangeTeamMembersResponse
             {
                 Code = SuccessCodes.TeamMembersChanged,
                 Message = "Team members changed.",
-                TeamMembers = teamMembers
+                TeamMembers = notification.TeamMembers
             });
         }
 
@@ -237,7 +251,7 @@ namespace Pubquiz.WebApi.Controllers
                 await notification.Execute();
             }
 
-            await SignOut();
+            //await SignOut();
             return Ok(new ApiResponse
             {
                 Code = SuccessCodes.LoggedOut,

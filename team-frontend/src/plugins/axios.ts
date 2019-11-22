@@ -1,59 +1,64 @@
-import Vue, { PluginObject } from 'vue';
-import axios from 'axios';
+// import Vue, { PluginObject } from 'vue';
+// import axios from 'axios';
 
-// Full config:  https://github.com/axios/axios#request-config
-// axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+// // Full config:  https://github.com/axios/axios#request-config
+// // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
+//  axios.defaults.headers.common.Authorization = 'Bearer ' + localStorage.getItem('token');
+// // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-const config = {
-  // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  // timeout: 60 * 1000, // Timeout
-  // withCredentials: true, // Check cross-site Access-Control
-};
+// const config = {
+//   // baseURL: process.env.baseURL || process.env.apiUrl || ""
+//   // timeout: 60 * 1000, // Timeout
+//   // withCredentials: true, // Check cross-site Access-Control
+// };
 
-const axiosInstance = axios.create(config);
+// const axiosInstance = axios.create(config);
 
-axiosInstance.interceptors.request.use(
-  cfg => {
-    // Do something before request is sent
-    return cfg;
-  },
-  err => {
-    // Do something with request error
-    return Promise.reject(err);
-  }
-);
+// axiosInstance.interceptors.request.use(
+//   cfg => {
+//     // Do something before request is sent
+//     if (localStorage.getItem('token')) {
+//       axiosInstance.defaults.headers.common.Authorization = 'Bearer ' + localStorage.getItem('token');
+//     } else {
+//       axiosInstance.defaults.headers.common.Authorization = undefined;
+//     }
+//     return cfg;
+//   },
+//   err => {
+//     // Do something with request error
+//     return Promise.reject(err);
+//   }
+// );
 
-// Add a response interceptor
-axiosInstance.interceptors.response.use(
-  res => {
-    // Do something with response data
-    return res;
-  },
-  err => {
-    // Do something with response error
-    return Promise.reject(err);
-  }
-);
+// // Add a response interceptor
+// axiosInstance.interceptors.response.use(
+//   res => {
+//     // Do something with response data
+//     return res;
+//   },
+//   err => {
+//     // Do something with response error
+//     return Promise.reject(err);
+//   }
+// );
 
-const Plugin: PluginObject<any> = {
-  install: vue => {
-    vue.$axios = axiosInstance;
-  }
-};
-Plugin.install = vue => {
-  vue.$axios = axiosInstance;
-  window.axios = axiosInstance;
-  Object.defineProperties(vue.prototype, {
-    $axios: {
-      get() {
-        return axiosInstance;
-      }
-    }
-  });
-};
+// const Plugin: PluginObject<any> = {
+//   install: vue => {
+//     vue.$axios = axiosInstance;
+//   }
+// };
+// Plugin.install = vue => {
+//   vue.$axios = axiosInstance;
+//   window.axios = axiosInstance;
+//   Object.defineProperties(vue.prototype, {
+//     $axios: {
+//       get() {
+//         return axiosInstance;
+//       }
+//     }
+//   });
+// };
 
-Vue.use(Plugin);
+// Vue.use(Plugin);
 
-export default Plugin;
+// export default Plugin;

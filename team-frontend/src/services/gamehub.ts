@@ -1,4 +1,4 @@
-import * as SignalR from '@aspnet/signalr';
+import * as SignalR from '@microsoft/signalr';
 import store from '../store/index';
 
 export default {
@@ -14,7 +14,7 @@ export default {
   },
   init() {
     const connection = new SignalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5000/gamehub')
+      .withUrl('http://localhost:5000/gamehub', {accessTokenFactory: () => localStorage.getItem('token') || '' })
       .configureLogging(SignalR.LogLevel.Information)
       .build();
     this.closing = false;

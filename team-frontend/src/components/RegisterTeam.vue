@@ -4,7 +4,7 @@
       <b-row>
         <h1>{{$t('REGISTER')}}</h1>
       </b-row>
-      <hr />
+      <hr>
       <b-row>
         <b-form @submit="register" novalidate>
           <b-form-group label="Teamnaam:" description="Houd het netjes!" label-for="teamNameInput">
@@ -45,11 +45,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { mixins } from "vue-class-component";
+import AccountServiceMixin from "@/services/accountservice";
 import { AxiosResponse, AxiosError } from "axios";
 import { TeamInfo } from "../models/models";
 
 @Component
-export default class RegisterTeam extends Vue {
+export default class RegisterTeam extends mixins(AccountServiceMixin) {
   public name: string = "RegisterTeam";
   public teamName: string = "";
   public code: string = "";
@@ -73,32 +75,26 @@ export default class RegisterTeam extends Vue {
     // console.log("valid, registering.");
 
     // register!
-    this.$axios
-      .post(
-        "/api/account/register",
-        {
-          teamName: this.teamName,
-          code: this.code
-        },
-        { withCredentials: true }
-      )
-      .then((response: AxiosResponse<TeamInfo>) => {
-        // disco. init team (add team to store, start signalr)
-        this.$store
-          .dispatch("initTeam", {
-            teamId: response.data.teamId,
-            teamName: response.data.teamName,
-            memberNames: response.data.memberNames,
-            isLoggedIn: true
-          })
-          .then(() => {
-            // and goto lobby
-            this.$bvToast.toast(`Welkom!`, {
-              title: "todo",
-              variant: "info"
+    this.registerForGame(this.teamName, this.code)
+      .then((response: AxiosResponse<RegisterForGameResponse>) => {
+        this.$store.dispatch("storeToken", response.data.jwt).then(() => {
+          // disco. init team (add team to store, start signalr)
+          this.$store
+            .dispatch("initTeam", {
+              teamId: response.data.teamId,
+              teamName: response.data.teamName,
+              memberNames: response.data.memberNames,
+              isLoggedIn: true
+            })
+            .then(() => {
+              // and goto lobby
+                this.$bvToast.toast(`Welkom!`, {
+                    title: "todo",
+                    variant: "info"
+                });
+              this.$router.push({ name: "TeamLobby" });
             });
-            this.$router.push({ name: "TeamLobby" });
-          });
+        });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {

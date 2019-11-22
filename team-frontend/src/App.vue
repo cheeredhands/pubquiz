@@ -12,7 +12,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav v-if="isLoggedIn" class="ml-auto">
           <b-nav-item-dropdown :text="userName" right>
-            <b-dropdown-item @click="logout()">Spel verlaten</b-dropdown-item>
+            <b-dropdown-item @click="logOut()">Spel verlaten</b-dropdown-item>
             <b-dropdown-item>Help</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -25,12 +25,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Component from "vue-class-component";
+import Component, { mixins } from "vue-class-component";
+import { AxiosResponse } from "axios";
 import { AxiosResponse, AxiosError } from "axios";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
+import AccountServiceMixin from "@/services/accountservice";
 
 @Component
-export default class App extends Vue {
+export default class App extends mixins(AccountServiceMixin) {
   public name: string = "app";
 
   public message: string = "Welkom bij Quizr";
@@ -51,24 +53,21 @@ export default class App extends Vue {
     return this.team.teamName || this.user.userName;
   }
 
-  public logout() {
-    this.$axios
-      .post("/api/account/logout", { withCredentials: true })
-      .then((response: AxiosResponse<ApiResponse>) => {
-        if (response.data.code === 2) {
-          this.$store.dispatch("logout");
-          this.$router.replace("/");
+  public logOut() {
+    this.logOutCurrentUser().then((response: AxiosResponse<ApiResponse>) => {
+      if (response.data.code === 2) {
+        this.$store.dispatch("logout");
+        this.$router.replace("/");
           this.$bvToast.toast("Sucesvol uitgelogd.", {
-            title: "info",
-            variant: "info"
+              title: "info",
+              variant: "info"
           });
-        }
-      });
+      }
+    });
   }
 
   public mounted() {
-    this.$axios
-      .get("/api/account/whoami", { withCredentials: true })
+    this.getWhoAmI()
       .then((response: AxiosResponse<WhoAmIResponse>) => {
         if (response.data.userName === "") {
           return;

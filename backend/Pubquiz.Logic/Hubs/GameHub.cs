@@ -1,11 +1,9 @@
 using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
@@ -27,17 +25,23 @@ namespace Pubquiz.Logic.Hubs
     [Authorize]
     public class GameHub : Hub<IGameHub>
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<GameHub> _logger;
 
-        public GameHub(ILoggerFactory loggerFactory)
+        public GameHub(ILoggerFactory loggerFactory, IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _logger = loggerFactory.CreateLogger<GameHub>();
         }
 
         public override async Task OnConnectedAsync()
         {
             var userRole = Context.User.GetUserRole();
-            var currentGameId = Context.User.GetCurrentGameId();
+            var userId = Context.User.GetId();
+            var user = userRole == UserRole.Team
+                ? _unitOfWork.GetCollection<Team>().GetAsync(userId).Result
+                : _unitOfWork.GetCollection<User>().GetAsync(userId).Result;
+            var currentGameId = user.CurrentGameId;
             switch (userRole)
             {
                 case UserRole.Team:
@@ -61,7 +65,11 @@ namespace Pubquiz.Logic.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var userRole = Context.User.GetUserRole();
-            var currentGameId = Context.User.GetCurrentGameId();
+            var userId = Context.User.GetId();
+            var user = userRole == UserRole.Team
+                ? _unitOfWork.GetCollection<Team>().GetAsync(userId).Result
+                : _unitOfWork.GetCollection<User>().GetAsync(userId).Result;
+            var currentGameId = user.CurrentGameId;
             switch (userRole)
             {
                 case UserRole.Team:

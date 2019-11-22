@@ -70,7 +70,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component} from "vue-property-decorator";
+import { mixins } from "vue-class-component";
 import { Route } from "vue-router";
 import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
@@ -79,6 +80,7 @@ import {
   ApiResponse,
   SaveTeamMembersResponse
 } from "../models/models";
+import AccountServiceMixin from "@/services/accountservice";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -93,7 +95,7 @@ import {
     next();
   }
 })
-export default class TeamLobby extends Vue {
+export default class TeamLobby extends mixins(AccountServiceMixin) {
   public name: string = "TeamLobby";
 
   public inEdit: boolean = false;
@@ -106,8 +108,7 @@ export default class TeamLobby extends Vue {
 
   public created() {
     // get team lobby view model
-    this.$axios
-      .get("/api/game/teamlobby")
+    this.getTeamLobby()
       .then((response: AxiosResponse<TeamLobbyViewModel>) => {
         this.$store.commit("setTeam", response.data.team);
         this.$store.commit("setTeams", response.data.otherTeamsInGame);
@@ -131,7 +132,6 @@ export default class TeamLobby extends Vue {
 
     this.$axios
       .post("api/account/changeteammembers", {
-        teamId: this.teamId,
         teamMembers: this.newMemberNames
       })
       .then((response: AxiosResponse<SaveTeamMembersResponse>) => {
