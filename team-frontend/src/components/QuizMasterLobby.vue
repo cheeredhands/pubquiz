@@ -25,21 +25,12 @@
               <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
               <b-badge v-if="!team.isLoggedIn">uitgelogd</b-badge>
               <font-awesome-icon
-                icon="sign-out-alt"
+                icon="trash-alt"
                 @click="kickTeam(team.teamId)"
                 pull="right"
                 style="cursor:pointer;"
                 title="Kick this team from the game"
               />
-              <span v-if="team.isLoggedIn">
-                <font-awesome-icon
-                  icon="comment"
-                  @click="messageTeam"
-                  pull="right"
-                  style="cursor:pointer;"
-                  title="Send this team a message"
-                />
-              </span>
             </b-list-group-item>
           </b-list-group>
         </b-col>
@@ -92,14 +83,6 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       });
   }
 
-  // errorMessage(message: string) {
-  //   this.$bvToast.toast(message, {
-  //     solid: true,
-  //     toaster: "b-toaster-bottom-right",
-  //     title: "oops",
-  //     variant: "error"
-  //   });
-  // }
 
   startGame() {
     this.setGameState(this.userId, this.game.gameId, GameState.Running)

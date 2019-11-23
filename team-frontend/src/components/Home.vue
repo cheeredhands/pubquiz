@@ -1,11 +1,10 @@
 <template>
   <div id="content">
     <h1>{{ $t('HOME_WELCOME')}}</h1>
-    <router-link
-      class="btn btn-primary btn-lg"
-      :to="{name: 'RegisterTeam'}">{{ $t('HOME_REGISTERHERE') }}</router-link>
+    <b-button variant="primary" size="lg"
+      :to="{name: 'RegisterTeam'}">{{ $t('HOME_REGISTERHERE') }}</b-button>
     <hr />
-    <router-link :to="{name: 'QuizMasterLogin'}">{{ $t('HOME_QUIZMASTERLOGIN') }}</router-link>
+    <b-link :to="{name: 'QuizMasterLogin'}">{{ $t('HOME_QUIZMASTERLOGIN') }}</b-link>
   </div>
 </template>
 
