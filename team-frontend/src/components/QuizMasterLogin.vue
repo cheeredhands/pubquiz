@@ -1,12 +1,14 @@
 <template>
-  <div id="content">
-    <b-container>
-      <b-row>
+  <b-container fluid>
+    <b-row>
+      <b-col>
         <h1>{{ $t('QUIZMASTER_LOGIN') }}</h1>
-      </b-row>
-      <hr />
-      <b-row>
-        <b-form @submit="login" novalidate>
+        <hr />
+      </b-col>
+    </b-row>
+    <b-form @submit="login" novalidate>
+      <b-form-row>
+        <b-col md="6" lg="4">
           <b-form-group :label="$t('USERNAME')" label-for="userNameInput">
             <b-form-input
               type="text"
@@ -20,7 +22,11 @@
             />
             <b-form-invalid-feedback>Een gebruikersnaam van minimaal 5 en maximaal 30 karakters is verplicht.</b-form-invalid-feedback>
           </b-form-group>
-          <b-form-group label="Wachtwoord:" label-for="passwordInput">
+        </b-col>
+      </b-form-row>
+      <b-form-row>
+        <b-col md="6" lg="4">
+          <b-form-group label="Wachtwoord" label-for="passwordInput">
             <b-form-input
               type="password"
               size="lg"
@@ -32,12 +38,15 @@
             />
             <b-form-invalid-feedback>Een wachtwoord is minimaal 2 tekens.</b-form-invalid-feedback>
           </b-form-group>
+        </b-col>
+      </b-form-row>
+      <b-form-row>
+        <b-col md="6" lg="4">
           <b-button type="submit" variant="primary">Inloggen</b-button>
-        </b-form>
-      </b-row>
-    </b-container>
-    <div></div>
-  </div>
+        </b-col>
+      </b-form-row>
+    </b-form>
+  </b-container>
 </template>
 
 <script lang="ts">
