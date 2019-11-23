@@ -31,15 +31,6 @@
                 style="cursor:pointer;"
                 title="Kick this team from the game"
               />
-              <span v-if="team.isLoggedIn">
-                <font-awesome-icon
-                  icon="comment"
-                  @click="messageTeam"
-                  pull="right"
-                  style="cursor:pointer;"
-                  title="Send this team a message"
-                />
-              </span>
             </b-list-group-item>
           </b-list-group>
         </b-col>
