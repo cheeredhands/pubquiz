@@ -12,7 +12,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav v-if="isLoggedIn" class="ml-auto">
           <b-nav-item-dropdown :text="userName" right>
-            <b-dropdown-item @click="logout()">{{ $t('LEAVE_GAME')}}</b-dropdown-item>
+            <b-dropdown-item @click="logOut()">{{ $t('LEAVE_GAME')}}</b-dropdown-item>
             <b-dropdown-item>{{ $t('MENU_HELP') }}</b-dropdown-item>
 
           </b-nav-item-dropdown>
