@@ -25,7 +25,7 @@
               <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
               <b-badge v-if="!team.isLoggedIn">uitgelogd</b-badge>
               <font-awesome-icon
-                icon="sign-out-alt"
+                icon="trash-alt"
                 @click="kickTeam(team.teamId)"
                 pull="right"
                 style="cursor:pointer;"
