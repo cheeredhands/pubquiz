@@ -62,6 +62,9 @@ export default class QuizMasterLogin extends mixins(AccountServiceMixin) {
   public userName: string = "";
   public password: string = "";
 
+  public created() {
+    this.$store.commit("setNavbarText", "Quiz master login");
+  }
   public mounted() {}
 
   public login(evt: Event) {

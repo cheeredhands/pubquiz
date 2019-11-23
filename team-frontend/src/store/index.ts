@@ -16,6 +16,7 @@ interface RootState {
   user?: UserInfo;
   currentGameId?: string;
   gameIds: string[];
+  navbarText: string;
 }
 
 const store: StoreOptions<RootState> = {
@@ -28,7 +29,8 @@ const store: StoreOptions<RootState> = {
 
     user: undefined,
     currentGameId: undefined,
-    gameIds: []
+    gameIds: [],
+    navbarText: 'Quizr'
   },
   getters: {},
   mutations: {
@@ -126,6 +128,9 @@ const store: StoreOptions<RootState> = {
     },
     clearSignalRConnection(state) {
       state.signalrconnection = undefined;
+    },
+    setNavbarText(state, text: string){
+      state.navbarText = text;
     }
   },
   actions: {

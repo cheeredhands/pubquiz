@@ -2,8 +2,7 @@
   <b-container fluid>
     <b-row>
       <b-col>
-        <h1>Welkom in de lobby, {{userName}}!</h1>
-        {{game.gameTitle}} ({{game.state}})
+       Game title: {{game.gameTitle}} (state: {{game.state}})
         <b-button
           v-on:disabled="game.state==GameState.Running"
           v-on:click="startGame"
@@ -66,6 +65,7 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   public name: string = "QuizMasterLobby";
 
   public created() {
+    this.$store.commit('setNavbarText', 'Quiz master lobby');
     // get team lobby view model
     this.$axios
       .get("/api/game/quizmasterlobby")

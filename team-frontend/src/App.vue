@@ -6,21 +6,26 @@
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav>
           <b-nav-item>
-            <router-link to="/">{{ $t('MENU_HOME') }}</router-link>
+            <b-link to="/">{{ $t('MENU_HOME') }}</b-link>
           </b-nav-item>
         </b-navbar-nav>
+        <b-navbar-nav class="ml-auto">
+          <b-nav-text center>{{ navbarText }}</b-nav-text>
+        </b-navbar-nav>
+
         <!-- Right aligned nav items -->
-        <b-navbar-nav v-if="isLoggedIn" class="ml-auto">
-          <b-nav-item-dropdown :text="userName" right>
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown v-if="isLoggedIn" :text="userName" right>
             <b-dropdown-item @click="logOut()">{{ $t('LEAVE_GAME')}}</b-dropdown-item>
             <b-dropdown-item>{{ $t('MENU_HELP') }}</b-dropdown-item>
-
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
     <router-view></router-view>
-    <footer class="footer">{{message}}</footer>
+    <footer class="footer">
+      <slot name="footer"></slot>
+    </footer>
   </div>
 </template>
 
@@ -31,13 +36,13 @@ import Component, { mixins } from "vue-class-component";
 import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
 import AccountServiceMixin from "./services/accountservice";
 
-
 @Component
 export default class App extends mixins(AccountServiceMixin) {
   public name: string = "app";
 
-  public message: string = "Welkom bij Quizr";
-
+  get navbarText() {
+    return this.$store.state.navbarText || "";
+  }
   get isLoggedIn() {
     return this.$store.state.isLoggedIn || false;
   }
@@ -55,14 +60,12 @@ export default class App extends mixins(AccountServiceMixin) {
   }
 
   public logOut() {
-    this.logOutCurrentUser()
-      .then((response: AxiosResponse<ApiResponse>) => {
-        if (response.data.code === 2) {
-          this.$store.dispatch("logout");
-          this.$router.replace("/");
-        }
-      });
-
+    this.logOutCurrentUser().then((response: AxiosResponse<ApiResponse>) => {
+      if (response.data.code === 2) {
+        this.$store.dispatch("logout");
+        this.$router.replace("/");
+      }
+    });
   }
 
   public mounted() {
@@ -146,7 +149,7 @@ footer {
   font-size: 10px;
 }
 
-.container-fluid:first-child {
+.container-fluid {
   padding-top: 10px;
 }
 

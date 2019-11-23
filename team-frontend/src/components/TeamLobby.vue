@@ -109,6 +109,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
   public newMemberNames: string = "";
 
   public created() {
+    this.$store.commit('setNavbarText', 'Team lobby');
     // get team lobby view model
     this.getTeamLobby()
       .then((response: AxiosResponse<TeamLobbyViewModel>) => {

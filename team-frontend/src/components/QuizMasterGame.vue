@@ -1,13 +1,21 @@
 <template>
   <b-container fluid>
     <b-row>
-      <b-col>
-        <h1>Welkom in de Game omgeving, {{userName}}!</h1>
-        {{game.gameTitle}} ({{game.state}})
+      <b-col col cols="1">Buttons</b-col>
+      <b-col col cols="5">
+        Game title: {{game.gameTitle}} (state: {{game.state}})
+        <h2>Teamfeed</h2>
+      </b-col>
+      <b-col col cols="6">
+        Current question and ranking
+        <template v-slot:footer>
+          <p>Here's some contact info</p>
+        </template>
       </b-col>
     </b-row>
   </b-container>
 </template>
+
 
 <script lang="ts">
 import Vue from "vue";
@@ -34,6 +42,7 @@ export default class QuizMasterGame extends Vue {
   public name: string = "QuizMasterGame";
 
   public created() {
+    this.$store.commit("setNavbarText", "Quiz master game screen");
     // // get QuizMaster Game view model
     // this.$axios
     //   .get("/api/game/quizmastergame")
