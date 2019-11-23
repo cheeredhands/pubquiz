@@ -23,5 +23,8 @@
   "ADJUST": "Aanpassen",
   "SAVE": "Opslaan",
   "COMPETING_TEAMS": "Jullie gaan het opnemen tegen",
-  "LOGGED_OUT": "(Uitgelogd)"
+  "LOGGED_OUT": "(Uitgelogd)",
+  "KICKED_OUT": "Jullie zijn verwijderd door de quizmaster. Klik op OK om naar het registratiescherm te gaan.",
+  "REMOVED": "Verwijderd",
+  "ERROR_MESSAGE_TITLE": "Oopsie"
 }
