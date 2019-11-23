@@ -18,9 +18,9 @@
               minlength="5"
               maxlength="30"
             />
-            <b-form-invalid-feedback>Een gebruikersnaam van minimaal 5 en maximaal 30 karakters is verplicht.</b-form-invalid-feedback>
+            <b-form-invalid-feedback>{{ $t('USERNAME_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
-          <b-form-group label="Wachtwoord:" label-for="passwordInput">
+          <b-form-group :label="$t('PASSWORD')" label-for="passwordInput">
             <b-form-input
               type="password"
               size="lg"
@@ -30,9 +30,9 @@
               required
               minlength="2"
             />
-            <b-form-invalid-feedback>Een wachtwoord is minimaal 2 tekens.</b-form-invalid-feedback>
+            <b-form-invalid-feedback>{{ $t('PASSWORD_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
-          <b-button type="submit" variant="primary">Inloggen</b-button>
+          <b-button type="submit" variant="primary">{{ $t('LOGIN') }} </b-button>
         </b-form>
       </b-row>
     </b-container>
@@ -69,17 +69,13 @@ export default class QuizMasterLogin extends mixins(AccountServiceMixin) {
             })
             .then(() => {
               // and goto lobby
-              this.$bvToast.toast("Welkom quizmaster!", {
-                title: "Welkom!",
-                variant: "info"
-              });
               this.$router.push({ name: "QuizMasterLobby" });
             });
         });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "Oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
