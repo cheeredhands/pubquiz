@@ -44,10 +44,11 @@
 import Vue from "vue";
 import { AxiosResponse, AxiosError } from "axios";
 import { LoginResponse } from "../models/models";
-import Component from "vue-class-component";
+import Component, { mixins } from "vue-class-component";
+import AccountServiceMixin from "../services/accountservice";
 
 @Component
-export default class QuizMasterLogin extends Vue {
+export default class QuizMasterLogin extends mixins(AccountServiceMixin) {
   public name: string = "QuizMasterLogin";
   public userName: string = "";
   public password: string = "";
@@ -56,17 +57,7 @@ export default class QuizMasterLogin extends Vue {
 
   public login(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) return;
-
-    // register!
-    this.$axios
-      .post(
-        "/api/account/login",
-        {
-          userName: this.userName,
-          password: this.password
-        },
-        { withCredentials: true }
-      )
+    this.loginUser(this.userName, this.password)
       .then((response: AxiosResponse<LoginResponse>) => {
         this.$store.dispatch("storeToken", response.data.jwt).then(() => {
           this.$store
