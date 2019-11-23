@@ -4,13 +4,14 @@
       <b-row>
         <h1>{{$t('REGISTER')}}</h1>
       </b-row>
-      <hr>
+      <hr />
       <b-row>
         <b-form @submit="register" novalidate>
           <b-form-group
             :label="$t('TEAMNAME')"
             :description="$t('KEEP_IT_CLEAN')"
-            label-for="teamNameInput">
+            label-for="teamNameInput"
+          >
             <b-form-input
               type="text"
               size="lg"
@@ -23,11 +24,7 @@
             />
             <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
           </b-form-group>
-          <b-form-group
-            :label="$t('CODE')"
-            label-for="codeInput"
-            :description="$t('CODE_ORIGIN')"
-          >
+          <b-form-group :label="$t('CODE')" label-for="codeInput" :description="$t('CODE_ORIGIN')">
             <b-form-input
               type="text"
               size="lg"
@@ -84,7 +81,7 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
