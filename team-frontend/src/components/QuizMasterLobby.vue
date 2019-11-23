@@ -1,43 +1,37 @@
 <template>
-  <div id="content">
-    <h1>Welkom in de lobby, {{userName}}!</h1>
-    <b-container fluid>
-      <b-row>
-        <b-col>{{game.gameTitle}} ({{game.state}})</b-col>
-        <b-col>
-          <b-button
-            v-on:disabled="game.state==GameState.Running"
-            v-on:click="startGame"
-            variant="success"
-          >Start Game</b-button>
-        </b-col>
-      </b-row>
-      <hr />
-      <b-row>
-        <b-col>
-          <p>De volgende teams zitten in de teamlobby:</p>
-          <b-list-group>
-            <b-list-group-item
-              v-for="(team, index) in teams"
-              :key="index"
-            >
-              <strong>{{ team.teamName }}</strong> -
-              <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
-              <b-badge v-if="!team.isLoggedIn">uitgelogd</b-badge>
-              <font-awesome-icon
-                icon="trash-alt"
-                @click="kickTeam(team.teamId)"
-                pull="right"
-                style="cursor:pointer;"
-                title="Kick this team from the game"
-              />
-            </b-list-group-item>
-          </b-list-group>
-        </b-col>
-        <b-col></b-col>
-      </b-row>
-    </b-container>
-  </div>
+  <b-container fluid>
+    <b-row>
+      <b-col>
+        <h1>Welkom in de lobby, {{userName}}!</h1>
+        {{game.gameTitle}} ({{game.state}})
+        <b-button
+          v-on:disabled="game.state==GameState.Running"
+          v-on:click="startGame"
+          variant="success"
+        >Start Game</b-button>
+        <hr />
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col lg="6">
+        <p>De volgende teams zitten in de teamlobby:</p>
+        <b-list-group>
+          <b-list-group-item v-for="(team, index) in teams" :key="index">
+            <strong>{{ team.teamName }}</strong> -
+            <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
+            <b-badge v-if="!team.isLoggedIn">uitgelogd</b-badge>
+            <font-awesome-icon
+              icon="trash-alt"
+              @click="kickTeam(team.teamId)"
+              pull="right"
+              style="cursor:pointer;"
+              title="Kick this team from the game"
+            />
+          </b-list-group-item>
+        </b-list-group>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script lang="ts">
@@ -48,8 +42,12 @@ import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
 import { mixins } from "vue-class-component";
 import AccountServiceMixin from "../services/accountservice";
-import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
-
+import {
+  QuizMasterLobbyViewModel,
+  ApiResponse,
+  GameState,
+  GameStateChanged
+} from "../models/models";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -83,7 +81,6 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       });
   }
 
-
   startGame() {
     this.setGameState(this.userId, this.game.gameId, GameState.Running)
       .then(() => {
@@ -100,14 +97,14 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
 
   kickTeam(teamId: string) {
     this.deleteTeam(teamId)
-      .then(() => {       
+      .then(() => {
         this.$bvToast.toast("Team removed from the game.", {
           title: "Team removed",
           variant: "warning"
         });
       })
       .catch((error: AxiosError) => {
-         this.$bvToast.toast(error.message, {
+        this.$bvToast.toast(error.message, {
           title: "oops",
           variant: "error"
         });

@@ -1,10 +1,12 @@
 <template>
-  <div id="content">
-    <h1>Welkom in de Game omgeving, {{userName}}!</h1>
-    <b-container fluid>
-      <b-col>{{game.gameTitle}} ({{game.state}})</b-col>
-    </b-container>
-  </div>
+  <b-container fluid>
+    <b-row>
+      <b-col>
+        <h1>Welkom in de Game omgeving, {{userName}}!</h1>
+        {{game.gameTitle}} ({{game.state}})
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script lang="ts">
@@ -28,7 +30,6 @@ import { ApiResponse } from "../models/models";
     next();
   }
 })
-
 export default class QuizMasterGame extends Vue {
   public name: string = "QuizMasterGame";
 
