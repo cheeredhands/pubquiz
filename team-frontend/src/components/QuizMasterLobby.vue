@@ -1,6 +1,6 @@
 <template>
   <div id="content">
-    <h1>Welkom in de lobby, {{userName}}!</h1>
+    <h1>{{ $t('WELCOME_TO_QUIZMASTER_LOBBY') + ', '}} {{userName}}!</h1>
     <b-container fluid>
       <b-row>
         <b-col>{{game.gameTitle}} ({{game.state}})</b-col>
@@ -9,27 +9,24 @@
             v-on:disabled="game.state==GameState.Running"
             v-on:click="startGame"
             variant="success"
-          >Start Game</b-button>
+          >{{ $t('START_GAME' )}}</b-button>
         </b-col>
       </b-row>
       <hr />
       <b-row>
         <b-col>
-          <p>De volgende teams zitten in de teamlobby:</p>
+          <p>{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
           <b-list-group>
-            <b-list-group-item
-              v-for="(team, index) in teams"
-              :key="index"
-            >
+            <b-list-group-item v-for="(team, index) in teams" :key="index">
               <strong>{{ team.teamName }}</strong> -
               <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
-              <b-badge v-if="!team.isLoggedIn">uitgelogd</b-badge>
+              <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
               <font-awesome-icon
                 icon="trash-alt"
                 @click="kickTeam(team.teamId)"
                 pull="right"
                 style="cursor:pointer;"
-                title="Kick this team from the game"
+                :title="$t('KICK_OUT')"
               />
             </b-list-group-item>
           </b-list-group>
@@ -48,8 +45,12 @@ import store from "../store";
 import { AxiosResponse, AxiosError } from "axios";
 import { mixins } from "vue-class-component";
 import AccountServiceMixin from "../services/accountservice";
-import { QuizMasterLobbyViewModel, ApiResponse, GameState, GameStateChanged } from "../models/models";
-
+import {
+  QuizMasterLobbyViewModel,
+  ApiResponse,
+  GameState,
+  GameStateChanged
+} from "../models/models";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -77,12 +78,11 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
   }
-
 
   startGame() {
     this.setGameState(this.userId, this.game.gameId, GameState.Running)
@@ -92,7 +92,7 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
@@ -100,15 +100,15 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
 
   kickTeam(teamId: string) {
     this.deleteTeam(teamId)
-      .then(() => {       
-        this.$bvToast.toast("Team removed from the game.", {
-          title: "Team removed",
+      .then(() => {
+        this.$bvToast.toast(this.$t('TEAM_KICKED_OUT').toString(), {
+          title: this.$t('REMOVED').toString(),
           variant: "warning"
         });
       })
       .catch((error: AxiosError) => {
-         this.$bvToast.toast(error.message, {
-          title: "oops",
+        this.$bvToast.toast(error.message, {
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
