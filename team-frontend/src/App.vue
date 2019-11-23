@@ -147,9 +147,13 @@ footer {
 }
 
 #content {
-  padding: 10px;
+  /* padding-top: 10px; */
   /* display: grid;
   grid-template-rows: 1fr 2fr 20px; */
+}
+
+.container-fluid:first-child {
+  padding-top: 10px;
 }
 
 .strong {

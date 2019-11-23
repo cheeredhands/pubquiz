@@ -1,13 +1,21 @@
 <template>
   <div id="content">
-    <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
     <b-container fluid>
-      <b-row>{{ $t('TEAMLOBBY_SIT_BACK')}}</b-row>
-      <hr />
+      <b-row>
+        <b-col>
+          <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
+          <p>{{ $t('TEAMLOBBY_SIT_BACK')}}</p>
+          <hr />
+        </b-col>
+      </b-row>
       <b-row>
         <b-col>
           <b-form @submit="applyTeamNameChange" novalidate>
-            <b-form-group :label="$t('TEAMNAME')" :description="$t('KEEP_IT_CLEAN')" label-for="nameInput">
+            <b-form-group
+              :label="$t('TEAMNAME')"
+              :description="$t('KEEP_IT_CLEAN')"
+              label-for="nameInput"
+            >
               <b-input-group>
                 <b-form-input
                   id="nameInput"
@@ -52,14 +60,14 @@
             <b-list-group-item
               v-for="(otherTeam, index) in teams"
               :key="index"
-              :title="otherTeam.memberNames">
+              :title="otherTeam.memberNames"
+            >
               {{ otherTeam.teamName }}
-              <span v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}} </span>
+              <span v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}}</span>
             </b-list-group-item>
           </b-list-group>
         </b-col>
       </b-row>
-
     </b-container>
   </div>
 </template>
@@ -174,13 +182,16 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
     if (oldValue && !value) {
       // we've been kicked!
       this.$bvModal
-        .msgBoxOk("Jullie zijn verwijderd door de quizmaster. Klik op OK om naar het registratiescherm te gaan.",{
-          title: 'Verwijderd',
-          centered: true
-        })
+        .msgBoxOk(
+          "Jullie zijn verwijderd door de quizmaster. Klik op OK om naar het registratiescherm te gaan.",
+          {
+            title: "Verwijderd",
+            centered: true
+          }
+        )
         .then(_ => {
           this.$router.push({ name: "RegisterTeam" });
-        }); 
+        });
     }
   }
 
