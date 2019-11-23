@@ -83,14 +83,6 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       });
   }
 
-  // errorMessage(message: string) {
-  //   this.$bvToast.toast(message, {
-  //     solid: true,
-  //     toaster: "b-toaster-bottom-right",
-  //     title: "oops",
-  //     variant: "error"
-  //   });
-  // }
 
   startGame() {
     this.setGameState(this.userId, this.game.gameId, GameState.Running)
