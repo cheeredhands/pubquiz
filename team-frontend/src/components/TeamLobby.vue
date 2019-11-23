@@ -1,75 +1,73 @@
 <template>
-  <div id="content">
-    <b-container fluid>
-      <b-row>
-        <b-col>
-          <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
-          <p>{{ $t('TEAMLOBBY_SIT_BACK')}}</p>
-          <hr />
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <b-form @submit="applyTeamNameChange" novalidate>
-            <b-form-group
-              :label="$t('TEAMNAME')"
-              :description="$t('KEEP_IT_CLEAN')"
-              label-for="nameInput"
-            >
-              <b-input-group>
-                <b-form-input
-                  id="nameInput"
-                  v-model="newName"
-                  type="text"
-                  name="nameInput"
-                  required
-                  minlength="5"
-                  maxlength="30"
-                ></b-form-input>
-                <b-input-group-append>
-                  <b-button variant="primary" type="submit">{{ $t('ADJUST')}}</b-button>
-                </b-input-group-append>
-                <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
-              </b-input-group>
-            </b-form-group>
-          </b-form>
-          <b-form @submit="saveMembers" novalidate>
-            <b-form-group
-              :label="$t('MEMBERS')"
-              label-for="memberNamesInput"
-              :description="$t('MEMBER_NAMES')"
-            >
-              <b-input-group>
-                <b-form-textarea
-                  rows="4"
-                  v-model="newMemberNames"
-                  id="memberNamesInput"
-                  name="membersNamesInput"
-                  maxlength="140"
-                ></b-form-textarea>
-                <b-input-group-append>
-                  <b-button variant="primary" type="submit">{{ $t('SAVE')}}</b-button>
-                </b-input-group-append>
-              </b-input-group>
-            </b-form-group>
-          </b-form>
-        </b-col>
-        <b-col>
-          <p>{{ $t('COMPETING_TEAMS')}}</p>
-          <b-list-group>
-            <b-list-group-item
-              v-for="(otherTeam, index) in teams"
-              :key="index"
-              :title="otherTeam.memberNames"
-            >
-              {{ otherTeam.teamName }}
-              <span v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}}</span>
-            </b-list-group-item>
-          </b-list-group>
-        </b-col>
-      </b-row>
-    </b-container>
-  </div>
+  <b-container fluid>
+    <b-row>
+      <b-col>
+        <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
+        <p>{{ $t('TEAMLOBBY_SIT_BACK')}}</p>
+        <hr />
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col md="6">
+        <b-form @submit="applyTeamNameChange" novalidate>
+          <b-form-group
+            :label="$t('TEAMNAME')"
+            :description="$t('KEEP_IT_CLEAN')"
+            label-for="nameInput"
+          >
+            <b-input-group>
+              <b-form-input
+                id="nameInput"
+                v-model="newName"
+                type="text"
+                name="nameInput"
+                required
+                minlength="5"
+                maxlength="30"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-button variant="primary" type="submit">{{ $t('ADJUST')}}</b-button>
+              </b-input-group-append>
+              <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
+            </b-input-group>
+          </b-form-group>
+        </b-form>
+        <b-form @submit="saveMembers" novalidate>
+          <b-form-group
+            :label="$t('MEMBERS')"
+            label-for="memberNamesInput"
+            :description="$t('MEMBER_NAMES')"
+          >
+            <b-input-group>
+              <b-form-textarea
+                rows="4"
+                v-model="newMemberNames"
+                id="memberNamesInput"
+                name="membersNamesInput"
+                maxlength="140"
+              ></b-form-textarea>
+              <b-input-group-append>
+                <b-button variant="primary" type="submit">{{ $t('SAVE')}}</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-form>
+      </b-col>
+      <b-col>
+        <p>{{ $t('COMPETING_TEAMS')}}</p>
+        <b-list-group>
+          <b-list-group-item
+            v-for="(otherTeam, index) in teams"
+            :key="index"
+            :title="otherTeam.memberNames"
+          >
+            {{ otherTeam.teamName }}
+            <span v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}}</span>
+          </b-list-group-item>
+        </b-list-group>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script lang="ts">
