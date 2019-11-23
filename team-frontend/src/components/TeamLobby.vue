@@ -118,9 +118,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          solid: true,
-          toaster: "b-toaster-bottom-right",
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
@@ -139,7 +137,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       })
