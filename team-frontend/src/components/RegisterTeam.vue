@@ -1,49 +1,62 @@
 <template>
-  <div id="content">
-    <b-container>
+    <b-container fluid>
       <b-row>
-        <h1>{{$t('REGISTER')}}</h1>
+        <b-col>
+          <h1>{{$t('REGISTER')}}</h1>
+          <hr />
+        </b-col>
       </b-row>
-      <hr>
-      <b-row>
-        <b-form @submit="register" novalidate>
-          <b-form-group
-            :label="$t('TEAMNAME')"
-            :description="$t('KEEP_IT_CLEAN')"
-            label-for="teamNameInput">
-            <b-form-input
-              type="text"
-              size="lg"
-              v-model="teamName"
-              id="teamNameInput"
-              name="teamNameInput"
-              required
-              minlength="5"
-              maxlength="30"
-            />
-            <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
-          </b-form-group>
-          <b-form-group
-            :label="$t('CODE')"
-            label-for="codeInput"
-            :description="$t('CODE_ORIGIN')"
-          >
-            <b-form-input
-              type="text"
-              size="lg"
-              v-model="code"
-              id="codeInput"
-              name="codeInput"
-              required
-              minlength="4"
-            />
-            <b-form-invalid-feedback>{{ $t('CODE_LENGTH') }}</b-form-invalid-feedback>
-          </b-form-group>
-          <b-button type="submit" variant="primary">{{ $t('REGISTER') }}</b-button>
-        </b-form>
-      </b-row>
+      <b-form @submit="register" novalidate>
+        <b-form-row>
+          <b-col md="6" lg="4">
+            <b-form-group
+              :label="$t('TEAMNAME')"
+              :description="$t('KEEP_IT_CLEAN')"
+              label-for="teamNameInput"
+              :invalid-feedback="$t('TEAMNAME_LENGTH')"
+            >
+              <b-form-input
+                type="text"
+                size="lg"
+                v-model="teamName"
+                id="teamNameInput"
+                name="teamNameInput"
+                required
+                trim
+                minlength="5"
+                maxlength="30"
+              />
+            </b-form-group>
+          </b-col>
+        </b-form-row>
+        <b-form-row>
+          <b-col md="6" lg="4">
+            <b-form-group
+              :label="$t('CODE')"
+              label-for="codeInput"
+              :description="$t('CODE_ORIGIN')"
+              :invalid-feedback="$t('CODE_LENGTH')"
+            >
+              <b-form-input
+                type="text"
+                size="lg"
+                v-model="code"
+                id="codeInput"
+                name="codeInput"
+                required
+                trim
+                minlength="4"
+              />
+            </b-form-group>
+          </b-col>
+        </b-form-row>
+        <b-form-row>
+          <b-col>
+            <b-button type="submit" variant="primary">{{ $t('REGISTER') }}</b-button>
+          </b-col>
+        </b-form-row>
+      </b-form>
     </b-container>
-  </div>
 </template>
 
 <script lang="ts">
