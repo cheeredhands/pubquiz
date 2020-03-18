@@ -7,7 +7,11 @@
       <b-row>
         <b-col>
           <b-form @submit="applyTeamNameChange" novalidate>
-            <b-form-group :label="$t('TEAMNAME')" :description="$t('KEEP_IT_CLEAN')" label-for="nameInput">
+            <b-form-group
+              :label="$t('TEAMNAME')"
+              :description="$t('KEEP_IT_CLEAN')"
+              label-for="nameInput"
+            >
               <b-input-group>
                 <b-form-input
                   id="nameInput"
@@ -52,14 +56,14 @@
             <b-list-group-item
               v-for="(otherTeam, index) in teams"
               :key="index"
-              :title="otherTeam.memberNames">
+              :title="otherTeam.memberNames"
+            >
               {{ otherTeam.teamName }}
-              <span v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}} </span>
+              <span v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}}</span>
             </b-list-group-item>
           </b-list-group>
         </b-col>
       </b-row>
-
     </b-container>
   </div>
 </template>
@@ -76,7 +80,7 @@ import {
   ApiResponse,
   SaveTeamMembersResponse
 } from "../models/models";
-import AccountServiceMixin from "@/services/accountservice";
+import AccountServiceMixin from "../services/accountservice";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -114,9 +118,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          solid: true,
-          toaster: "b-toaster-bottom-right",
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
@@ -135,7 +137,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       })
@@ -161,7 +163,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       })
@@ -172,15 +174,17 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
 
   @Watch("isLoggedIn") OnLoggedInChanged(value: boolean, oldValue: boolean) {
     if (oldValue && !value) {
-      // we've been kicked!
+      // we've been kicked
+
       this.$bvModal
-        .msgBoxOk("Jullie zijn verwijderd door de quizmaster. Klik op OK om naar het registratiescherm te gaan.",{
-          title: 'Verwijderd',
+        // Line below seen as error but worky!
+        .msgBoxOk(this.$t("KICKED_OUT").toString(), {
+          title: this.$t("REMOVED").toString(),
           centered: true
         })
         .then(_ => {
           this.$router.push({ name: "RegisterTeam" });
-        }); 
+        });
     }
   }
 
