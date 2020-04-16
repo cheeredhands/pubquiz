@@ -23,7 +23,7 @@
               <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
               <font-awesome-icon
                 icon="trash-alt"
-                @click="kickTeam(team.teamId)"
+                @click="kickTeam(team.teamId, team.teamName)"
                 pull="right"
                 style="cursor:pointer;"
                 :title="$t('KICK_OUT')"
@@ -98,10 +98,10 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       });
   }
 
-  kickTeam(teamId: string) {
+  kickTeam(teamId: string, teamName: string) {
     this.deleteTeam(teamId)
       .then(() => {
-        this.$bvToast.toast(this.$t('TEAM_KICKED_OUT').toString(), {
+        this.$bvToast.toast(this.$t('TEAM_KICKED_OUT', {teamName}).toString(), {
           title: this.$t('REMOVED').toString(),
           variant: "warning"
         });

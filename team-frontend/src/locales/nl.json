@@ -35,5 +35,5 @@
   "START_GAME": "Start game",
   "CURRENT_TEAMS_IN_LOBBY" : "De volgende teams zitten in de teamlobby:",
   "WELCOME_TO_QUIZMASTER_LOBBY": "Welkom in de lobby",
-  "TEAM_KICKED_OUT": "Team kicked uit de game."
+  "TEAM_KICKED_OUT": "Team '{teamName}' uit het spel verwijderd."
 }
