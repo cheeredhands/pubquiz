@@ -22,10 +22,7 @@ namespace Pubquiz.WebApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(serverOptions =>
-                        {
-                            // Set properties and call methods on options
-                        })
+                    webBuilder
                         .UseStartup<Startup>()
                         .UseDefaultServiceProvider(options => options.ValidateScopes = false);
                 });
