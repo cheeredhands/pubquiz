@@ -4,27 +4,27 @@
       <b-col>
        Game title: {{game.gameTitle}} (state: {{game.state}})
         <b-button
-          v-on:disabled="game.state==GameState.Running"
+          v-on:disabled="game.state===GameState.Running"
           v-on:click="startGame"
           variant="success"
-        >Start Game</b-button>
+        >{{ $t('START_GAME' )}}</b-button>
         <hr />
       </b-col>
     </b-row>
     <b-row>
       <b-col lg="6">
-        <p>De volgende teams zitten in de teamlobby:</p>
+        <p>{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
         <b-list-group>
           <b-list-group-item v-for="(team, index) in teams" :key="index">
             <strong>{{ team.teamName }}</strong> -
             <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
-            <b-badge v-if="!team.isLoggedIn">uitgelogd</b-badge>
+            <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
             <font-awesome-icon
               icon="trash-alt"
-              @click="kickTeam(team.teamId)"
+              @click="kickTeam(team.teamId, team.teamName)"
               pull="right"
               style="cursor:pointer;"
-              title="Kick this team from the game"
+              :title="$t('KICK_OUT')"
             />
           </b-list-group-item>
         </b-list-group>
@@ -75,11 +75,12 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
   }
+
 
   startGame() {
     this.setGameState(this.userId, this.game.gameId, GameState.Running)
@@ -89,23 +90,23 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
   }
 
-  kickTeam(teamId: string) {
+  kickTeam(teamId: string, teamName: string) {
     this.deleteTeam(teamId)
       .then(() => {
-        this.$bvToast.toast("Team removed from the game.", {
-          title: "Team removed",
+        this.$bvToast.toast(this.$t('TEAM_KICKED_OUT', {teamName}).toString(), {
+          title: this.$t('REMOVED').toString(),
           variant: "warning"
         });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });

@@ -7,6 +7,7 @@
   "LEAVE_GAME": "Spel verlaten",
   "TEAMNAME": "Teamnaam",
   "TEAMNAME_LENGTH": "Een teamnaam van minimaal 5 en maximaal 30 karakters is verplicht.",
+  "USERNAME_LENGTH": "Een gebruikersnaam van minimaal 5 en maximaal 30 karakters is verplicht.",
   "HOME_WELCOME": "Welkom bij Quizr!",
   "HOME_REGISTERHERE": "Registreer hier",
   "HOME_QUIZMASTERLOGIN": "Quizmaster login",
@@ -23,5 +24,16 @@
   "ADJUST": "Aanpassen",
   "SAVE": "Opslaan",
   "COMPETING_TEAMS": "Jullie gaan het opnemen tegen",
-  "LOGGED_OUT": "(Uitgelogd)"
+  "LOGGED_OUT": "(Uitgelogd)",
+  "KICKED_OUT": "Jullie zijn verwijderd door de quizmaster. Klik op OK om naar het registratiescherm te gaan.",
+  "KICK_OUT": "Kick dit team uit de game!",
+  "REMOVED": "Verwijderd",
+  "ERROR_MESSAGE_TITLE": "Oopsie",
+  "PASSWORD": "Wachtwoord",
+  "PASSWORD_LENGTH": "Een wachtwoord is minimaal 2 tekens.",
+  "LOGIN": "Inloggen",
+  "START_GAME": "Start game",
+  "CURRENT_TEAMS_IN_LOBBY" : "De volgende teams zitten in de teamlobby:",
+  "WELCOME_TO_QUIZMASTER_LOBBY": "Welkom in de lobby",
+  "TEAM_KICKED_OUT": "Team '{teamName}' uit het spel verwijderd."
 }

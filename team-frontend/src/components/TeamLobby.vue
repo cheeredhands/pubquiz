@@ -82,7 +82,7 @@ import {
   ApiResponse,
   SaveTeamMembersResponse
 } from "../models/models";
-import AccountServiceMixin from "@/services/accountservice";
+import AccountServiceMixin from "../services/accountservice";
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -121,9 +121,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          solid: true,
-          toaster: "b-toaster-bottom-right",
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       });
@@ -142,7 +140,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       })
@@ -168,7 +166,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
+          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
           variant: "error"
         });
       })
@@ -181,13 +179,11 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
     if (oldValue && !value) {
       // we've been kicked!
       this.$bvModal
-        .msgBoxOk(
-          "Jullie zijn verwijderd door de quizmaster. Klik op OK om naar het registratiescherm te gaan.",
-          {
-            title: "Verwijderd",
-            centered: true
-          }
-        )
+        // Line below seen as error but worky!
+        .msgBoxOk(this.$t("KICKED_OUT").toString(), {
+          title: this.$t("REMOVED").toString(),
+          centered: true
+        })
         .then(_ => {
           this.$router.push({ name: "RegisterTeam" });
         });
