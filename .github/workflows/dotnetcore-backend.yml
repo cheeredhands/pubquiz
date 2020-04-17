@@ -1,4 +1,4 @@
-name: .NET Core
+name: Backend build and test
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
         channel: sourcecontrol
-        status: Backend build and test succeeded
+        status: SUCCESS
         color: good
     - name: Notify slack fail
       if: failure()
@@ -42,5 +42,5 @@ jobs:
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
         channel: sourcecontrol
-        status: Backend build and test failed
+        status: FAILED
         color: danger
