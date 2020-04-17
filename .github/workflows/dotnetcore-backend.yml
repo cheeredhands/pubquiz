@@ -33,7 +33,7 @@ jobs:
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
         channel: sourcecontrol
-        status: SUCCESS
+        status: Backend build and test succeeded
         color: good
     - name: Notify slack fail
       if: failure()
@@ -42,5 +42,5 @@ jobs:
       uses: voxmedia/github-action-slack-notify-build@v1
       with:
         channel: sourcecontrol
-        status: FAILED
+        status: Backend build and test failed
         color: danger
