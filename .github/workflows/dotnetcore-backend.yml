@@ -33,7 +33,7 @@ jobs:
         # Artifact name
         name: backend
         # Directory containing files to upload
-        path: Pubquiz.WebApi/bin/Release/netcoreapp3.1
+        path: ../Pubquiz.WebApi/bin/Release/netcoreapp3.1
     - name: Notify slack success
       if: success()
       env:
