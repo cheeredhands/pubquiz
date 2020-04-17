@@ -12,15 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - working-directory: backend
     - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
+      working-directory: backend
       run: dotnet restore
     - name: Build
+      working-directory: backend
       run: dotnet build --configuration Release --no-restore
     - name: Test
+      working-directory: backend
       run: dotnet test --no-restore --verbosity normal
