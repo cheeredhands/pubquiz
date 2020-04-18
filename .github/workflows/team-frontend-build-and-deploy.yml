@@ -14,8 +14,10 @@
 name: Build, test and deploy team-frontend
 on: 
   push:
+    paths: team-frontend
     branches: [ master ]
   pull_request:
+    paths: team-frontend
     branches: [ master ]
     
 env:
@@ -41,6 +43,8 @@ jobs:
         npm install
         npm run build --if-present
         npm run test --if-present
+        # move the contents of the dist folder to a subfolder called
+        # wwwroot. 
         mkdir pub
         mv dist/* pub
         mv pub wwwroot
