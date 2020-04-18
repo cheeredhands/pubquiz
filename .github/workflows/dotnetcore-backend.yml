@@ -1,4 +1,4 @@
-name: Backend build and test
+name: Backend build, test and deployment to thenanne.nl
 
 on: 
   push:
