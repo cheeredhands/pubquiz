@@ -1,6 +1,6 @@
 name: Backend build and test
 
-on:
+on: 
   push:
     branches: [ master ]
   pull_request:
@@ -34,6 +34,15 @@ jobs:
  #       name: backend
  #       # Directory containing files to upload
  #       path: backend/Pubquiz.WebApi/bin/Release/netcoreapp3.1
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v1
+      with:
+        app-name: 'thenanne-web'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.THENANNE_WEB_PUBLISH_PROFILE }}
+        package: ${{env.DOTNET_ROOT}}/myapp 
     - name: Notify slack success
       if: success()
       env:
