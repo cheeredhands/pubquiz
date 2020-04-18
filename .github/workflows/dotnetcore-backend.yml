@@ -35,6 +35,7 @@ jobs:
  #       # Directory containing files to upload
  #       path: backend/Pubquiz.WebApi/bin/Release/netcoreapp3.1
     - name: dotnet publish
+      working-directory: backend
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
