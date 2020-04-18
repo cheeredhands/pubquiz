@@ -2,10 +2,10 @@ name: Backend build, test and deployment to thenanne.nl
 
 on: 
   push:
-    paths: ['.github/dotnetcore-backend.yml','backend/**']
+    paths: ['.github/workflows/dotnetcore-backend.yml','backend/**']
     branches: [ master ]
   pull_request:
-    paths: ['.github/dotnetcore-backend.yml','backend/**']
+    paths: ['.github/workflows/dotnetcore-backend.yml','backend/**']
     branches: [ master ]
 
 jobs:
