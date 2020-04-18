@@ -49,9 +49,20 @@ jobs:
         mv dist/* pub
         mv pub wwwroot
         mv wwwroot dist/
-    - name: 'Deploy to Azure WebApp'
-      uses: azure/webapps-deploy@v2
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.THENANNE_WEB_PUBLISH_PROFILE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
+        ftp-server: ${{ secret.THENANNE_FTP_SERVER }}
+        # FTP account username
+        ftp-username: ${{ secret.THENANNE_FTP_USER }}
+        # FTP account password
+        ftp-password: ${{ secret.THENANNE_FTP_PASSWORD }}
+        # The local folder to copy, defaults to root project folder
+        local-dir: team-frontend/dist
+#    - name: 'Deploy to Azure WebApp'
+#      uses: azure/webapps-deploy@v2
+#      with:
+#        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#        publish-profile: ${{ secrets.THENANNE_WEB_PUBLISH_PROFILE }}
+#        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
