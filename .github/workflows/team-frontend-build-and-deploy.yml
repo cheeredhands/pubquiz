@@ -14,10 +14,10 @@
 name: team-frontend - build, test and deploy 
 on: 
   push:
-    paths: ['.github/team-frontend-build-and-deploy.yml','team-frontend/**']
+    paths: ['.github/workflows/team-frontend-build-and-deploy.yml','team-frontend/**']
     branches: [ master ]
   pull_request:
-    paths: ['.github/team-frontend-build-and-deploy.yml','team-frontend/**']
+    paths: ['.github/workflows/team-frontend-build-and-deploy.yml','team-frontend/**']
     branches: [ master ]
     
 env:
