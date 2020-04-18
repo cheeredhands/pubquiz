@@ -21,8 +21,8 @@ on:
     branches: [ master ]
     
 env:
-  AZURE_WEBAPP_NAME: thenanne-web    # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: 'team-frontend/dist'      # set this to the path to your web app project, defaults to the repository root
+#  AZURE_WEBAPP_NAME: thenanne-web    # set this to your application's name
+#  AZURE_WEBAPP_PACKAGE_PATH: 'team-frontend/dist'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '13.x'                # set this to the node version to use
 
 jobs:
