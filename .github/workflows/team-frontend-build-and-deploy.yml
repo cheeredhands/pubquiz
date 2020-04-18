@@ -14,10 +14,10 @@
 name: Build, test and deploy team-frontend
 on: 
   push:
-    paths: ['.github','team-frontend']
+    paths: ['.github/**','team-frontend/**']
     branches: [ master ]
   pull_request:
-    paths: ['.github','team-frontend']
+    paths: ['.github/**','team-frontend/**']
     branches: [ master ]
     
 env:
