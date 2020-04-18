@@ -11,6 +11,7 @@
 #on:
 #  release:
 #    types: [created]
+name: Build, test and deploy team-frontend
 on: 
   push:
     branches: [ master ]
@@ -40,9 +41,10 @@ jobs:
         npm install
         npm run build --if-present
         npm run test --if-present
-        mkdir dist/wwwroot
-        mv dist/* dist/wwwroot
-        rmdir dist/wwwroot/wwwroot
+        mkdir pub
+        mv dist/* pub
+        mv pub wwwroot
+        mv wwwroot dist/
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
       with:
