@@ -71,7 +71,7 @@ jobs:
         uses: isthatcentered/dist-to-ftp@master
         with:
           user: ${{ secrets.THENANNE_FTP_USER }} # Ftp user Ex:
-          password: ${{ secrets.FTP_PASSWORD }} # Ftp password Ex:
+          password: ${{ secrets.THENANNE_FTP_PASSWORD }} # Ftp password Ex:
           host: ${{ secrets.THENANNE_FTP_SERVER }} # Ftp host Ex:
           # port: ${{ secrets.FTP_PORT }} # (optional) FTP port, defaults to 21
           path: dist # Folder to deploy Ex: apps/frontend/dist or dist
