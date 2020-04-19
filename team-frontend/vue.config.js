@@ -5,9 +5,9 @@ module.exports = {
   devServer: {
     proxy: {
       // setup a proxy indicating all calls made to /api...
-      // should be made to http://localhost:5000.
+      // should be made to process.env.BACKEND_URI.
       '/api': {
-        target: 'http://localhost:5000',
+        target: process.env.BACKEND_URI,
         changeOrigin: true
       }
     }
