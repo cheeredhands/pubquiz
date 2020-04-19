@@ -50,17 +50,25 @@ jobs:
         mv pub wwwroot
         mv wwwroot dist/
         ls dist/wwwroot
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@3.0.0
+    - name: Upload ftp
+      uses: sebastianpopp/ftp-action@releases/v2
       with:
-        # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
-        ftp-server: ${{ secrets.THENANNE_FTP_SERVER }}
-        # FTP account username
-        ftp-username: ${{ secrets.THENANNE_FTP_USER }}
-        # FTP account password
-        ftp-password: ${{ secrets.THENANNE_FTP_PASSWORD }}
-        # The local folder to copy, defaults to root project folder
-        local-dir: team-frontend/dist/
+        host: ${{ secrets.THENANNE_FTP_SERVER }}
+        user: ${{ secrets.THENANNE_FTP_USER }}
+        password: ${{ secrets.THENANNE_FTP_PASSWORD }}
+        localDir: "team-frontend/dist"
+        remoteDir: ""        
+#    - name: FTP Deploy
+#      uses: SamKirkland/FTP-Deploy-Action@3.0.0
+#      with:
+#        # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
+#        ftp-server: ${{ secrets.THENANNE_FTP_SERVER }}
+#        # FTP account username
+#        ftp-username: ${{ secrets.THENANNE_FTP_USER }}
+#        # FTP account password
+#        ftp-password: ${{ secrets.THENANNE_FTP_PASSWORD }}
+#        # The local folder to copy, defaults to root project folder
+#        local-dir: team-frontend/dist/
 #    - name: 'Deploy to Azure WebApp'
 #      uses: azure/webapps-deploy@v2
 #      with:
