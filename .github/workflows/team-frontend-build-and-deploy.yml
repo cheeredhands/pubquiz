@@ -41,7 +41,7 @@ jobs:
         # Build and test the project, then
         # deploy to Azure Web App.
         npm install
-        npm run build --if-present
+        npm run build-prod --if-present
         npm run test --if-present
         # move the contents of the dist folder to a subfolder called
         # wwwroot. 
@@ -49,6 +49,7 @@ jobs:
         mv dist/* pub
         mv pub wwwroot
         mv wwwroot dist/
+        ls dist/wwwroot
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
