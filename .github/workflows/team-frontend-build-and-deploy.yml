@@ -72,7 +72,7 @@ jobs:
         with:
           user: ${{ secrets.THENANNE_FTP_USER }} # Ftp user Ex:
           password: ${{ secrets.THENANNE_FTP_PASSWORD }} # Ftp password Ex:
-          host: ${{ secrets.THENANNE_FTP_SERVER }} # Ftp host Ex:
+          host: ${{ secrets.THENANNE_FTP_SERVERHOST }} # Ftp host Ex:
           # port: ${{ secrets.FTP_PORT }} # (optional) FTP port, defaults to 21
           path: dist # Folder to deploy Ex: apps/frontend/dist or dist
           into: wwwroot # Where to place the files in your ftp
