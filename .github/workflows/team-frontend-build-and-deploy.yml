@@ -59,7 +59,7 @@ jobs:
         # FTP account password
         ftp-password: ${{ secrets.THENANNE_FTP_PASSWORD }}
         # The local folder to copy, defaults to root project folder
-        local-dir: team-frontend/dist
+        local-dir: team-frontend/dist/
 #    - name: 'Deploy to Azure WebApp'
 #      uses: azure/webapps-deploy@v2
 #      with:
