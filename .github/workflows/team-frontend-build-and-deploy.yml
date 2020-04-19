@@ -26,8 +26,8 @@ env:
   NODE_VERSION: '13.x'                # set this to the node version to use
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy
+  build:
+    name: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -50,14 +50,33 @@ jobs:
         mv pub wwwroot
         mv wwwroot dist/
         ls dist/wwwroot
-    - name: Upload ftp
-      uses: sebastianpopp/ftp-action@releases/v2
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
       with:
-        host: ${{ secrets.THENANNE_FTP_SERVER }}
-        user: ${{ secrets.THENANNE_FTP_USER }}
-        password: ${{ secrets.THENANNE_FTP_PASSWORD }}
-        localDir: "team-frontend/dist"
-        remoteDir: ""        
+        name: dist-folder # Upload artifact with name `dist`
+        path: 'team-frontend/dist' # Upload content of `dist` folder
+  deploy:
+    name: ftp deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download bundle
+        uses: actions/download-artifact@master
+        with:
+          name: dist-folder # Download artifact named `my_artifact_name` (matches build step: Upload bundle)
+          path: dist # Optional, downloads to current working directory under folder {artifact_name} if not specified
+      - name: Debug Files
+        run: ls
+      - name: Upload to FTP
+        uses: isthatcentered/dist-to-ftp@master
+        with:
+          user: ${{ secrets.THENANNE_FTP_USER }} # Ftp user Ex:
+          password: ${{ secrets.FTP_PASSWORD }} # Ftp password Ex:
+          host: ${{ secrets.THENANNE_FTP_SERVER }} # Ftp host Ex:
+          # port: ${{ secrets.FTP_PORT }} # (optional) FTP port, defaults to 21
+          path: dist # Folder to deploy Ex: apps/frontend/dist or dist
+          into: wwwroot # Where to place the files in your ftp
+          cleanupExisting: true # (Optional), Remove already existing files inside FTP destination folder (`into` parameter)
 #    - name: FTP Deploy
 #      uses: SamKirkland/FTP-Deploy-Action@3.0.0
 #      with:
