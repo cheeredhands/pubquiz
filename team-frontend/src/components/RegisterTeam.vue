@@ -60,48 +60,47 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { mixins } from "vue-class-component";
-import { AxiosResponse, AxiosError } from "axios";
-import VueI18n from "vue-i18n";
-import { TeamInfo, RegisterForGameResponse } from "../models/models";
-import AccountServiceMixin from "../services/accountservice";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mixins } from 'vue-class-component';
+import { AxiosResponse, AxiosError } from 'axios';
+import VueI18n from 'vue-i18n';
+import { TeamInfo, RegisterForGameResponse } from '../models/models';
+import AccountServiceMixin from '../services/accountservice';
 
 @Component
 export default class RegisterTeam extends mixins(AccountServiceMixin) {
-  public name: string = "RegisterTeam";
-  public teamName: string = "";
-  public code: string = "";
+  public name: string = 'RegisterTeam';
+  public teamName: string = '';
+  public code: string = '';
 
   public created() {
-    this.$store.commit("setNavbarText", "Team registration");
+    this.$store.commit('setNavbarText', 'Team registration');
   }
-  public mounted() {}
 
   public register(evt: Event) {
-    if (!this.$quizrhelpers.formIsValid(evt)) return;
+    if (!this.$quizrhelpers.formIsValid(evt)) { return; }
 
     // register!
     this.registerForGame(this.teamName, this.code)
       .then((response: AxiosResponse<RegisterForGameResponse>) => {
-        this.$store.dispatch("storeToken", response.data.jwt).then(() => {
+        this.$store.dispatch('storeToken', response.data.jwt).then(() => {
           // disco. init team (add team to store, start signalr)
           this.$store
-            .dispatch("initTeam", {
+            .dispatch('initTeam', {
               teamId: response.data.teamId,
               teamName: response.data.teamName,
               memberNames: response.data.memberNames,
               isLoggedIn: true
             })
             .then(() => {
-              this.$router.push({ name: "TeamLobby" });
+              this.$router.push({ name: 'TeamLobby' });
             });
         });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
-          variant: "error"
+          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+          variant: 'error'
         });
       });
   }

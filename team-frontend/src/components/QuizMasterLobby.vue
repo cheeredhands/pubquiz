@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-row>
       <b-col>
-       Game title: {{game.gameTitle}} (state: {{game.state}})
+        Game title: {{game.gameTitle}} (state: {{game.state}})
         <b-button
           v-on:disabled="game.state===GameState.Running"
           v-on:click="startGame"
@@ -34,19 +34,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { Route } from "vue-router";
-import store from "../store";
-import { AxiosResponse, AxiosError } from "axios";
-import { mixins } from "vue-class-component";
-import AccountServiceMixin from "../services/accountservice";
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import { Route } from 'vue-router';
+import store from '../store';
+import { AxiosResponse, AxiosError } from 'axios';
+import { mixins } from 'vue-class-component';
+import AccountServiceMixin from '../services/accountservice';
 import {
   QuizMasterLobbyViewModel,
   ApiResponse,
   GameState,
   GameStateChanged
-} from "../models/models";
+} from '../models/models';
 
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -55,67 +55,69 @@ import {
     // because it has not been created yet when this guard is called!
 
     if (!store.state.isLoggedIn) {
-      next("/");
+      next('/');
     }
     // todo also check the state of the game, you might want to go straight back into the game.
     next();
   }
 })
 export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
-  public name: string = "QuizMasterLobby";
+  public name: string = 'QuizMasterLobby';
 
   public created() {
     this.$store.commit('setNavbarText', 'Quiz master lobby');
     // get team lobby view model
     this.$axios
-      .get("/api/game/quizmasterlobby")
+      .get('/api/game/quizmasterlobby')
       .then((response: AxiosResponse<QuizMasterLobbyViewModel>) => {
-        this.$store.commit("setTeams", response.data.teamsInGame);
-        this.$store.commit("setGame", response.data.currentGame);
+        this.$store.commit('setTeams', response.data.teamsInGame);
+        this.$store.commit('setGame', response.data.currentGame);
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
-          variant: "error"
+          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+          variant: 'error'
         });
       });
   }
 
-
-  startGame() {
+  public startGame() {
     this.setGameState(this.userId, this.game.gameId, GameState.Running)
       .then(() => {
-        //go to gameComponent
-        this.$router.push({ name: "QuizMasterGame" });
+        // go to gameComponent
+        this.$router.push({ name: 'QuizMasterGame' });
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
-          variant: "error"
+          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+          variant: 'error'
         });
       });
   }
 
-  kickTeam(teamId: string, teamName: string) {
+  public kickTeam(teamId: string, teamName: string) {
     this.deleteTeam(teamId)
       .then(() => {
-        this.$bvToast.toast(this.$t('TEAM_KICKED_OUT', {teamName}).toString(), {
-          title: this.$t('REMOVED').toString(),
-          variant: "warning"
-        });
+        this.$bvToast.toast(
+          this.$t('TEAM_KICKED_OUT', { teamName }).toString(),
+          {
+            title: this.$t('REMOVED').toString(),
+            variant: 'warning'
+          }
+        );
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: this.$t("ERROR_MESSAGE_TITLE").toString(),
-          variant: "error"
+          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+          variant: 'error'
         });
       });
   }
 
-  messageTeam() {
-    this.$bvToast.toast("todo: send message to team", {
-      title: "todo",
-      variant: "warning"
+  public messageTeam() {
+    this.$bvToast.toast('todo: send message to team', {
+      title: 'todo',
+      variant: 'warning'
     });
   }
 
@@ -128,11 +130,11 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   }
 
   get userName() {
-    return this.$store.state.user.userName || "";
+    return this.$store.state.user.userName || '';
   }
 
   get userId() {
-    return this.$store.state.userId || "";
+    return this.$store.state.userId || '';
   }
 }
 </script>

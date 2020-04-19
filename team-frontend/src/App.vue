@@ -30,29 +30,29 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { AxiosResponse, AxiosError } from "axios";
-import Component, { mixins } from "vue-class-component";
-import { WhoAmIResponse, ApiResponse, UserRole } from "./models/models";
-import AccountServiceMixin from "./services/accountservice";
+import Vue from 'vue';
+import { AxiosResponse, AxiosError } from 'axios';
+import Component, { mixins } from 'vue-class-component';
+import { WhoAmIResponse, ApiResponse, UserRole } from './models/models';
+import AccountServiceMixin from './services/accountservice';
 
 @Component
 export default class App extends mixins(AccountServiceMixin) {
-  public name: string = "app";
+  public name: string = 'app';
 
   get navbarText() {
-    return this.$store.state.navbarText || "";
+    return this.$store.state.navbarText || '';
   }
   get isLoggedIn() {
     return this.$store.state.isLoggedIn || false;
   }
 
   get team() {
-    return this.$store.state.team || "";
+    return this.$store.state.team || '';
   }
 
   get user() {
-    return this.$store.state.user || "";
+    return this.$store.state.user || '';
   }
 
   get userName() {
@@ -62,8 +62,8 @@ export default class App extends mixins(AccountServiceMixin) {
   public logOut() {
     this.logOutCurrentUser().then((response: AxiosResponse<ApiResponse>) => {
       if (response.data.code === 2) {
-        this.$store.dispatch("logout");
-        this.$router.replace("/");
+        this.$store.dispatch('logout');
+        this.$router.replace('/');
       }
     });
   }
@@ -72,34 +72,34 @@ export default class App extends mixins(AccountServiceMixin) {
     this.getWhoAmI()
       .then((response: AxiosResponse<WhoAmIResponse>) => {
         if (response.data.code === 2) {
-          this.$store.dispatch("logout");
+          this.$store.dispatch('logout');
           return;
         }
         if (response.data.userRole === UserRole.Team) {
           this.$store
-            .dispatch("initTeam", {
+            .dispatch('initTeam', {
               teamId: response.data.userId,
               teamName: response.data.userName,
               currentGameId: response.data.currentGameId
             })
             .then(() => {
-              this.$router.replace({ name: "TeamLobby" });
+              this.$router.replace({ name: 'TeamLobby' });
             });
         } else {
           this.$store
-            .dispatch("initQuizMaster", {
+            .dispatch('initQuizMaster', {
               userId: response.data.userId,
               userName: response.data.userName
             })
             .then(() => {
-              this.$router.replace({ name: "QuizMasterLobby" });
+              this.$router.replace({ name: 'QuizMasterLobby' });
             });
         }
       })
       .catch((error: AxiosError) => {
         this.$bvToast.toast(error.message, {
-          title: "oops",
-          variant: "error"
+          title: 'oops',
+          variant: 'error'
         });
       });
   }
