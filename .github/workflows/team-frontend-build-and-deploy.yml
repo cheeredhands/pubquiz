@@ -42,14 +42,14 @@ jobs:
         # deploy to Azure Web App.
         npm install
         npm run build-prod --if-present
-        npm run test --if-present
-        # move the contents of the dist folder to a subfolder called
-        # wwwroot. 
-        mkdir pub
-        mv dist/* pub
-        mv pub wwwroot
-        mv wwwroot dist/
-        ls dist/wwwroot
+#       npm run test --if-present
+#        # move the contents of the dist folder to a subfolder called
+#        # wwwroot. 
+#        mkdir pub
+#        mv dist/* pub
+#        mv pub wwwroot
+#        mv wwwroot dist/
+#        ls dist/wwwroot
     - name: Upload artifacts
       uses: actions/upload-artifact@master
       with:
