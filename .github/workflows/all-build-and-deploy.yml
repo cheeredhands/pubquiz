@@ -12,7 +12,7 @@
 name: all - build, test and deploy 
 on:
  release:
-   types: [created]
+   types: [created, edited]
 
 # on: 
 #   push:
