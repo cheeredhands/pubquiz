@@ -81,7 +81,7 @@ jobs:
       uses: actions/download-artifact@master
       with:
         name: dist-folder 
-        path: backend/wwwroot
+        path: ${{env.DOTNET_ROOT}}/myapp/wwwroot
     - name: dotnet publish
       working-directory: backend
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp        
