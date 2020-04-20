@@ -14,7 +14,7 @@ export default {
   },
   init() {
     const connection = new SignalR.HubConnectionBuilder()
-      .withUrl(process.env.BACKEND_URI + 'gamehub', {accessTokenFactory: () => localStorage.getItem('token') || '' })
+      .withUrl(process.env.VUE_APP_BACKEND_URI + 'gamehub', {accessTokenFactory: () => localStorage.getItem('token') || '' })
       .configureLogging(SignalR.LogLevel.Information)
       .build();
     this.closing = false;
