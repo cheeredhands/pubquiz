@@ -22,7 +22,7 @@ Vue.use(BootstrapVue, {
 });
 
 const instanceUserApi = axios.create({
-  baseURL: process.env.BACKEND_URI
+  baseURL: process.env.VUE_APP_BACKEND_URI
 });
 instanceUserApi.interceptors.request.use(
   cfg => {
