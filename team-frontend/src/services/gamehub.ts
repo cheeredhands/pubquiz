@@ -14,7 +14,7 @@ export default {
   },
   init() {
     const connection = new SignalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5000/gamehub', {accessTokenFactory: () => localStorage.getItem('token') || '' })
+      .withUrl(process.env.BACKEND_URI + 'gamehub', {accessTokenFactory: () => localStorage.getItem('token') || '' })
       .configureLogging(SignalR.LogLevel.Information)
       .build();
     this.closing = false;

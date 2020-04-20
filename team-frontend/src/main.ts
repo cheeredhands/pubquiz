@@ -20,7 +20,7 @@ Vue.use(BootstrapVue, {
     toaster: 'b-toaster-bottom-right'
   }
 });
-
+console.log(process.env.BACKEND_URI);
 const instanceUserApi = axios.create({
   baseURL: process.env.BACKEND_URI
 });
