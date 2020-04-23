@@ -14,7 +14,3 @@
     </b-row>
   </b-container>
 </template>
-
-<style scoped>
-</style>
-

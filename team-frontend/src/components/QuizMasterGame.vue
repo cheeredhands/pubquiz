@@ -8,7 +8,7 @@
       </b-col>
       <b-col col cols="6">
         Current question and ranking
-        <template v-slot:footer>
+        <template slot="footerslot">
           <p>Here's some contact info</p>
         </template>
       </b-col>
