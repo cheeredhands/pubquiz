@@ -19,12 +19,12 @@ namespace Pubquiz.Logic.Tools
             var claim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
             if (claim == null)
             {
-                throw new DomainException(ErrorCodes.NoRoleClaimForUser, "The user doesn't have a Role claim.", true);
+                throw new DomainException(ResultCode.NoRoleClaimForUser, "The user doesn't have a Role claim.", true);
             }
 
             if (!Enum.TryParse(claim.Value, out UserRole result))
             {
-                throw new DomainException(ErrorCodes.NoRoleClaimForUser, "The user doesn't have a valid Role claim.",
+                throw new DomainException(ResultCode.NoRoleClaimForUser, "The user doesn't have a valid Role claim.",
                     true);
             }
 

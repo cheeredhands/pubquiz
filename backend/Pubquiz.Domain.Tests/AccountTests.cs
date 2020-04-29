@@ -116,7 +116,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual("Invalid TeamId.", exception.Message);
-            Assert.AreEqual(3, exception.ErrorCode);
+            Assert.AreEqual(3, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -131,7 +131,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual("Team name is taken.", exception.Message);
-            Assert.AreEqual(2, exception.ErrorCode);
+            Assert.AreEqual(2, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -147,7 +147,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual("Invalid TeamId.", exception.Message);
-            Assert.AreEqual(3, exception.ErrorCode);
+            Assert.AreEqual(3, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -179,7 +179,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidTeamId, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -195,7 +195,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidUserId, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidUserId, exception.ResultCode);
             Assert.AreEqual("Invalid ActorId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -211,7 +211,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.QuizMasterUnauthorizedForGame, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.QuizMasterUnauthorizedForGame, exception.ResultCode);
             Assert.AreEqual($"Actor with id {user.Id} is not authorized for game '{Game.Id}'", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -272,7 +272,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidUserNameOrPassword, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidUserNameOrPassword, exception.ResultCode);
             Assert.AreEqual("Invalid username or password.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -286,7 +286,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidUserNameOrPassword, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidUserNameOrPassword, exception.ResultCode);
             Assert.AreEqual("Invalid username or password.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }

@@ -9,14 +9,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Pubquiz.WebApi.Helpers;
 using Pubquiz.WebApi.Models;
 using Rebus.Bus;
-
 
 namespace Pubquiz.WebApi.Controllers
 {
@@ -44,7 +43,7 @@ namespace Pubquiz.WebApi.Controllers
                 return Ok(new WhoAmiResponse
                 {
                     UserName = "",
-                    Code = SuccessCodes.LoggedOut,
+                    Code = ResultCode.LoggedOut,
                     Message = "You're not logged in",
                 });
             }
@@ -62,14 +61,14 @@ namespace Pubquiz.WebApi.Controllers
                 return Ok(new WhoAmiResponse
                 {
                     UserName = "",
-                    Code = SuccessCodes.LoggedOut,
+                    Code = ResultCode.LoggedOut,
                     Message = "You're not logged in"
                 });
             }
 
             return Ok(new WhoAmiResponse
             {
-                Code = SuccessCodes.ThatsYou,
+                Code = ResultCode.ThatsYou,
                 Message = "",
                 UserName = user.UserName,
                 UserId = User.GetId(),
@@ -88,11 +87,11 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new RegisterForGameResponse
             {
-                Code = SuccessCodes.TeamRegisteredAndLoggedIn,
+                Code = ResultCode.TeamRegisteredAndLoggedIn,
                 Message = $"Team '{team.Name}' registered and logged in.",
                 Jwt = jwt,
                 TeamId = team.Id,
-                GameId =  team.CurrentGameId,
+                GameId = team.CurrentGameId,
                 TeamName = team.Name,
                 MemberNames = team.MemberNames
             });
@@ -107,7 +106,7 @@ namespace Pubquiz.WebApi.Controllers
             return Ok(new LoginResponse
             {
                 Jwt = jwt,
-                Code = SuccessCodes.UserLoggedIn,
+                Code = ResultCode.UserLoggedIn,
                 Message = $"User {user.UserName} logged in.",
                 UserId = user.Id,
                 UserName = user.UserName,
@@ -131,7 +130,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new SelectGameResponse
             {
-                Code = SuccessCodes.GameSelected,
+                Code = ResultCode.GameSelected,
                 Message = "Game selected",
                 GameId = notification.GameId
             });
@@ -167,7 +166,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new TestAuthResponse
             {
-                Code = SuccessCodes.AuthSuccesfullyTested,
+                Code = ResultCode.AuthSuccessfullyTested,
                 Message = $"Test ok. {User.Identity.Name} - {User.GetId()}",
                 Teams = teams
             });
@@ -189,7 +188,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new ChangeTeamNameResponse
             {
-                Code = SuccessCodes.TeamRenamed,
+                Code = ResultCode.TeamRenamed,
                 Message = "Team renamed.",
                 TeamName = notification.NewName
             });
@@ -206,7 +205,7 @@ namespace Pubquiz.WebApi.Controllers
             await notification.Execute();
             return Ok(new ChangeTeamMembersResponse
             {
-                Code = SuccessCodes.TeamMembersChanged,
+                Code = ResultCode.TeamMembersChanged,
                 Message = "Team members changed.",
                 TeamMembers = notification.TeamMembers
             });
@@ -226,7 +225,7 @@ namespace Pubquiz.WebApi.Controllers
             await notification.Execute();
             return Ok(new ApiResponse
             {
-                Code = SuccessCodes.TeamDeleted,
+                Code = ResultCode.TeamDeleted,
                 Message = $"Team with id {notification.TeamId} deleted"
             });
         }
@@ -250,7 +249,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new ApiResponse
             {
-                Code = SuccessCodes.LoggedOut,
+                Code = ResultCode.LoggedOut,
                 Message = "Successfully logged out."
             });
         }

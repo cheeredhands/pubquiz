@@ -29,7 +29,7 @@ namespace Pubquiz.Logic.Requests
 
             if (game.State != GameState.Open)
             {
-                throw new DomainException(ErrorCodes.LobbyUnavailableBecauseOfGameState,
+                throw new DomainException(ResultCode.LobbyUnavailableBecauseOfGameState,
                     "The lobby for this game is not open.", true);
             }
 

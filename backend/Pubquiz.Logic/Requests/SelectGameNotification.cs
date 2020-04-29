@@ -27,12 +27,12 @@ namespace Pubquiz.Logic.Requests
             var user = await userCollection.GetAsync(ActorId);
             if (user.UserRole != UserRole.QuizMaster)
             {
-                throw new DomainException(ErrorCodes.UnauthorizedRole, "You can't do that with this role.", true);
+                throw new DomainException(ResultCode.UnauthorizedRole, "You can't do that with this role.", true);
             }
 
             if (!user.GameIds.Contains(GameId))
             {
-                throw new DomainException(ErrorCodes.QuizMasterUnauthorizedForGame,
+                throw new DomainException(ResultCode.QuizMasterUnauthorizedForGame,
                     $"Actor with id {ActorId} is not authorized for game '{GameId}'", true);
             }
 

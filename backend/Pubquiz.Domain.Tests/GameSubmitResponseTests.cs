@@ -25,7 +25,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidTeamId, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -45,7 +45,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidQuestionId, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidQuestionId, exception.ResultCode);
             Assert.AreEqual("Invalid QuestionId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -65,7 +65,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.QuestionNotInQuiz, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.QuestionNotInQuiz, exception.ResultCode);
             Assert.AreEqual("This question doesn't belong to the quiz.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -86,7 +86,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.QuestionNotInCurrentQuizSection, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.QuestionNotInCurrentQuizSection, exception.ResultCode);
             Assert.AreEqual("This question doesn't belong to the current quiz section.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -106,7 +106,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidInteractionId, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidInteractionId, exception.ResultCode);
             Assert.AreEqual("Invalid InteractionId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }

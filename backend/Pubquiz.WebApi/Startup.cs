@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -199,7 +200,8 @@ namespace Pubquiz.WebApi
             }
 
             services.AddRequests(Assembly.Load("Pubquiz.Logic"));
-            services.AddSignalR();
+            services.AddSignalR().AddJsonProtocol(options =>
+                options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         }
 
         private void AddSwagger(IServiceCollection services)

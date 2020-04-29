@@ -24,27 +24,27 @@ namespace Pubquiz.Logic
             {
                 if (attribute.EntityType == typeof(Team))
                 {
-                    CheckEntity<Team>(attribute.IdPropertyName, ErrorCodes.InvalidTeamId);
+                    CheckEntity<Team>(attribute.IdPropertyName, ResultCode.InvalidTeamId);
                 }
 
                 if (attribute.EntityType == typeof(User))
                 {
-                    CheckEntity<User>(attribute.IdPropertyName, ErrorCodes.InvalidUserId);
+                    CheckEntity<User>(attribute.IdPropertyName, ResultCode.InvalidUserId);
                 }
 
                 if (attribute.EntityType == typeof(Game))
                 {
-                    CheckEntity<Game>(attribute.IdPropertyName, ErrorCodes.InvalidGameId);
+                    CheckEntity<Game>(attribute.IdPropertyName, ResultCode.InvalidGameId);
                 }
 
                 if (attribute.EntityType == typeof(Question))
                 {
-                    CheckEntity<Question>(attribute.IdPropertyName, ErrorCodes.InvalidQuestionId);
+                    CheckEntity<Question>(attribute.IdPropertyName, ResultCode.InvalidQuestionId);
                 }
             }
         }
 
-        private void CheckEntity<TEntity>(string entityIdPropertyName, int errorCode) where TEntity : Model, new()
+        private void CheckEntity<TEntity>(string entityIdPropertyName, ResultCode resultCode) where TEntity : Model, new()
         {
             // get the property or field
             var property = GetType().GetProperty(entityIdPropertyName);
@@ -68,7 +68,7 @@ namespace Pubquiz.Logic
             var entity = entityCollection.GetAsync(entityId).Result;
             if (entity == null)
             {
-                throw new DomainException(errorCode, $"Invalid {entityIdPropertyName}.", true);
+                throw new DomainException(resultCode, $"Invalid {entityIdPropertyName}.", true);
             }
         }
     }

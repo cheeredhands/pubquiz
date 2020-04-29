@@ -29,7 +29,7 @@ namespace Pubquiz.Logic.Handlers
             {
                 // log it somewhere, or send a message (with a DomainException?) to the hub so the quizmaster knows something went wrong?
                 // something like:
-                var exception = new DomainException(ErrorCodes.InvalidTeamId, "Team could not be found while scoring answer.", true);
+                var exception = new DomainException(ResultCode.InvalidTeamId, "Team could not be found while scoring answer.", true);
                 await _bus.Publish(new ErrorOccurred(exception));
                 return;
             }

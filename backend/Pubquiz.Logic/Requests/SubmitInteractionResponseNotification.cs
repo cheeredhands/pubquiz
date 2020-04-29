@@ -44,19 +44,19 @@ namespace Pubquiz.Logic.Requests
                 .FirstOrDefault(qs => qs.QuestionItems.Any(q => q.Id == QuestionId))?.Id;
             if (string.IsNullOrWhiteSpace(quizSectionId))
             {
-                throw new DomainException(ErrorCodes.QuestionNotInQuiz, "This question doesn't belong to the quiz.",
+                throw new DomainException(ResultCode.QuestionNotInQuiz, "This question doesn't belong to the quiz.",
                     true);
             }
 
             if (game.CurrentQuizSectionId != quizSectionId)
             {
-                throw new DomainException(ErrorCodes.QuestionNotInCurrentQuizSection,
+                throw new DomainException(ResultCode.QuestionNotInCurrentQuizSection,
                     "This question doesn't belong to the current quiz section.", true);
             }
 
             if (question.Interactions.All(i => i.Id != InteractionId))
             {
-                throw new DomainException(ErrorCodes.InvalidInteractionId, "Invalid InteractionId.", true);
+                throw new DomainException(ResultCode.InvalidInteractionId, "Invalid InteractionId.", true);
             }
 
 

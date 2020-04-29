@@ -35,12 +35,12 @@ namespace Pubquiz.Logic.Requests
                 team = teamCollection.AsQueryable().FirstOrDefault(t => t.RecoveryCode == Code);
                 if (team == null)
                 {
-                    throw new DomainException(ErrorCodes.InvalidCode, "Invalid code.", false);
+                    throw new DomainException(ResultCode.InvalidCode, "Invalid code.", false);
                 }
 
                 if (team.IsLoggedIn)
                 {
-                    throw new DomainException(ErrorCodes.TeamAlreadyLoggedIn,
+                    throw new DomainException(ResultCode.TeamAlreadyLoggedIn,
                         "Team is already logged in on another device.", true);
                 }
             }
@@ -52,7 +52,7 @@ namespace Pubquiz.Logic.Requests
                                       await teamCollection.AnyAsync(t => t.Name == TeamName && t.CurrentGameId == game.Id);
                 if (isTeamNameTaken)
                 {
-                    throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
+                    throw new DomainException(ResultCode.TeamNameIsTaken, "Team name is taken.", true);
                 }
             
                 // register team and return team object
