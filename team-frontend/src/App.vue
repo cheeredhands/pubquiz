@@ -6,7 +6,8 @@
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import Component, { mixins } from 'vue-class-component';
-import { WhoAmIResponse, UserRole, ResultCode } from './models/models';
+import { WhoAmIResponse, UserRole } from './models/models';
+import { ResultCode } from './models/ResultCode';
 import AccountServiceMixin from './services/accountservice';
 import NavBarPart from './components/parts/NavBarPart.vue';
 import FooterPart from './components/parts/FooterPart.vue';

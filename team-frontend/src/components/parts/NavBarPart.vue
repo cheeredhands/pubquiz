@@ -29,9 +29,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
-import { WhoAmIResponse, ApiResponse, UserRole, ResultCode } from '../../models/models';
+import { WhoAmIResponse, ApiResponse, UserRole } from '../../models/models';
 import Component, { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../../services/accountservice';
+import { ResultCode } from '../../models/ResultCode';
 
 @Component
 export default class NavBarPart extends mixins(AccountServiceMixin) {

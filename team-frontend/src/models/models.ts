@@ -1,3 +1,5 @@
+import { ResultCode } from './ResultCode';
+
 export interface TeamInfo {
   /** The team Id (Guid) */
   teamId: string;
@@ -46,7 +48,7 @@ export interface GameStateChanged {
 }
 
 export interface ApiResponse {
-  code: number;
+  code: ResultCode;
   message: string;
 }
 
@@ -101,37 +103,4 @@ export enum UserRole {
   Admin
 }
 
-export enum ResultCode {
-  /* Error codes */
-  InvalidCode,
-  TeamNameIsTaken,
-  InvalidTeamId,
-  InvalidQuestionId,
-  QuestionNotInQuiz,
-  QuestionNotInCurrentQuizSection,
-  InvalidInteractionId,
-  InvalidGameStateTransition,
-  InvalidGameId,
-  InvalidUserNameOrPassword,
-  InvalidUserId,
-  QuizMasterUnauthorizedForGame,
-  LobbyUnavailableBecauseOfGameState,
-  NoRoleClaimForUser,
-  NoCurrentGameIdClaimForUser,
-  UnauthorizedRole,
-  TeamAlreadyLoggedIn,
-  ValidationError,
-  /* Success codes */
-  ThatsYou,
-  TeamRegisteredAndLoggedIn,
-  LoggedOut,
-  TeamRenamed,
-  TeamMembersChanged,
-  TeamDeleted,
-  UserLoggedIn,
-  InteractionResponseSubmitted,
-  AuthSuccessfullyTested,
-  GameStateChanged,
-  GameSelected,
-}
 
