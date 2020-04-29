@@ -116,7 +116,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual("Invalid TeamId.", exception.Message);
-            Assert.AreEqual(3, exception.ResultCode);
+            Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -131,7 +131,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual("Team name is taken.", exception.Message);
-            Assert.AreEqual(2, exception.ResultCode);
+            Assert.AreEqual(ResultCode.TeamNameIsTaken, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -147,7 +147,7 @@ namespace Pubquiz.Domain.Tests
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
             Assert.AreEqual("Invalid TeamId.", exception.Message);
-            Assert.AreEqual(3, exception.ResultCode);
+            Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
