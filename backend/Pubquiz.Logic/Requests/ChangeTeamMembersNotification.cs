@@ -28,7 +28,7 @@ namespace Pubquiz.Logic.Requests
         {
             if (TeamMembers.Length > ValidationValues.MaxTeamMembersLength)
             {
-                throw new DomainException(ErrorCodes.ValidationError,
+                throw new DomainException(ResultCode.ValidationError,
                     $"Team members maximum length is {ValidationValues.MaxTeamMembersLength} characters.", true);
             }
             var teamCollection = UnitOfWork.GetCollection<Team>();

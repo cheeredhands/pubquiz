@@ -4,7 +4,7 @@ namespace Pubquiz.Domain
 {
     public class DomainException : Exception
     {
-        public readonly int ErrorCode;
+        public readonly ResultCode ResultCode;
         public readonly bool IsBadRequest;
 
         public DomainException(string message, bool isBadRequest) : base(message)
@@ -12,9 +12,9 @@ namespace Pubquiz.Domain
             IsBadRequest = isBadRequest;
         }
         
-        public DomainException(int errorCode, string message, bool isBadRequest) : base(message)
+        public DomainException(ResultCode resultCode, string message, bool isBadRequest) : base(message)
         {
-            ErrorCode = errorCode;
+            ResultCode = resultCode;
             IsBadRequest = isBadRequest;            
         }
     }

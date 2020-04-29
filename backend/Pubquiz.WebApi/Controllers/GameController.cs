@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pubquiz.Domain;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Pubquiz.WebApi.Helpers;
 using Pubquiz.WebApi.Models;
 
 namespace Pubquiz.WebApi.Controllers
@@ -44,7 +44,7 @@ namespace Pubquiz.WebApi.Controllers
 
             notification.TeamId = User.GetId();
             await notification.Execute();
-            return Ok(new {Code = SuccessCodes.InteractionResponseSubmitted, Message = "Response submitted ok."});
+            return Ok(new {Code = ResultCode.InteractionResponseSubmitted, Message = "Response submitted ok."});
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new
             {
-                Code = SuccessCodes.GameStateChanged,
+                Code = ResultCode.GameStateChanged,
                 Message = $"Game state changed to {notification.NewGameState}."
             });
         }

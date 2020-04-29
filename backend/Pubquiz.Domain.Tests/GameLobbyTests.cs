@@ -32,7 +32,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => query.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidTeamId, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -51,7 +51,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => query.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.LobbyUnavailableBecauseOfGameState, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.LobbyUnavailableBecauseOfGameState, exception.ResultCode);
             Assert.AreEqual("The lobby for this game is not open.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -83,7 +83,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidGameId, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidGameId, exception.ResultCode);
             Assert.AreEqual("Invalid GameId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -97,7 +97,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.InvalidUserId, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidUserId, exception.ResultCode);
             Assert.AreEqual("Invalid ActorId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -111,7 +111,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
-            Assert.AreEqual(ErrorCodes.QuizMasterUnauthorizedForGame, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.QuizMasterUnauthorizedForGame, exception.ResultCode);
             Assert.AreEqual($"Actor with id {actorId} is not authorized for game '{Game.Id}'", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }

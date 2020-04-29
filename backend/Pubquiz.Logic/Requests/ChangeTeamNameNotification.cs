@@ -30,7 +30,7 @@ namespace Pubquiz.Logic.Requests
             var isTeamNameTaken = await teamCollection.AnyAsync(t => t.Name == NewName && t.CurrentGameId == team.CurrentGameId);
             if (isTeamNameTaken)
             {
-                throw new DomainException(ErrorCodes.TeamNameIsTaken, "Team name is taken.", true);
+                throw new DomainException(ResultCode.TeamNameIsTaken, "Team name is taken.", true);
             }
 
             // set new name

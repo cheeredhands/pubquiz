@@ -16,7 +16,7 @@ namespace Pubquiz.Logic.Handlers
 
         public Task Handle(ErrorOccurred message) => Task.Run(() =>
         {
-            _logger.LogError(message.DomainException.ErrorCode, message.DomainException,
+            _logger.LogError((int)message.DomainException.ResultCode, message.DomainException,
                 "An error occurred while handling a message.");
         });
     }

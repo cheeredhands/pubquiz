@@ -36,12 +36,12 @@ namespace Pubquiz.WebApi.Helpers
 
             if (domainExceptions.Any())
             {
-                var messages = domainExceptions.Select(e => new {e.ErrorCode, e.Message});
+                var messages = domainExceptions.Select(e => new {ErrorCode = e.ResultCode, e.Message});
                 var badRequest = domainExceptions.Any(e => e.IsBadRequest);
                 foreach (var domainException in domainExceptions)
                 {
                     _logger.LogWarning(0,
-                        $"A domain exception ({domainException.ErrorCode}) was thrown: {domainException.Message}. The request that caused it was {(domainException.IsBadRequest ? "malformed" : "not malformed")}",
+                        $"A domain exception ({domainException.ResultCode}) was thrown: {domainException.Message}. The request that caused it was {(domainException.IsBadRequest ? "malformed" : "not malformed")}",
                         domainException);
                 }
 

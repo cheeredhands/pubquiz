@@ -1,12 +1,13 @@
-using System;
 using System.Collections.Generic;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Pubquiz.WebApi.Models
 {
     public class ApiResponse
     {
-        public int Code { get; set; }
+        public ResultCode Code { get; set; }
         public string Message { get; set; }
     }
 

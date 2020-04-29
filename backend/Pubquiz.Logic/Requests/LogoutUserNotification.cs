@@ -21,7 +21,7 @@ namespace Pubquiz.Logic.Requests
             var user = await userCollection.GetAsync(UserId);
             if (user == null)
             {
-                throw new DomainException(ErrorCodes.InvalidUserId, "Invalid User id", false);
+                throw new DomainException(ResultCode.InvalidUserId, "Invalid User id", false);
             }
 
             user.IsLoggedIn = false;

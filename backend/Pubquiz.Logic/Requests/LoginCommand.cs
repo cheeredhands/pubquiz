@@ -27,7 +27,7 @@ namespace Pubquiz.Logic.Requests
 
             if (user == null)
             {
-                throw new DomainException(ErrorCodes.InvalidUserNameOrPassword, "Invalid username or password.", true);
+                throw new DomainException(ResultCode.InvalidUserNameOrPassword, "Invalid username or password.", true);
             }
 
             return user;

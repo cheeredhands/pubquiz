@@ -44,7 +44,7 @@ namespace Pubquiz.Domain.Tests
 
                 // act & assert
                 var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Closed));
-                Assert.AreEqual(ErrorCodes.InvalidGameStateTransition, exception.ErrorCode);
+                Assert.AreEqual(ResultCode.InvalidGameStateTransition, exception.ResultCode);
                 Assert.AreEqual("Can only close the game from the open state.", exception.Message);
                 Assert.IsTrue(exception.IsBadRequest);
             }
@@ -71,7 +71,7 @@ namespace Pubquiz.Domain.Tests
             
             // act & assert
             var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
-            Assert.AreEqual(ErrorCodes.InvalidGameStateTransition, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidGameStateTransition, exception.ResultCode);
             Assert.AreEqual("Can't open the game without a quiz and/or a title.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -85,7 +85,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Open));
-            Assert.AreEqual(ErrorCodes.InvalidGameStateTransition, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidGameStateTransition, exception.ResultCode);
             Assert.AreEqual("Can't open the game without a quiz and/or a title.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -114,7 +114,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Running));
-            Assert.AreEqual(ErrorCodes.InvalidGameStateTransition, exception.ErrorCode);
+            Assert.AreEqual(ResultCode.InvalidGameStateTransition, exception.ResultCode);
             Assert.AreEqual("Can't start the game without teams.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -134,7 +134,7 @@ namespace Pubquiz.Domain.Tests
 
                 // act & assert
                 var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Running));
-                Assert.AreEqual(ErrorCodes.InvalidGameStateTransition, exception.ErrorCode);
+                Assert.AreEqual(ResultCode.InvalidGameStateTransition, exception.ResultCode);
                 Assert.AreEqual("Can only start the game from the open and paused states.", exception.Message);
                 Assert.IsTrue(exception.IsBadRequest);
             }
@@ -181,7 +181,7 @@ namespace Pubquiz.Domain.Tests
 
                 // act & assert
                 var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Paused));
-                Assert.AreEqual(ErrorCodes.InvalidGameStateTransition, exception.ErrorCode);
+                Assert.AreEqual(ResultCode.InvalidGameStateTransition, exception.ResultCode);
                 Assert.AreEqual("Can only pause the game from the running state.", exception.Message);
                 Assert.IsTrue(exception.IsBadRequest);
             }
@@ -216,7 +216,7 @@ namespace Pubquiz.Domain.Tests
 
                 // act & assert
                 var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Finished));
-                Assert.AreEqual(ErrorCodes.InvalidGameStateTransition, exception.ErrorCode);
+                Assert.AreEqual(ResultCode.InvalidGameStateTransition, exception.ResultCode);
                 Assert.AreEqual("Can only finish the game from the running and paused states.", exception.Message);
                 Assert.IsTrue(exception.IsBadRequest);
             }

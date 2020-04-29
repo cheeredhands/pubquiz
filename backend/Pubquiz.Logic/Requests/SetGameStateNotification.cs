@@ -35,7 +35,7 @@ namespace Pubquiz.Logic.Requests
             {
                 if (game.QuizMasterIds.All(i => i != ActorId))
                 {
-                    throw new DomainException(ErrorCodes.QuizMasterUnauthorizedForGame,
+                    throw new DomainException(ResultCode.QuizMasterUnauthorizedForGame,
                         $"Actor with id {ActorId} is not authorized for game '{game.Id}'", true);
                 }
             }
