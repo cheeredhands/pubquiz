@@ -25,13 +25,13 @@ export interface UserInfo {
 }
 
 export interface GameInfo {
-  gameId: string; 
+  gameId: string;
   gameTitle: string;
   state: GameState;
 }
 
 export enum GameState {
-  Closed = 'Closed', 
+  Closed = 'Closed',
   Open = 'Open',
   Running = 'Running',
   Paused = 'Paused',
@@ -58,12 +58,12 @@ export interface LoginResponse extends ApiResponse {
   gameIds: string[];
 }
 
-export interface RegisterForGameResponse extends ApiResponse{
-    jwt: string;
-    teamId: string;
-    gameId: string;
-    teamName: string;
-    memberNames: string;
+export interface RegisterForGameResponse extends ApiResponse {
+  jwt: string;
+  teamId: string;
+  gameId: string;
+  teamName: string;
+  memberNames: string;
 }
 
 export interface WhoAmIResponse extends ApiResponse {
@@ -100,3 +100,38 @@ export enum UserRole {
   QuizMaster,
   Admin
 }
+
+export enum ResultCode {
+  /* Error codes */
+  InvalidCode,
+  TeamNameIsTaken,
+  InvalidTeamId,
+  InvalidQuestionId,
+  QuestionNotInQuiz,
+  QuestionNotInCurrentQuizSection,
+  InvalidInteractionId,
+  InvalidGameStateTransition,
+  InvalidGameId,
+  InvalidUserNameOrPassword,
+  InvalidUserId,
+  QuizMasterUnauthorizedForGame,
+  LobbyUnavailableBecauseOfGameState,
+  NoRoleClaimForUser,
+  NoCurrentGameIdClaimForUser,
+  UnauthorizedRole,
+  TeamAlreadyLoggedIn,
+  ValidationError,
+  /* Success codes */
+  ThatsYou,
+  TeamRegisteredAndLoggedIn,
+  LoggedOut,
+  TeamRenamed,
+  TeamMembersChanged,
+  TeamDeleted,
+  UserLoggedIn,
+  InteractionResponseSubmitted,
+  AuthSuccessfullyTested,
+  GameStateChanged,
+  GameSelected,
+}
+

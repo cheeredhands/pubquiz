@@ -1,15 +1,18 @@
 <template>
   <b-navbar toggleable="md" type="dark" variant="dark">
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-    <b-navbar-brand href="#">{{ $t('APP_TITLE')}}</b-navbar-brand>
+    <b-navbar-brand href="/" :title="$t('HOME_TITLE')">{{ $t('APP_TITLE')}}</b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
         <b-nav-item>
-          <b-link to="/">{{ $t('MENU_HOME') }}</b-link>
+          <b-link to="/about">{{ $t('MENU_ABOUT') }}</b-link>
         </b-nav-item>
+        <slot></slot>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
-        <b-nav-text center>{{ navbarText }}</b-nav-text>
+        <b-nav-text center>
+          <slot name="centertext">Quizr</slot>
+        </b-nav-text>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -26,17 +29,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
-import { WhoAmIResponse, ApiResponse, UserRole } from '../models/models';
+import { WhoAmIResponse, ApiResponse, UserRole, ResultCode } from '../../models/models';
 import Component, { mixins } from 'vue-class-component';
-import AccountServiceMixin from '@/services/accountservice';
+import AccountServiceMixin from '../../services/accountservice';
 
 @Component
 export default class NavBarPart extends mixins(AccountServiceMixin) {
   public name: string = 'NavBarPart';
 
-  get navbarText() {
-    return this.$store.state.navbarText || '';
-  }
   get isLoggedIn() {
     return this.$store.state.isLoggedIn || false;
   }
@@ -55,7 +55,7 @@ export default class NavBarPart extends mixins(AccountServiceMixin) {
 
   public logOut() {
     this.logOutCurrentUser().then((response: AxiosResponse<ApiResponse>) => {
-      if (response.data.code === 2) {
+      if (response.data.code === ResultCode.LoggedOut) {
         this.$store.dispatch('logout');
         this.$router.replace('/');
       }

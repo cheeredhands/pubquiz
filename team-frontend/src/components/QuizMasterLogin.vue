@@ -1,4 +1,6 @@
 <template>
+  <div id="app">
+    <NavBarPart />
   <b-container fluid>
     <b-row>
       <b-col>
@@ -47,6 +49,8 @@
       </b-form-row>
     </b-form>
   </b-container>
+      <FooterPart />
+  </div>
 </template>
 
 <script lang="ts">
@@ -55,8 +59,12 @@ import { AxiosResponse, AxiosError } from 'axios';
 import { LoginResponse } from '../models/models';
 import Component, { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../services/accountservice';
+import NavBarPart from './parts/NavBarPart.vue';
+import FooterPart from './parts/FooterPart.vue';
 
-@Component
+@Component({
+  components: { NavBarPart, FooterPart }
+})
 export default class QuizMasterLogin extends mixins(AccountServiceMixin) {
   public name: string = 'QuizMasterLogin';
   public userName: string = '';

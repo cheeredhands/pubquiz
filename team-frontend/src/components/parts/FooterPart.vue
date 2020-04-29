@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <slot name="footerslot">footer</slot>
+    <slot>footer</slot>
   </footer>
 </template>
 
@@ -9,7 +9,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component
-export default class FooterPater extends Vue {
+export default class FooterPart extends Vue {
     public name: string = 'FooterPart';
 }
 </script>
