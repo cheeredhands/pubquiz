@@ -34,7 +34,8 @@
   "PASSWORD": "Wachtwoord",
   "PASSWORD_LENGTH": "Een wachtwoord is minimaal 2 tekens.",
   "LOGIN": "Inloggen",
-  "START_GAME": "Start game",
+  "START_GAME": "Start spel",
+  "CONTINUE_GAME": "Spel hervatten",
   "CURRENT_TEAMS_IN_LOBBY" : "De volgende teams zitten in de teamlobby:",
   "WELCOME_TO_QUIZMASTER_LOBBY": "Welkom in de lobby",
   "TEAM_KICKED_OUT": "Team '{teamName}' uit het spel verwijderd."
