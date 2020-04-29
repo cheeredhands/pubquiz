@@ -10,17 +10,17 @@
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
 
 name: all - build, test and deploy 
-on:
- release:
-   types: [created, edited]
+# on:
+#  release:
+#    types: [created, edited]
 
-# on: 
-#   push:
-#     paths: ['.github/workflows/team-frontend-build-and-deploy.yml','team-frontend/**']
-#     branches: [ master ]
-#   pull_request:
-#     paths: ['.github/workflows/team-frontend-build-and-deploy.yml','team-frontend/**']
-#     branches: [ master ]
+on: 
+  push:
+    #paths: ['.github/workflows/team-frontend-build-and-deploy.yml','team-frontend/**']
+    branches: [ master ]
+  pull_request:
+    #paths: ['.github/workflows/team-frontend-build-and-deploy.yml','team-frontend/**']
+    branches: [ master ]
     
 env:
 #  AZURE_WEBAPP_NAME: thenanne-web    # set this to your application's name
