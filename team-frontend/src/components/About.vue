@@ -1,19 +1,13 @@
 <template>
   <div id="app">
-    <NavBarPart>
+    <NavBarPart>      
       <template v-slot:centertext>Home</template>
     </NavBarPart>
     <b-container fluid>
       <b-row>
         <b-col>
-          <h1>{{ $t('HOME_WELCOME')}}</h1>
-          <b-button
-            variant="primary"
-            size="lg"
-            :to="{name: 'RegisterTeam'}"
-          >{{ $t('HOME_REGISTERHERE') }}</b-button>
-          <hr />
-          <b-link :to="{name: 'QuizMasterLogin'}">{{ $t('HOME_QUIZMASTERLOGIN') }}</b-link>
+          <h1>{{ $t('ABOUT_WELCOME')}}</h1>
+          <p>text</p>
         </b-col>
       </b-row>
     </b-container>
@@ -30,7 +24,7 @@ import FooterPart from './parts/FooterPart.vue';
 @Component({
   components: { NavBarPart, FooterPart }
 })
-export default class Home extends Vue {
-  public name: string = 'Home';
+export default class About extends Vue {
+  public name: string = 'About';
 }
 </script>

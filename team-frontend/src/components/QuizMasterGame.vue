@@ -1,19 +1,24 @@
+
 <template>
-  <b-container fluid>
-    <b-row>
-      <b-col col cols="1">Buttons</b-col>
-      <b-col col cols="5">
-        Game title: {{game.gameTitle}} (state: {{game.state}})
-        <h2>Teamfeed</h2>
-      </b-col>
-      <b-col col cols="6">
-        Current question and ranking
-        <template slot="footerslot">
-          <p>Here's some contact info</p>
-        </template>
-      </b-col>
-    </b-row>
-  </b-container>
+  <div id="app">
+    <NavBarPart />
+    <b-container fluid>
+      <b-row>
+        <b-col col cols="1">Buttons</b-col>
+        <b-col col cols="5">
+          Game title: {{game.gameTitle}} (state: {{game.state}})
+          <h2>Teamfeed</h2>
+        </b-col>
+        <b-col col cols="6">
+          Current question and ranking
+          <template slot="footerslot">
+            <p>Here's some contact info</p>
+          </template>
+        </b-col>
+      </b-row>
+    </b-container>
+    <FooterPart />
+  </div>
 </template>
 
 
@@ -24,8 +29,11 @@ import { Route } from 'vue-router';
 import store from '../store';
 import { AxiosResponse, AxiosError } from 'axios';
 import { ApiResponse } from '../models/models';
+import NavBarPart from './parts/NavBarPart.vue';
+import FooterPart from './parts/FooterPart.vue';
 
 @Component({
+  components: { NavBarPart, FooterPart },
   beforeRouteEnter(to: Route, from: Route, next: any) {
     // called before the route that renders this component is confirmed.
     // does NOT have access to `this` component instance,

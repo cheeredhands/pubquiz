@@ -1,6 +1,8 @@
 {
-  "APP_TITLE": "Quizr",
-  "MENU_HOME": "Home",
+  "APP_TITLE": "Quizr",  
+  "HOME_TITLE": "Naar de voorpagina",
+  "MENU_ABOUT": "Over",
+  "ABOUT_WELCOME": "Alles over quizr",
   "MENU_HELP": "Help",
   "QUIZMASTER_LOGIN": "Quizmaster / admin login",
   "USERNAME": "Gebruikersnaam",

@@ -1,36 +1,39 @@
 <template>
-  <b-container fluid>
-    <b-row>
-      <b-col>
-        Game title: {{game.gameTitle}} (state: {{game.state}})
-        <b-button
-          v-on:disabled="game.state===GameState.Running"
-          v-on:click="startGame"
-          variant="success"
-        >{{ $t('START_GAME' )}}</b-button>
-        <hr />
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col lg="6">
-        <p>{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
-        <b-list-group>
-          <b-list-group-item v-for="(team, index) in teams" :key="index">
-            <strong>{{ team.teamName }}</strong> -
-            <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
-            <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
-            <font-awesome-icon
-              icon="trash-alt"
-              @click="kickTeam(team.teamId, team.teamName)"
-              pull="right"
-              style="cursor:pointer;"
-              :title="$t('KICK_OUT')"
-            />
-          </b-list-group-item>
-        </b-list-group>
-      </b-col>
-    </b-row>
-  </b-container>
+  <div id="app">
+    <NavBarPart />
+    <b-container fluid>
+      <b-row>
+        <b-col>
+          Game title: {{game.gameTitle}} (state: {{game.state}})
+          <b-button
+            @click="startGame"
+            variant="success"
+          >{{ game.state===runningState ? $t('CONTINUE_GAME') : $t('START_GAME') }}</b-button>
+          <hr />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col lg="6">
+          <p>{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
+          <b-list-group>
+            <b-list-group-item v-for="(team, index) in teams" :key="index">
+              <strong>{{ team.teamName }}</strong> -
+              <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
+              <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
+              <font-awesome-icon
+                icon="trash-alt"
+                @click="kickTeam(team.teamId, team.teamName)"
+                pull="right"
+                style="cursor:pointer;"
+                :title="$t('KICK_OUT')"
+              />
+            </b-list-group-item>
+          </b-list-group>
+        </b-col>
+      </b-row>
+    </b-container>
+    <FooterPart />
+  </div>
 </template>
 
 <script lang="ts">
@@ -47,8 +50,11 @@ import {
   GameState,
   GameStateChanged
 } from '../models/models';
+import NavBarPart from './parts/NavBarPart.vue';
+import FooterPart from './parts/FooterPart.vue';
 
 @Component({
+  components: { NavBarPart, FooterPart },
   beforeRouteEnter(to: Route, from: Route, next: any) {
     // called before the route that renders this component is confirmed.
     // does NOT have access to `this` component instance,
@@ -63,7 +69,7 @@ import {
 })
 export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   public name: string = 'QuizMasterLobby';
-
+  public runningState = GameState.Running;
   public created() {
     this.$store.commit('setNavbarText', 'Quiz master lobby');
     // get team lobby view model
@@ -82,17 +88,20 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   }
 
   public startGame() {
-    this.setGameState(this.userId, this.game.gameId, GameState.Running)
-      .then(() => {
-        // go to gameComponent
-        this.$router.push({ name: 'QuizMasterGame' });
-      })
-      .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
+    if (this.game.state !== GameState.Running) {
+      this.setGameState(this.userId, this.game.gameId, GameState.Running)
+        .then(() => {
+          this.$router.push({ name: 'QuizMasterGame' });
+        })
+        .catch((error: AxiosError) => {
+          this.$bvToast.toast(error.message, {
+            title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+            variant: 'error'
+          });
         });
-      });
+    } else {
+      this.$router.push({ name: 'QuizMasterGame' });
+    }
   }
 
   public kickTeam(teamId: string, teamName: string) {
