@@ -1,23 +1,38 @@
 
 <template>
   <div id="app">
-    <NavBarPart />
-    <b-container fluid>
-      <b-row>
-        <b-col col cols="1">Buttons</b-col>
-        <b-col col cols="5">
-          Game title: {{game.gameTitle}} (state: {{game.state}})
-          <h2>Teamfeed</h2>
-        </b-col>
-        <b-col col cols="6">
-          Current question and ranking
-          <template slot="footerslot">
-            <p>Here's some contact info</p>
-          </template>
-        </b-col>
-      </b-row>
-    </b-container>
-    <FooterPart />
+    <NavBarPart>
+      <b-nav-item>
+        <b-button
+          size="sm"
+          @click="toggleGame"
+          :variant="game.state===runningState ? 'secondary' : 'success' "
+        >
+          <font-awesome-icon :icon="game.state===runningState ? 'pause' : 'play'" />
+          {{ game.state===runningState ? $t('PAUSE_GAME') : $t('RESUME_GAME') }}
+        </b-button>&nbsp;
+        <b-button size="sm" @click="finishGame" variant="danger">
+          <font-awesome-icon icon="power-off" />
+          {{ $t('FINISH_GAME') }}
+        </b-button>
+      </b-nav-item>
+      <template v-slot:centercontent>{{game.gameTitle}} ({{ $t(game.state) }})</template>
+      <template v-slot:rightcontent>
+        <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
+      </template>
+    </NavBarPart>
+    <div class="grid-container">
+      <div class="teamfeed">[Teamfeed]</div>
+
+      <div class="quiz-container">
+        <div class="question">
+          <QmQuestionPart />
+        </div>
+
+        <div class="ranking">[Ranking]</div>
+      </div>
+    </div>
+    <FooterPart>Quiz master game screen footer</FooterPart>
   </div>
 </template>
 
@@ -28,12 +43,15 @@ import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import store from '../store';
 import { AxiosResponse, AxiosError } from 'axios';
-import { ApiResponse } from '../models/models';
+import { ApiResponse, GameState } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
+import QmQuestionPart from './qm-gameparts/QmQuestionPart.vue';
+import { mixins } from 'vue-class-component';
+import AccountServiceMixin from '../services/accountservice';
 
 @Component({
-  components: { NavBarPart, FooterPart },
+  components: { NavBarPart, FooterPart, QmQuestionPart },
   beforeRouteEnter(to: Route, from: Route, next: any) {
     // called before the route that renders this component is confirmed.
     // does NOT have access to `this` component instance,
@@ -46,9 +64,9 @@ import FooterPart from './parts/FooterPart.vue';
     next();
   }
 })
-export default class QuizMasterGame extends Vue {
+export default class QuizMasterGame extends mixins(AccountServiceMixin) {
   public name: string = 'QuizMasterGame';
-
+  public runningState = GameState.Running;
   public created() {
     this.$store.commit('setNavbarText', 'Quiz master game screen');
     // // get QuizMaster Game view model
@@ -71,9 +89,96 @@ export default class QuizMasterGame extends Vue {
   get userName() {
     return this.$store.state.user.userName || '';
   }
+
+  get userId() {
+    return this.$store.state.userId || '';
+  }
+
+  public toggleGame() {
+    this.setGameState(
+      this.userId,
+      this.game.gameId,
+      this.game.state === GameState.Running
+        ? GameState.Paused
+        : GameState.Running
+    )
+      .then((response: AxiosResponse<ApiResponse>) => {
+        alert(response);
+        // this.$router.push({ name: 'QuizMasterGame' });
+      })
+      .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
+          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+          variant: 'error'
+        });
+      });
+  }
+
+  public finishGame() {
+    this.setGameState(this.userId, this.game.gameId, GameState.Finished)
+      .then(() => {
+        // this.$router.push({ name: 'QuizMasterGame' });
+      })
+      .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
+          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+          variant: 'error'
+        });
+      });
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.grid-container {
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  grid-template-rows: 1fr;
+  /* background-color: black;
+  grid-gap: 1px; */
+  grid-template-areas: "teamfeed quiz-container";
+}
+
+.grid-container > * {
+  /* background-color: #fff; */
+  border-right: 2px solid black;
+  padding: 0.5em;
+}
+.teamfeed {
+  grid-area: teamfeed;
+}
+
+.quiz-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 4fr 3fr;
+  grid-template-areas: "question" "ranking";
+  grid-area: quiz-container;
+  /* background-color: black;
+  grid-gap: 1px; */
+  padding: 0px;
+}
+
+.quiz-container > * {
+  padding: 0.5em;
+}
+
+.question {
+  grid-area: question;
+  padding: 0px;
+  border-bottom: 2px solid black;
+}
+
+.ranking {
+  grid-area: ranking;
+}
 </style>

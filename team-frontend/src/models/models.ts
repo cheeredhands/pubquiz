@@ -48,6 +48,7 @@ export interface GameStateChanged {
 }
 
 export interface ApiResponse {
+  errorCode: ResultCode;
   code: ResultCode;
   message: string;
 }

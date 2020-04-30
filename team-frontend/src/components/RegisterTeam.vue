@@ -68,7 +68,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 import { AxiosResponse, AxiosError } from 'axios';
 import VueI18n from 'vue-i18n';
-import { TeamInfo, RegisterForGameResponse } from '../models/models';
+import { TeamInfo, RegisterForGameResponse, ApiResponse } from '../models/models';
 import AccountServiceMixin from '../services/accountservice';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
@@ -107,8 +107,12 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
             });
         });
       })
-      .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
+     .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
           title: this.$t('ERROR_MESSAGE_TITLE').toString(),
           variant: 'error'
         });

@@ -6,9 +6,15 @@
         <b-col>
           Game title: {{game.gameTitle}} (state: {{game.state}})
           <b-button
+            v-if="game.state===runningState || game.state===pausedState"
             @click="startGame"
             variant="success"
-          >{{ game.state===runningState ? $t('CONTINUE_GAME') : $t('START_GAME') }}</b-button>
+          >{{ $t('CONTINUE_GAME') }}</b-button>
+          <b-button
+            v-if="game.state===openState"
+            @click="startGame"
+            variant="success"
+          >{{ $t('START_GAME') }}</b-button>
           <hr />
         </b-col>
       </b-row>
@@ -69,7 +75,9 @@ import FooterPart from './parts/FooterPart.vue';
 })
 export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   public name: string = 'QuizMasterLobby';
+  public openState = GameState.Open;
   public runningState = GameState.Running;
+  public pausedState = GameState.Paused;
   public created() {
     this.$store.commit('setNavbarText', 'Quiz master lobby');
     // get team lobby view model
@@ -79,8 +87,12 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
         this.$store.commit('setTeams', response.data.teamsInGame);
         this.$store.commit('setGame', response.data.currentGame);
       })
-      .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
+      .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
           title: this.$t('ERROR_MESSAGE_TITLE').toString(),
           variant: 'error'
         });
@@ -88,17 +100,21 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   }
 
   public startGame() {
-    if (this.game.state !== GameState.Running) {
+    if (this.game.state === GameState.Open) {
       this.setGameState(this.userId, this.game.gameId, GameState.Running)
         .then(() => {
           this.$router.push({ name: 'QuizMasterGame' });
         })
-        .catch((error: AxiosError) => {
-          this.$bvToast.toast(error.message, {
-            title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-            variant: 'error'
-          });
+        .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
+          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+          variant: 'error'
         });
+      });
     } else {
       this.$router.push({ name: 'QuizMasterGame' });
     }
@@ -115,8 +131,12 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
           }
         );
       })
-      .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
+      .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
           title: this.$t('ERROR_MESSAGE_TITLE').toString(),
           variant: 'error'
         });

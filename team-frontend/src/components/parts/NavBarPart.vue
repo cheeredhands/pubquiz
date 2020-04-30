@@ -4,22 +4,20 @@
     <b-navbar-brand href="/" :title="$t('HOME_TITLE')">{{ $t('APP_TITLE')}}</b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
-        <b-nav-item>
-          <b-link to="/about">{{ $t('MENU_ABOUT') }}</b-link>
-        </b-nav-item>
-        <slot></slot>
-      </b-navbar-nav>
-      <b-navbar-nav class="ml-auto">
         <b-nav-text center>
-          <slot name="centertext">Quizr</slot>
+          <slot name="centercontent">Quizr</slot>
         </b-nav-text>
       </b-navbar-nav>
-
+      <b-navbar-nav class="ml-auto">
+        <slot></slot>
+      </b-navbar-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
+        <slot name="rightcontent"></slot>
         <b-nav-item-dropdown v-if="isLoggedIn" :text="userName" right>
           <b-dropdown-item @click="logOut()">{{ $t('LEAVE_GAME')}}</b-dropdown-item>
           <b-dropdown-item>{{ $t('MENU_HELP') }}</b-dropdown-item>
+          <b-dropdown-item to="/about">{{ $t('MENU_ABOUT') }}</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>

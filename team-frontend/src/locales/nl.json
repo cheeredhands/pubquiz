@@ -34,9 +34,18 @@
   "PASSWORD": "Wachtwoord",
   "PASSWORD_LENGTH": "Een wachtwoord is minimaal 2 tekens.",
   "LOGIN": "Inloggen",
-  "START_GAME": "Start spel",
-  "CONTINUE_GAME": "Spel hervatten",
+  "START_GAME": "Spel starten",
+  "CONTINUE_GAME": "Naar het spelscherm",
+  "PAUSE_GAME": "Pauzeren",
+  "RESUME_GAME": "Hervatten",
+  "FINISH_GAME": "Einde",
   "CURRENT_TEAMS_IN_LOBBY" : "De volgende teams zitten in de teamlobby:",
   "WELCOME_TO_QUIZMASTER_LOBBY": "Welkom in de lobby",
-  "TEAM_KICKED_OUT": "Team '{teamName}' uit het spel verwijderd."
+  "TEAM_KICKED_OUT": "Team '{teamName}' uit het spel verwijderd.",
+  "Running": "Bezig",
+  "Paused": "Gepauzeerd",
+  "Open":"Open",
+  "Closed": "Gesloten",
+  "Finished": "Afgelopen",
+  "LOBBY_TITLE": "Terug naar de lobby"
 }

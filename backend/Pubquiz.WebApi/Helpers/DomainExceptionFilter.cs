@@ -36,7 +36,7 @@ namespace Pubquiz.WebApi.Helpers
 
             if (domainExceptions.Any())
             {
-                var messages = domainExceptions.Select(e => new {ErrorCode = e.ResultCode, e.Message});
+                var messages = domainExceptions.Select(e => new {Code = e.ResultCode, e.Message});
                 var badRequest = domainExceptions.Any(e => e.IsBadRequest);
                 foreach (var domainException in domainExceptions)
                 {
@@ -44,14 +44,16 @@ namespace Pubquiz.WebApi.Helpers
                         $"A domain exception ({domainException.ResultCode}) was thrown: {domainException.Message}. The request that caused it was {(domainException.IsBadRequest ? "malformed" : "not malformed")}",
                         domainException);
                 }
-
+                
+                // only return the last (innermost) message
+                var message = messages.Last();
                 if (badRequest)
                 {
-                    context.Result = new BadRequestObjectResult(messages);
+                    context.Result = new BadRequestObjectResult(message);
                 }
                 else
                 {
-                    context.Result = new NotFoundObjectResult(messages);
+                    context.Result = new NotFoundObjectResult(message);
                 }
             }
 

@@ -1,6 +1,7 @@
 <template>
-  <footer class="footer">
-    <slot>footer</slot>
+  <footer class="footer font-small">
+    <slot>footer</slot>    
+    <b-link class="float-right" to="/about">{{ $t('MENU_ABOUT') }}</b-link>
   </footer>
 </template>
 

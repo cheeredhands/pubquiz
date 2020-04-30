@@ -56,7 +56,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
-import { LoginResponse } from '../models/models';
+import { LoginResponse, ApiResponse } from '../models/models';
 import Component, { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../services/accountservice';
 import NavBarPart from './parts/NavBarPart.vue';
@@ -92,8 +92,12 @@ export default class QuizMasterLogin extends mixins(AccountServiceMixin) {
             });
         });
       })
-      .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
+      .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
           title: this.$t('ERROR_MESSAGE_TITLE').toString(),
           variant: 'error'
         });

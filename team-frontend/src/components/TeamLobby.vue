@@ -126,8 +126,12 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
         this.newName = this.teamName;
         this.newMemberNames = this.memberNames;
       })
-      .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
+      .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
           title: this.$t('ERROR_MESSAGE_TITLE').toString(),
           variant: 'error'
         });
@@ -149,8 +153,12 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
       .then((response: AxiosResponse<SaveTeamMembersResponse>) => {
         this.$store.commit('setOwnTeamMembers', response.data.teamMembers);
       })
-      .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
+      .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
           title: this.$t('ERROR_MESSAGE_TITLE').toString(),
           variant: 'error'
         });
@@ -179,8 +187,12 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
         // only save it to the store if api call is successful!
         this.$store.commit('setOwnTeamName', this.newName);
       })
-      .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
+      .catch((error: AxiosError<ApiResponse>) => {
+        const errorCode =
+          error !== undefined && error.response !== undefined
+            ? error.response.data.code
+            : 'UNKNOWN_ERROR';
+        this.$bvToast.toast(this.$t(errorCode).toString(), {
           title: this.$t('ERROR_MESSAGE_TITLE').toString(),
           variant: 'error'
         });

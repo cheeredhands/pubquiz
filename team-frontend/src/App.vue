@@ -60,29 +60,20 @@ export default class App extends mixins(AccountServiceMixin) {
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~bootstrap-vue/dist/bootstrap-vue.css";
 
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
-  color: #2c3e50;
-  /* margin: 0px; */
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 50px 1fr 50px;
-  height: 100%;
+  grid-template-areas: "Nav" "Main" "Footer";
+  height: 100vh;
 }
 
 nav a {
   font-weight: bold;
-  color: gainsboro;
+  color: aliceblue;
 }
 
 nav a:hover {
@@ -96,11 +87,8 @@ nav a.router-link-exact-active {
 
 footer {
   background-color: lightblue;
-  font-size: 10px;
-}
-
-.container-fluid {
-  padding-top: 10px;
+  /* font-size: 0.7rem; */
+  padding: 0.5em;
 }
 
 .strong {
