@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <NavBarPart />
+    <NavBarPart>
+      <template v-slot:titlecontent>{{$t('REGISTER_TEAM')}}</template>
+    </NavBarPart>
     <b-container fluid>
       <b-row>
         <b-col>

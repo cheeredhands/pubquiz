@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <NavBarPart />
+    <NavBarPart>
+      <template v-slot:titlecontent>Lobby</template>
+    </NavBarPart>
     <b-container fluid>
       <b-row>
         <b-col>

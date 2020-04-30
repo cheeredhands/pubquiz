@@ -16,7 +16,7 @@
           {{ $t('FINISH_GAME') }}
         </b-button>
       </b-nav-item>
-      <template v-slot:centercontent>{{game.gameTitle}} ({{ $t(game.state) }})</template>
+      <template v-slot:titlecontent>{{game.gameTitle}} ({{ $t(game.state) }})</template>
       <template v-slot:rightcontent>
         <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
       </template>
