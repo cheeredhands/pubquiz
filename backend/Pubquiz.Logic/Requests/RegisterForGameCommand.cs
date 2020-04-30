@@ -28,6 +28,12 @@ namespace Pubquiz.Logic.Requests
 
             // check validity of invite code, otherwise throw DomainException
             var game = gameCollection.AsQueryable().FirstOrDefault(g => g.InviteCode == Code);
+
+            if (game != null && (game.State == GameState.Closed || game.State == GameState.Finished))
+            {
+                throw new DomainException(ResultCode.InvalidCode, "Invalid or expired code.", true);
+            }
+
             Team team = null;
             if (game == null)
             {
@@ -49,12 +55,13 @@ namespace Pubquiz.Logic.Requests
             {
                 // check if team name is taken, otherwise throw DomainException
                 var isTeamNameTaken = !string.IsNullOrWhiteSpace(TeamName) &&
-                                      await teamCollection.AnyAsync(t => t.Name == TeamName && t.CurrentGameId == game.Id);
+                                      await teamCollection.AnyAsync(t =>
+                                          t.Name == TeamName && t.CurrentGameId == game.Id);
                 if (isTeamNameTaken)
                 {
                     throw new DomainException(ResultCode.TeamNameIsTaken, "Team name is taken.", true);
                 }
-            
+
                 // register team and return team object
                 var userName = TeamName.Trim();
                 var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
