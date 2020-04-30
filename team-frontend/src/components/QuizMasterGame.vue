@@ -102,8 +102,7 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
         ? GameState.Paused
         : GameState.Running
     )
-      .then((response: AxiosResponse<ApiResponse>) => {
-        alert(response);
+      .then((response: AxiosResponse<ApiResponse>) => {       
         // this.$router.push({ name: 'QuizMasterGame' });
       })
       .catch((error: AxiosError<ApiResponse>) => {
