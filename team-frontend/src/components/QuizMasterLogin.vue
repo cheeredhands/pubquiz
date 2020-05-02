@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <NavBarPart />
-  <b-container fluid>
+    <NavBarPart>{{ $t('QUIZMASTER_LOGIN') }}</NavBarPart>
+  <b-container>
     <b-row>
       <b-col>
         <h1>{{ $t('QUIZMASTER_LOGIN') }}</h1>

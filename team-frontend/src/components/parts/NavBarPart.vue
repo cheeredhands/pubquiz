@@ -5,11 +5,11 @@
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
         <b-nav-text center>
-          <slot name="titlecontent"></slot>
+          <slot></slot>
         </b-nav-text>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
-        <slot></slot>
+        <slot name="centercontent"></slot>
       </b-navbar-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">

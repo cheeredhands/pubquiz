@@ -1,12 +1,10 @@
 <template>
   <div id="app">
-    <NavBarPart>
-      <template v-slot:titlecontent>{{$t('REGISTER_TEAM')}}</template>
-    </NavBarPart>
-    <b-container fluid>
+    <NavBarPart>{{$t('REGISTER_TEAM')}}</NavBarPart>
+    <b-container>
       <b-row>
         <b-col>
-          <h1>{{$t('REGISTER')}}</h1>
+          <h1>{{$t('REGISTER_TEAM')}}</h1>
           <hr />
         </b-col>
       </b-row>
@@ -70,7 +68,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 import { AxiosResponse, AxiosError } from 'axios';
 import VueI18n from 'vue-i18n';
-import { TeamInfo, RegisterForGameResponse, ApiResponse } from '../models/models';
+import {
+  TeamInfo,
+  RegisterForGameResponse,
+  ApiResponse
+} from '../models/models';
 import AccountServiceMixin from '../services/accountservice';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
@@ -92,11 +94,9 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
       return;
     }
 
-    // register!
     this.registerForGame(this.teamName, this.code)
       .then((response: AxiosResponse<RegisterForGameResponse>) => {
         this.$store.dispatch('storeToken', response.data.jwt).then(() => {
-          // disco. init team (add team to store, start signalr)
           this.$store
             .dispatch('initTeam', {
               teamId: response.data.teamId,
@@ -109,7 +109,7 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
             });
         });
       })
-     .catch((error: AxiosError<ApiResponse>) => {
+      .catch((error: AxiosError<ApiResponse>) => {
         const errorCode =
           error !== undefined && error.response !== undefined
             ? error.response.data.code

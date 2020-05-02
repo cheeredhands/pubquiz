@@ -1,6 +1,7 @@
 {
+  "HOME_NAVTITLE": "Welcome",
   "HOME_TITLE": "To the front page",
-  "REGISTER": "Register",
+  "REGISTER_TEAM": "Register as a team",
   "MENU_ABOUT": "About",
   "ABOUT_WELCOME": "All about quizr",
   "GOTO_GAME": "Go to game screen",
