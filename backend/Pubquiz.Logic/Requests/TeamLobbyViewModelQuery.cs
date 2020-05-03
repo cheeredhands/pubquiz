@@ -27,7 +27,7 @@ namespace Pubquiz.Logic.Requests
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(team.CurrentGameId);
 
-            if (game.State != GameState.Open)
+            if (game.State == GameState.Closed || game.State == GameState.Finished)
             {
                 throw new DomainException(ResultCode.LobbyUnavailableBecauseOfGameState,
                     "The lobby for this game is not open.", true);
