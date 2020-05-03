@@ -99,9 +99,7 @@ export interface GameViewModel {
 }
 
 export enum UserRole {
-  Team,
-  QuizMaster,
-  Admin
+  Team = 'Team',
+  QuizMaster = 'QuizMaster',
+  Admin = 'Admin'
 }
-
-
