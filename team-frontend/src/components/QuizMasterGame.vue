@@ -2,21 +2,24 @@
 <template>
   <div id="app">
     <NavBarPart>
-      <b-nav-item>
-        <b-button
-          size="sm"
-          @click="toggleGame"
-          :variant="game.state===runningState ? 'secondary' : 'success' "
-        >
-          <font-awesome-icon :icon="game.state===runningState ? 'pause' : 'play'" />
-          {{ game.state===runningState ? $t('PAUSE_GAME') : $t('RESUME_GAME') }}
-        </b-button>&nbsp;
-        <b-button size="sm" @click="finishGame" variant="danger">
-          <font-awesome-icon icon="power-off" />
-          {{ $t('FINISH_GAME') }}
-        </b-button>
-      </b-nav-item>
-      <template v-slot:titlecontent>{{game.gameTitle}} ({{ $t(game.state) }})</template>
+      {{game.gameTitle}} ({{ $t(game.state) }})
+      <template v-slot:centercontent>
+        <b-nav-item>
+          <b-button
+            size="sm"
+            @click="toggleGame"
+            :variant="game.state===runningState ? 'secondary' : 'success' "
+          >
+            <font-awesome-icon :icon="game.state===runningState ? 'pause' : 'play'" />
+            {{ game.state===runningState ? $t('PAUSE_GAME') : $t('RESUME_GAME') }}
+          </b-button>&nbsp;
+          <b-button size="sm" @click="finishGame" variant="danger">
+            <font-awesome-icon icon="power-off" />
+            {{ $t('FINISH_GAME') }}
+          </b-button>
+        </b-nav-item>
+      </template>
+
       <template v-slot:rightcontent>
         <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
       </template>
@@ -102,7 +105,7 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
         ? GameState.Paused
         : GameState.Running
     )
-      .then((response: AxiosResponse<ApiResponse>) => {       
+      .then((response: AxiosResponse<ApiResponse>) => {
         // this.$router.push({ name: 'QuizMasterGame' });
       })
       .catch((error: AxiosError<ApiResponse>) => {
