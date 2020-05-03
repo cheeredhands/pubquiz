@@ -3,7 +3,7 @@
     <NavBarPart>
       <template v-slot:titlecontent>Lobby</template>
     </NavBarPart>
-    <b-container fluid>
+    <b-container>
       <b-row>
         <b-col>
           Game title: {{game.gameTitle}} (state: {{game.state}})
@@ -108,15 +108,15 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
           this.$router.push({ name: 'QuizMasterGame' });
         })
         .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
+          const errorCode =
+            error !== undefined && error.response !== undefined
+              ? error.response.data.code
+              : 'UNKNOWN_ERROR';
+          this.$bvToast.toast(this.$t(errorCode).toString(), {
+            title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+            variant: 'error'
+          });
         });
-      });
     } else {
       this.$router.push({ name: 'QuizMasterGame' });
     }

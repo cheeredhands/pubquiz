@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBarPart />
-    <b-container fluid>
+    <b-container>
       <b-row>
         <b-col>
           <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>

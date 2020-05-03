@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <NavBarPart>      
+    <NavBarPart>
       <template v-slot:centertext>Home</template>
     </NavBarPart>
-    <b-container fluid>
+    <b-container>
       <b-row>
         <b-col>
           <h1>{{ $t('ABOUT_WELCOME')}}</h1>
