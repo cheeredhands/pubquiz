@@ -98,7 +98,7 @@ const store: StoreOptions<RootState> = {
       }
     },
     setOtherTeamMembers(state, team: TeamInfo) {
-      console.log(`setOtherTeam: ${team.memberNames}`);
+      console.log(`setOtherTeamMembers: ${team.memberNames}`);
       const teamInStore = state.teams.find(
         item => item.teamId === team.teamId
       );
@@ -129,7 +129,7 @@ const store: StoreOptions<RootState> = {
     clearSignalRConnection(state) {
       state.signalrconnection = undefined;
     },
-    setNavbarText(state, text: string){
+    setNavbarText(state, text: string) {
       state.navbarText = text;
     }
   },
