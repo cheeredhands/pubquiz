@@ -21,17 +21,10 @@ namespace Pubquiz.Domain
         UnauthorizedRole,
         TeamAlreadyLoggedIn,
         ValidationError,
+
         /* Success codes */
+        Ok,
         ThatsYou,
-        TeamRegisteredAndLoggedIn,
-        LoggedOut,
-        TeamRenamed,
-        TeamMembersChanged,
-        TeamDeleted,
-        UserLoggedIn,
-        InteractionResponseSubmitted,
-        AuthSuccessfullyTested,
-        GameStateChanged,
-        GameSelected,
+        LoggedOut
     }
 }

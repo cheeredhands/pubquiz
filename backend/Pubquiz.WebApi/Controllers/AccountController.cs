@@ -87,7 +87,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new RegisterForGameResponse
             {
-                Code = ResultCode.TeamRegisteredAndLoggedIn,
+                Code = ResultCode.Ok,
                 Message = $"Team '{team.Name}' registered and logged in.",
                 Jwt = jwt,
                 TeamId = team.Id,
@@ -106,7 +106,7 @@ namespace Pubquiz.WebApi.Controllers
             return Ok(new LoginResponse
             {
                 Jwt = jwt,
-                Code = ResultCode.UserLoggedIn,
+                Code = ResultCode.Ok,
                 Message = $"User {user.UserName} logged in.",
                 UserId = user.Id,
                 UserName = user.UserName,
@@ -130,7 +130,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new SelectGameResponse
             {
-                Code = ResultCode.GameSelected,
+                Code = ResultCode.Ok,
                 Message = "Game selected",
                 GameId = notification.GameId
             });
@@ -166,7 +166,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new TestAuthResponse
             {
-                Code = ResultCode.AuthSuccessfullyTested,
+                Code = ResultCode.Ok,
                 Message = $"Test ok. {User.Identity.Name} - {User.GetId()}",
                 Teams = teams
             });
@@ -188,7 +188,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new ChangeTeamNameResponse
             {
-                Code = ResultCode.TeamRenamed,
+                Code = ResultCode.Ok,
                 Message = "Team renamed.",
                 TeamName = notification.NewName
             });
@@ -205,7 +205,7 @@ namespace Pubquiz.WebApi.Controllers
             await notification.Execute();
             return Ok(new ChangeTeamMembersResponse
             {
-                Code = ResultCode.TeamMembersChanged,
+                Code = ResultCode.Ok,
                 Message = "Team members changed.",
                 TeamMembers = notification.TeamMembers
             });
@@ -225,7 +225,7 @@ namespace Pubquiz.WebApi.Controllers
             await notification.Execute();
             return Ok(new ApiResponse
             {
-                Code = ResultCode.TeamDeleted,
+                Code = ResultCode.Ok,
                 Message = $"Team with id {notification.TeamId} deleted"
             });
         }

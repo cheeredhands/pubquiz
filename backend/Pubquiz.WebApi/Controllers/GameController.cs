@@ -44,7 +44,7 @@ namespace Pubquiz.WebApi.Controllers
 
             notification.TeamId = User.GetId();
             await notification.Execute();
-            return Ok(new {Code = ResultCode.InteractionResponseSubmitted, Message = "Response submitted ok."});
+            return Ok(new {Code = ResultCode.Ok, Message = "Response submitted ok."});
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(new
             {
-                Code = ResultCode.GameStateChanged,
+                Code = ResultCode.Ok,
                 Message = $"Game state changed to {notification.NewGameState}."
             });
         }
