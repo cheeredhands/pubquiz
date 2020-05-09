@@ -1,25 +1,17 @@
 <template>
   <div id="app">
     <NavBarPart>
-      <template v-slot:titlecontent>Lobby</template>
+      <b-nav-item>
+        <b-button
+          v-if="game.state===runningState || game.state===pausedState"
+          @click="startGame"
+          variant="success"
+        >{{ $t('CONTINUE_GAME') }}</b-button>
+        <b-button v-else @click="startGame" variant="success">{{ $t('START_GAME') }}</b-button>
+      </b-nav-item>
+      <template v-slot:centercontent>Lobby - {{game.gameTitle}} ({{ $t(game.state) }})</template>
     </NavBarPart>
     <b-container>
-      <b-row>
-        <b-col>
-          Game title: {{game.gameTitle}} (state: {{game.state}})
-          <b-button
-            v-if="game.state===runningState || game.state===pausedState"
-            @click="startGame"
-            variant="success"
-          >{{ $t('CONTINUE_GAME') }}</b-button>
-          <b-button
-            v-if="game.state===openState"
-            @click="startGame"
-            variant="success"
-          >{{ $t('START_GAME') }}</b-button>
-          <hr />
-        </b-col>
-      </b-row>
       <b-row>
         <b-col lg="6">
           <p v-if="game.state===openState">{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>

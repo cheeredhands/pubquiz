@@ -4,12 +4,12 @@
     <b-navbar-brand to="/" :title="$t('HOME_TITLE')">{{ $t('APP_TITLE')}}</b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
-        <b-nav-text center>
-          <slot></slot>
-        </b-nav-text>
+        <slot></slot>
       </b-navbar-nav>
-      <b-navbar-nav class="ml-auto">
-        <slot name="centercontent"></slot>
+      <b-navbar-nav align="center" class="ml-auto">
+        <b-nav-text>
+          <slot name="centercontent"></slot>
+        </b-nav-text>
       </b-navbar-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">

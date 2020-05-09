@@ -2,24 +2,20 @@
 <template>
   <div id="app">
     <NavBarPart>
-      {{game.gameTitle}} ({{ $t(game.state) }})
-      <template v-slot:centercontent>
-        <b-nav-item>
-          <b-button
-            size="sm"
-            @click="toggleGame"
-            :variant="game.state===runningState ? 'secondary' : 'success' "
-          >
-            <font-awesome-icon :icon="game.state===runningState ? 'pause' : 'play'" />
-            {{ game.state===runningState ? $t('PAUSE_GAME') : $t('RESUME_GAME') }}
-          </b-button>&nbsp;
-          <b-button size="sm" @click="finishGame" variant="danger">
-            <font-awesome-icon icon="power-off" />
-            {{ $t('FINISH_GAME') }}
-          </b-button>
-        </b-nav-item>
-      </template>
-
+      <b-nav-item>
+        <b-button
+          @click="toggleGame"
+          :variant="game.state===runningState ? 'secondary' : 'success' "
+        >
+          <font-awesome-icon :icon="game.state===runningState ? 'pause' : 'play'" />
+          {{ game.state===runningState ? $t('PAUSE_GAME') : $t('RESUME_GAME') }}
+        </b-button>&nbsp;
+        <b-button @click="finishGame" variant="danger">
+          <font-awesome-icon icon="power-off" />
+          {{ $t('FINISH_GAME') }}
+        </b-button>
+      </b-nav-item>
+      <template v-slot:centercontent>{{game.gameTitle}} ({{ $t(game.state) }})</template>
       <template v-slot:rightcontent>
         <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
       </template>
@@ -121,19 +117,34 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
   }
 
   public finishGame() {
-    this.setGameState(this.userId, this.game.gameId, GameState.Finished)
-      .then(() => {
-        // this.$router.push({ name: 'QuizMasterGame' });
+    this.$bvModal
+      .msgBoxConfirm(this.$t('CONFIRM_END_GAME').toString(), {
+        title: this.$t('PLEASE_CONFIRM').toString(),
+        okVariant: 'danger'.toString(),
+        okTitle: this.$t('YES').toString(),
+        cancelTitle: this.$t('NO').toString()
       })
-      .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+      .then(value => {
+        if (!value) {
+          return;
+        }
+        this.setGameState(this.userId, this.game.gameId, GameState.Finished)
+          .then(() => {
+            // this.$router.push({ name: 'QuizMasterGame' });
+          })
+          .catch((error: AxiosError<ApiResponse>) => {
+            const errorCode =
+              error !== undefined && error.response !== undefined
+                ? error.response.data.code
+                : 'UNKNOWN_ERROR';
+            this.$bvToast.toast(this.$t(errorCode).toString(), {
+              title: this.$t('ERROR_MESSAGE_TITLE').toString(),
+              variant: 'error'
+            });
+          });
+      })
+      .catch(err => {
+        // An error occurred
       });
   }
 }
