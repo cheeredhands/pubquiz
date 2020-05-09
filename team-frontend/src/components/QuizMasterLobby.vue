@@ -22,7 +22,8 @@
       </b-row>
       <b-row>
         <b-col lg="6">
-          <p>{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
+          <p v-if="game.state===openState">{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
+          <p v-else>{{ $t('CURRENT_TEAMS_IN_GAME')}}</p>
           <b-list-group>
             <b-list-group-item v-for="(team, index) in teams" :key="index">
               <strong>{{ team.teamName }}</strong> -
