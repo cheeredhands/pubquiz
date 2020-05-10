@@ -19,15 +19,7 @@ export enum ResultCode {
     TeamAlreadyLoggedIn = 'TeamAlreadyLoggedIn',
     ValidationError = 'ValidationError',
     /* Success codes */
+    Ok = 'Ok',
     ThatsYou = 'ThatsYou',
-    TeamRegisteredAndLoggedIn = 'TeamRegisteredAndLoggedIn',
-    LoggedOut = 'LoggedOut',
-    TeamRenamed = 'TeamRenamed',
-    TeamMembersChanged = 'TeamMembersChanged',
-    TeamDeleted = 'TeamDeleted',
-    UserLoggedIn = 'UserLoggedIn',
-    InteractionResponseSubmitted = 'InteractionResponseSubmitted',
-    AuthSuccessfullyTested = 'AuthSuccessfullyTested',
-    GameStateChanged = 'GameStateChanged',
-    GameSelected = 'GameSelected'
+    LoggedOut = 'LoggedOut'
 }
