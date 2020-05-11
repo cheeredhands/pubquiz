@@ -95,9 +95,9 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
       with:
-        app-name: 'thenanne-web'
+        app-name: 'quizr-web'
         slot-name: 'production'
-        publish-profile: ${{ secrets.THENANNE_WEB_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets.QUIZR_WEB_PUBLISH_PROFILE }}
         package: ${{env.DOTNET_ROOT}}/myapp 
     - name: Notify slack success
       if: success()
