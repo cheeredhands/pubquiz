@@ -21,7 +21,7 @@
       </template>
     </NavBarPart>
     <div class="grid-container">
-      <div class="teamfeed">[Teamfeed]</div>
+      <div class="teamfeed"><QmTeamFeedPart/></div>
 
       <div class="quiz-container">
         <div class="question">
@@ -46,11 +46,12 @@ import { ApiResponse, GameState } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import QmQuestionPart from './qm-gameparts/QmQuestionPart.vue';
+import QmTeamFeedPart from './qm-gameparts/QmTeamFeedPart.vue';
 import { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../services/accountservice';
 
 @Component({
-  components: { NavBarPart, FooterPart, QmQuestionPart },
+  components: { NavBarPart, FooterPart, QmQuestionPart, QmTeamFeedPart },
   beforeRouteEnter(to: Route, from: Route, next: any) {
     // called before the route that renders this component is confirmed.
     // does NOT have access to `this` component instance,
