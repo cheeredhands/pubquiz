@@ -18,7 +18,7 @@ interface RootState {
   gameIds: string[];
 }
 
-const store: StoreOptions<RootState> = {
+const storeOpts: StoreOptions<RootState> = {
   state: {
     isLoggedIn: false,
     team: undefined,
@@ -30,7 +30,10 @@ const store: StoreOptions<RootState> = {
     currentGameId: undefined,
     gameIds: []
   },
-  getters: {},
+  getters: {
+    getGame: state => state.game || {},
+    getUserId: state => state.user?.userId || ''
+  },
   mutations: {
     // mutations are sync store updates
     setUser(state, user: UserInfo) {
@@ -194,4 +197,4 @@ const store: StoreOptions<RootState> = {
   }
 };
 
-export default new Vuex.Store<RootState>(store);
+export default new Vuex.Store<RootState>(storeOpts);

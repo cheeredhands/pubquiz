@@ -82,15 +82,11 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
   }
 
   get game() {
-    return this.$store.state.game || {};
-  }
-
-  get userName() {
-    return this.$store.state.user.userName || '';
+    return this.$store.getters.getGame;
   }
 
   get userId() {
-    return this.$store.state.userId || '';
+    return this.$store.getters.getUserId;
   }
 
   public toggleGame() {
