@@ -25,7 +25,9 @@
     },
     "peacock.color": "#007fff",
     "debug.allowBreakpointsEverywhere": true,
-    "vetur.format.defaultFormatter.ts": "prettier-tslint",
-    "vetur.format.defaultFormatter.js": "prettier-eslint"
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.preferences.quoteStyle": "single",
+    "vetur.format.defaultFormatter.js": "prettier-eslint",
+    "vetur.format.defaultFormatter.ts": "prettier-tslint"
   }
 }

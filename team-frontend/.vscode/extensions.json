@@ -5,7 +5,6 @@
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
     "octref.vetur",
-    "esbenp.prettier-vscode",
     "msjsdiag.debugger-for-chrome",
     "firefox-devtools.vscode-firefox-debug",
     "ms-vscode.vscode-typescript-tslint-plugin",
