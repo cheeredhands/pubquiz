@@ -67,7 +67,6 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
   public name: string = 'QuizMasterGame';
   public runningState = GameState.Running;
   public created() {
-    this.$store.commit('setNavbarText', 'Quiz master game screen');
     // // get QuizMaster Game view model
     // this.$axios
     //   .get("/api/game/quizmastergame")

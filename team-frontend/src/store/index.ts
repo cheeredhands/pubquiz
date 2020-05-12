@@ -128,9 +128,6 @@ const store: StoreOptions<RootState> = {
     },
     clearSignalRConnection(state) {
       state.signalrconnection = undefined;
-    },
-    setNavbarText(state, text: string) {
-      state.navbarText = text;
     }
   },
   actions: {

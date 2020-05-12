@@ -86,7 +86,6 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
   public code: string = '';
 
   public created() {
-    this.$store.commit('setNavbarText', 'Team registration');
   }
 
   public register(evt: Event) {

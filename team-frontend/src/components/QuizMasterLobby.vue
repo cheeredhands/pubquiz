@@ -74,7 +74,6 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   public runningState = GameState.Running;
   public pausedState = GameState.Paused;
   public created() {
-    this.$store.commit('setNavbarText', 'Quiz master lobby');
     // get team lobby view model
     this.$axios
       .get('/api/game/quizmasterlobby')

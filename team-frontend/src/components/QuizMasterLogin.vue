@@ -71,7 +71,6 @@ export default class QuizMasterLogin extends mixins(AccountServiceMixin) {
   public password: string = '';
 
   public created() {
-    this.$store.commit('setNavbarText', 'Quiz master login');
   }
 
   public login(evt: Event) {
