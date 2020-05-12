@@ -16,7 +16,6 @@ interface RootState {
   user?: UserInfo;
   currentGameId?: string;
   gameIds: string[];
-  navbarText: string;
 }
 
 const store: StoreOptions<RootState> = {
@@ -29,8 +28,7 @@ const store: StoreOptions<RootState> = {
 
     user: undefined,
     currentGameId: undefined,
-    gameIds: [],
-    navbarText: 'Quizr'
+    gameIds: []
   },
   getters: {},
   mutations: {
