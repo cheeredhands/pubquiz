@@ -19,7 +19,7 @@ export default class QmQuestionPart extends Vue {
 .question-container {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 100px;
+  grid-template-rows: 6fr 1fr;
   grid-template-areas: "question-current" "question-nav";
   height: 100%;
 }
