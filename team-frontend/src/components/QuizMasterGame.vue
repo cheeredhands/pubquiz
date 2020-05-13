@@ -30,7 +30,18 @@
           <QmQuestionPart />
         </div>
 
-        <div class="ranking">[Ranking]</div>
+        <div class="ranking">
+          <ul class="list-unstyled" v-for="i in 12" v-bind:key="i">
+            <b-media tag="li">
+              <template v-slot:aside>
+                <h1>{{i}}</h1>
+                <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
+              </template>
+              <h5 class="mt-0 mb-1">Team name</h5>
+              <p class="mb-0">Score. Trend (going up or sinking).</p>
+            </b-media>
+          </ul>
+        </div>
       </div>
     </div>
     <FooterPart>Quiz master game screen footer</FooterPart>
@@ -154,14 +165,11 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
   display: grid;
   grid-template-columns: 5fr 6fr;
   grid-template-rows: 1fr;
-  /* background-color: black;
-  grid-gap: 1px; */
   grid-template-areas: "teamfeed quiz-container";
   overflow: hidden;
 }
 
 .grid-container > * {
-  /* background-color: #fff; */
   border-right: 2px solid black;
   padding: 0.5em;
 }
@@ -177,9 +185,8 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
   grid-template-rows: 4fr 3fr;
   grid-template-areas: "question" "ranking";
   grid-area: quiz-container;
-  /* background-color: black;
-  grid-gap: 1px; */
   padding: 0px;
+  overflow: hidden;
 }
 
 .quiz-container > * {
@@ -194,5 +201,6 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
 
 .ranking {
   grid-area: ranking;
+  overflow: auto;
 }
 </style>

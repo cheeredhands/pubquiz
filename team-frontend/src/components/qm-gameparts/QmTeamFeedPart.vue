@@ -5,7 +5,17 @@
     </div>
     <div class="feed">
       <ul class="list-unstyled" v-for="i in 12" v-bind:key="i">
-        <QmTeamFeedItem />
+        <b-media tag="li">
+          <template v-slot:aside>
+            <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img>
+          </template>
+          <h5 class="mt-0 mb-1">Team {{i}}</h5>
+          <p class="mb-0">
+            The team avatar to the left has a status badge overlay.
+            This area shows the answers a team gives to the current question (as they are typing).
+            The score and correctness of a team is shown. When automatic scoring is not possible, buttons are shown to mark the answer.
+          </p>
+        </b-media>
       </ul>
     </div>
   </div>
@@ -14,11 +24,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import QmTeamFeedItem from './QmTeamFeedItem.vue';
 
-@Component({
-  components: { QmTeamFeedItem }
-})
+@Component
 export default class QmTeamFeedPart extends Vue {
   public name: string = 'QmTeamFeedPart';
 
@@ -27,6 +34,14 @@ export default class QmTeamFeedPart extends Vue {
 </script>
 
 <style scoped>
+h5 {
+  font-size: 1em;
+}
+
+p {
+  font-size: smaller;
+}
+
 .teamfeed-container {
   display: grid;
   /* grid-template-columns: 1fr; */
