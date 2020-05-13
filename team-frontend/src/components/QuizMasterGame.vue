@@ -21,7 +21,9 @@
       </template>
     </NavBarPart>
     <div class="grid-container">
-      <div class="teamfeed"><QmTeamFeedPart/></div>
+      <div class="teamfeed">
+        <qm-team-feed-part />
+      </div>
 
       <div class="quiz-container">
         <div class="question">
@@ -155,6 +157,7 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
   /* background-color: black;
   grid-gap: 1px; */
   grid-template-areas: "teamfeed quiz-container";
+  overflow: hidden;
 }
 
 .grid-container > * {
@@ -164,6 +167,8 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
 }
 .teamfeed {
   grid-area: teamfeed;
+  padding: 0px;
+  overflow: hidden;
 }
 
 .quiz-container {

@@ -11,7 +11,7 @@ import Component from 'vue-class-component';
 
 @Component
 export default class QmQuestionPart extends Vue {
-  public name: string = 'QmQuestionPart';
+  public name: string = 'qm-question-part';
 }
 </script>
 

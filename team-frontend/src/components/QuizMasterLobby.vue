@@ -19,7 +19,7 @@
           <b-list-group>
             <b-list-group-item v-for="(team, index) in teams" :key="index">
               <strong>{{ team.teamName }}</strong> -
-              <span class="teamMembers">{{team.memberNames}}</span>&nbsp;
+              <span>{{team.memberNames}}</span>&nbsp;
               <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
               <font-awesome-icon
                 icon="trash-alt"
