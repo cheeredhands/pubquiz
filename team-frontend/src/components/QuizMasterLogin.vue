@@ -58,24 +58,24 @@ import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import { LoginResponse, ApiResponse } from '../models/models';
 import Component, { mixins } from 'vue-class-component';
-import AccountServiceMixin from '../services/accountservice';
+import AccountServiceMixin from '../services/account-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
+import HelperMixin from '../services/helper-mixin';
 
 @Component({
   components: { NavBarPart, FooterPart }
 })
-export default class QuizMasterLogin extends mixins(AccountServiceMixin) {
+export default class QuizMasterLogin extends mixins(AccountServiceMixin, HelperMixin) {
   public name: string = 'QuizMasterLogin';
   public userName: string = '';
   public password: string = '';
 
-  public created() {
-  }
+  // public created() {  }
 
   public login(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) { return; }
-    this.loginUser(this.userName, this.password)
+    this.$_accountService_loginUser(this.userName, this.password)
       .then((response: AxiosResponse<LoginResponse>) => {
         this.$store.dispatch('storeToken', response.data.jwt).then(() => {
           this.$store
@@ -92,14 +92,7 @@ export default class QuizMasterLogin extends mixins(AccountServiceMixin) {
         });
       })
       .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+       this.$_helper_toastError(error);
       });
   }
 }

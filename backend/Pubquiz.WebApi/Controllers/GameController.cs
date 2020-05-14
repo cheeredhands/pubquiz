@@ -89,6 +89,20 @@ namespace Pubquiz.WebApi.Controllers
             });
         }
 
+        [HttpPost("navigate")]
+        [Authorize(AuthPolicy.QuizMaster)]
+        public async Task<IActionResult> NavigateToItemByOffset(NavigateToItemByOffsetNotification notification)
+        {
+            notification.ActorId = User.GetId();
+            await notification.Execute();
+            
+            return Ok(new
+            {
+                Code = ResultCode.Ok,
+                Message = $"Navigated with offset {notification.Offset}."
+            });
+        }
+
         #endregion
     }
 }

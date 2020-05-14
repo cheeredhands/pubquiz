@@ -8,18 +8,19 @@ import { AxiosResponse, AxiosError } from 'axios';
 import Component, { mixins } from 'vue-class-component';
 import { WhoAmIResponse, UserRole } from './models/models';
 import { ResultCode } from './models/ResultCode';
-import AccountServiceMixin from './services/accountservice';
+import AccountServiceMixin from './services/account-service-mixin';
 import NavBarPart from './components/parts/NavBarPart.vue';
 import FooterPart from './components/parts/FooterPart.vue';
+import HelperMixin from './services/helper-mixin';
 
 @Component({
   components: { NavBarPart, FooterPart }
 })
-export default class App extends mixins(AccountServiceMixin) {
+export default class App extends mixins(AccountServiceMixin, HelperMixin) {
   public name: string = 'App';
 
   public mounted() {
-    this.getWhoAmI()
+    this.$_accountService_getWhoAmI()
       .then((response: AxiosResponse<WhoAmIResponse>) => {
         if (response.data.code === ResultCode.LoggedOut) {
           this.$store.dispatch('logout');
@@ -47,10 +48,7 @@ export default class App extends mixins(AccountServiceMixin) {
         }
       })
       .catch((error: AxiosError) => {
-        this.$bvToast.toast(error.message, {
-          title: 'oops',
-          variant: 'error'
-        });
+       this.$_helper_toastError(error);
       });
   }
 }

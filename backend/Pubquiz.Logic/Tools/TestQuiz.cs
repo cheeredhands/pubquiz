@@ -224,6 +224,7 @@ namespace Pubquiz.Logic.Tools
                 Id = Guid.Parse("ACC39DF3-B1A5-4F97-BC12-AA59BC580418").ToShortGuidString(),
                 Title = "Testquiz"
             };
+            quiz.QuizSections.Add(quizSectionIntro);
             quiz.QuizSections.Add(quizSection1);
             quiz.QuizSections.Add(quizSection2);
 

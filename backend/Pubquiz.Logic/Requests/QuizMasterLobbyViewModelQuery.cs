@@ -11,14 +11,14 @@ namespace Pubquiz.Logic.Requests
     /// Query to get the <see cref="QuizMasterLobbyViewModel"/> for a specific <see cref="User"/>.
     /// </summary>
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "UserId")]
-    public class QuizMasterLobbyViewModelQuery : Query<QuizMasterLobbyViewModel>
+    public class QuizMasterLobbyViewModelQuery : Query<QmLobbyViewModel>
     {
         public string UserId { get; set; }
         public QuizMasterLobbyViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
         
-        protected override async Task<QuizMasterLobbyViewModel> DoExecute()
+        protected override async Task<QmLobbyViewModel> DoExecute()
         {
             var userCollection = UnitOfWork.GetCollection<User>();
             var user = await userCollection.GetAsync(UserId);
@@ -28,7 +28,7 @@ namespace Pubquiz.Logic.Requests
 
             var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.Select(t => new TeamViewModel(t));
 
-            var model = new QuizMasterLobbyViewModel
+            var model = new QmLobbyViewModel
             {
                 UserId = UserId,
                 CurrentGame = game.ToViewModel(),

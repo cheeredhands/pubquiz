@@ -20,6 +20,7 @@ namespace Pubquiz.Domain
         NoCurrentGameIdClaimForUser,
         UnauthorizedRole,
         TeamAlreadyLoggedIn,
+        InvalidItemNavigation,
         ValidationError,
 
         /* Success codes */

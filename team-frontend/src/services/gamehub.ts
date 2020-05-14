@@ -65,6 +65,11 @@ export default {
       store.dispatch('processTeamDeleted', data);
     })
 
+    connection.on('ItemNavigated', data => {
+      console.log(data);
+      store.dispatch('processItemNavigated', data);
+    })
+
     return start().catch(err => {
       return console.error(err.toString());
     });

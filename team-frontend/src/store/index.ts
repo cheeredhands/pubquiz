@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import { GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState } from '../models/models';
+import { GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState, ItemNavigationInfo } from '../models/models';
 
 Vue.use(Vuex);
 
@@ -117,6 +117,18 @@ const storeOpts: StoreOptions<RootState> = {
     setGame(state, currentGame: GameInfo) {
       state.game = currentGame;
     },
+    setCurrentItem(state, itemNavigationInfo: ItemNavigationInfo) {
+      if (state.game === undefined) {
+        return;
+      }
+      state.game.currentSectionQuizItemCount = itemNavigationInfo.newSectionQuizItemCount;
+      state.game.currentSectionIndex = itemNavigationInfo.newSectionIndex;
+      state.game.currentSectionId = itemNavigationInfo.newSectionId;
+      state.game.currentQuizItemId = itemNavigationInfo.newQuizItemId;
+      state.game.currentQuizItemIndexInSection = itemNavigationInfo.newQuizItemIndexInSection;
+      state.game.currentQuizItemIndexInTotal = itemNavigationInfo.newQuizItemIndexInTotal;
+      state.game.currentQuestionIndexInTotal = itemNavigationInfo.newQuestionIndexInTotal;
+    },
     logout(state) {
       state.team = undefined;
       state.isLoggedIn = false;
@@ -193,6 +205,12 @@ const storeOpts: StoreOptions<RootState> = {
       } else {
         commit('removeTeam', deletedTeam);
       }
+    },
+    processItemNavigated({ commit, state }, itemNavigationInfo: ItemNavigationInfo) {
+      if (state.game === undefined) {
+        return;
+      }
+      commit('setCurrentItem', itemNavigationInfo);
     }
   }
 };

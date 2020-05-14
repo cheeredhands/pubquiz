@@ -73,27 +73,27 @@ import {
   RegisterForGameResponse,
   ApiResponse
 } from '../models/models';
-import AccountServiceMixin from '../services/accountservice';
+import AccountServiceMixin from '../services/account-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
+import HelperMixin from '../services/helper-mixin';
 
 @Component({
   components: { NavBarPart, FooterPart }
 })
-export default class RegisterTeam extends mixins(AccountServiceMixin) {
+export default class RegisterTeam extends mixins(AccountServiceMixin, HelperMixin) {
   public name: string = 'RegisterTeam';
   public teamName: string = '';
   public code: string = '';
 
-  public created() {
-  }
+  // public created() { }
 
   public register(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) {
       return;
     }
 
-    this.registerForGame(this.teamName, this.code)
+    this.$_accountService_registerForGame(this.teamName, this.code)
       .then((response: AxiosResponse<RegisterForGameResponse>) => {
         this.$store.dispatch('storeToken', response.data.jwt).then(() => {
           this.$store
@@ -109,14 +109,7 @@ export default class RegisterTeam extends mixins(AccountServiceMixin) {
         });
       })
       .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+       this.$_helper_toastError(error);
       });
   }
 }

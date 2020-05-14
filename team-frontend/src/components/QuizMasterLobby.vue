@@ -9,7 +9,7 @@
         >{{ $t('CONTINUE_GAME') }}</b-button>
         <b-button v-else @click="startGame" variant="success">{{ $t('START_GAME') }}</b-button>
       </b-nav-item>
-      <template v-slot:centercontent>Lobby - {{game.gameTitle}} ({{ $t(game.state) }})</template>
+      <template v-slot:centercontent>Lobby - {{game.gameTitle}} ({{ $t(game.state) }} {{$t('SECTION')}} {{game.currentSectionIndex}} : {{game.currentQuizItemIndexInSection}}/{{game.currentSectionQuizItemCount}})</template>
     </NavBarPart>
     <b-container>
       <b-row>
@@ -44,15 +44,17 @@ import { Route } from 'vue-router';
 import store from '../store';
 import { AxiosResponse, AxiosError } from 'axios';
 import { mixins } from 'vue-class-component';
-import AccountServiceMixin from '../services/accountservice';
+import AccountServiceMixin from '../services/account-service-mixin';
+import GameServiceMixin from '../services/game-service-mixin';
 import {
-  QuizMasterLobbyViewModel,
+  QmLobbyViewModel,
   ApiResponse,
   GameState,
   GameStateChanged
 } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
+import HelperMixin from '../services/helper-mixin';
 
 @Component({
   components: { NavBarPart, FooterPart },
@@ -68,7 +70,7 @@ import FooterPart from './parts/FooterPart.vue';
     next();
   }
 })
-export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
+export default class QuizMasterLobby extends mixins(AccountServiceMixin, GameServiceMixin, HelperMixin) {
   public name: string = 'QuizMasterLobby';
   public openState = GameState.Open;
   public runningState = GameState.Running;
@@ -77,37 +79,23 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
     // get team lobby view model
     this.$axios
       .get('/api/game/quizmasterlobby')
-      .then((response: AxiosResponse<QuizMasterLobbyViewModel>) => {
+      .then((response: AxiosResponse<QmLobbyViewModel>) => {
         this.$store.commit('setTeams', response.data.teamsInGame);
         this.$store.commit('setGame', response.data.currentGame);
       })
       .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+        this.$_helper_toastError(error);
       });
   }
 
   public startGame() {
     if (this.game.state === GameState.Open) {
-      this.setGameState(this.userId, this.game.gameId, GameState.Running)
+      this.$_gameService_setGameState(this.userId, this.game.gameId, GameState.Running)
         .then(() => {
           this.$router.push({ name: 'QuizMasterGame' });
         })
         .catch((error: AxiosError<ApiResponse>) => {
-          const errorCode =
-            error !== undefined && error.response !== undefined
-              ? error.response.data.code
-              : 'UNKNOWN_ERROR';
-          this.$bvToast.toast(this.$t(errorCode).toString(), {
-            title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-            variant: 'error'
-          });
+          this.$_helper_toastError(error);
         });
     } else {
       this.$router.push({ name: 'QuizMasterGame' });
@@ -115,7 +103,7 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
   }
 
   public kickTeam(teamId: string, teamName: string) {
-    this.deleteTeam(teamId)
+    this.$_accountService_deleteTeam(teamId)
       .then(() => {
         this.$bvToast.toast(
           this.$t('TEAM_KICKED_OUT', { teamName }).toString(),
@@ -126,14 +114,7 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin) {
         );
       })
       .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+        this.$_helper_toastError(error);
       });
   }
 

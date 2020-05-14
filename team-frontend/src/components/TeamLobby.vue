@@ -86,9 +86,10 @@ import {
   ApiResponse,
   SaveTeamMembersResponse
 } from '../models/models';
-import AccountServiceMixin from '../services/accountservice';
+import AccountServiceMixin from '../services/account-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
+import HelperMixin from '../services/helper-mixin';
 
 @Component({
   components: { NavBarPart, FooterPart },
@@ -104,7 +105,7 @@ import FooterPart from './parts/FooterPart.vue';
     next();
   }
 })
-export default class TeamLobby extends mixins(AccountServiceMixin) {
+export default class TeamLobby extends mixins(AccountServiceMixin, HelperMixin) {
   public name: string = 'TeamLobby';
 
   public inEdit: boolean = false;
@@ -117,7 +118,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
 
   public created() {
     // get team lobby view model
-    this.getTeamLobby()
+    this.$_accountService_getTeamLobby()
       .then((response: AxiosResponse<TeamLobbyViewModel>) => {
         this.$store.commit('setTeam', response.data.team);
         this.$store.commit('setTeams', response.data.otherTeamsInGame);
@@ -126,14 +127,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
         this.newMemberNames = this.memberNames;
       })
       .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+        this.$_helper_toastError(error);
       });
   }
 
@@ -153,14 +147,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
         this.$store.commit('setOwnTeamMembers', response.data.teamMembers);
       })
       .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+        this.$_helper_toastError(error);
       })
       .finally(() => {
         this.newMemberNames = this.memberNames;
@@ -187,14 +174,7 @@ export default class TeamLobby extends mixins(AccountServiceMixin) {
         this.$store.commit('setOwnTeamName', this.newName);
       })
       .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+        this.$_helper_toastError(error);
       })
       .finally(() => {
         this.newName = this.teamName;

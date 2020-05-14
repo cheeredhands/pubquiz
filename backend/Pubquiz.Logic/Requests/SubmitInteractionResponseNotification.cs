@@ -48,7 +48,7 @@ namespace Pubquiz.Logic.Requests
                     true);
             }
 
-            if (game.CurrentQuizSectionId != quizSectionId)
+            if (game.CurrentSectionId != quizSectionId)
             {
                 throw new DomainException(ResultCode.QuestionNotInCurrentQuizSection,
                     "This question doesn't belong to the current quiz section.", true);

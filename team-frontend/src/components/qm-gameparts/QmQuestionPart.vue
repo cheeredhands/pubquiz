@@ -1,17 +1,57 @@
 <template>
   <div class="question-container">
-    <div class="question-current">[Current question]</div>
-    <div class="question-nav">[Question navigation]</div>
+    <div class="question-current">
+      [Current question]
+      <br />
+      question id: {{game.currentQuizItemId}}
+    </div>
+    <div class="question-nav">
+       <b-button @click="navigateItem(-4)" variant="secondary">
+        <font-awesome-icon icon="arrow-left" />
+        -4
+      </b-button>
+      <b-button @click="navigateItem(-1)" variant="secondary">
+        <font-awesome-icon icon="arrow-left" />
+        {{ $t('PREVIOUS_ITEM') }}
+      </b-button>
+      {{$t('SECTION')}} {{game.currentSectionIndex}} : {{$t('QUIZ_ITEM')}} {{game.currentQuizItemIndexInSection}} {{$t('OF')}} {{game.currentSectionQuizItemCount}})
+      <b-button @click="navigateItem(1)" variant="secondary">
+        {{ $t('NEXT_ITEM') }}
+        <font-awesome-icon icon="arrow-right" />
+      </b-button>
+       <b-button @click="navigateItem(4)" variant="secondary">
+        +4
+        <font-awesome-icon icon="arrow-right" />
+      </b-button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, { mixins } from 'vue-class-component';
+import GameServiceMixin from '../../services/game-service-mixin';
+import HelperMixin from '../../services/helper-mixin';
+import { AxiosError } from 'axios';
+import { ApiResponse } from '@/models/models';
 
 @Component
-export default class QmQuestionPart extends Vue {
+export default class QmQuestionPart extends mixins(GameServiceMixin, HelperMixin) {
   public name: string = 'qm-question-part';
+
+  // public created() {}
+
+  get game() {
+    return this.$store.getters.getGame;
+  }
+
+  public navigateItem(offset: number) {
+    this.$_gameService_navigateItem(this.game.gameId, offset).catch(
+      (error: AxiosError<ApiResponse>) => {
+        this.$_helper_toastError(error);
+      }
+    );
+  }
 }
 </script>
 

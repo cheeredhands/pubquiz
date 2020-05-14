@@ -26,11 +26,31 @@ namespace Pubquiz.Domain.Models
         public List<string> QuizMasterIds { get; set; }
         public string InviteCode { get; set; }
 
-        public Question CurrentQuestion { get; set; }
-        public int CurrentQuestionIndex { get; set; }
-        public string CurrentQuestionId { get; set; }
-        public int CurrentQuizSectionIndex { get; set; }
-        public string CurrentQuizSectionId { get; set; }
+        public int TotalQuizItemCount { get; set; }
+        public int TotalQuestionCount { get; set; }
+        public int CurrentSectionQuizItemCount { get; set; }
+
+        /// <summary>
+        /// 1-based index.
+        /// </summary>
+        public int CurrentSectionIndex { get; set; }
+
+        public string CurrentSectionId { get; set; }
+        public string CurrentQuizItemId { get; set; }
+
+        /// <summary>
+        /// 1-based index.
+        /// </summary>
+        public int CurrentQuizItemIndexInSection { get; set; }
+
+        /// <summary>
+        /// 1-based index.
+        /// </summary>
+        public int CurrentQuizItemIndexInTotal { get; set; }
+        /// <summary>
+        /// 1-based index.
+        /// </summary>
+        public int CurrentQuestionIndexInTotal { get; set; }
 
         public Game()
         {
@@ -58,7 +78,8 @@ namespace Pubquiz.Domain.Models
                             "Can only open the game from the closed state.", true);
                     }
 
-                    if (State == GameState.Closed && (QuizId == Guid.Empty.ToShortGuidString() || string.IsNullOrWhiteSpace(Title)))
+                    if (State == GameState.Closed &&
+                        (QuizId == Guid.Empty.ToShortGuidString() || string.IsNullOrWhiteSpace(Title)))
                     {
                         throw new DomainException(ResultCode.InvalidGameStateTransition,
                             "Can't open the game without a quiz and/or a title.", true);
@@ -109,7 +130,16 @@ namespace Pubquiz.Domain.Models
             {
                 GameId = Id,
                 State = State,
-                GameTitle = Title
+                GameTitle = Title,
+                TotalQuizItemCount = TotalQuizItemCount,
+                TotalQuestionCount = TotalQuestionCount,
+                CurrentSectionQuizItemCount = CurrentSectionQuizItemCount,
+                CurrentSectionIndex = CurrentSectionIndex,
+                CurrentSectionId = CurrentSectionId,
+                CurrentQuizItemId = CurrentQuizItemId,
+                CurrentQuizItemIndexInSection = CurrentQuizItemIndexInSection,
+                CurrentQuizItemIndexInTotal = CurrentQuizItemIndexInTotal,
+                CurrentQuestionIndexInTotal = CurrentQuestionIndexInTotal
             };
         }
     }

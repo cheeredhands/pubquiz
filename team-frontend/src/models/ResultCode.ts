@@ -17,6 +17,7 @@ export enum ResultCode {
     NoCurrentGameIdClaimForUser = 'NoCurrentGameIdClaimForUser',
     UnauthorizedRole = 'UnauthorizedRole',
     TeamAlreadyLoggedIn = 'TeamAlreadyLoggedIn',
+    InvalidItemNavigation = 'InvalidItemNavigation',
     ValidationError = 'ValidationError',
     /* Success codes */
     Ok = 'Ok',

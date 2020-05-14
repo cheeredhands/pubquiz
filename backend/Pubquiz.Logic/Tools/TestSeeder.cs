@@ -25,8 +25,7 @@ namespace Pubquiz.Logic.Tools
             var gameCollection = _unitOfWork.GetCollection<Game>();
             var users = TestUsers.GetUsers();
             var quiz = TestQuiz.GetQuiz();
-            var game = TestGame.GetGame(users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), 0,
-                quiz.QuizSections[0].Id);
+            var game = TestGame.GetGame(users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), quiz);
             users.First(u => u.UserName == "Quiz master 1").GameIds.Add(game.Id);
             users.First(u => u.UserName == "Quiz master 1").CurrentGameId = game.Id;
             var teams = TestTeams.GetTeams(teamCollection, game.Id);

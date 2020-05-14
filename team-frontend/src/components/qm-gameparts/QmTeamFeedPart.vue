@@ -29,7 +29,7 @@ import Component from 'vue-class-component';
 export default class QmTeamFeedPart extends Vue {
   public name: string = 'QmTeamFeedPart';
 
-  public created() {}
+  // public created() {}
 }
 </script>
 

@@ -21,7 +21,7 @@ namespace Pubquiz.Logic.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         Task TeamLoggedOut(TeamLoggedOut message);
-        
+
         /// <summary>
         /// Called when a user logs out (leaves the game). Notifies other teams and the quizmaster
         /// within the current game.
@@ -43,6 +43,7 @@ namespace Pubquiz.Logic.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         Task TeamDeleted(TeamDeleted message);
+
         /// <summary>
         /// Called when a team changes its team members.
         /// </summary>
@@ -58,6 +59,12 @@ namespace Pubquiz.Logic.Hubs
         /// <returns></returns>
         Task GameStateChanged(GameStateChanged message);
 
+        /// <summary>
+        /// Called when the quiz master navigates to another quiz item.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task ItemNavigated(ItemNavigated message);
         //        /// <summary>
         //        /// Called when a team is typing an answer.
         //        /// </summary>

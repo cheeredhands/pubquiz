@@ -29,7 +29,7 @@ import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import { WhoAmIResponse, ApiResponse, UserRole } from '../../models/models';
 import Component, { mixins } from 'vue-class-component';
-import AccountServiceMixin from '../../services/accountservice';
+import AccountServiceMixin from '../../services/account-service-mixin';
 import { ResultCode } from '../../models/ResultCode';
 
 @Component
@@ -53,7 +53,7 @@ export default class NavBarPart extends mixins(AccountServiceMixin) {
   }
 
   public logOut() {
-    this.logOutCurrentUser().then((response: AxiosResponse<ApiResponse>) => {
+    this.$_accountService_logOutCurrentUser().then((response: AxiosResponse<ApiResponse>) => {
       if (response.data.code === ResultCode.LoggedOut) {
         this.$store.dispatch('logout');
         this.$router.replace('/');

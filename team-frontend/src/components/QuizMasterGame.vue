@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import Component, { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
 import store from '../store';
 import { AxiosResponse, AxiosError } from 'axios';
@@ -60,8 +60,9 @@ import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import QmQuestionPart from './qm-gameparts/QmQuestionPart.vue';
 import QmTeamFeedPart from './qm-gameparts/QmTeamFeedPart.vue';
-import { mixins } from 'vue-class-component';
-import AccountServiceMixin from '../services/accountservice';
+import AccountServiceMixin from '../services/account-service-mixin';
+import GameServiceMixin from '../services/game-service-mixin';
+import HelperMixin from '../services/helper-mixin';
 
 @Component({
   components: { NavBarPart, FooterPart, QmQuestionPart, QmTeamFeedPart },
@@ -77,7 +78,7 @@ import AccountServiceMixin from '../services/accountservice';
     next();
   }
 })
-export default class QuizMasterGame extends mixins(AccountServiceMixin) {
+export default class QuizMasterGame extends mixins(AccountServiceMixin, GameServiceMixin, HelperMixin) {
   public name: string = 'QuizMasterGame';
   public runningState = GameState.Running;
   public created() {
@@ -103,7 +104,7 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
   }
 
   public toggleGame() {
-    this.setGameState(
+    this.$_gameService_setGameState(
       this.userId,
       this.game.gameId,
       this.game.state === GameState.Running
@@ -114,14 +115,7 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
         // this.$router.push({ name: 'QuizMasterGame' });
       })
       .catch((error: AxiosError<ApiResponse>) => {
-        const errorCode =
-          error !== undefined && error.response !== undefined
-            ? error.response.data.code
-            : 'UNKNOWN_ERROR';
-        this.$bvToast.toast(this.$t(errorCode).toString(), {
-          title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-          variant: 'error'
-        });
+        this.$_helper_toastError(error);
       });
   }
 
@@ -137,19 +131,12 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin) {
         if (!value) {
           return;
         }
-        this.setGameState(this.userId, this.game.gameId, GameState.Finished)
+        this.$_gameService_setGameState(this.userId, this.game.gameId, GameState.Finished)
           .then(() => {
             // this.$router.push({ name: 'QuizMasterGame' });
           })
           .catch((error: AxiosError<ApiResponse>) => {
-            const errorCode =
-              error !== undefined && error.response !== undefined
-                ? error.response.data.code
-                : 'UNKNOWN_ERROR';
-            this.$bvToast.toast(this.$t(errorCode).toString(), {
-              title: this.$t('ERROR_MESSAGE_TITLE').toString(),
-              variant: 'error'
-            });
+            this.$_helper_toastError(error);
           });
       })
       .catch(err => {

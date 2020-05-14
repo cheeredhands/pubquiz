@@ -30,6 +30,26 @@ export interface GameInfo {
   gameId: string;
   gameTitle: string;
   state: GameState;
+  totalQuestionCount: number;
+  totalQuizItemCount: number;
+  currentSectionQuizItemCount: number;
+  currentSectionIndex: number;
+  currentSectionId: string;
+  currentQuizItemId: string;
+  currentQuizItemIndexInSection: number;
+  currentQuizItemIndexInTotal: number;
+  currentQuestionIndexInTotal:number;
+}
+
+export interface ItemNavigationInfo {
+  gameId: string;
+  newSectionId: string;
+  newQuizItemId: string;
+  newSectionIndex: number;
+  newSectionQuizItemCount: number;
+  newQuizItemIndexInSection: number;
+  newQuizItemIndexInTotal: number;
+  newQuestionIndexInTotal: number;
 }
 
 export enum GameState {
@@ -86,7 +106,7 @@ export interface TeamLobbyViewModel {
   otherTeamsInGame: TeamInfo[];
 }
 
-export interface QuizMasterLobbyViewModel {
+export interface QmLobbyViewModel {
   userId: string;
   currentGame: GameViewModel;
   teamsInGame: TeamInfo[];
