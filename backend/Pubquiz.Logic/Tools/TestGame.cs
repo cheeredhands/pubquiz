@@ -19,12 +19,12 @@ namespace Pubquiz.Logic.Tools
                 QuizMasterIds = quizMasterIds.ToList(),
                 TotalQuestionCount = quiz.TotalQuestionCount,
                 TotalQuizItemCount = quiz.TotalQuizItemCount,
-                CurrentSectionQuizItemCount = quiz.QuizSections[0].QuizItems.Count,
-                CurrentSectionIndex = 1,
-                CurrentSectionId = quiz.QuizSections[0].Id,
-                CurrentQuizItemId = quiz.QuizSections[0].QuizItems[0].Id,
+                CurrentSectionQuizItemCount = quiz.QuizSections[1].QuizItems.Count,
+                CurrentSectionIndex = 2,
+                CurrentSectionId = quiz.QuizSections[1].Id,
+                CurrentQuizItemId = quiz.QuizSections[1].QuizItems[0].Id,
                 CurrentQuizItemIndexInSection = 1,
-                CurrentQuizItemIndexInTotal = 1,
+                CurrentQuizItemIndexInTotal = 2,
                 CurrentQuestionIndexInTotal = 1,
                 State = GameState.Open
             };

@@ -20,7 +20,7 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = 1,
                 Response = string.Empty,
-                QuestionId = Quiz.QuizSections.First().QuestionItems[0].Id
+                QuestionId = Quiz.QuizSections[1].QuestionItems[0].Id
             };
 
             // act & assert
@@ -81,7 +81,7 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = 1,
                 Response = string.Empty,
-                QuestionId = Quiz.QuizSections[1].QuestionItems[0].Id
+                QuestionId = Quiz.QuizSections[2].QuestionItems[0].Id
             };
 
             // act & assert
@@ -101,7 +101,7 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = -1,
                 Response = string.Empty,
-                QuestionId = Quiz.QuizSections.First().QuestionItems[0].Id
+                QuestionId = Quiz.QuizSections[1].QuestionItems[0].Id
             };
 
             // act & assert
