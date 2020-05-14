@@ -159,6 +159,18 @@ namespace Pubquiz.Logic.Tools
             return etQuestion;
         }
 
+        public static InformationItem GetIntroItem()
+        {
+            var introItem = new InformationItem
+            {
+                Id = Guid.Parse("27125F9A-5DC1-42DB-8C86-FD6A86C24DAF").ToShortGuidString(),
+                Body = "Welkom!",
+                Title = "Introductie"
+            };
+
+            return introItem;
+        }
+
         public static List<Question> GetQuestions()
         {
             return new List<Question>
@@ -174,6 +186,15 @@ namespace Pubquiz.Logic.Tools
 
         public static Quiz GetQuiz()
         {
+            var quizSectionIntro = new QuizSection
+            {
+                Id = Guid.Parse("631F79E0-7013-45BC-AFE9-FD596BB412B8").ToShortGuidString(),
+                Title = "Introduction",
+                QuizItems = new List<QuizItem>
+                {
+                    new QuizItem(GetIntroItem().Id, ItemType.Information)
+                }
+            };
             var quizSection1 = new QuizSection
             {
                 Id = Guid.Parse("CFD8977B-4F15-4F7C-9E18-DE1238B97327").ToShortGuidString(),
