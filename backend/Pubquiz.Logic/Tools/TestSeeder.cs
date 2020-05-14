@@ -1,11 +1,9 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.WebApi.Helpers
+namespace Pubquiz.Logic.Tools
 {
     public class TestSeeder
     {
@@ -40,11 +38,18 @@ namespace Pubquiz.WebApi.Helpers
             game.QuizId = quiz.Id;
             game.TeamIds = teams.Select(t => t.Id).ToList();
 
-            Task.WaitAll(
-                quizCollection.AddAsync(quiz),
-                teams.ToAsyncEnumerable().ForEachAsync(t => teamCollection.AddAsync(t)),
-                users.ToAsyncEnumerable().ForEachAsync(u => userCollection.AddAsync(u)),
-                gameCollection.AddAsync(game));
+            quizCollection.AddAsync(quiz).Wait();
+            foreach (var team in teams)
+            {
+                teamCollection.AddAsync(team).Wait();
+            }
+
+            foreach (var user in users)
+            {
+                userCollection.AddAsync(user).Wait();
+            }
+
+            gameCollection.AddAsync(game).Wait();
         }
     }
 }
