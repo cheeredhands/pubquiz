@@ -10,17 +10,17 @@ using Rebus.Bus;
 namespace Pubquiz.Logic.Requests
 {
     [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
-    public class NavigateToItemByOffsetNotification : Notification
+    public class NavigateToItemByOffsetCommand : Command<string>
     {
         public int Offset { get; set; }
         public string GameId { get; set; }
         public string ActorId { get; set; }
 
-        public NavigateToItemByOffsetNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public NavigateToItemByOffsetCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
         {
         }
 
-        protected override async Task DoExecute()
+        protected override async Task<string> DoExecute()
         {
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
@@ -42,32 +42,37 @@ namespace Pubquiz.Logic.Requests
             // check if valid navigation
             int newSectionIndex = game.CurrentSectionIndex;
             var newQuizItemIndexInTotal = game.CurrentQuizItemIndexInTotal + Offset;
-
-            if (newQuizItemIndexInTotal < 1 || newQuizItemIndexInTotal > game.TotalQuizItemCount)
-            {
-                throw new DomainException(ResultCode.InvalidItemNavigation, "Item index out of bounds.", true);
-            }
-
             var newQuizItemIndexInSection = game.CurrentQuizItemIndexInSection + Offset;
 
-            if (newQuizItemIndexInSection < 1) // navigate to previous section
+            if (newQuizItemIndexInTotal < 1)
             {
-                do // skipping sections
+                newQuizItemIndexInTotal = 1;
+                newSectionIndex = 1;
+                game.CurrentSectionQuizItemCount = quiz.QuizSections.First().QuizItems.Count;
+                newQuizItemIndexInSection = 1;
+            }
+            else if (newQuizItemIndexInTotal > game.TotalQuizItemCount)
+            {
+                newQuizItemIndexInTotal = game.TotalQuizItemCount;
+                newSectionIndex = quiz.QuizSections.Count;
+                game.CurrentSectionQuizItemCount = newSectionIndex;
+                newQuizItemIndexInSection = quiz.QuizSections.Last().QuizItems.Count;
+            }
+            else
+            {
+                while (newQuizItemIndexInSection < 1)
                 {
                     newSectionIndex--;
                     game.CurrentSectionQuizItemCount = quiz.QuizSections[newSectionIndex - 1].QuizItems.Count;
                     newQuizItemIndexInSection += game.CurrentSectionQuizItemCount;
-                } while (newQuizItemIndexInSection < 1);
-            }
+                }
 
-            if (newQuizItemIndexInSection > game.CurrentSectionQuizItemCount) // navigate to next section
-            {
-                do
+                while (newQuizItemIndexInSection > game.CurrentSectionQuizItemCount)
                 {
                     newSectionIndex++;
                     newQuizItemIndexInSection -= game.CurrentSectionQuizItemCount;
                     game.CurrentSectionQuizItemCount = quiz.QuizSections[newSectionIndex - 1].QuizItems.Count;
-                } while (newQuizItemIndexInSection > game.CurrentSectionQuizItemCount);
+                }
             }
 
             game.CurrentSectionIndex = newSectionIndex;
@@ -91,6 +96,7 @@ namespace Pubquiz.Logic.Requests
             await Bus.Publish(new ItemNavigated(GameId, newSectionId, newQuizItemId, newSectionIndex,
                 newQuizItemIndexInSection,
                 newQuizItemIndexInTotal, newQuestionIndexInTotal, game.CurrentSectionQuizItemCount));
+            return $"Navigated to quiz item with id {newQuizItemId}.";
         }
     }
 }

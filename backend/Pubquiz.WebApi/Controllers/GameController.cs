@@ -91,15 +91,15 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("navigate")]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> NavigateToItemByOffset(NavigateToItemByOffsetNotification notification)
+        public async Task<IActionResult> NavigateToItemByOffset(NavigateToItemByOffsetCommand command)
         {
-            notification.ActorId = User.GetId();
-            await notification.Execute();
+            command.ActorId = User.GetId();
+           var result= await command.Execute();
             
             return Ok(new
             {
                 Code = ResultCode.Ok,
-                Message = $"Navigated with offset {notification.Offset}."
+                Message = result
             });
         }
 
