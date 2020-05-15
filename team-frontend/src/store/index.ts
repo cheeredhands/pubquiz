@@ -3,7 +3,6 @@ import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState, ItemNavigationInfo, QuizItem } from '../models/models';
-import { AxiosError } from 'axios';
 
 Vue.use(Vuex);
 
