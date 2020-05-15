@@ -21,10 +21,11 @@ Vue.use(BootstrapVue, {
   }
 });
 
-const instanceUserApi = axios.create({
+// https://dev.to/heftyhead/lets-talk-about-an-unnecessary-but-popular-vue-plugin-1ied
+const axiosInstanceBackend = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URI
 });
-instanceUserApi.interceptors.request.use(
+axiosInstanceBackend.interceptors.request.use(
   cfg => {
     if (localStorage.getItem('token')) {
       cfg.headers.common.Authorization = 'Bearer ' + localStorage.getItem('token');
@@ -38,7 +39,8 @@ instanceUserApi.interceptors.request.use(
 );
 
 
-Vue.prototype.$axios = instanceUserApi;
+Vue.prototype.$axios = axiosInstanceBackend;
+Vue.prototype.$http = axios;
 
 new Vue({
   router,
