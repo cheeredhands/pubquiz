@@ -43,7 +43,7 @@ namespace Pubquiz.Domain.Models
             }
         }
 
-        public void Score(Question question)
+        public void Score(QuizItem question)
         {
             foreach (var interactionResponse in InteractionResponses)
             {

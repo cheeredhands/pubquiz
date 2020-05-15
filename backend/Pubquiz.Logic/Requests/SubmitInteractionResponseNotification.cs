@@ -11,10 +11,10 @@ using InteractionResponseAdded = Pubquiz.Logic.Messages.InteractionResponseAdded
 namespace Pubquiz.Logic.Requests
 {
     /// <summary>
-    /// Notification to submit an interaction response for a certain <see cref="Interaction"/> in a <see cref="Question"/>
+    /// Notification to submit an interaction response for a certain <see cref="Interaction"/> in a <see cref="QuizItem"/>
     /// </summary>
     [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
-    [ValidateEntity(EntityType = typeof(Question), IdPropertyName = "QuestionId")]
+    [ValidateEntity(EntityType = typeof(QuizItem), IdPropertyName = "QuestionId")]
     public class SubmitInteractionResponseNotification : Notification
     {
         public string TeamId { get; set; }
@@ -31,7 +31,7 @@ namespace Pubquiz.Logic.Requests
         {
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
-            var questionCollection = UnitOfWork.GetCollection<Question>();
+            var questionCollection = UnitOfWork.GetCollection<QuizItem>();
             var question = await questionCollection.GetAsync(QuestionId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(team.CurrentGameId);
@@ -41,7 +41,7 @@ namespace Pubquiz.Logic.Requests
             var quiz = await quizCollection.GetAsync(quizId);
 
             var quizSectionId = quiz.QuizSections
-                .FirstOrDefault(qs => qs.QuestionItems.Any(q => q.Id == QuestionId))?.Id;
+                .FirstOrDefault(qs => qs.QuestionItemRefs.Any(q => q.Id == QuestionId))?.Id;
             if (string.IsNullOrWhiteSpace(quizSectionId))
             {
                 throw new DomainException(ResultCode.QuestionNotInQuiz, "This question doesn't belong to the quiz.",
@@ -80,7 +80,7 @@ namespace Pubquiz.Logic.Requests
             //answer.Score(question);
         }
 
-        private string GetChoiceOptionTexts(Question question, List<int> choiceOptionIds)
+        private string GetChoiceOptionTexts(QuizItem question, List<int> choiceOptionIds)
         {
             var choiceOptionTexts = new List<string>();
             foreach (var choiceOptionId in choiceOptionIds)

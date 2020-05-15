@@ -1,11 +1,14 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain;
 using Pubquiz.Logic.Requests;
+using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Models;
+using Rebus.Messages;
 
 namespace Pubquiz.WebApi.Controllers
 {
@@ -60,6 +63,15 @@ namespace Pubquiz.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("quizmasteringame")]
+        [Authorize(AuthPolicy.QuizMaster)]
+        public async Task<IActionResult> GetQuizMasterInGame()
+        {
+            var query = new QuizMasterInGameViewModelQuery(_unitOfWork) { ActorId = User.GetId()};
+            var result = await query.Execute();
+            return Ok(result);
+        }
+
         [HttpGet("games")]
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> GetGames()
@@ -94,13 +106,28 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<IActionResult> NavigateToItemByOffset(NavigateToItemByOffsetCommand command)
         {
             command.ActorId = User.GetId();
-           var result= await command.Execute();
-            
-            return Ok(new
+            var result = await command.Execute();
+
+            return Ok(new NavigateItemResponse
             {
                 Code = ResultCode.Ok,
-                Message = result
+                Message = "",
+                QuizItemId = result
             });
+        }
+
+        [HttpGet("{gameId}/getquizitem/{quizItemId}")]
+        [Authorize(AuthPolicy.QuizMaster)]
+        public async Task<IActionResult> GetQuizItem(string gameId, string quizItemId)
+        {
+            var query = new QuizItemQuery(_unitOfWork);
+            query.ActorId = User.GetId();
+            query.GameId = gameId;
+            query.QuizItemId = quizItemId;
+
+            var result = await query.Execute();
+
+            return Ok(result);
         }
 
         #endregion

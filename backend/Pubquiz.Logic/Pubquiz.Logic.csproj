@@ -15,4 +15,9 @@
       <ProjectReference Include="..\Pubquiz.Persistence\Pubquiz.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Requests\Commands" />
+      <Folder Include="Requests\Notifications" />
+    </ItemGroup>
+
 </Project>

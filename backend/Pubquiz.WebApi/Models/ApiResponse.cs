@@ -56,4 +56,9 @@ namespace Pubquiz.WebApi.Models
     {
         public string TeamMembers { get; set; }
     }
+
+    public class NavigateItemResponse : ApiResponse
+    {
+        public string QuizItemId { get; set; }
+    }
 }

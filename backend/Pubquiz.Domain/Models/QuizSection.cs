@@ -16,17 +16,17 @@ namespace Pubquiz.Domain.Models
     {
         public string Id { get; set; }
         public string Title { get; set; }
-        public List<QuizItem> QuizItems { get; set; }
+        public List<QuizItemRef> QuizItemRefs { get; set; }
 
         /// <summary>
         /// Only the questions in this section.
         /// </summary>
-        public List<QuizItem> QuestionItems => QuizItems.Where(q => q.ItemType == ItemType.Question).ToList();
+        public List<QuizItemRef> QuestionItemRefs => QuizItemRefs.Where(q => q.ItemType != QuizItemType.Information).ToList();
 
         public QuizSection()
         {
             Id = Guid.NewGuid().ToShortGuidString();
-            QuizItems = new List<QuizItem>();
+            QuizItemRefs = new List<QuizItemRef>();
         }
     }
 }

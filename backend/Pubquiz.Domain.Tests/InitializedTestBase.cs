@@ -29,8 +29,8 @@ namespace Pubquiz.Domain.Tests
         protected Quiz Quiz;
         protected List<User> Users;
         protected List<Team> Teams;
-        protected List<Question> QuestionsInQuiz;
-        protected List<Question> OtherQuestions;
+        protected List<QuizItem> QuestionsInQuiz;
+        protected List<QuizItem> OtherQuestions;
         protected IBus Bus;
         private ILoggerFactory _loggerFactory;
         private InMemorySubscriberStore _inMemorySubscriberStore;
@@ -50,7 +50,7 @@ namespace Pubquiz.Domain.Tests
             var userCollection = UnitOfWork.GetCollection<User>();
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var questionCollection = UnitOfWork.GetCollection<Question>();
+            var questionCollection = UnitOfWork.GetCollection<QuizItem>();
 
             Users = TestUsers.GetUsers();
             Quiz = TestQuiz.GetQuiz();
@@ -59,8 +59,8 @@ namespace Pubquiz.Domain.Tests
             Teams = TestTeams.GetTeams(teamCollection, Game.Id);
             Game.QuizId = Quiz.Id;
             Game.TeamIds = Teams.Select(t => t.Id).ToList();
-            QuestionsInQuiz = TestQuiz.GetQuestions();
-            OtherQuestions = new List<Question> {new Question(), new Question(), new Question()};
+            QuestionsInQuiz = TestQuiz.GetQuizItems();
+            OtherQuestions = new List<QuizItem> {new QuizItem(), new QuizItem(), new QuizItem()};
             Task.WaitAll(
                 quizCollection.AddAsync(Quiz),
                 QuestionsInQuiz.ToAsyncEnumerable().ForEachAsync(q => questionCollection.AddAsync(q)),

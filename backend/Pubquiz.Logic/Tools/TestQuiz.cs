@@ -7,15 +7,15 @@ namespace Pubquiz.Logic.Tools
 {
     public static class TestQuiz
     {
-        public static Question GetMCQuestion()
+        public static QuizItem GetMCQuestion()
         {
-            var mcQuestion = new Question
+            var mcQuestion = new QuizItem
             {
                 Id = Guid.Parse("EB42AF2C-DD76-4470-8480-8EC6DD8203DA").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Multiple choice",
                 MaxScore = 1,
-                QuestionType = QuestionType.MultipleChoice
+                QuizItemType = QuizItemType.MultipleChoice
             };
 
             mcQuestion.Interactions.Add(new Interaction(1)
@@ -36,15 +36,15 @@ namespace Pubquiz.Logic.Tools
             return mcQuestion;
         }
 
-        public static Question GetMRQuestion()
+        public static QuizItem GetMRQuestion()
         {
-            var mrQuestion = new Question
+            var mrQuestion = new QuizItem
             {
                 Id = Guid.Parse("F39D1BD5-60E9-4615-8512-553149CDC28C").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Multiple response",
                 MaxScore = 1,
-                QuestionType = QuestionType.MultipleResponse
+                QuizItemType = QuizItemType.MultipleResponse
             };
 
             mrQuestion.Interactions.Add(new Interaction(1)
@@ -65,15 +65,15 @@ namespace Pubquiz.Logic.Tools
             return mrQuestion;
         }
 
-        public static Question GetSAQuestion()
+        public static QuizItem GetSAQuestion()
         {
-            var mrQuestion = new Question
+            var mrQuestion = new QuizItem
             {
                 Id = Guid.Parse("6423EA00-9984-40DC-8D76-499447C3EA3B").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Short answer with one solution",
                 MaxScore = 1,
-                QuestionType = QuestionType.ShortAnswer
+                QuizItemType = QuizItemType.ShortAnswer
             };
 
             mrQuestion.Interactions.Add(new Interaction(1)
@@ -87,15 +87,15 @@ namespace Pubquiz.Logic.Tools
             return mrQuestion;
         }
 
-        public static Question GetSAWithMultipleSolutionsQuestion()
+        public static QuizItem GetSAWithMultipleSolutionsQuestion()
         {
-            var mrQuestion = new Question
+            var mrQuestion = new QuizItem
             {
                 Id = Guid.Parse("DD550891-8EF3-4313-BF0F-871D96A3BFC5").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Short answer with multiple solutions",
                 MaxScore = 1,
-                QuestionType = QuestionType.ShortAnswer
+                QuizItemType = QuizItemType.ShortAnswer
             };
 
             mrQuestion.Interactions.Add(new Interaction(1)
@@ -109,15 +109,15 @@ namespace Pubquiz.Logic.Tools
             return mrQuestion;
         }
 
-        public static Question GetMultipleSAQuestion()
+        public static QuizItem GetMultipleSAQuestion()
         {
-            var multipleSAQuestion = new Question
+            var multipleSAQuestion = new QuizItem
             {
                 Id = Guid.Parse("4B431B8E-9C58-4849-AB0E-3070767CFC81").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Test question",
                 MaxScore = 3,
-                QuestionType = QuestionType.ShortAnswer
+                QuizItemType = QuizItemType.ShortAnswer
             };
 
             multipleSAQuestion.Interactions.Add(new Interaction(1)
@@ -138,15 +138,15 @@ namespace Pubquiz.Logic.Tools
             return multipleSAQuestion;
         }
 
-        public static Question GetETQuestion()
+        public static QuizItem GetETQuestion()
         {
-            var etQuestion = new Question
+            var etQuestion = new QuizItem
             {
                 Id = Guid.Parse("88681DFF-61E7-4289-8CCD-835D02BF0FA8").ToShortGuidString(),
                 Body = "Question body",
                 Title = "Extended text (no solution, manually corrected)",
                 MaxScore = 1,
-                QuestionType = QuestionType.ExtendedText
+                QuizItemType = QuizItemType.ExtendedText
             };
 
             etQuestion.Interactions.Add(new Interaction(1)
@@ -159,22 +159,24 @@ namespace Pubquiz.Logic.Tools
             return etQuestion;
         }
 
-        public static InformationItem GetIntroItem()
+        public static QuizItem GetIntroItem()
         {
-            var introItem = new InformationItem
+            var introItem = new QuizItem
             {
                 Id = Guid.Parse("27125F9A-5DC1-42DB-8C86-FD6A86C24DAF").ToShortGuidString(),
                 Body = "Welkom!",
-                Title = "Introductie"
+                Title = "Introductie",
+                QuizItemType = QuizItemType.Information
             };
 
             return introItem;
         }
 
-        public static List<Question> GetQuestions()
+        public static List<QuizItem> GetQuizItems()
         {
-            return new List<Question>
+            return new List<QuizItem>
             {
+                GetIntroItem(),
                 GetMCQuestion(),
                 GetMRQuestion(),
                 GetSAQuestion(),
@@ -190,20 +192,20 @@ namespace Pubquiz.Logic.Tools
             {
                 Id = Guid.Parse("631F79E0-7013-45BC-AFE9-FD596BB412B8").ToShortGuidString(),
                 Title = "Introduction",
-                QuizItems = new List<QuizItem>
+                QuizItemRefs = new List<QuizItemRef>
                 {
-                    new QuizItem(GetIntroItem().Id, ItemType.Information)
+                    new QuizItemRef(GetIntroItem())
                 }
             };
             var quizSection1 = new QuizSection
             {
                 Id = Guid.Parse("CFD8977B-4F15-4F7C-9E18-DE1238B97327").ToShortGuidString(),
                 Title = "First quiz section",
-                QuizItems = new List<QuizItem>
+                QuizItemRefs = new List<QuizItemRef>
                 {
-                    new QuizItem(GetMCQuestion().Id, ItemType.Question),
-                    new QuizItem(GetMRQuestion().Id, ItemType.Question),
-                    new QuizItem(GetSAQuestion().Id, ItemType.Question)
+                    new QuizItemRef(GetMCQuestion()),
+                    new QuizItemRef(GetMRQuestion()),
+                    new QuizItemRef(GetSAQuestion())
                 }
             };
 
@@ -211,11 +213,11 @@ namespace Pubquiz.Logic.Tools
             {
                 Id = Guid.Parse("41E0F686-CEF2-493E-A5FD-1D1DD75BAEEB").ToShortGuidString(),
                 Title = "Second quiz section",
-                QuizItems = new List<QuizItem>
+                QuizItemRefs = new List<QuizItemRef>
                 {
-                    new QuizItem(GetSAWithMultipleSolutionsQuestion().Id, ItemType.Question),
-                    new QuizItem(GetMultipleSAQuestion().Id, ItemType.Question),
-                    new QuizItem(GetETQuestion().Id, ItemType.Question)
+                    new QuizItemRef(GetSAWithMultipleSolutionsQuestion()),
+                    new QuizItemRef(GetMultipleSAQuestion()),
+                    new QuizItemRef(GetETQuestion())
                 }
             };
 

@@ -5,7 +5,7 @@ using Pubquiz.Domain.ViewModels;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Queries
 {
     /// <summary>
     /// Query to get the <see cref="QuizMasterLobbyViewModel"/> for a specific <see cref="User"/>.

@@ -2,7 +2,8 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import { GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState, ItemNavigationInfo } from '../models/models';
+import { GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState, ItemNavigationInfo, QuizItem } from '../models/models';
+import { AxiosError } from 'axios';
 
 Vue.use(Vuex);
 
@@ -11,6 +12,8 @@ interface RootState {
   team?: TeamInfo;
   teams: TeamInfo[];
   game?: GameInfo;
+  quizItem?: QuizItem;
+  quizItems: Map<string, QuizItem>;
   signalrconnection?: HubConnection;
 
   user?: UserInfo;
@@ -24,6 +27,8 @@ const storeOpts: StoreOptions<RootState> = {
     team: undefined,
     teams: [],
     game: undefined,
+    quizItem: undefined,
+    quizItems: new Map<string, QuizItem>(),
     signalrconnection: undefined,
 
     user: undefined,
@@ -32,7 +37,8 @@ const storeOpts: StoreOptions<RootState> = {
   },
   getters: {
     getGame: state => state.game || {},
-    getUserId: state => state.user?.userId || ''
+    getUserId: state => state.user?.userId || '',
+    getQuizItem: state => state.quizItem || {}
   },
   mutations: {
     // mutations are sync store updates
@@ -128,6 +134,16 @@ const storeOpts: StoreOptions<RootState> = {
       state.game.currentQuizItemIndexInSection = itemNavigationInfo.newQuizItemIndexInSection;
       state.game.currentQuizItemIndexInTotal = itemNavigationInfo.newQuizItemIndexInTotal;
       state.game.currentQuestionIndexInTotal = itemNavigationInfo.newQuestionIndexInTotal;
+    },
+    setQuizItem(state, quizItem: QuizItem) {
+      state.quizItem = quizItem;
+      if (!state.quizItems.has(quizItem.id)) {
+        state.quizItems.set(quizItem.id, quizItem);
+      }
+    },
+    setQuizItemFromCache(state, quizItemId: string) {
+      const quizItem = state.quizItems.get(quizItemId);
+      state.quizItem = quizItem;
     },
     logout(state) {
       state.team = undefined;

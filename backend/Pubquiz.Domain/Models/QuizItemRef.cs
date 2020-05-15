@@ -5,25 +5,21 @@ using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Models
 {
-    public class QuizItemRef : Model
+    public class QuizItemRef
     {
-        public ItemType ItemType { get; set; }
-
-        public QuizItemRef(string id, ItemType itemType)
+        public string Id { get; set; }
+        public QuizItemType ItemType { get; set; }
+        public string Title { get; set; }
+        public QuizItemRef(QuizItem quizItem)
         {
-            Id = id;
-            ItemType = itemType;
+            Id = quizItem.Id;
+            ItemType = quizItem.QuizItemType;
+            Title = quizItem.Title;
         }
 
         public QuizItemRef()
         {
             
         }
-    }
-
-    public enum ItemType
-    {
-        Question,
-        Information
     }
 }

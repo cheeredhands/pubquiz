@@ -22,6 +22,10 @@ namespace Pubquiz.Logic
 
             foreach (var attribute in attributes)
             {
+                if (attribute.EntityType==typeof(Quiz))
+                {
+                    CheckEntity<Quiz>(attribute.IdPropertyName, ResultCode.InvalidQuizId);
+                }
                 if (attribute.EntityType == typeof(Team))
                 {
                     CheckEntity<Team>(attribute.IdPropertyName, ResultCode.InvalidTeamId);
@@ -37,9 +41,9 @@ namespace Pubquiz.Logic
                     CheckEntity<Game>(attribute.IdPropertyName, ResultCode.InvalidGameId);
                 }
 
-                if (attribute.EntityType == typeof(Question))
+                if (attribute.EntityType == typeof(QuizItem))
                 {
-                    CheckEntity<Question>(attribute.IdPropertyName, ResultCode.InvalidQuestionId);
+                    CheckEntity<QuizItem>(attribute.IdPropertyName, ResultCode.InvalidQuizItemId);
                 }
             }
         }
