@@ -23,8 +23,10 @@ namespace Pubquiz.Logic.Tools
             var teamCollection = _unitOfWork.GetCollection<Team>();
             var userCollection = _unitOfWork.GetCollection<User>();
             var gameCollection = _unitOfWork.GetCollection<Game>();
+            var quizItemCollection = _unitOfWork.GetCollection<QuizItem>();
             var users = TestUsers.GetUsers();
             var quiz = TestQuiz.GetQuiz();
+            var quizItems = TestQuiz.GetQuizItems();
             var game = TestGame.GetGame(users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), quiz);
             users.First(u => u.UserName == "Quiz master 1").GameIds.Add(game.Id);
             users.First(u => u.UserName == "Quiz master 1").CurrentGameId = game.Id;
@@ -38,6 +40,10 @@ namespace Pubquiz.Logic.Tools
             game.TeamIds = teams.Select(t => t.Id).ToList();
 
             quizCollection.AddAsync(quiz).Wait();
+            foreach (var quizItem in quizItems)
+            {
+                quizItemCollection.AddAsync(quizItem).Wait();
+            }
             foreach (var team in teams)
             {
                 teamCollection.AddAsync(team).Wait();

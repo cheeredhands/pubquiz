@@ -36,9 +36,44 @@ export interface GameInfo {
   currentSectionIndex: number;
   currentSectionId: string;
   currentQuizItemId: string;
+  currentQuizItemType: QuizItemType;
+  currentQuizItemTitle: string;
   currentQuizItemIndexInSection: number;
   currentQuizItemIndexInTotal: number;
-  currentQuestionIndexInTotal:number;
+  currentQuestionIndexInTotal: number;
+}
+
+export interface QuizItemInfo {
+  id: string;
+  title: string;
+  itemType: QuizItemType;
+  body: string;
+}
+
+export interface QuizItem {
+  id: string;
+  title: string;
+  body: string;
+  media: []// MediaObject[];
+  quizItemType: QuizItemType;
+  maxScore: number;
+   interactions: []; // Interaction[];
+}
+
+/** Type of the question */
+export enum QuizItemType {
+  /** Multiple options, one correct answer */
+  MultipleChoice = 'MultipleChoice',
+  /** Multiple options, more than one answer to be chosen for max score */
+  MultipleResponse = 'MultipleResponse',
+  /** One line answer, often automatically scoreable */
+  ShortAnswer = 'ShortAnswer',
+  /** Multiline answer, usually not automatically scoreable */
+  ExtendedText = 'ExtendedText',
+  /** Mixed (multiple interaction at the question level) */
+  Mixed = 'Mixed',
+  /** An informational quiz item, so not a question. Can be used as a divider between rounds or as a header and footer of the quiz. */
+  Information = 'Information'
 }
 
 export interface ItemNavigationInfo {
@@ -98,6 +133,10 @@ export interface WhoAmIResponse extends ApiResponse {
 
 export interface SaveTeamMembersResponse extends ApiResponse {
   teamMembers: string;
+}
+
+export interface NavigateItemResponse extends ApiResponse {
+  quizItemId: string;
 }
 
 export interface TeamLobbyViewModel {

@@ -48,7 +48,7 @@ namespace Pubquiz.Logic.Requests
             {
                 newQuizItemIndexInTotal = 1;
                 newSectionIndex = 1;
-                game.CurrentSectionQuizItemCount = quiz.QuizSections.First().QuizItems.Count;
+                game.CurrentSectionQuizItemCount = quiz.QuizSections.First().QuizItemRefs.Count;
                 newQuizItemIndexInSection = 1;
             }
             else if (newQuizItemIndexInTotal > game.TotalQuizItemCount)
@@ -56,14 +56,14 @@ namespace Pubquiz.Logic.Requests
                 newQuizItemIndexInTotal = game.TotalQuizItemCount;
                 newSectionIndex = quiz.QuizSections.Count;
                 game.CurrentSectionQuizItemCount = newSectionIndex;
-                newQuizItemIndexInSection = quiz.QuizSections.Last().QuizItems.Count;
+                newQuizItemIndexInSection = quiz.QuizSections.Last().QuizItemRefs.Count;
             }
             else
             {
                 while (newQuizItemIndexInSection < 1)
                 {
                     newSectionIndex--;
-                    game.CurrentSectionQuizItemCount = quiz.QuizSections[newSectionIndex - 1].QuizItems.Count;
+                    game.CurrentSectionQuizItemCount = quiz.QuizSections[newSectionIndex - 1].QuizItemRefs.Count;
                     newQuizItemIndexInSection += game.CurrentSectionQuizItemCount;
                 }
 
@@ -71,7 +71,7 @@ namespace Pubquiz.Logic.Requests
                 {
                     newSectionIndex++;
                     newQuizItemIndexInSection -= game.CurrentSectionQuizItemCount;
-                    game.CurrentSectionQuizItemCount = quiz.QuizSections[newSectionIndex - 1].QuizItems.Count;
+                    game.CurrentSectionQuizItemCount = quiz.QuizSections[newSectionIndex - 1].QuizItemRefs.Count;
                 }
             }
 
@@ -79,13 +79,13 @@ namespace Pubquiz.Logic.Requests
             var newSectionId = quiz.QuizSections[newSectionIndex - 1].Id;
             game.CurrentSectionId = newSectionId;
             game.CurrentQuizItemIndexInSection = newQuizItemIndexInSection;
-            var newQuizItemId = quiz.QuizSections[newSectionIndex - 1].QuizItems[newQuizItemIndexInSection - 1].Id;
+            var newQuizItemId = quiz.QuizSections[newSectionIndex - 1].QuizItemRefs[newQuizItemIndexInSection - 1].Id;
             game.CurrentQuizItemId = newQuizItemId;
 
             var questionsInPreviousSections =
-                quiz.QuizSections.Take(newSectionIndex - 1).Sum(qs => qs.QuestionItems.Count);
-            var questionsInSectionIncludingCurrentQuizItem = quiz.QuizSections[newSectionIndex - 1].QuizItems
-                .Take(newQuizItemIndexInSection).Count(qi => qi.ItemType == ItemType.Question);
+                quiz.QuizSections.Take(newSectionIndex - 1).Sum(qs => qs.QuestionItemRefs.Count);
+            var questionsInSectionIncludingCurrentQuizItem = quiz.QuizSections[newSectionIndex - 1].QuizItemRefs
+                .Take(newQuizItemIndexInSection).Count(qi => qi.ItemType != QuizItemType.Information);
             var newQuestionIndexInTotal = questionsInPreviousSections + questionsInSectionIncludingCurrentQuizItem;
             game.CurrentQuestionIndexInTotal = newQuestionIndexInTotal;
             game.CurrentQuizItemIndexInTotal = newQuizItemIndexInTotal;
@@ -96,7 +96,7 @@ namespace Pubquiz.Logic.Requests
             await Bus.Publish(new ItemNavigated(GameId, newSectionId, newQuizItemId, newSectionIndex,
                 newQuizItemIndexInSection,
                 newQuizItemIndexInTotal, newQuestionIndexInTotal, game.CurrentSectionQuizItemCount));
-            return $"Navigated to quiz item with id {newQuizItemId}.";
+            return newQuizItemId;
         }
     }
 }

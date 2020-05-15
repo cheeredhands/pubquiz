@@ -3,7 +3,17 @@
     <div class="question-current">
       [Current question]
       <br />
-      question id: {{game.currentQuizItemId}}
+      id: {{quizItem.id}}
+      <br/>
+      quiz item type: {{quizItem.quizItemType}}
+      <br/>
+      title: {{quizItem.title}}
+      <br/>
+      body: {{quizItem.body}}
+      <br/>
+      interactions: {{quizItem.interactions}}
+      <br/>
+      media: {{quizItem.media}}
     </div>
     <div class="question-nav">
        <b-button @click="navigateItem(-4)" variant="secondary">
@@ -33,7 +43,7 @@ import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
 import { AxiosError } from 'axios';
-import { ApiResponse } from '@/models/models';
+import { ApiResponse } from '../../models/models';
 
 @Component
 export default class QmQuestionPart extends mixins(GameServiceMixin, HelperMixin) {
@@ -45,12 +55,12 @@ export default class QmQuestionPart extends mixins(GameServiceMixin, HelperMixin
     return this.$store.getters.getGame;
   }
 
+  get quizItem() {
+    return this.$store.getters.getQuizItem;
+  }
+
   public navigateItem(offset: number) {
-    this.$_gameService_navigateItem(this.game.gameId, offset).catch(
-      (error: AxiosError<ApiResponse>) => {
-        this.$_helper_toastError(error);
-      }
-    );
+    this.$_gameService_navigateItem(this.game.gameId, offset);
   }
 }
 </script>

@@ -41,7 +41,7 @@ namespace Pubquiz.Logic.Handlers
                 return;
             }
 
-            var questionCollection = _unitOfWork.GetCollection<Question>();
+            var questionCollection = _unitOfWork.GetCollection<QuizItem>();
             var question = await questionCollection.GetAsync(message.QuestionId);
             if (question == null)
             {

@@ -17,12 +17,14 @@ namespace Pubquiz.Domain.Models
     {
         public string Title { get; set; }
         public List<QuizSection> QuizSections { get; set; }
-        public int TotalQuizItemCount => QuizSections.Sum(qs => qs.QuizItems.Count);
-        public int TotalQuestionCount => QuizSections.Sum(qs => qs.QuestionItems.Count);
-        
+        public int TotalQuizItemCount => QuizSections.Sum(qs => qs.QuizItemRefs.Count);
+        public int TotalQuestionCount => QuizSections.Sum(qs => qs.QuestionItemRefs.Count);
+        public IEnumerable<string> QuizItemIds => QuizSections.SelectMany(qs => qs.QuizItemRefs.Select(qi => qi.Id));
+
         public Quiz()
         {
             QuizSections = new List<QuizSection>();
         }
+
     }
 }
