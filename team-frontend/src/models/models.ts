@@ -54,10 +54,10 @@ export interface QuizItem {
   id: string;
   title: string;
   body: string;
-  media: []//MediaObject[];
+  media: []// MediaObject[];
   quizItemType: QuizItemType;
   maxScore: number;
-   interactions: []; //Interaction[];
+   interactions: []; // Interaction[];
 }
 
 /** Type of the question */

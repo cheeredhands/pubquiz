@@ -1,5 +1,5 @@
 import { AxiosResponse, AxiosError } from 'axios';
-import { WhoAmIResponse, ApiResponse, RegisterForGameResponse, TeamLobbyViewModel, GameState, LoginResponse, ItemType, QuizItem, NavigateItemResponse } from '../models/models';
+import { ApiResponse, GameState,  QuizItem, NavigateItemResponse } from '../models/models';
 import Component, { mixins } from 'vue-class-component';
 import HelperMixin from './helper-mixin';
 

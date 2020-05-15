@@ -43,7 +43,7 @@ import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
 import { AxiosError } from 'axios';
-import { ApiResponse } from '@/models/models';
+import { ApiResponse } from '../../models/models';
 
 @Component
 export default class QmQuestionPart extends mixins(GameServiceMixin, HelperMixin) {
