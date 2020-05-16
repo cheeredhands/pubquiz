@@ -78,7 +78,11 @@ import HelperMixin from '../services/helper-mixin';
     next();
   }
 })
-export default class QuizMasterGame extends mixins(AccountServiceMixin, GameServiceMixin, HelperMixin) {
+export default class QuizMasterGame extends mixins(
+  AccountServiceMixin,
+  GameServiceMixin,
+  HelperMixin
+) {
   public name: string = 'QuizMasterGame';
   public runningState = GameState.Running;
   public created() {
@@ -131,7 +135,11 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin, GameServ
         if (!value) {
           return;
         }
-        this.$_gameService_setGameState(this.userId, this.game.gameId, GameState.Finished)
+        this.$_gameService_setGameState(
+          this.userId,
+          this.game.gameId,
+          GameState.Finished
+        )
           .then(() => {
             // this.$router.push({ name: 'QuizMasterGame' });
           })
@@ -157,7 +165,7 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin, GameServ
 }
 
 .grid-container > * {
-  border-right: 2px solid black;
+  border-right: 4px solid lightblue;
   padding: 0.5em;
 }
 .teamfeed {
@@ -183,7 +191,7 @@ export default class QuizMasterGame extends mixins(AccountServiceMixin, GameServ
 .question {
   grid-area: question;
   padding: 0px;
-  border-bottom: 2px solid black;
+  border-bottom: 4px solid lightblue;
 }
 
 .ranking {
