@@ -4,22 +4,18 @@
       [Current question]
       <br />
       id: {{quizItem.id}}
-      <br/>
+      <br />
       quiz item type: {{quizItem.quizItemType}}
-      <br/>
+      <br />
       title: {{quizItem.title}}
-      <br/>
+      <br />
       body: {{quizItem.body}}
-      <br/>
+      <br />
       interactions: {{quizItem.interactions}}
-      <br/>
+      <br />
       media: {{quizItem.media}}
     </div>
     <div class="question-nav">
-       <b-button @click="navigateItem(-4)" variant="secondary">
-        <font-awesome-icon icon="arrow-left" />
-        -4
-      </b-button>
       <b-button @click="navigateItem(-1)" variant="secondary">
         <font-awesome-icon icon="arrow-left" />
         {{ $t('PREVIOUS_ITEM') }}
@@ -27,10 +23,6 @@
       {{$t('SECTION')}} {{game.currentSectionIndex}} : {{$t('QUIZ_ITEM')}} {{game.currentQuizItemIndexInSection}} {{$t('OF')}} {{game.currentSectionQuizItemCount}})
       <b-button @click="navigateItem(1)" variant="secondary">
         {{ $t('NEXT_ITEM') }}
-        <font-awesome-icon icon="arrow-right" />
-      </b-button>
-       <b-button @click="navigateItem(4)" variant="secondary">
-        +4
         <font-awesome-icon icon="arrow-right" />
       </b-button>
     </div>
@@ -46,7 +38,10 @@ import { AxiosError } from 'axios';
 import { ApiResponse } from '../../models/models';
 
 @Component
-export default class QmQuestionPart extends mixins(GameServiceMixin, HelperMixin) {
+export default class QmQuestionPart extends mixins(
+  GameServiceMixin,
+  HelperMixin
+) {
   public name: string = 'qm-question-part';
 
   // public created() {}
