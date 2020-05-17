@@ -55,7 +55,7 @@ import Component, { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
 import store from '../store';
 import { AxiosResponse, AxiosError } from 'axios';
-import { ApiResponse, GameState } from '../models/models';
+import { GameState } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import QmQuestionPart from './qm-gameparts/QmQuestionPart.vue';
@@ -63,6 +63,7 @@ import QmTeamFeedPart from './qm-gameparts/QmTeamFeedPart.vue';
 import AccountServiceMixin from '../services/account-service-mixin';
 import GameServiceMixin from '../services/game-service-mixin';
 import HelperMixin from '../services/helper-mixin';
+import { ApiResponse } from '../models/apiResponses';
 
 @Component({
   components: { NavBarPart, FooterPart, QmQuestionPart, QmTeamFeedPart },
@@ -86,25 +87,15 @@ export default class QuizMasterGame extends mixins(
   public name: string = 'QuizMasterGame';
   public runningState = GameState.Running;
   public created() {
-    // // get QuizMaster Game view model
-    // this.$axios
-    //   .get("/api/game/quizmastergame")
-    //   .then((response: AxiosResponse<QuizMasterGameViewModel>) => {
-    //   })
-    //   .catch((error: AxiosError) => {
-    //     this.$bvToast.toast(error.message, {
-    //       title: "oops",
-    //       variant: "error"
-    //     });
-    //   });
+    this.$_gameService_getQmInGame();
   }
 
   get game() {
-    return this.$store.getters.getGame;
+    return this.$store.getters.game;
   }
 
   get userId() {
-    return this.$store.getters.getUserId;
+    return this.$store.getters.userId;
   }
 
   public toggleGame() {
@@ -114,13 +105,7 @@ export default class QuizMasterGame extends mixins(
       this.game.state === GameState.Running
         ? GameState.Paused
         : GameState.Running
-    )
-      .then((response: AxiosResponse<ApiResponse>) => {
-        // this.$router.push({ name: 'QuizMasterGame' });
-      })
-      .catch((error: AxiosError<ApiResponse>) => {
-        this.$_helper_toastError(error);
-      });
+    );
   }
 
   public finishGame() {
@@ -139,13 +124,7 @@ export default class QuizMasterGame extends mixins(
           this.userId,
           this.game.gameId,
           GameState.Finished
-        )
-          .then(() => {
-            // this.$router.push({ name: 'QuizMasterGame' });
-          })
-          .catch((error: AxiosError<ApiResponse>) => {
-            this.$_helper_toastError(error);
-          });
+        );
       })
       .catch(err => {
         // An error occurred

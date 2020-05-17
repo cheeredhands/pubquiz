@@ -2,20 +2,21 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import { GameInfo, TeamInfo, UserInfo, GameStateChanged, GameState, ItemNavigationInfo, QuizItem } from '../models/models';
+import { User, GameState, ItemNavigatedMessage, QuizItem, Team, Game } from '../models/models';
+import { TeamLoggedOutMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage } from '@/models/messages';
 
 Vue.use(Vuex);
 
 interface RootState {
   isLoggedIn: boolean;
-  team?: TeamInfo;
-  teams: TeamInfo[];
-  game?: GameInfo;
+  team?: Team;
+  teams: Team[];
+  game?: Game;
   quizItem?: QuizItem;
   quizItems: Map<string, QuizItem>;
   signalrconnection?: HubConnection;
 
-  user?: UserInfo;
+  user?: User;
   currentGameId?: string;
   gameIds: string[];
 }
@@ -35,26 +36,29 @@ const storeOpts: StoreOptions<RootState> = {
     gameIds: []
   },
   getters: {
-    getGame: state => state.game || {},
-    getUserId: state => state.user?.userId || '',
-    getQuizItem: state => state.quizItem || {}
+    game: state => state.game || {},
+    userId: state => state.user?.userId || '',
+    quizItem: state => state.quizItem || {},
+    teamId: state => state.team?.teamId || '',
+    teamName: state => state.team?.teamName || '',
+    memberNames: state => state.team?.memberNames || ''
   },
   mutations: {
     // mutations are sync store updates
-    setUser(state, user: UserInfo) {
+    setUser(state, user: User) {
       // called when a quizmaster logs in succesfully
       state.user = user;
       state.isLoggedIn = true;
       state.currentGameId = user.currentGameId;
       state.gameIds = user.gameIds;
     },
-    setTeam(state, team: TeamInfo) {
+    setTeam(state, team: Team) {
       // called when the current team registers succesfully
       state.team = team;
       state.currentGameId = team.currentGameId;
       state.isLoggedIn = true;
     },
-    addTeam(state, team: TeamInfo) {
+    addTeam(state, team: Team) {
       // called by the signalr stuff when a new team registers
       console.log(`addTeam: ${team.teamName}`);
       team.isLoggedIn = true;
@@ -67,21 +71,21 @@ const storeOpts: StoreOptions<RootState> = {
         state.teams.push(team);
       }
     },
-    removeTeam(state, team: TeamInfo) {
+    removeTeam(state, team: Team) {
       console.log(`removeTeam: ${team.teamId}`);
       const teamInStore = state.teams.find(i => i.teamId === team.teamId);
       if (teamInStore !== undefined) {
         state.teams = state.teams.filter(t => t.teamId !== team.teamId);
       }
     },
-    setTeamLoggedOut(state, team: TeamInfo) {
+    setTeamLoggedOut(state, team: TeamLoggedOutMessage) {
       console.log(`setOtherTeamLoggedOut: ${team.teamName}`);
       const teamInStore = state.teams.find(i => i.teamId === team.teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = false;
       }
     },
-    setTeams(state, teams: TeamInfo[]) {
+    setTeams(state, teams: Team[]) {
       state.teams = teams;
     },
     setOwnTeamName(state, newName) {
@@ -94,7 +98,7 @@ const storeOpts: StoreOptions<RootState> = {
         state.team.memberNames = newMemberNames;
       }
     },
-    setOtherTeamName(state, team: TeamInfo) {
+    setOtherTeamName(state, team: Team) {
       console.log(`setOtherTeamName: ${team.teamName}`);
       const teamInStore = state.teams.find(
         item => item.teamId === team.teamId
@@ -103,7 +107,7 @@ const storeOpts: StoreOptions<RootState> = {
         teamInStore.teamName = team.teamName;
       }
     },
-    setOtherTeamMembers(state, team: TeamInfo) {
+    setOtherTeamMembers(state, team: Team) {
       console.log(`setOtherTeamMembers: ${team.memberNames}`);
       const teamInStore = state.teams.find(
         item => item.teamId === team.teamId
@@ -119,10 +123,10 @@ const storeOpts: StoreOptions<RootState> = {
       }
       state.game.state = newGameState;
     },
-    setGame(state, currentGame: GameInfo) {
+    setGame(state, currentGame: Game) {
       state.game = currentGame;
     },
-    setCurrentItem(state, itemNavigationInfo: ItemNavigationInfo) {
+    setCurrentItem(state, itemNavigationInfo: ItemNavigatedMessage) {
       if (state.game === undefined) {
         return;
       }
@@ -164,11 +168,11 @@ const storeOpts: StoreOptions<RootState> = {
     async storeToken({ commit }, jwt: string) {
       localStorage.setItem('token', jwt);
     },
-    async initTeam({ commit }, team: TeamInfo) {
+    async initTeam({ commit }, team: TeamDeletedMessage) {
       commit('setTeam', team);
       await gamehub.init();
     },
-    async initQuizMaster({ commit }, user: UserInfo) {
+    async initQuizMaster({ commit }, user: User) {
       commit('setUser', user);
       await gamehub.init();
     },
@@ -177,55 +181,55 @@ const storeOpts: StoreOptions<RootState> = {
       await gamehub.close();
       localStorage.removeItem('token');
     },
-    processTeamNameUpdated({ commit }, team: TeamInfo) {
+    processTeamNameUpdated({ commit }, team: TeamNameUpdatedMessage) {
       console.log(`processTeamNameUpdated: ${team.teamName}`);
       commit('setOtherTeamName', team);
     },
-    processTeamMembersChanged({ commit }, team: TeamInfo) {
+    processTeamMembersChanged({ commit }, team: TeamMembersChangedMessage) {
       console.log(`processTeamMembersChanged: ${team.memberNames}`);
       commit('setOtherTeamMembers', team);
     },
-    processTeamRegistered({ commit, state }, teamRegistered: TeamInfo) {
-      console.log(`processTeamRegistered: ${teamRegistered.teamName}`);
+    processTeamRegistered({ commit, state }, team: TeamRegisteredMessage) {
+      console.log(`processTeamRegistered: ${team.teamName}`);
       if (state.user !== undefined) {
-        commit('addTeam', teamRegistered);
-      } else if (state.team !== undefined && teamRegistered.teamId !== state.team.teamId) {
-        commit('addTeam', teamRegistered);
+        commit('addTeam', team);
+      } else if (state.team !== undefined && team.teamId !== state.team.teamId) {
+        commit('addTeam', team);
       }
     },
-    processTeamLoggedOut({ commit, state }, teamLoggedOut: TeamInfo) {
-      console.log(`processTeamLoggedOut: ${teamLoggedOut.teamName}`);
+    processTeamLoggedOut({ commit, state }, team: TeamLoggedOutMessage) {
+      console.log(`processTeamLoggedOut: ${team.teamName}`);
       if (state.user !== undefined) {
-        commit('setTeamLoggedOut', teamLoggedOut);
-      } else if (state.team !== undefined && teamLoggedOut.teamId !== state.team.teamId) {
-        commit('setTeamLoggedOut', teamLoggedOut);
+        commit('setTeamLoggedOut', team);
+      } else if (state.team !== undefined && team.teamId !== state.team.teamId) {
+        commit('setTeamLoggedOut', team);
       }
     },
-    processUserLoggedOut({ commit, state }, userLoggedOut: UserInfo) {
+    processUserLoggedOut({ commit, state }, userLoggedOut: User) {
       // todo notify teams that the quizmaster left?
     },
-    processGameStateChanged({ commit, state }, gameStateChanged: GameStateChanged) {
+    processGameStateChanged({ commit, state }, gameStateChangedMessage: GameStateChangedMessage) {
       if (state.game === undefined) {
         return;
       }
-      if (state.game.state !== gameStateChanged.oldGameState) {
-        console.log(`Old game state ${state.game.state} doesn't match old game state in the gameStateChanged message (${gameStateChanged.oldGameState})`);
+      if (state.game.state !== gameStateChangedMessage.oldGameState) {
+        console.log(`Old game state ${state.game.state} doesn't match old game state in the gameStateChanged message (${gameStateChangedMessage.oldGameState})`);
         return;
       }
-      commit('setGameState', gameStateChanged.newGameState);
+      commit('setGameState', gameStateChangedMessage.newGameState);
     },
-    processTeamDeleted({ commit, state }, deletedTeam: TeamInfo) {
-      if (state.team !== undefined && deletedTeam.teamId === state.team.teamId) {
+    processTeamDeleted({ commit, state }, team: TeamDeletedMessage) {
+      if (state.team !== undefined && team.teamId === state.team.teamId) {
         commit('logout');
       } else {
-        commit('removeTeam', deletedTeam);
+        commit('removeTeam', team);
       }
     },
-    processItemNavigated({ commit, state }, itemNavigationInfo: ItemNavigationInfo) {
+    processItemNavigated({ commit, state }, itemNavigatedMessage: ItemNavigatedMessage) {
       if (state.game === undefined) {
         return;
       }
-      commit('setCurrentItem', itemNavigationInfo);
+      commit('setCurrentItem', itemNavigatedMessage);
     }
   }
 };

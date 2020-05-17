@@ -124,23 +124,23 @@ namespace Pubquiz.Domain.Models
             State = newGameState;
         }
 
-        public GameViewModel ToViewModel()
-        {
-            return new GameViewModel
-            {
-                GameId = Id,
-                State = State,
-                GameTitle = Title,
-                TotalQuizItemCount = TotalQuizItemCount,
-                TotalQuestionCount = TotalQuestionCount,
-                CurrentSectionQuizItemCount = CurrentSectionQuizItemCount,
-                CurrentSectionIndex = CurrentSectionIndex,
-                CurrentSectionId = CurrentSectionId,
-                CurrentQuizItemId = CurrentQuizItemId,
-                CurrentQuizItemIndexInSection = CurrentQuizItemIndexInSection,
-                CurrentQuizItemIndexInTotal = CurrentQuizItemIndexInTotal,
-                CurrentQuestionIndexInTotal = CurrentQuestionIndexInTotal
-            };
-        }
+        // public GameViewModel ToViewModel()
+        // {
+        //     return new GameViewModel
+        //     {
+        //         GameId = Id,
+        //         State = State,
+        //         GameTitle = Title,
+        //         TotalQuizItemCount = TotalQuizItemCount,
+        //         TotalQuestionCount = TotalQuestionCount,
+        //         CurrentSectionQuizItemCount = CurrentSectionQuizItemCount,
+        //         CurrentSectionIndex = CurrentSectionIndex,
+        //         CurrentSectionId = CurrentSectionId,
+        //         CurrentQuizItemId = CurrentQuizItemId,
+        //         CurrentQuizItemIndexInSection = CurrentQuizItemIndexInSection,
+        //         CurrentQuizItemIndexInTotal = CurrentQuizItemIndexInTotal,
+        //         CurrentQuestionIndexInTotal = CurrentQuestionIndexInTotal
+        //     };
+        // }
     }
 }

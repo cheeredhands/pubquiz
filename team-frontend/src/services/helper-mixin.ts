@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { AxiosError } from 'axios';
-import { ApiResponse } from '../models/models';
+import { ApiResponse } from '../models/apiResponses';
 import Component from 'vue-class-component';
 
 @Component

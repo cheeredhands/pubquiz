@@ -31,7 +31,7 @@ namespace Pubquiz.Logic.Requests.Queries
             var model = new QmLobbyViewModel
             {
                 UserId = UserId,
-                CurrentGame = game.ToViewModel(),
+                Game = game,
                 TeamsInGame = teams.ToList()
             };
 

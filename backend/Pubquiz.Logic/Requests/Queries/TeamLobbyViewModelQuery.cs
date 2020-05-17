@@ -41,7 +41,6 @@ namespace Pubquiz.Logic.Requests
 
             var model = new TeamLobbyViewModel
             {
-                TeamId = TeamId,
                 Team = new TeamViewModel(team),
                 OtherTeamsInGame = otherTeamsInGame.ToList()
             };

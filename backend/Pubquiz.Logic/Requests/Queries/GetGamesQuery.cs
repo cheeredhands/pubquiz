@@ -12,7 +12,7 @@ namespace Pubquiz.Logic.Requests
     /// Query to get the available Games for the <see cref="User"/>.
     /// </summary>
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "UserId")]
-    public class GetGamesQuery : Query<List<GameViewModel>>
+    public class GetGamesQuery : Query<List<Game>>
     {
         public string UserId { get; set; }
 
@@ -20,14 +20,14 @@ namespace Pubquiz.Logic.Requests
         {
         }
         
-        protected override async Task<List<GameViewModel>> DoExecute()
+        protected override async Task<List<Game>> DoExecute()
         {
             var userCollection = UnitOfWork.GetCollection<User>();
             var user = await userCollection.GetAsync(UserId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var games = gameCollection.GetAsync(user.GameIds.ToArray()).Result.Select(g => g.ToViewModel()).ToList();
+            var games = gameCollection.GetAsync(user.GameIds.ToArray()).Result;
 
-            return games;
+            return games.ToList();
         }
     }
 }

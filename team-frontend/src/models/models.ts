@@ -1,22 +1,9 @@
 import { ResultCode } from './ResultCode';
 
-export interface TeamInfo {
-  /** The team Id (Guid) */
-  teamId: string;
-  /** The current game Id */
-  currentGameId: string;
-  /** The Team Name */
-  teamName: string;
-  /** false when the team has logged out / left game */
-  isLoggedIn: boolean;
-  /** Team member names */
-  memberNames: string;
-}
-
-export interface UserInfo {
-  /** The team Id (Guid) */
+export interface User {
+  /** The user Id */
   userId: string;
-  /** The Team Name */
+  /** The user name */
   userName: string;
   /** false when the user has logged out / left game */
   isLoggedIn: boolean;
@@ -26,7 +13,7 @@ export interface UserInfo {
   gameIds: string[];
 }
 
-export interface GameInfo {
+export interface Game {
   gameId: string;
   gameTitle: string;
   state: GameState;
@@ -43,7 +30,22 @@ export interface GameInfo {
   currentQuestionIndexInTotal: number;
 }
 
-export interface QuizItemInfo {
+export interface Team {
+  /** The team Id */
+  teamId: string;
+  /** The game Id */
+  gameId: string;
+  /** The Team Name */
+  teamName: string;
+  /** Team member names */
+  memberNames: string;
+  /** the current game Id */
+  currentGameId: string;
+  /** false when the user has logged out / left game */
+  isLoggedIn: boolean;
+}
+
+export interface QuizItemRef {
   id: string;
   title: string;
   itemType: QuizItemType;
@@ -76,7 +78,7 @@ export enum QuizItemType {
   Information = 'Information'
 }
 
-export interface ItemNavigationInfo {
+export interface ItemNavigatedMessage {
   gameId: string;
   newSectionId: string;
   newQuizItemId: string;
@@ -95,67 +97,8 @@ export enum GameState {
   Finished = 'Finished'
 }
 
-export interface GameStateChanged {
-  /** The old game state */
-  oldGameState: GameState;
-  /** The new game state */
-  newGameState: GameState;
-}
 
-export interface ApiResponse {
-  errorCode: ResultCode;
-  code: ResultCode;
-  message: string;
-}
 
-export interface LoginResponse extends ApiResponse {
-  jwt: string;
-  userId: string;
-  userName: string;
-  currentGameId: string;
-  gameIds: string[];
-}
-
-export interface RegisterForGameResponse extends ApiResponse {
-  jwt: string;
-  teamId: string;
-  gameId: string;
-  teamName: string;
-  memberNames: string;
-}
-
-export interface WhoAmIResponse extends ApiResponse {
-  userName: string;
-  userId: string;
-  currentGameId: string;
-  userRole: UserRole;
-}
-
-export interface SaveTeamMembersResponse extends ApiResponse {
-  teamMembers: string;
-}
-
-export interface NavigateItemResponse extends ApiResponse {
-  quizItemId: string;
-}
-
-export interface TeamLobbyViewModel {
-  userId: string;
-  team: TeamInfo;
-  otherTeamsInGame: TeamInfo[];
-}
-
-export interface QmLobbyViewModel {
-  userId: string;
-  currentGame: GameViewModel;
-  teamsInGame: TeamInfo[];
-}
-
-export interface GameViewModel {
-  gameId: string;
-  gameTitle: string;
-  state: GameState;
-}
 
 export enum UserRole {
   Team = 'Team',

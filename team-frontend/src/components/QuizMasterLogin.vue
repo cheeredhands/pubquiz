@@ -56,7 +56,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
-import { LoginResponse, ApiResponse } from '../models/models';
+import { LoginResponse, ApiResponse } from '../models/apiResponses';
 import Component, { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../services/account-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';

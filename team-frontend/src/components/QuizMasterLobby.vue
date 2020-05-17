@@ -46,15 +46,11 @@ import { AxiosResponse, AxiosError } from 'axios';
 import { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../services/account-service-mixin';
 import GameServiceMixin from '../services/game-service-mixin';
-import {
-  QmLobbyViewModel,
-  ApiResponse,
-  GameState,
-  GameStateChanged
-} from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
+import { GameState } from '../models/models';
+import { ApiResponse } from '../models/apiResponses';
 
 @Component({
   components: { NavBarPart, FooterPart },
@@ -76,16 +72,7 @@ export default class QuizMasterLobby extends mixins(AccountServiceMixin, GameSer
   public runningState = GameState.Running;
   public pausedState = GameState.Paused;
   public created() {
-    // get team lobby view model
-    this.$axios
-      .get('/api/game/quizmasterlobby')
-      .then((response: AxiosResponse<QmLobbyViewModel>) => {
-        this.$store.commit('setTeams', response.data.teamsInGame);
-        this.$store.commit('setGame', response.data.currentGame);
-      })
-      .catch((error: AxiosError<ApiResponse>) => {
-        this.$_helper_toastError(error);
-      });
+   this.$_gameService_getQmLobby();
   }
 
   public startGame() {

@@ -81,16 +81,12 @@ import { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
 import store from '../store';
 import { AxiosResponse, AxiosError } from 'axios';
-import {
-  TeamLobbyViewModel,
-  ApiResponse,
-  SaveTeamMembersResponse
-} from '../models/models';
 import AccountServiceMixin from '../services/account-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
-
+import GameServiceMixin from '../services/game-service-mixin';
+import { ApiResponse, SaveTeamMembersResponse } from '../models/apiResponses';
 @Component({
   components: { NavBarPart, FooterPart },
   beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -105,30 +101,45 @@ import HelperMixin from '../services/helper-mixin';
     next();
   }
 })
-export default class TeamLobby extends mixins(AccountServiceMixin, HelperMixin) {
+export default class TeamLobby extends mixins(
+  AccountServiceMixin,
+  GameServiceMixin,
+  HelperMixin
+) {
   public name: string = 'TeamLobby';
 
   public inEdit: boolean = false;
 
   public newName: string = '';
 
-  public teamId: string = '';
+  public teamId: string = this.$store.getters.teamId;
 
   public newMemberNames: string = '';
 
+  get isLoggedIn(): boolean {
+    return this.$store.state.isLoggedIn || false;
+  }
+
+  get teamName() {
+    return this.$store.getters.teamName;
+  }
+
+  get memberNames() {
+    return this.$store.getters.memberNames;
+  }
+
+  get teams() {
+    return this.$store.state.teams || [];
+  }
+
+  get isInEdit() {
+    return this.inEdit;
+  }
+
   public created() {
-    // get team lobby view model
-    this.$_accountService_getTeamLobby()
-      .then((response: AxiosResponse<TeamLobbyViewModel>) => {
-        this.$store.commit('setTeam', response.data.team);
-        this.$store.commit('setTeams', response.data.otherTeamsInGame);
-        this.teamId = this.$store.state.team.teamId;
-        this.newName = this.teamName;
-        this.newMemberNames = this.memberNames;
-      })
-      .catch((error: AxiosError<ApiResponse>) => {
-        this.$_helper_toastError(error);
-      });
+    this.$_gameService_getTeamLobby();
+    this.newName = this.teamName;
+    this.newMemberNames = this.memberNames;
   }
 
   public saveMembers(evt: Event) {
@@ -145,11 +156,10 @@ export default class TeamLobby extends mixins(AccountServiceMixin, HelperMixin) 
       })
       .then((response: AxiosResponse<SaveTeamMembersResponse>) => {
         this.$store.commit('setOwnTeamMembers', response.data.teamMembers);
+        this.newMemberNames = response.data.teamMembers;
       })
       .catch((error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);
-      })
-      .finally(() => {
         this.newMemberNames = this.memberNames;
       });
   }
@@ -197,26 +207,6 @@ export default class TeamLobby extends mixins(AccountServiceMixin, HelperMixin) 
           this.$router.push({ name: 'RegisterTeam' });
         });
     }
-  }
-
-  get isLoggedIn(): boolean {
-    return this.$store.state.isLoggedIn || false;
-  }
-
-  get teamName() {
-    return this.$store.state.team.teamName || '';
-  }
-
-  get memberNames() {
-    return this.$store.state.team.memberNames || '';
-  }
-
-  get teams() {
-    return this.$store.state.teams || [];
-  }
-
-  get isInEdit() {
-    return this.inEdit;
   }
 }
 </script>

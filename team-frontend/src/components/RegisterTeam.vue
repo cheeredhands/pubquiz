@@ -68,15 +68,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 import { AxiosResponse, AxiosError } from 'axios';
 import VueI18n from 'vue-i18n';
-import {
-  TeamInfo,
-  RegisterForGameResponse,
-  ApiResponse
-} from '../models/models';
 import AccountServiceMixin from '../services/account-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
+import { RegisterForGameResponse, ApiResponse } from '../models/apiResponses';
 
 @Component({
   components: { NavBarPart, FooterPart }

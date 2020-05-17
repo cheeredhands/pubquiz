@@ -35,7 +35,6 @@ import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
 import { AxiosError } from 'axios';
-import { ApiResponse } from '../../models/models';
 
 @Component
 export default class QmQuestionPart extends mixins(
@@ -47,11 +46,11 @@ export default class QmQuestionPart extends mixins(
   // public created() {}
 
   get game() {
-    return this.$store.getters.getGame;
+    return this.$store.getters.game;
   }
 
   get quizItem() {
-    return this.$store.getters.getQuizItem;
+    return this.$store.getters.quizItem;
   }
 
   public navigateItem(offset: number) {
