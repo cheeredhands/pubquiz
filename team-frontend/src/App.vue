@@ -6,12 +6,13 @@
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import Component, { mixins } from 'vue-class-component';
-import { WhoAmIResponse, UserRole } from './models/models';
+import { UserRole } from './models/models';
 import { ResultCode } from './models/ResultCode';
 import AccountServiceMixin from './services/account-service-mixin';
 import NavBarPart from './components/parts/NavBarPart.vue';
 import FooterPart from './components/parts/FooterPart.vue';
 import HelperMixin from './services/helper-mixin';
+import { WhoAmIResponse } from './models/apiResponses';
 
 @Component({
   components: { NavBarPart, FooterPart }
@@ -48,7 +49,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
         }
       })
       .catch((error: AxiosError) => {
-       this.$_helper_toastError(error);
+        this.$_helper_toastError(error);
       });
   }
 }
