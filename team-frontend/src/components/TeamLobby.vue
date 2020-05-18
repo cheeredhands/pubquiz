@@ -19,8 +19,7 @@
             >
               <b-input-group>
                 <font-awesome-icon
-                  v-if="!teamNameEditable"
-                  style="display: inline-block;position:absolute; right:10px; top: 10px; z-index:10;"
+                  v-if="!teamNameEditable"                  
                   icon="pen"
                   @click="enterTeamNameEditMode"
                   :title="$t('EDIT')"
@@ -35,15 +34,10 @@
                   type="text"
                   name="nameInput"
                   required
+                  size="lg"
                   minlength="5"
                   maxlength="30"
                 ></b-form-input>
-
-                <!-- <b-input-group-append>
-                  <b-button type="submit" variant="primary">
-                    <font-awesome-icon :icon="teamNameEditIcon" :title="$t('EDIT')" />
-                  </b-button>
-                </b-input-group-append>-->
                 <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
               </b-input-group>
             </b-form-group>
@@ -68,15 +62,12 @@
                   @blur="exitMemberNamesEditMode"
                   class="editable"
                   :placeholder="$t('TEAM_MEMBERS_HERE')"
-                  rows="4"
+                  rows="5"
                   v-model="newMemberNames"
                   id="memberNamesInput"
                   name="membersNamesInput"
                   maxlength="140"
                 ></b-form-textarea>
-                <!-- <b-input-group-append>
-                  <b-button variant="primary" type="submit">{{ $t('SAVE')}}</b-button>
-                </b-input-group-append>-->
               </b-input-group>
             </b-form-group>
           </b-form>
@@ -158,8 +149,6 @@ export default class TeamLobby extends mixins(
 
   public created() {
     this.$_gameService_getTeamLobby();
-    // this.newName = this.teamName;
-    // this.newMemberNames = this.memberNames;
   }
 
   public enterTeamNameEditMode() {
@@ -261,12 +250,10 @@ export default class TeamLobby extends mixins(
 
 .fa-pen {
   cursor: pointer;
-}
-.fa-pen {
   display: inline-block;
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 15px;
+  top: 15px;
   z-index: 10;
   color: lightgrey;
 }
@@ -283,13 +270,4 @@ export default class TeamLobby extends mixins(
   /* display: inline-block; */
   color: black;
 }
-
-/* button {
-  background-color: Transparent;
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-} */
 </style>
