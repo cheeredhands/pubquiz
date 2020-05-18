@@ -8,7 +8,7 @@ using Pubquiz.Persistence;
 using Rebus.Bus;
 using TeamMembersChanged = Pubquiz.Logic.Messages.TeamMembersChanged;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Notifications
 {
     /// <summary>
     /// Notification to change the <see cref="Team"/> members.

@@ -5,7 +5,7 @@ using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.Logic
+namespace Pubquiz.Logic.Requests
 {
     public abstract class Request
     {

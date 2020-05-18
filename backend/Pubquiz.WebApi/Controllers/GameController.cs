@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain;
 using Pubquiz.Logic.Requests;
+using Pubquiz.Logic.Requests.Commands;
+using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;

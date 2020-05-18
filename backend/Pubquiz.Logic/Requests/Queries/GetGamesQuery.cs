@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.ViewModels;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Queries
 {
     /// <summary>
     /// Query to get the available Games for the <see cref="User"/>.

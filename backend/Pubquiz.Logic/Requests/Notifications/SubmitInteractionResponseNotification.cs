@@ -8,7 +8,7 @@ using Pubquiz.Persistence;
 using Rebus.Bus;
 using InteractionResponseAdded = Pubquiz.Logic.Messages.InteractionResponseAdded;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Notifications
 {
     /// <summary>
     /// Notification to submit an interaction response for a certain <see cref="Interaction"/> in a <see cref="QuizItem"/>

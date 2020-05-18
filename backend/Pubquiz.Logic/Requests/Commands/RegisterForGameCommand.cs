@@ -7,7 +7,7 @@ using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Commands
 {
     /// <summary>
     /// Command to register for a <see cref="Game"/>.

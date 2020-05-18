@@ -4,7 +4,7 @@ using Pubquiz.Logic.Messages;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Notifications
 {
     public class LogoutTeamNotification : Notification
     {

@@ -7,7 +7,7 @@ using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Commands
 {
     [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
     public class NavigateToItemByOffsetCommand : Command<string>

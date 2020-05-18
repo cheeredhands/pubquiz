@@ -5,7 +5,7 @@ using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Notifications
 {
     /// <summary>
     /// Command to select a current <see cref="Game"/>.

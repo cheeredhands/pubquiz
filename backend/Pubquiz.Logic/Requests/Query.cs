@@ -1,26 +1,22 @@
 using System.Threading.Tasks;
-using Pubquiz.Domain;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
-namespace Pubquiz.Logic
+namespace Pubquiz.Logic.Requests
 {
     /// <summary>
-    /// A command request.
+    /// A query request.
     /// </summary>
     /// <typeparam name="TResponse"></typeparam>
-    public abstract class Command<TResponse> : Request
+    public abstract class Query<TResponse> : Request
     {
-        protected readonly IBus Bus;
-
-        protected Command(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork)
+        protected Query(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            Bus = bus;
         }
 
         public Task<TResponse> Execute()
         {
             CheckValidationAttributes();
+
             return DoExecute();
         }
 

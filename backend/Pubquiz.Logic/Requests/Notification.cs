@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using Pubquiz.Domain;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
-namespace Pubquiz.Logic
+namespace Pubquiz.Logic.Requests
 {
     /// <summary>
     /// A command request that doesn't have a return value e.g. fire-and-forget.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Logic.Requests;
+using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Domain.Tests

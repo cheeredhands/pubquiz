@@ -2,7 +2,7 @@
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Queries
 {
     public class UserQuery : Query<User>
     {

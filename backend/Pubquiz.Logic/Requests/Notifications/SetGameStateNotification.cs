@@ -7,7 +7,7 @@ using Pubquiz.Persistence;
 using Rebus.Bus;
 using GameStateChanged = Pubquiz.Logic.Messages.GameStateChanged;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Notifications
 {
     /// <summary>
     /// Notification to set the <see cref="GameState">state</see> of a specific <see cref="Game"/>.

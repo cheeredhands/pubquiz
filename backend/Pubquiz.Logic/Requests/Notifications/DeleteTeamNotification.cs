@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using Newtonsoft.Json;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
@@ -9,7 +8,7 @@ using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Notifications
 {
     /// <summary>
     /// Notification to delete a <see cref="Team"/>.

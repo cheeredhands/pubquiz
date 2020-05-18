@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
+using Pubquiz.Logic.Requests.Commands;
 
 namespace Pubquiz.Domain.Tests
 {

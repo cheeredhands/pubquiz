@@ -1,12 +1,10 @@
-using System;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence;
 using Rebus.Bus;
-using Rebus.Handlers;
 
-namespace Pubquiz.Logic.Requests
+namespace Pubquiz.Logic.Requests.Commands
 {
     /// <summary>
     /// Command to login to the system.
