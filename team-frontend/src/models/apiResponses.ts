@@ -26,6 +26,8 @@ export interface ApiResponse {
   export interface WhoAmIResponse extends ApiResponse {
     userName: string;
     userId: string;
+    teamName: string;
+    memberNames: string;
     currentGameId: string;
     userRole: UserRole;
   }

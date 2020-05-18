@@ -6,7 +6,7 @@
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import Component, { mixins } from 'vue-class-component';
-import { UserRole } from './models/models';
+import { UserRole, Team, User } from './models/models';
 import { ResultCode } from './models/ResultCode';
 import AccountServiceMixin from './services/account-service-mixin';
 import NavBarPart from './components/parts/NavBarPart.vue';
@@ -31,9 +31,11 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
           this.$store
             .dispatch('initTeam', {
               teamId: response.data.userId,
-              teamName: response.data.userName,
-              currentGameId: response.data.currentGameId
-            })
+              teamName: response.data.teamName,
+              memberNames: response.data.memberNames,
+              currentGameId: response.data.currentGameId,
+              isLoggedIn: true
+            } as Team)
             .then(() => {
               this.$router.replace({ name: 'TeamLobby' });
             });
@@ -42,7 +44,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
             .dispatch('initQuizMaster', {
               userId: response.data.userId,
               userName: response.data.userName
-            })
+            } as User)
             .then(() => {
               this.$router.replace({ name: 'QuizMasterLobby' });
             });

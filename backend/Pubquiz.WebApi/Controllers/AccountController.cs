@@ -66,10 +66,24 @@ namespace Pubquiz.WebApi.Controllers
                 });
             }
 
+            if (user is Team team)
+            {
+                return Ok(new WhoAmiResponse
+                {
+                    Code = ResultCode.ThatsYou,
+                    Message = "Logged in as team.",
+                    UserName = team.UserName,
+                    UserId = User.GetId(),
+                    TeamName = team.Name,
+                    MemberNames = team.MemberNames,
+                    CurrentGameId = team.CurrentGameId,
+                    UserRole = User.GetUserRole()
+                });
+            }
             return Ok(new WhoAmiResponse
             {
                 Code = ResultCode.ThatsYou,
-                Message = "",
+                Message = "Logged in as user.",
                 UserName = user.UserName,
                 UserId = User.GetId(),
                 CurrentGameId = user.CurrentGameId,
