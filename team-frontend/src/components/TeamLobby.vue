@@ -18,7 +18,16 @@
               label-for="nameInput"
             >
               <b-input-group>
+                <!-- <font-awesome-icon
+                  type="button"
+                  style="display: inline-block;position:absolute; right:10px; top: 10px; z-index:10"
+                  :icon="teamNameEditIcon"
+                  :title="$t('EDIT')"
+                />-->
                 <b-form-input
+                  :plaintext="!teamNameEditable"
+                  class="editable"
+                  @click="enterTeamNameEditMode"
                   id="nameInput"
                   v-model="newName"
                   type="text"
@@ -26,9 +35,13 @@
                   required
                   minlength="5"
                   maxlength="30"
+                  @blur="exitTeamNameEditMode"
                 ></b-form-input>
+
                 <b-input-group-append>
-                  <b-button variant="primary" type="submit">{{ $t('ADJUST')}}</b-button>
+                  <button type="submit">
+                    <font-awesome-icon :icon="teamNameEditIcon" :title="$t('EDIT')" />
+                  </button>
                 </b-input-group-append>
                 <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
               </b-input-group>
@@ -108,10 +121,9 @@ export default class TeamLobby extends mixins(
 ) {
   public name: string = 'TeamLobby';
 
-  public inEdit: boolean = false;
-
   public newName: string = '';
-
+  public teamNameEditable = false;
+  public teamNameEditIcon = 'pen';
   public teamId: string = this.$store.getters.teamId;
 
   public newMemberNames: string = '';
@@ -132,14 +144,21 @@ export default class TeamLobby extends mixins(
     return this.$store.state.teams || [];
   }
 
-  get isInEdit() {
-    return this.inEdit;
-  }
-
   public created() {
     this.$_gameService_getTeamLobby();
     this.newName = this.teamName;
     this.newMemberNames = this.memberNames;
+  }
+
+  public enterTeamNameEditMode() {
+    if (!this.teamNameEditable) {
+      this.teamNameEditable = true;
+    }
+    this.teamNameEditIcon = 'check';
+  }
+
+  public exitTeamNameEditMode(evt: Event) {
+    this.applyTeamNameChange(evt);
   }
 
   public saveMembers(evt: Event) {
@@ -166,11 +185,15 @@ export default class TeamLobby extends mixins(
 
   public applyTeamNameChange(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) {
+      // this.teamNameEditable = false;
+      // this.teamNameEditIcon = 'pen';
       return;
     }
 
     // call api that team name changed but only if team name has not changed!
     if (this.teamName === this.newName) {
+      this.teamNameEditable = false;
+      this.teamNameEditIcon = 'pen';
       return;
     }
 
@@ -188,6 +211,8 @@ export default class TeamLobby extends mixins(
       })
       .finally(() => {
         this.newName = this.teamName;
+        this.teamNameEditable = false;
+        this.teamNameEditIcon = 'pen';
       });
   }
 
@@ -210,3 +235,14 @@ export default class TeamLobby extends mixins(
   }
 }
 </script>
+
+<style scoped>
+button {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+</style>
