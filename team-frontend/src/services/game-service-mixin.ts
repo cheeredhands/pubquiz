@@ -22,7 +22,7 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
     public $_gameService_getTeamLobby() {
         return this.$axios.get('/api/game/teamlobby', { withCredentials: true })
             .then((response: AxiosResponse<TeamLobbyViewModel>) => {
-                this.$store.commit('setTeam', response.data.team);
+                // this.$store.commit('setTeam', response.data.team);
                 this.$store.commit('setTeams', response.data.otherTeamsInGame);
             })
             .catch((error: AxiosError<ApiResponse>) => {

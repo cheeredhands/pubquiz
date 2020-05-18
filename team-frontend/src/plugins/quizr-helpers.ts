@@ -2,13 +2,14 @@ import Vue, { PluginObject } from 'vue';
 
 export class QuizrHelpers {
 
-  public formIsValid(evt: Event): boolean {
+  public formIsValid(evt: Event, form?: HTMLFormElement): boolean {
     // check validation
     evt.preventDefault();
     evt.stopPropagation();
 
-    const form = evt.srcElement as HTMLFormElement;
-
+    if (form === undefined) {
+      form = evt.srcElement as HTMLFormElement;
+    }
     if (form.checkValidity() === false) {
       // https://getbootstrap.com/docs/4.3/components/forms/#custom-styles
       form.classList.add('was-validated');

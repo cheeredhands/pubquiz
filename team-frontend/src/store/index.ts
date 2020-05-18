@@ -168,7 +168,7 @@ const storeOpts: StoreOptions<RootState> = {
     async storeToken({ commit }, jwt: string) {
       localStorage.setItem('token', jwt);
     },
-    async initTeam({ commit }, team: TeamDeletedMessage) {
+    async initTeam({ commit }, team: Team) {
       commit('setTeam', team);
       await gamehub.init();
     },

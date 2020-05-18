@@ -11,23 +11,25 @@
       </b-row>
       <b-row>
         <b-col md="6">
-          <b-form @submit="applyTeamNameChange" novalidate>
+          <b-form ref="teamNameForm" @submit="applyTeamNameChange" novalidate>
             <b-form-group
               :label="$t('TEAMNAME')"
               :description="$t('KEEP_IT_CLEAN')"
               label-for="nameInput"
             >
               <b-input-group>
-                <!-- <font-awesome-icon
-                  type="button"
-                  style="display: inline-block;position:absolute; right:10px; top: 10px; z-index:10"
-                  :icon="teamNameEditIcon"
+                <font-awesome-icon
+                  v-if="!teamNameEditable"
+                  style="display: inline-block;position:absolute; right:10px; top: 10px; z-index:10;"
+                  icon="pen"
+                  @click="enterTeamNameEditMode"
                   :title="$t('EDIT')"
-                />-->
+                />
                 <b-form-input
                   :plaintext="!teamNameEditable"
-                  class="editable"
                   @click="enterTeamNameEditMode"
+                  @blur="exitTeamNameEditMode"
+                  class="editable"
                   id="nameInput"
                   v-model="newName"
                   type="text"
@@ -35,35 +37,46 @@
                   required
                   minlength="5"
                   maxlength="30"
-                  @blur="exitTeamNameEditMode"
                 ></b-form-input>
 
-                <b-input-group-append>
-                  <button type="submit">
+                <!-- <b-input-group-append>
+                  <b-button type="submit" variant="primary">
                     <font-awesome-icon :icon="teamNameEditIcon" :title="$t('EDIT')" />
-                  </button>
-                </b-input-group-append>
+                  </b-button>
+                </b-input-group-append>-->
                 <b-form-invalid-feedback>{{ $t('TEAMNAME_LENGTH') }}</b-form-invalid-feedback>
               </b-input-group>
             </b-form-group>
           </b-form>
-          <b-form @submit="saveMembers" novalidate>
+          <b-form ref="memberNamesForm" @submit="saveMembers" novalidate>
             <b-form-group
               :label="$t('MEMBERS')"
               label-for="memberNamesInput"
               :description="$t('MEMBER_NAMES')"
             >
               <b-input-group>
+                <font-awesome-icon
+                  v-if="!memberNamesEditable"
+                  style="display: inline-block;position:absolute; right:10px; top: 10px; z-index:10;"
+                  icon="pen"
+                  @click="enterMemberNamesEditMode"
+                  :title="$t('EDIT')"
+                />
                 <b-form-textarea
+                  :plaintext="!memberNamesEditable"
+                  @click="enterMemberNamesEditMode"
+                  @blur="exitMemberNamesEditMode"
+                  class="editable"
+                  :placeholder="$t('TEAM_MEMBERS_HERE')"
                   rows="4"
                   v-model="newMemberNames"
                   id="memberNamesInput"
                   name="membersNamesInput"
                   maxlength="140"
                 ></b-form-textarea>
-                <b-input-group-append>
+                <!-- <b-input-group-append>
                   <b-button variant="primary" type="submit">{{ $t('SAVE')}}</b-button>
-                </b-input-group-append>
+                </b-input-group-append>-->
               </b-input-group>
             </b-form-group>
           </b-form>
@@ -120,13 +133,12 @@ export default class TeamLobby extends mixins(
   HelperMixin
 ) {
   public name: string = 'TeamLobby';
-
-  public newName: string = '';
-  public teamNameEditable = false;
-  public teamNameEditIcon = 'pen';
   public teamId: string = this.$store.getters.teamId;
 
-  public newMemberNames: string = '';
+  public newName: string = this.teamName;
+  public newMemberNames: string = this.memberNames;
+  public teamNameEditable = false;
+  public memberNamesEditable = false;
 
   get isLoggedIn(): boolean {
     return this.$store.state.isLoggedIn || false;
@@ -146,26 +158,38 @@ export default class TeamLobby extends mixins(
 
   public created() {
     this.$_gameService_getTeamLobby();
-    this.newName = this.teamName;
-    this.newMemberNames = this.memberNames;
+    // this.newName = this.teamName;
+    // this.newMemberNames = this.memberNames;
   }
 
   public enterTeamNameEditMode() {
     if (!this.teamNameEditable) {
       this.teamNameEditable = true;
     }
-    this.teamNameEditIcon = 'check';
+  }
+
+  public enterMemberNamesEditMode() {
+    if (!this.memberNamesEditable) {
+      this.memberNamesEditable = true;
+    }
   }
 
   public exitTeamNameEditMode(evt: Event) {
     this.applyTeamNameChange(evt);
   }
 
+  public exitMemberNamesEditMode(evt: Event) {
+    this.saveMembers(evt);
+  }
+
   public saveMembers(evt: Event) {
-    if (!this.$quizrhelpers.formIsValid(evt)) {
+    if (
+      !this.$quizrhelpers.formIsValid(evt, this.$refs.memberNamesForm as any)
+    ) {
       return;
     }
     if (this.memberNames === this.newMemberNames) {
+      this.memberNamesEditable = false;
       return;
     }
 
@@ -176,6 +200,7 @@ export default class TeamLobby extends mixins(
       .then((response: AxiosResponse<SaveTeamMembersResponse>) => {
         this.$store.commit('setOwnTeamMembers', response.data.teamMembers);
         this.newMemberNames = response.data.teamMembers;
+        this.memberNamesEditable = false;
       })
       .catch((error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);
@@ -184,16 +209,13 @@ export default class TeamLobby extends mixins(
   }
 
   public applyTeamNameChange(evt: Event) {
-    if (!this.$quizrhelpers.formIsValid(evt)) {
-      // this.teamNameEditable = false;
-      // this.teamNameEditIcon = 'pen';
+    if (!this.$quizrhelpers.formIsValid(evt, this.$refs.teamNameForm as any)) {
       return;
     }
 
     // call api that team name changed but only if team name has not changed!
     if (this.teamName === this.newName) {
       this.teamNameEditable = false;
-      this.teamNameEditIcon = 'pen';
       return;
     }
 
@@ -212,7 +234,6 @@ export default class TeamLobby extends mixins(
       .finally(() => {
         this.newName = this.teamName;
         this.teamNameEditable = false;
-        this.teamNameEditIcon = 'pen';
       });
   }
 
@@ -237,12 +258,38 @@ export default class TeamLobby extends mixins(
 </script>
 
 <style scoped>
-button {
+.editable,
+.fa-pen {
+  cursor: pointer;
+}
+.fa-pen {
+  display: inline-block;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 10;
+  color: lightgrey;
+}
+
+.input-group {
+  border: 1px solid transparent;
+  /* margin-left: 4px; */
+}
+
+.input-group:hover {
+  border: 1px solid lightgrey;
+}
+.input-group:hover .fa-pen {
+  /* display: inline-block; */
+  color: black;
+}
+
+/* button {
   background-color: Transparent;
   background-repeat: no-repeat;
   border: none;
   cursor: pointer;
   overflow: hidden;
   outline: none;
-}
+} */
 </style>
