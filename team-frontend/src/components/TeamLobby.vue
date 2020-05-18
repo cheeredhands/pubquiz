@@ -258,7 +258,7 @@ export default class TeamLobby extends mixins(
 </script>
 
 <style scoped>
-.editable,
+
 .fa-pen {
   cursor: pointer;
 }
