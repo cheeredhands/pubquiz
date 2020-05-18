@@ -1,7 +1,7 @@
 import { GameState, QuizItemType, Team, Game } from './models';
 
 export interface TeamLobbyViewModel {
-    team: Team;
+    game: Game;
     otherTeamsInGame: Team[];
 }
 

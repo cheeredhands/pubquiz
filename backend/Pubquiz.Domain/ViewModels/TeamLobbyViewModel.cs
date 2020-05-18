@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Pubquiz.Domain.Models;
 
 namespace Pubquiz.Domain.ViewModels
 {
     public class TeamLobbyViewModel
     {
-        public TeamViewModel Team { get; set; }
+        public Game Game { get; set; }
         public List<TeamViewModel> OtherTeamsInGame { get; set; }
     }
 }
