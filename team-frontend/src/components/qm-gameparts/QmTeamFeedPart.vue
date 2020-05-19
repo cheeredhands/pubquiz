@@ -4,8 +4,8 @@
       <h4 class="mt-1 mb-0 ml-1">Team feed (12 teams)</h4>
     </div>
     <div class="feed">
-      <ul class="list-unstyled" v-for="i in 12" v-bind:key="i">
-        <b-media tag="li">
+      <ul class="list-unstyled">
+        <b-media tag="li" v-for="i in 12" v-bind:key="i">
           <template v-slot:aside>
             <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img>
           </template>
