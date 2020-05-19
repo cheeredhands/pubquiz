@@ -1,16 +1,20 @@
 <template>
   <div id="app">
-    <NavBarPart />
+    <nav-bar-part>
+      <template
+        v-slot:centercontent
+      >Lobby - {{game.title}} ({{ $t(game.state) }} {{$t('SECTION')}} {{game.currentSectionIndex}} : {{game.currentQuizItemIndexInSection}}/{{game.currentSectionQuizItemCount}})</template>
+    </nav-bar-part>
     <b-container>
       <b-row>
         <b-col>
           <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
           <p>{{ $t('TEAMLOBBY_SIT_BACK')}}</p>
-          <hr />
         </b-col>
       </b-row>
       <b-row>
         <b-col md="6">
+          <h3>{{ $t('YOUR_TEAM')}}</h3>
           <quizr-editable-textfield
             v-model="newName"
             :label="$t('TEAMNAME')"
@@ -33,15 +37,17 @@
           ></quizr-editable-textarea>
         </b-col>
         <b-col>
-          <p>{{ $t('COMPETING_TEAMS')}}</p>
+          <h3>{{ $t('COMPETING_TEAMS')}}</h3>
           <b-list-group>
             <b-list-group-item
+              class="d-flex justify-content-between align-items-center"
               v-for="(otherTeam, index) in teams"
               :key="index"
-              :title="otherTeam.memberNames"
-            >
-              {{ otherTeam.teamName }}
-              <b-badge v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}}</b-badge>
+            ><div>
+              <h5 class="mt-0 mb-1"> {{ otherTeam.teamName }}</h5>
+               <p class="mb-0 small">
+                {{ otherTeam.memberNames }}</p></div>
+              <b-badge v-if="!otherTeam.isLoggedIn" pill>{{ $t('LOGGED_OUT')}}</b-badge>
             </b-list-group-item>
           </b-list-group>
         </b-col>
@@ -101,6 +107,9 @@ export default class TeamLobby extends mixins(
     return this.$store.state.isLoggedIn || false;
   }
 
+  get game() {
+    return this.$store.state.game || {};
+  }
   get teamName() {
     return this.$store.getters.teamName;
   }
