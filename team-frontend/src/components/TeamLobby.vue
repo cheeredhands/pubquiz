@@ -41,7 +41,7 @@
               :title="otherTeam.memberNames"
             >
               {{ otherTeam.teamName }}
-              <span v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}}</span>
+              <b-badge v-if="!otherTeam.isLoggedIn">{{ $t('LOGGED_OUT')}}</b-badge>
             </b-list-group-item>
           </b-list-group>
         </b-col>
