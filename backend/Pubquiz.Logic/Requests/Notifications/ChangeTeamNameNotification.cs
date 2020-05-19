@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
@@ -27,7 +28,9 @@ namespace Pubquiz.Logic.Requests.Notifications
             var team = await teamCollection.GetAsync(TeamId);
 
             // check if team name is taken, otherwise throw DomainException
-            var isTeamNameTaken = await teamCollection.AnyAsync(t => t.Name == NewName && t.CurrentGameId == team.CurrentGameId);
+            var isTeamNameTaken = await teamCollection.AnyAsync(t =>
+                String.Equals(t.Name, NewName, StringComparison.CurrentCultureIgnoreCase) &&
+                t.CurrentGameId == team.CurrentGameId);
             if (isTeamNameTaken)
             {
                 throw new DomainException(ResultCode.TeamNameIsTaken, "Team name is taken.", true);
