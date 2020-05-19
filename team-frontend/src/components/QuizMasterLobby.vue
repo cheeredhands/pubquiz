@@ -9,7 +9,7 @@
         >{{ $t('CONTINUE_GAME') }}</b-button>
         <b-button v-else @click="startGame" variant="success">{{ $t('START_GAME') }}</b-button>
       </b-nav-item>
-      <template v-slot:centercontent>Lobby - {{game.gameTitle}} ({{ $t(game.state) }} {{$t('SECTION')}} {{game.currentSectionIndex}} : {{game.currentQuizItemIndexInSection}}/{{game.currentSectionQuizItemCount}})</template>
+      <template v-slot:centercontent>Lobby - {{game.title}} ({{ $t(game.state) }} {{$t('SECTION')}} {{game.currentSectionIndex}} : {{game.currentQuizItemIndexInSection}}/{{game.currentSectionQuizItemCount}})</template>
     </NavBarPart>
     <b-container>
       <b-row>

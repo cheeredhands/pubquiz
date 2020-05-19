@@ -15,7 +15,7 @@ export interface User {
 
 export interface Game {
   gameId: string;
-  gameTitle: string;
+  title: string;
   state: GameState;
   totalQuestionCount: number;
   totalQuizItemCount: number;
