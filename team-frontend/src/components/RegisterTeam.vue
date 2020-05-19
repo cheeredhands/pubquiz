@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <NavBarPart>{{$t('REGISTER_TEAM')}}</NavBarPart>
+    <nav-bar-part>
+      <template v-slot:centercontent>{{$t('REGISTER_TEAM')}}</template>
+    </nav-bar-part>
     <b-container>
       <b-row>
         <b-col>
@@ -77,7 +79,10 @@ import { RegisterForGameResponse, ApiResponse } from '../models/apiResponses';
 @Component({
   components: { NavBarPart, FooterPart }
 })
-export default class RegisterTeam extends mixins(AccountServiceMixin, HelperMixin) {
+export default class RegisterTeam extends mixins(
+  AccountServiceMixin,
+  HelperMixin
+) {
   public name: string = 'RegisterTeam';
   public teamName: string = '';
   public code: string = '';
@@ -105,7 +110,7 @@ export default class RegisterTeam extends mixins(AccountServiceMixin, HelperMixi
         });
       })
       .catch((error: AxiosError<ApiResponse>) => {
-       this.$_helper_toastError(error);
+        this.$_helper_toastError(error);
       });
   }
 }
