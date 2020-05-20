@@ -75,6 +75,9 @@ body {
   grid-template-rows: 50px 1fr 50px;
   grid-template-areas: "Nav" "Main" "Footer";
   height: 100vh;
+  /* https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser */
+  /* https://news.ycombinator.com/item?id=21103735 */
+  min-height: -webkit-fill-available;
 }
 
 nav a {

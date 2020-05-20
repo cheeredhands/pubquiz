@@ -2,8 +2,9 @@
   <b-form ref="form" @submit="exitEditMode" novalidate>
     <b-form-group :label="label" :description="description" label-for="inputField">
       <b-input-group>
-        <font-awesome-icon v-if="!editable" icon="pen" @click="enterEditMode" :title="$t('EDIT')" />
-        <b-form-input ref="the_input"
+        <font-awesome-icon v-if="!editable" icon="pen" @click="clickPen" :title="$t('EDIT')" />
+        <b-form-input
+          ref="the_input"
           :plaintext="!editable"
           @click="enterEditMode"
           @blur="exitEditMode"
@@ -46,9 +47,11 @@ export default Vue.extend({
     this.initialFieldValue = this.value;
   },
   methods: {
+    clickPen() {
+      (this.$refs.the_input as any).click();
+    },
     enterEditMode() {
       if (!this.editable) {
-        (this.$refs.the_input as any).focus();
         this.initialFieldValue = this.value;
         this.editable = true;
       }
@@ -84,7 +87,7 @@ input {
 }
 
 .form-control-plaintext {
-    padding-left: 0.8em;
+  padding-left: 0.8em;
 }
 
 input:hover {
