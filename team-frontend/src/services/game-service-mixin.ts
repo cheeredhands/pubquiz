@@ -12,7 +12,7 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
         return this.$axios.post('api/game/setgamestate', {
             actorId, gameId, newGameState
         }).then((response: AxiosResponse<ApiResponse>) => {
-            // this.$router.push({ name: 'QuizMasterGame' });
+            // this.$router.push({ name: 'QuizMasterInGame' });
         })
             .catch((error: AxiosError<ApiResponse>) => {
                 this.$_helper_toastError(error);

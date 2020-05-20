@@ -91,13 +91,13 @@ export default class QuizMasterLobby extends mixins(
         GameState.Running
       )
         .then(() => {
-          this.$router.push({ name: 'QuizMasterGame' });
+          this.$router.push({ name: 'QuizMasterInGame' });
         })
         .catch((error: AxiosError<ApiResponse>) => {
           this.$_helper_toastError(error);
         });
     } else {
-      this.$router.push({ name: 'QuizMasterGame' });
+      this.$router.push({ name: 'QuizMasterInGame' });
     }
   }
 

@@ -81,12 +81,12 @@ import { ApiResponse } from '../models/apiResponses';
     next();
   }
 })
-export default class QuizMasterGame extends mixins(
+export default class QuizMasterInGame extends mixins(
   AccountServiceMixin,
   GameServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'QuizMasterGame';
+  public name: string = 'QuizMasterInGame';
   public runningState = GameState.Running;
   public created() {
     this.$_gameService_getQmInGame();
