@@ -5,55 +5,58 @@
         v-slot:centercontent
       >Lobby - {{game.title}} ({{ $t(game.state) }} {{$t('SECTION')}} {{game.currentSectionIndex}} : {{game.currentQuizItemIndexInSection}}/{{game.currentSectionQuizItemCount}})</template>
     </nav-bar-part>
-    <b-container>
-      <b-row>
-        <b-col>
-          <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
-          <p>{{ $t('TEAMLOBBY_SIT_BACK')}}</p>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col md="6">
-          <h3>{{ $t('YOUR_TEAM')}}</h3>
-          <quizr-editable-textfield
-            v-model="newName"
-            :label="$t('TEAMNAME')"
-            :description="$t('KEEP_IT_CLEAN')"
-            :feedback="$t('TEAMNAME_LENGTH')"
-            required
-            :minlength="5"
-            :maxlength="30"
-            v-on:apply="applyTeamNameChange"
-          ></quizr-editable-textfield>
-          <quizr-editable-textarea
-            v-model="newMemberNames"
-            :label="$t('MEMBERS')"
-            :description="$t('MEMBER_NAMES')"
-            :placeholder="$t('TEAM_MEMBERS_HERE')"
-            :rows="5"
-            :minlength="5"
-            :maxlength="140"
-            v-on:apply="saveMembers"
-          ></quizr-editable-textarea>
-        </b-col>
-        <b-col>
-          <h3>{{ $t('COMPETING_TEAMS')}}</h3>
-          <b-list-group>
-            <b-list-group-item
-              class="d-flex justify-content-between align-items-center"
-              v-for="(otherTeam, index) in teams"
-              :key="index"
-            ><div>
-              <h5 class="mt-0 mb-1"> {{ otherTeam.teamName }}</h5>
-               <p class="mb-0 small">
-                {{ otherTeam.memberNames }}</p></div>
-              <b-badge v-if="!otherTeam.isLoggedIn" pill>{{ $t('LOGGED_OUT')}}</b-badge>
-            </b-list-group-item>
-          </b-list-group>
-        </b-col>
-      </b-row>
-    </b-container>
-    <FooterPart />
+    <div class="main-container">
+      <b-container>
+        <b-row>
+          <b-col>
+            <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
+            <p>{{ $t('TEAMLOBBY_SIT_BACK')}}</p>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="6">
+            <h3>{{ $t('YOUR_TEAM')}}</h3>
+            <quizr-editable-textfield
+              v-model="newName"
+              :label="$t('TEAMNAME')"
+              :description="$t('KEEP_IT_CLEAN')"
+              :feedback="$t('TEAMNAME_LENGTH')"
+              required
+              :minlength="5"
+              :maxlength="30"
+              v-on:apply="applyTeamNameChange"
+            ></quizr-editable-textfield>
+            <quizr-editable-textarea
+              v-model="newMemberNames"
+              :label="$t('MEMBERS')"
+              :description="$t('MEMBER_NAMES')"
+              :placeholder="$t('TEAM_MEMBERS_HERE')"
+              :rows="5"
+              :minlength="5"
+              :maxlength="140"
+              v-on:apply="saveMembers"
+            ></quizr-editable-textarea>
+          </b-col>
+          <b-col>
+            <h3>{{ $t('COMPETING_TEAMS')}}</h3>
+            <b-list-group>
+              <b-list-group-item
+                class="d-flex justify-content-between align-items-center"
+                v-for="(otherTeam, index) in teams"
+                :key="index"
+              >
+                <div>
+                  <h5 class="mt-0 mb-1">{{ otherTeam.teamName }}</h5>
+                  <p class="mb-0 small">{{ otherTeam.memberNames }}</p>
+                </div>
+                <b-badge v-if="!otherTeam.isLoggedIn" pill>{{ $t('LOGGED_OUT')}}</b-badge>
+              </b-list-group-item>
+            </b-list-group>
+          </b-col>
+        </b-row>
+      </b-container>
+    </div>
+    <footer-part></footer-part>
   </div>
 </template>
 
@@ -175,6 +178,3 @@ export default class TeamLobby extends mixins(
   }
 }
 </script>
-
-<style scoped>
-</style>

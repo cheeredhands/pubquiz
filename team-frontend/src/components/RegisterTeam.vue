@@ -3,65 +3,67 @@
     <nav-bar-part>
       <template v-slot:centercontent>{{$t('REGISTER_TEAM')}}</template>
     </nav-bar-part>
-    <b-container>
-      <b-row>
-        <b-col>
-          <h1>{{$t('REGISTER_TEAM')}}</h1>
-          <hr />
-        </b-col>
-      </b-row>
-      <b-form @submit="register" novalidate>
-        <b-form-row>
-          <b-col md="6" lg="4">
-            <b-form-group
-              :label="$t('TEAMNAME')"
-              :description="$t('KEEP_IT_CLEAN')"
-              label-for="teamNameInput"
-              :invalid-feedback="$t('TEAMNAME_LENGTH')"
-            >
-              <b-form-input
-                type="text"
-                size="lg"
-                v-model="teamName"
-                id="teamNameInput"
-                name="teamNameInput"
-                required
-                trim
-                minlength="5"
-                maxlength="30"
-              />
-            </b-form-group>
-          </b-col>
-        </b-form-row>
-        <b-form-row>
-          <b-col md="6" lg="4">
-            <b-form-group
-              :label="$t('CODE')"
-              label-for="codeInput"
-              :description="$t('CODE_ORIGIN')"
-              :invalid-feedback="$t('CODE_LENGTH')"
-            >
-              <b-form-input
-                type="text"
-                size="lg"
-                v-model="code"
-                id="codeInput"
-                name="codeInput"
-                required
-                trim
-                minlength="4"
-              />
-            </b-form-group>
-          </b-col>
-        </b-form-row>
-        <b-form-row>
+    <div class="main-container">
+      <b-container>
+        <b-row>
           <b-col>
-            <b-button type="submit" variant="primary">{{ $t('REGISTER') }}</b-button>
+            <h1>{{$t('REGISTER_TEAM')}}</h1>
+            <hr />
           </b-col>
-        </b-form-row>
-      </b-form>
-    </b-container>
-    <FooterPart />
+        </b-row>
+        <b-form @submit="register" novalidate>
+          <b-form-row>
+            <b-col md="6" lg="4">
+              <b-form-group
+                :label="$t('TEAMNAME')"
+                :description="$t('KEEP_IT_CLEAN')"
+                label-for="teamNameInput"
+                :invalid-feedback="$t('TEAMNAME_LENGTH')"
+              >
+                <b-form-input
+                  type="text"
+                  size="lg"
+                  v-model="teamName"
+                  id="teamNameInput"
+                  name="teamNameInput"
+                  required
+                  trim
+                  minlength="5"
+                  maxlength="30"
+                />
+              </b-form-group>
+            </b-col>
+          </b-form-row>
+          <b-form-row>
+            <b-col md="6" lg="4">
+              <b-form-group
+                :label="$t('CODE')"
+                label-for="codeInput"
+                :description="$t('CODE_ORIGIN')"
+                :invalid-feedback="$t('CODE_LENGTH')"
+              >
+                <b-form-input
+                  type="text"
+                  size="lg"
+                  v-model="code"
+                  id="codeInput"
+                  name="codeInput"
+                  required
+                  trim
+                  minlength="4"
+                />
+              </b-form-group>
+            </b-col>
+          </b-form-row>
+          <b-form-row>
+            <b-col>
+              <b-button type="submit" variant="primary">{{ $t('REGISTER') }}</b-button>
+            </b-col>
+          </b-form-row>
+        </b-form>
+      </b-container>
+    </div>
+    <footer-part></footer-part>
   </div>
 </template>
 
@@ -115,7 +117,3 @@ export default class RegisterTeam extends mixins(
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

@@ -61,9 +61,9 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~bootstrap-vue/dist/bootstrap-vue.css";
 
-body {
+/* body {
   overflow: hidden;
-}
+} */
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -72,7 +72,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 50px 1fr 50px;
+  grid-template-rows: auto 1fr 50px;
   grid-template-areas: "Nav" "Main" "Footer";
   height: 100vh;
   /* https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser */
@@ -80,18 +80,8 @@ body {
   min-height: -webkit-fill-available;
 }
 
-nav a {
-  font-weight: bold;
-  color: aliceblue;
-}
-
-nav a:hover {
-  color: white;
-  text-decoration: none;
-}
-
-nav a.router-link-exact-active {
-  color: white;
+.main-container {
+  overflow: auto;
 }
 
 footer {

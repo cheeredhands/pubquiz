@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBarPart>
+    <nav-bar-part>
       <b-nav-item>
         <b-button
           v-if="game.state===runningState || game.state===pausedState"
@@ -9,31 +9,35 @@
         >{{ $t('CONTINUE_GAME') }}</b-button>
         <b-button v-else @click="startGame" variant="success">{{ $t('START_GAME') }}</b-button>
       </b-nav-item>
-      <template v-slot:centercontent>Lobby - {{game.title}} ({{ $t(game.state) }} {{$t('SECTION')}} {{game.currentSectionIndex}} : {{game.currentQuizItemIndexInSection}}/{{game.currentSectionQuizItemCount}})</template>
-    </NavBarPart>
-    <b-container>
-      <b-row>
-        <b-col lg="6">
-          <p v-if="game.state===openState">{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
-          <p v-else>{{ $t('CURRENT_TEAMS_IN_GAME')}}</p>
-          <b-list-group>
-            <b-list-group-item v-for="(team, index) in teams" :key="index">
-              <strong>{{ team.teamName }}</strong> -
-              <span>{{team.memberNames}}</span>&nbsp;
-              <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
-              <font-awesome-icon
-                icon="trash-alt"
-                @click="kickTeam(team.teamId, team.teamName)"
-                pull="right"
-                style="cursor:pointer;"
-                :title="$t('KICK_OUT')"
-              />
-            </b-list-group-item>
-          </b-list-group>
-        </b-col>
-      </b-row>
-    </b-container>
-    <FooterPart />
+      <template
+        v-slot:centercontent
+      >Lobby - {{game.title}} ({{ $t(game.state) }} {{$t('SECTION')}} {{game.currentSectionIndex}} : {{game.currentQuizItemIndexInSection}}/{{game.currentSectionQuizItemCount}})</template>
+    </nav-bar-part>
+    <div class="main-container">
+      <b-container>
+        <b-row>
+          <b-col lg="6">
+            <p v-if="game.state===openState">{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
+            <p v-else>{{ $t('CURRENT_TEAMS_IN_GAME')}}</p>
+            <b-list-group>
+              <b-list-group-item v-for="(team, index) in teams" :key="index">
+                <strong>{{ team.teamName }}</strong> -
+                <span>{{team.memberNames}}</span>&nbsp;
+                <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
+                <font-awesome-icon
+                  icon="trash-alt"
+                  @click="kickTeam(team.teamId, team.teamName)"
+                  pull="right"
+                  style="cursor:pointer;"
+                  :title="$t('KICK_OUT')"
+                />
+              </b-list-group-item>
+            </b-list-group>
+          </b-col>
+        </b-row>
+      </b-container>
+    </div>
+    <footer-part></footer-part>
   </div>
 </template>
 
@@ -66,18 +70,26 @@ import { ApiResponse } from '../models/apiResponses';
     next();
   }
 })
-export default class QuizMasterLobby extends mixins(AccountServiceMixin, GameServiceMixin, HelperMixin) {
+export default class QuizMasterLobby extends mixins(
+  AccountServiceMixin,
+  GameServiceMixin,
+  HelperMixin
+) {
   public name: string = 'QuizMasterLobby';
   public openState = GameState.Open;
   public runningState = GameState.Running;
   public pausedState = GameState.Paused;
   public created() {
-   this.$_gameService_getQmLobby();
+    this.$_gameService_getQmLobby();
   }
 
   public startGame() {
     if (this.game.state === GameState.Open) {
-      this.$_gameService_setGameState(this.userId, this.game.gameId, GameState.Running)
+      this.$_gameService_setGameState(
+        this.userId,
+        this.game.gameId,
+        GameState.Running
+      )
         .then(() => {
           this.$router.push({ name: 'QuizMasterGame' });
         })
