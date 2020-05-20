@@ -52,7 +52,7 @@ export default Vue.extend({
   },
   methods: {
     clickPen() {
-      (this.$refs.the_input as any).click();
+      (this.$refs.the_input as any).click().focus();
     },
     enterEditMode() {
       if (!this.editable) {
