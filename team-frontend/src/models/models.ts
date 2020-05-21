@@ -59,15 +59,20 @@ export interface QuizItem {
   media: []// MediaObject[];
   quizItemType: QuizItemType;
   maxScore: number;
-  interactions: []; // Interaction[];
+  interactions: Interaction[];
 }
 
 export interface Interaction {
   id: string;
   text: string;
   interactionType: InteractionType;
+  choiceOptions: ChoiceOption[];
 }
 
+export interface ChoiceOption {
+  id: string;
+  text: string;
+}
 /** Type of the question */
 export enum QuizItemType {
   /** Multiple options, one correct answer */
