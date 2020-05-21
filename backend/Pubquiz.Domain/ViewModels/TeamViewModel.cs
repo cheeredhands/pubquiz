@@ -9,6 +9,7 @@ namespace Pubquiz.Domain.ViewModels
         public string TeamName { get; set; }
         public string MemberNames { get; set; }
         public bool IsLoggedIn { get; set; }
+        public int TotalScore { get; set; }
 
         public TeamViewModel(Team team)
         {
@@ -17,6 +18,7 @@ namespace Pubquiz.Domain.ViewModels
             TeamName = team.Name;
             MemberNames = team.MemberNames;
             IsLoggedIn = team.IsLoggedIn;
+            TotalScore = team.TotalScore;
         }
     }
 }

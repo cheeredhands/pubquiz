@@ -16,6 +16,48 @@ namespace Pubquiz.Logic.Tools
             _logger = loggerFactory.CreateLogger<TestSeeder>();
         }
 
+        public void SeedSeedSet()
+        {
+            _logger.LogInformation("Seeding the seed set.");
+            var quizCollection = _unitOfWork.GetCollection<Quiz>();
+            var teamCollection = _unitOfWork.GetCollection<Team>();
+            var userCollection = _unitOfWork.GetCollection<User>();
+            var gameCollection = _unitOfWork.GetCollection<Game>();
+            var quizItemCollection = _unitOfWork.GetCollection<QuizItem>();
+            var users = SeedUsers.GetUsers();
+            var quizFactory = new PeCePubquiz2019();
+            var quiz = quizFactory.GetQuiz();
+            var quizItems = quizFactory.QuizItems;
+            var game = SeedGame.GetGame(users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), quiz);
+            users.First(u => u.UserName == "Quiz master 1").GameIds.Add(game.Id);
+            users.First(u => u.UserName == "Quiz master 1").CurrentGameId = game.Id;
+            var teams = SeedTeams.GetTeams(teamCollection, game.Id);
+            foreach (var team in teams)
+            {
+                _logger.LogInformation($"{team.Name}: {team.RecoveryCode}");
+            }
+
+            game.QuizId = quiz.Id;
+            game.TeamIds = teams.Select(t => t.Id).ToList();
+
+            quizCollection.AddAsync(quiz).Wait();
+            foreach (var quizItem in quizItems)
+            {
+                quizItemCollection.AddAsync(quizItem).Wait();
+            }
+            foreach (var team in teams)
+            {
+                teamCollection.AddAsync(team).Wait();
+            }
+
+            foreach (var user in users)
+            {
+                userCollection.AddAsync(user).Wait();
+            }
+
+            gameCollection.AddAsync(game).Wait();
+        }
+
         public void SeedTestSet()
         {
             _logger.LogInformation("Seeding test set.");

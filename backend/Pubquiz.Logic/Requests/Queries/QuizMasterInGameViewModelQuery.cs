@@ -26,13 +26,13 @@ namespace Pubquiz.Logic.Requests.Queries
             var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.Select(t => new TeamViewModel(t));
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
             var quizItem = await quizItemCollection.GetAsync(game.CurrentQuizItemId);
-            var model = new QmInGameViewModel()
+            var model = new QmInGameViewModel
             {
                 UserId = ActorId,
                 Game = game,
-                QmTeamFeed = new QmTeamFeedViewModel(),
+                QmTeamFeed = new QmTeamFeedViewModel(teams),
                 CurrentQuizItem = quizItem,
-                QmTeamRanking = new QmTeamRankingViewModel()
+                QmTeamRanking = new QmTeamRankingViewModel(teams)
             };
 
             return model;

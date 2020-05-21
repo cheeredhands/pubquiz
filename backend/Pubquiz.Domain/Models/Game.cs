@@ -20,6 +20,7 @@ namespace Pubquiz.Domain.Models
     public class Game : Model
     {
         public string Title { get; set; }
+        public string QuizTitle { get; set; }
         public GameState State { get; set; }
         public string QuizId { get; set; }
         public List<string> TeamIds { get; set; }

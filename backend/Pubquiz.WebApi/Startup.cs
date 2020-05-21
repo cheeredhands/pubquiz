@@ -267,7 +267,7 @@ namespace Pubquiz.WebApi
                 //var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
                 var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
                 var seeder = new TestSeeder(unitOfWork, loggerFactory);
-                seeder.SeedTestSet();
+                seeder.SeedSeedSet();
             }
         }
     }
