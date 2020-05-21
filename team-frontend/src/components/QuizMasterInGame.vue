@@ -90,6 +90,7 @@ export default class QuizMasterInGame extends mixins(
   public runningState = GameState.Running;
   public created() {
     this.$_gameService_getQmInGame();
+    document.title = 'In Game - ' + this.game.title;
   }
 
   get game() {
@@ -146,7 +147,7 @@ export default class QuizMasterInGame extends mixins(
 }
 
 .grid-container > * {
-  border-right: 4px solid lightblue;
+  border-right: 4px solid #212529;
   padding: 0.5em;
 }
 .teamfeed {
@@ -172,7 +173,7 @@ export default class QuizMasterInGame extends mixins(
 .question {
   grid-area: question;
   padding: 0px;
-  border-bottom: 4px solid lightblue;
+  border-bottom: 4px solid #212529;
 }
 
 .ranking {

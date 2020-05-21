@@ -85,7 +85,8 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
 }
 
 footer {
-  background-color: lightblue;
+  background-color: #212529;
+  color: white;
   font-size: 0.7rem;
   padding: 0.5em;
 }

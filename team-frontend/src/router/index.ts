@@ -16,6 +16,9 @@ export default new Router({
   routes: [
     {
       path: '/',
+      meta: {
+        title: 'Welkom bij Quizr!'
+      },
       name: 'Home',
       component: Home
     },
