@@ -1,19 +1,24 @@
 <template>
   <div class="question-container">
     <div class="question-current">
-      [Current question]
-      <br />
-      id: {{quizItem.id}}
-      <br />
-      quiz item type: {{quizItem.quizItemType}}
-      <br />
-      title: {{quizItem.title}}
-      <br />
-      body: {{quizItem.body}}
-      <br />
-      interactions: {{quizItem.interactions}}
-      <br />
-      media: {{quizItem.media}}
+      <h1 :title="`id: ${quizItem.id} type: ${quizItem.quizItemType}`">{{quizItem.title}}</h1>
+      <p>{{quizItem.body}}</p>
+      <div v-for="interaction in quizItem.interactions" :key="interaction.id">
+        <p :title="interaction.id">{{interaction.text}}</p>
+        <div
+          v-if="interaction.interactionType===multipleChoice || interaction.interactionType===multipleResponse"
+        >
+          <ul>
+            <li
+              v-for="choiceOption in interaction.choiceOptions"
+              :key="choiceOption.id"
+            >{{choiceOption.text}}</li>
+          </ul>
+        </div>
+        <div v-else-if="interaction.interactionType===shortAnswer"></div>
+        <div v-else-if="interaction.interactionType===extendedText"></div>
+      </div>
+      <p v-if="quizItem.media.length>0">media: {{quizItem.media}}</p>
     </div>
     <div class="question-nav">
       <b-button @click="navigateItem(-1)" variant="secondary">
@@ -35,6 +40,7 @@ import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
 import { AxiosError } from 'axios';
+import { InteractionType } from '../../models/models';
 
 @Component
 export default class QmQuestionPart extends mixins(
@@ -42,7 +48,10 @@ export default class QmQuestionPart extends mixins(
   HelperMixin
 ) {
   public name: string = 'qm-question-part';
-
+  public multipleChoice: InteractionType = InteractionType.MultipleChoice;
+  public multipleResponse: InteractionType = InteractionType.MultipleResponse;
+  public shortAnswer: InteractionType = InteractionType.ShortAnswer;
+  public extendedText: InteractionType = InteractionType.ExtendedText;
   // public created() {}
 
   get game() {
@@ -54,7 +63,7 @@ export default class QmQuestionPart extends mixins(
   }
 
   public navigateItem(offset: number) {
-    this.$_gameService_navigateItem(this.game.gameId, offset);
+    this.$_gameService_navigateItem(this.game.id, offset);
   }
 }
 </script>
@@ -70,7 +79,9 @@ export default class QmQuestionPart extends mixins(
 
 .question-current {
   grid-area: question-current;
+  padding: 1em;
   border-bottom: 1px solid black;
+  background-color: mintcream;
 }
 
 .question-nav {

@@ -8,6 +8,7 @@ import TeamLobby from '../components/TeamLobby.vue';
 import QuizMasterLogin from '../components/QuizMasterLogin.vue';
 import QuizMasterLobby from '../components/QuizMasterLobby.vue';
 import QuizMasterInGame from '../components/QuizMasterInGame.vue';
+import TeamInGame from '../components/TeamInGame.vue';
 
 Vue.use(Router);
 
@@ -15,6 +16,9 @@ export default new Router({
   routes: [
     {
       path: '/',
+      meta: {
+        title: 'Welkom bij Quizr!'
+      },
       name: 'Home',
       component: Home
     },
@@ -48,6 +52,11 @@ export default new Router({
       path: '/qm/game',
       name: 'QuizMasterInGame',
       component: QuizMasterInGame
+    },
+    {
+      path: '/game',
+      name: 'TeamInGame',
+      component: TeamInGame
     }
   ]
 });

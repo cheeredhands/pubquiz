@@ -72,7 +72,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
   -moz-osx-font-smoothing: grayscale;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr 50px;
+  grid-template-rows: auto 1fr 25px;
   grid-template-areas: "Nav" "Main" "Footer";
   height: 100vh;
   /* https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser */
@@ -85,8 +85,9 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
 }
 
 footer {
-  background-color: lightblue;
-  /* font-size: 0.7rem; */
+  background-color: #212529;
+  color: white;
+  font-size: 0.7rem;
   padding: 0.5em;
 }
 

@@ -48,8 +48,23 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
         this.$axios
             .get('/api/game/quizmasteringame')
             .then((response: AxiosResponse<QmInGameViewModel>) => {
-                this.$store.commit('setTeamFeed', response.data.teamFeed);
+                // this.$store.commit('setTeamFeed', response.data.qmTeamFeed);
                 this.$store.commit('setGame', response.data.game);
+                this.$store.commit('setQuizItem', response.data.currentQuizItem)
+            })
+            .catch((error: AxiosError<ApiResponse>) => {
+                this.$_helper_toastError(error);
+            });
+    }
+
+    public async $_gameService_getTeamInGame() {
+        // get team lobby view model
+        this.$axios
+            .get('/api/game/teamingame')
+            .then((response: AxiosResponse<QmInGameViewModel>) => {
+                // this.$store.commit('setTeamFeed', response.data.qmTeamFeed);
+                this.$store.commit('setGame', response.data.game);
+                this.$store.commit('setQuizItem', response.data.currentQuizItem)
             })
             .catch((error: AxiosError<ApiResponse>) => {
                 this.$_helper_toastError(error);

@@ -2,28 +2,14 @@
 <template>
   <div id="app">
     <nav-bar-part>
-      <b-nav-item>
-        <b-button
-          @click="toggleGame"
-          :variant="game.state===runningState ? 'secondary' : 'success' "
-        >
-          <font-awesome-icon :icon="game.state===runningState ? 'pause' : 'play'" />
-          {{ game.state===runningState ? $t('PAUSE_GAME') : $t('RESUME_GAME') }}
-        </b-button>&nbsp;
-        <b-button @click="finishGame" variant="danger">
-          <font-awesome-icon icon="power-off" />
-          {{ $t('FINISH_GAME') }}
-        </b-button>
-      </b-nav-item>
-      <template v-slot:centercontent>{{game.title}} ({{ $t(game.state) }})</template>
+      <template v-slot:centercontent>{{game.gameTitle}} ({{ $t(game.state) }})</template>
       <template v-slot:rightcontent>
-        <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
+        <b-nav-item to="/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
       </template>
     </nav-bar-part>
-
     <div class="grid-container">
-      <div class="teamfeed">
-        <qm-team-feed-part />
+      <div class="teamchat">
+        <QmTeamChatPart />
       </div>
 
       <div class="quiz-container">
@@ -45,8 +31,7 @@
         </div>
       </div>
     </div>
-
-    <footer-part>Quiz master game screen footer</footer-part>
+    <footer-part>Team game screen footer</footer-part>
   </div>
 </template>
 
@@ -61,14 +46,14 @@ import { GameState } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import QmQuestionPart from './qm-gameparts/QmQuestionPart.vue';
-import QmTeamFeedPart from './qm-gameparts/QmTeamFeedPart.vue';
+import TeamChatPart from './team-gameparts/TeamChatPart.vue';
 import AccountServiceMixin from '../services/account-service-mixin';
 import GameServiceMixin from '../services/game-service-mixin';
 import HelperMixin from '../services/helper-mixin';
 import { ApiResponse } from '../models/apiResponses';
 
 @Component({
-  components: { NavBarPart, FooterPart, QmQuestionPart, QmTeamFeedPart },
+  components: { NavBarPart, FooterPart, QmQuestionPart, TeamChatPart },
   beforeRouteEnter(to: Route, from: Route, next: any) {
     // called before the route that renders this component is confirmed.
     // does NOT have access to `this` component instance,
@@ -81,16 +66,15 @@ import { ApiResponse } from '../models/apiResponses';
     next();
   }
 })
-export default class QuizMasterInGame extends mixins(
+export default class TeamInGame extends mixins(
   AccountServiceMixin,
   GameServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'QuizMasterInGame';
+  public name: string = 'TeamInGame';
   public runningState = GameState.Running;
   public created() {
-    this.$_gameService_getQmInGame();
-    document.title = 'In Game - ' + this.game.title;
+    this.$_gameService_getTeamInGame();
   }
 
   get game() {
@@ -99,16 +83,6 @@ export default class QuizMasterInGame extends mixins(
 
   get userId() {
     return this.$store.getters.userId;
-  }
-
-  public toggleGame() {
-    this.$_gameService_setGameState(
-      this.userId,
-      this.game.gameId,
-      this.game.state === GameState.Running
-        ? GameState.Paused
-        : GameState.Running
-    );
   }
 
   public finishGame() {
@@ -142,12 +116,12 @@ export default class QuizMasterInGame extends mixins(
   display: grid;
   grid-template-columns: 5fr 6fr;
   grid-template-rows: 1fr;
-  grid-template-areas: "teamfeed quiz-container";
+  grid-template-areas: "teamchat quiz-container";
   overflow: hidden;
 }
 
 .grid-container > * {
-  border-right: 4px solid #212529;
+  border-right: 4px solid lightblue;
   padding: 0.5em;
 }
 .teamfeed {
@@ -173,7 +147,7 @@ export default class QuizMasterInGame extends mixins(
 .question {
   grid-area: question;
   padding: 0px;
-  border-bottom: 4px solid #212529;
+  border-bottom: 4px solid lightblue;
 }
 
 .ranking {

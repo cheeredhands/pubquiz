@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.ViewModels;
@@ -15,9 +16,26 @@ namespace Pubquiz.Logic.Requests.Queries
         {
         }
 
-        protected override Task<QmInGameViewModel> DoExecute()
+        protected override async Task<QmInGameViewModel> DoExecute()
         {
-            throw new System.NotImplementedException();
+            var userCollection = UnitOfWork.GetCollection<User>();
+            var user = await userCollection.GetAsync(ActorId);
+            var gameCollection = UnitOfWork.GetCollection<Game>();
+            var game = await gameCollection.GetAsync(user.CurrentGameId);
+            var teamCollection = UnitOfWork.GetCollection<Team>();
+            var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.Select(t => new TeamViewModel(t));
+            var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
+            var quizItem = await quizItemCollection.GetAsync(game.CurrentQuizItemId);
+            var model = new QmInGameViewModel()
+            {
+                UserId = ActorId,
+                Game = game,
+                QmTeamFeed = new QmTeamFeedViewModel(),
+                CurrentQuizItem = quizItem,
+                QmTeamRanking = new QmTeamRankingViewModel()
+            };
+
+            return model;
         }
     }
 }
