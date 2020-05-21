@@ -14,7 +14,7 @@ export interface User {
 }
 
 export interface Game {
-  gameId: string;
+  id: string;
   title: string;
   state: GameState;
   totalQuestionCount: number;
@@ -59,7 +59,13 @@ export interface QuizItem {
   media: []// MediaObject[];
   quizItemType: QuizItemType;
   maxScore: number;
-   interactions: []; // Interaction[];
+  interactions: []; // Interaction[];
+}
+
+export interface Interaction {
+  id: string;
+  text: string;
+  interactionType: InteractionType;
 }
 
 /** Type of the question */
@@ -97,8 +103,12 @@ export enum GameState {
   Finished = 'Finished'
 }
 
-
-
+export enum InteractionType {
+  MultipleChoice = 'MultipleChoice',
+  MultipleResponse = 'MultipleResponse',
+  ShortAnswer = 'ShortAnswer',
+  ExtendedText = 'ExtendedText'
+}
 
 export enum UserRole {
   Team = 'Team',

@@ -87,7 +87,7 @@ export default class QuizMasterLobby extends mixins(
     if (this.game.state === GameState.Open) {
       this.$_gameService_setGameState(
         this.userId,
-        this.game.gameId,
+        this.game.id,
         GameState.Running
       )
         .then(() => {

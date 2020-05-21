@@ -1,4 +1,4 @@
-import { GameState, QuizItemType, Team, Game } from './models';
+import { GameState, QuizItemType, Team, Game, QuizItem } from './models';
 
 export interface TeamLobbyViewModel {
     game: Game;
@@ -12,8 +12,10 @@ export interface QmLobbyViewModel {
 }
 
 export interface QmInGameViewModel {
-    teamFeed: {};
+    qmTeamFeed: {};
+    qmTeamRanking: {};
     game: Game;
+    currentQuizItem: QuizItem;
     // teamfeed
     // game info
     // current quiz itm

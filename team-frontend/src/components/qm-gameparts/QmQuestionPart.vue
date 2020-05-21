@@ -1,19 +1,12 @@
 <template>
   <div class="question-container">
     <div class="question-current">
-      [Current question]
-      <br />
-      id: {{quizItem.id}}
-      <br />
-      quiz item type: {{quizItem.quizItemType}}
-      <br />
-      title: {{quizItem.title}}
-      <br />
-      body: {{quizItem.body}}
-      <br />
-      interactions: {{quizItem.interactions}}
-      <br />
-      media: {{quizItem.media}}
+      <h1 :title="`id: ${quizItem.id} type: ${quizItem.quizItemType}`">{{quizItem.title}}</h1>
+      <p>{{quizItem.body}}</p>
+      <div v-for="interaction in quizItem.interactions" :key="interaction.id">
+        <p :title="interaction.id">{{interaction.text}}</p>
+      </div>
+      <p>media: {{quizItem.media}}</p>
     </div>
     <div class="question-nav">
       <b-button @click="navigateItem(-1)" variant="secondary">
@@ -54,7 +47,7 @@ export default class QmQuestionPart extends mixins(
   }
 
   public navigateItem(offset: number) {
-    this.$_gameService_navigateItem(this.game.gameId, offset);
+    this.$_gameService_navigateItem(this.game.id, offset);
   }
 }
 </script>

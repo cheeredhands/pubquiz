@@ -15,37 +15,37 @@
           {{ $t('FINISH_GAME') }}
         </b-button>
       </b-nav-item>
-      <template v-slot:centercontent>{{game.gameTitle}} ({{ $t(game.state) }})</template>
+      <template v-slot:centercontent>{{game.title}} ({{ $t(game.state) }})</template>
       <template v-slot:rightcontent>
         <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
       </template>
     </nav-bar-part>
-    <div class="main-container">
-      <div class="grid-container">
-        <div class="teamfeed">
-          <qm-team-feed-part />
+
+    <div class="grid-container">
+      <div class="teamfeed">
+        <qm-team-feed-part />
+      </div>
+
+      <div class="quiz-container">
+        <div class="question">
+          <QmQuestionPart />
         </div>
 
-        <div class="quiz-container">
-          <div class="question">
-            <QmQuestionPart />
-          </div>
-
-          <div class="ranking">
-            <ul class="list-unstyled" v-for="i in 12" v-bind:key="i">
-              <b-media tag="li">
-                <template v-slot:aside>
-                  <h1>{{i}}</h1>
-                  <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
-                </template>
-                <h5 class="mt-0 mb-1">Team name</h5>
-                <p class="mb-0">Score. Trend (going up or sinking).</p>
-              </b-media>
-            </ul>
-          </div>
+        <div class="ranking">
+          <ul class="list-unstyled" v-for="i in 12" v-bind:key="i">
+            <b-media tag="li">
+              <template v-slot:aside>
+                <h1>{{i}}</h1>
+                <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
+              </template>
+              <h5 class="mt-0 mb-1">Team name</h5>
+              <p class="mb-0">Score. Trend (going up or sinking).</p>
+            </b-media>
+          </ul>
         </div>
       </div>
     </div>
+
     <footer-part>Quiz master game screen footer</footer-part>
   </div>
 </template>
