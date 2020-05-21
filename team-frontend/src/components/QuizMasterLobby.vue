@@ -66,7 +66,6 @@ import { ApiResponse } from '../models/apiResponses';
     if (!store.state.isLoggedIn) {
       next('/');
     }
-    // todo also check the state of the game, you might want to go straight back into the game.
     next();
   }
 })
@@ -79,9 +78,15 @@ export default class QuizMasterLobby extends mixins(
   public openState = GameState.Open;
   public runningState = GameState.Running;
   public pausedState = GameState.Paused;
+
   public created() {
     this.$_gameService_getQmLobby();
+    document.title = 'Lobby - ' + this.game.title;
   }
+
+  // public mounted() {
+  //   document.title = this.game.title;
+  // }
 
   public startGame() {
     if (this.game.state === GameState.Open) {
