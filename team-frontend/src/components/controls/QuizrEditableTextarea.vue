@@ -9,6 +9,7 @@
           :placeholder="placeholder"
           @click="enterEditMode"
           @blur="exitEditMode"
+          @keyup.esc="exitEditMode"
           class="editable"
           id="inputField"
           v-bind:value="value"
@@ -52,7 +53,8 @@ export default Vue.extend({
   },
   methods: {
     clickPen() {
-      (this.$refs.the_input as any).click().focus();
+      this.editable = true;
+      (this.$refs.the_input as any).focus();
     },
     enterEditMode() {
       if (!this.editable) {
