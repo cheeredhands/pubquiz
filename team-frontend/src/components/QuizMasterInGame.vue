@@ -15,7 +15,7 @@
           {{ $t('FINISH_GAME') }}
         </b-button>
       </b-nav-item>
-      <template v-slot:centercontent>{{game.title}} ({{ $t(game.state) }})</template>
+      <template v-slot:centercontent>{{game.title}} (Quiz: '{{game.quizTitle}}' {{ $t(game.state) }})</template>
       <template v-slot:rightcontent>
         <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
       </template>
@@ -32,14 +32,14 @@
         </div>
 
         <div class="ranking">
-          <ul class="list-unstyled" v-for="i in 12" v-bind:key="i">
+          <ul class="list-unstyled" v-for="team in teamRanking.teams" :key="team.id">
             <b-media tag="li">
               <template v-slot:aside>
-                <h1>{{i}}</h1>
+                <h1 :title="$t('TOTAL_NUMBER_OF_POINTS')">{{team.totalScore}}</h1>
                 <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
               </template>
-              <h5 class="mt-0 mb-1">Team name</h5>
-              <p class="mb-0">Score. Trend (going up or sinking).</p>
+              <h5 class="mt-0 mb-1">{{team.teamName}}</h5>
+              <p class="mb-0">Trend (going up or sinking).</p>
             </b-media>
           </ul>
         </div>
@@ -95,6 +95,10 @@ export default class QuizMasterInGame extends mixins(
 
   get game() {
     return this.$store.getters.game;
+  }
+
+  get teamRanking() {
+    return this.$store.getters.teamRanking;
   }
 
   get userId() {

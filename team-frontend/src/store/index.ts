@@ -4,6 +4,7 @@ import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { User, GameState, ItemNavigatedMessage, QuizItem, Team, Game } from '../models/models';
 import { TeamLoggedOutMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage } from '@/models/messages';
+import { TeamFeedViewModel, TeamRankingViewModel } from '@/models/viewModels';
 
 Vue.use(Vuex);
 
@@ -19,6 +20,8 @@ interface RootState {
   user?: User;
   currentGameId?: string;
   gameIds: string[];
+  teamFeed?: TeamFeedViewModel;
+  teamRanking?: TeamRankingViewModel;
 }
 
 const storeOpts: StoreOptions<RootState> = {
@@ -33,7 +36,9 @@ const storeOpts: StoreOptions<RootState> = {
 
     user: undefined,
     currentGameId: undefined,
-    gameIds: []
+    gameIds: [],
+    teamFeed: undefined,
+    teamRanking: undefined
   },
   getters: {
     game: state => state.game || {},
@@ -41,7 +46,9 @@ const storeOpts: StoreOptions<RootState> = {
     quizItem: state => state.quizItem || {},
     teamId: state => state.team?.teamId || '',
     teamName: state => state.team?.teamName || '',
-    memberNames: state => state.team?.memberNames || ''
+    memberNames: state => state.team?.memberNames || '',
+    teamFeed: state => state.teamFeed || {},
+    teamRanking: state => state.teamRanking || {}
   },
   mutations: {
     // mutations are sync store updates
@@ -57,6 +64,12 @@ const storeOpts: StoreOptions<RootState> = {
       state.team = team;
       state.currentGameId = team.currentGameId;
       state.isLoggedIn = true;
+    },
+    setTeamFeed(state, teamFeed: TeamFeedViewModel) {
+      state.teamFeed = teamFeed;
+    },
+    setTeamRanking(state, teamRanking: TeamRankingViewModel) {
+      state.teamRanking = teamRanking;
     },
     addTeam(state, team: Team) {
       // called by the signalr stuff when a new team registers

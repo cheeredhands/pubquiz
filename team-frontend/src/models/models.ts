@@ -16,6 +16,7 @@ export interface User {
 export interface Game {
   id: string;
   title: string;
+  quizTitle:string;
   state: GameState;
   totalQuestionCount: number;
   totalQuizItemCount: number;
@@ -43,6 +44,7 @@ export interface Team {
   currentGameId: string;
   /** false when the user has logged out / left game */
   isLoggedIn: boolean;
+  totalScore: number;
 }
 
 export interface QuizItemRef {
@@ -67,6 +69,7 @@ export interface Interaction {
   text: string;
   interactionType: InteractionType;
   choiceOptions: ChoiceOption[];
+  maxScore: number;
 }
 
 export interface ChoiceOption {

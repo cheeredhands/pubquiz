@@ -51,5 +51,7 @@
   "Open": "Open",
   "Closed": "Gesloten",
   "Finished": "Afgelopen",
-  "LOBBY_TITLE": "Terug naar de lobby"
+  "LOBBY_TITLE": "Terug naar de lobby",
+  "POINTS": "p",
+  "TOTAL_NUMBER_OF_POINTS": "Totaal aantal punten"
 }

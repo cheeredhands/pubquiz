@@ -17,5 +17,7 @@
   "Open": "Open",
   "Closed": "Closed",
   "Finished": "Finished",
-  "LOBBY_TITLE": "Back to the lobby"
+  "LOBBY_TITLE": "Back to the lobby",
+  "POINTS":"point(s)",
+  "TOTAL_NUMBER_OF_POINTS": "Total number of points"
 }

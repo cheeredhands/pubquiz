@@ -2,9 +2,9 @@
   <div class="question-container">
     <div class="question-current">
       <h1 :title="`id: ${quizItem.id} type: ${quizItem.quizItemType}`">{{quizItem.title}}</h1>
-      <p>{{quizItem.body}}</p>
+      <p v-html="quizItem.body"></p>
       <div v-for="interaction in quizItem.interactions" :key="interaction.id">
-        <p :title="interaction.id">{{interaction.text}}</p>
+        <p :title="interaction.id">{{interaction.text}} ({{interaction.maxScore}} {{$t('POINTS')}})</p>
         <div
           v-if="interaction.interactionType===multipleChoice || interaction.interactionType===multipleResponse"
         >
@@ -18,7 +18,7 @@
         <div v-else-if="interaction.interactionType===shortAnswer"></div>
         <div v-else-if="interaction.interactionType===extendedText"></div>
       </div>
-      <p v-if="quizItem.media.length>0">media: {{quizItem.media}}</p>
+      <!-- <p v-if="quizItem.media.length>0">media: {{quizItem.media}}</p> -->
     </div>
     <div class="question-nav">
       <b-button @click="navigateItem(-1)" variant="secondary">

@@ -5,11 +5,11 @@
     </div>
     <div class="feed">
       <ul class="list-unstyled">
-        <b-media tag="li" v-for="i in 12" v-bind:key="i">
+        <b-media tag="li" v-for="team in teamFeed.teams" :key="team.id">
           <template v-slot:aside>
             <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img>
           </template>
-          <h5 class="mt-0 mb-1">Team {{i}}</h5>
+          <h5 class="mt-0 mb-1">{{team.teamName}}</h5>
           <p class="mb-0">
             The team avatar to the left has a status badge overlay.
             This area shows the answers a team gives to the current question (as they are typing).
@@ -30,6 +30,10 @@ export default class QmTeamFeedPart extends Vue {
   public name: string = 'QmTeamFeedPart';
 
   // public created() {}
+
+  get teamFeed() {
+    return this.$store.getters.teamFeed;
+  }
 }
 </script>
 

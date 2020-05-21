@@ -12,12 +12,20 @@ export interface QmLobbyViewModel {
 }
 
 export interface QmInGameViewModel {
-    qmTeamFeed: {};
-    qmTeamRanking: {};
+    qmTeamFeed: TeamFeedViewModel;
+    qmTeamRanking: TeamRankingViewModel;
     game: Game;
     currentQuizItem: QuizItem;
     // teamfeed
     // game info
     // current quiz itm
     // ranking
+}
+
+export interface TeamFeedViewModel {
+    teams: Team[];
+}
+
+export interface TeamRankingViewModel {
+    teams: Team[];
 }
