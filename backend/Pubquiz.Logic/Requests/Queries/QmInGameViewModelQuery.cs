@@ -8,11 +8,11 @@ using Pubquiz.Persistence;
 namespace Pubquiz.Logic.Requests.Queries
 {
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
-    public class QuizMasterInGameViewModelQuery: Query<QmInGameViewModel>
+    public class QmInGameViewModelQuery: Query<QmInGameViewModel>
     {
         public string ActorId { get; set; }
         
-        public QuizMasterInGameViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public QmInGameViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 

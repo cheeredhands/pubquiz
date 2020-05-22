@@ -69,7 +69,7 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> GetQuizMasterLobby()
         {
-            var query = new QuizMasterLobbyViewModelQuery(_unitOfWork) {UserId = User.GetId()};
+            var query = new QmLobbyViewModelQuery(_unitOfWork) {UserId = User.GetId()};
             var result = await query.Execute();
             return Ok(result);
         }
@@ -78,7 +78,7 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> GetQuizMasterInGame()
         {
-            var query = new QuizMasterInGameViewModelQuery(_unitOfWork) { ActorId = User.GetId()};
+            var query = new QmInGameViewModelQuery(_unitOfWork) { ActorId = User.GetId()};
             var result = await query.Execute();
             return Ok(result);
         }

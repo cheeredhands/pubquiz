@@ -11,10 +11,10 @@ namespace Pubquiz.Logic.Requests.Queries
     /// Query to get the <see cref="QuizMasterLobbyViewModel"/> for a specific <see cref="User"/>.
     /// </summary>
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "UserId")]
-    public class QuizMasterLobbyViewModelQuery : Query<QmLobbyViewModel>
+    public class QmLobbyViewModelQuery : Query<QmLobbyViewModel>
     {
         public string UserId { get; set; }
-        public QuizMasterLobbyViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public QmLobbyViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
         
