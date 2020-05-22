@@ -52,6 +52,15 @@ namespace Pubquiz.WebApi.Controllers
             return Ok(new {Code = ResultCode.Ok, Message = "Response submitted ok."});
         }
 
+        [HttpGet("teamingame")]
+        [Authorize(AuthPolicy.Team)]
+        public async Task<IActionResult> GetTeamInGame()
+        {
+            var query = new TeamInGameViewModelQuery(_unitOfWork) { ActorId = User.GetId()};
+            var result = await query.Execute();
+            return Ok(result);
+        }
+
         #endregion
 
         #region Admin and quiz master actions
