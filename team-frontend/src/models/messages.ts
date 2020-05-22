@@ -58,8 +58,8 @@ export interface GameStateChangedMessage {
 
   export interface InteractionResponseAddedMessage {
       teamId: string;
-      quizSectionId: string;
       quizItemId: string;
+      interactionId: number;
       response: string;
   }
   
