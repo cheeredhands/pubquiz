@@ -8,7 +8,7 @@ namespace Pubquiz.Domain.ViewModels
     {
         public string Title { get; set; }
         public string Body { get; set; }
-        public List<Media> Media { get; set; }
+        public List<MediaObject> Media { get; set; }
 
         public QuizItemType QuizItemType { get; set; }
         public int MaxScore { get; set; }
@@ -22,7 +22,7 @@ namespace Pubquiz.Domain.ViewModels
         {
             Title = quizItem.Title;
             Body = quizItem.Body;
-            Media = quizItem.Media;
+            Media = quizItem.MediaObjects;
             QuizItemType = quizItem.QuizItemType;
             MaxScore = quizItem.MaxScore;
             Interactions = quizItem.Interactions.Select(i => new InteractionViewModel(i)).ToList();

@@ -14,7 +14,7 @@ namespace Pubquiz.Domain.Models
     {
         public string Title { get; set; }
         public string Body { get; set; }
-        public List<Media> Media { get; set; }
+        public List<MediaObject> MediaObjects { get; set; }
 
         public QuizItemType QuizItemType { get; set; }
         public int MaxScore { get; set; }
@@ -22,7 +22,7 @@ namespace Pubquiz.Domain.Models
 
         public QuizItem()
         {
-            Media = new List<Media>();
+            MediaObjects = new List<MediaObject>();
             Interactions = new List<Interaction>();
         }
         
@@ -159,7 +159,7 @@ namespace Pubquiz.Domain.Models
         ExtendedText
     }
 
-    public class Media
+    public class MediaObject
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -167,14 +167,14 @@ namespace Pubquiz.Domain.Models
         public Dimensions Dimensions { get; set; }
         public MediaType MediaType { get; }
 
-        public Media(string uri, MediaType mediaType)
+        public MediaObject(string uri, MediaType mediaType)
         {
             Id = Guid.NewGuid();
             Uri = uri;
             MediaType = mediaType;
         }
 
-        public Media()
+        public MediaObject()
         {
         }
     }
