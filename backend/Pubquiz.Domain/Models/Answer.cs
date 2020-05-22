@@ -33,7 +33,14 @@ namespace Pubquiz.Domain.Models
             var interactionResponse = InteractionResponses.FirstOrDefault(r => r.InteractionId == interactionId);
             if (interactionResponse == null)
             {
-                interactionResponse = new InteractionResponse(interactionId, choiceOptionIds, response);
+                if (choiceOptionIds==null)
+                {
+                    interactionResponse = new InteractionResponse(interactionId, response);
+                }
+                else
+                {
+                    interactionResponse = new InteractionResponse(interactionId, choiceOptionIds, response);    
+                }
                 InteractionResponses.Add(interactionResponse);
             }
             else

@@ -7,7 +7,7 @@ using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Requests.Queries
 {
-    [ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
+    [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "ActorId")]
     public class TeamInGameViewModelQuery: Query<TeamInGameViewModel>
     {
         public string ActorId { get; set; }
@@ -18,10 +18,10 @@ namespace Pubquiz.Logic.Requests.Queries
 
         protected override async Task<TeamInGameViewModel> DoExecute()
         {
-            var userCollection = UnitOfWork.GetCollection<User>();
-            var user = await userCollection.GetAsync(ActorId);
+            var teamCollection = UnitOfWork.GetCollection<Team>();
+            var team = await teamCollection.GetAsync(ActorId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var game = await gameCollection.GetAsync(user.CurrentGameId);
+            var game = await gameCollection.GetAsync(team.CurrentGameId);
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
             var quizItem = await quizItemCollection.GetAsync(game.CurrentQuizItemId);
             var model = new TeamInGameViewModel

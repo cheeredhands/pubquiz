@@ -70,6 +70,10 @@ export default {
       store.dispatch('processItemNavigated', data);
     })
 
+    connection.on('InteractionResponseAdded', data => {
+      console.log(data);
+      store.dispatch('processInteractionResponseAdded',data)
+    })
     return start().catch(err => {
       return console.error(err.toString());
     });

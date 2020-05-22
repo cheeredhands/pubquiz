@@ -3,7 +3,7 @@ import { GameState, QuizItem } from '../models/models';
 import Component, { mixins } from 'vue-class-component';
 import HelperMixin from './helper-mixin';
 import { ApiResponse, NavigateItemResponse } from '../models/apiResponses';
-import { TeamLobbyViewModel, QmLobbyViewModel, QmInGameViewModel } from '../models/viewModels';
+import { TeamLobbyViewModel, QmLobbyViewModel, QmInGameViewModel, TeamInGameViewModel } from '../models/viewModels';
 
 @Component
 export default class GameServiceMixin extends mixins(HelperMixin) {
@@ -31,7 +31,6 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
     }
 
     public async $_gameService_getQmLobby() {
-        // get team lobby view model
         this.$axios
             .get('/api/game/quizmasterlobby')
             .then((response: AxiosResponse<QmLobbyViewModel>) => {
@@ -44,7 +43,6 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
     }
 
     public async $_gameService_getQmInGame() {
-        // get team lobby view model
         this.$axios
             .get('/api/game/quizmasteringame')
             .then((response: AxiosResponse<QmInGameViewModel>) => {
@@ -59,13 +57,11 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
     }
 
     public async $_gameService_getTeamInGame() {
-        // get team lobby view model
         this.$axios
             .get('/api/game/teamingame')
-            .then((response: AxiosResponse<QmInGameViewModel>) => {
-                // this.$store.commit('setTeamFeed', response.data.qmTeamFeed);
+            .then((response: AxiosResponse<TeamInGameViewModel>) => {
                 this.$store.commit('setGame', response.data.game);
-                this.$store.commit('setQuizItem', response.data.currentQuizItem)
+                this.$store.commit('setQuizItemViewModel', response.data.quizItemViewModel)
             })
             .catch((error: AxiosError<ApiResponse>) => {
                 this.$_helper_toastError(error);
@@ -98,4 +94,34 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
             }
         );
     }
+    public async $_gameService_getQuizItemViewModel(gameId: string, quizItemId: string) {
+        if (this.$store.state.quizItemViewModels.has(quizItemId)) {
+            this.$store.commit('setQuizItemViewModelFromCache', quizItemId);
+            return;
+        }
+
+        await this.$axios.get<QuizItem>(`api/game/${gameId}/getteamquizitem/${quizItemId}`).then(response => {
+            this.$store.commit('setQuizItemViewModel', response.data);
+        }).catch(
+            (error: AxiosError<ApiResponse>) => {
+                this.$_helper_toastError(error);
+            }
+        );
+    }
+
+    public async $_gameService_submitInteractionResponse(quizItemId: string, interactionId: number, choiceOptionIds?: number[], response?: string) {
+        await this.$axios.post<ApiResponse>('api/game/submitresponse', {
+            quizItemId,
+            interactionId,
+            choiceOptionIds,
+            response
+        }).then(() => {
+            // this.$store.commit('setQuizItemViewModel', response.data);
+        }).catch(
+            (error: AxiosError<ApiResponse>) => {
+                this.$_helper_toastError(error);
+            }
+        );
+    }
+
 }

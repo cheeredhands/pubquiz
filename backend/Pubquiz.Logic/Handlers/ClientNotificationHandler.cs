@@ -31,11 +31,10 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(InteractionResponseAdded message)
         {
-            // todo implement
-            await Task.CompletedTask;
-            // notify clients via hub
-            // something like:
-            // var sendMessage = new {Code = 100, message.TeamId, message.TeamName, message.QuestionId, message.Response};
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).InteractionResponseAdded(message);
         }
 
         public async Task Handle(TeamMembersChanged message)

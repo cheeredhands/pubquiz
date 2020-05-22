@@ -75,6 +75,7 @@ import GameServiceMixin from '../services/game-service-mixin';
 import { ApiResponse, SaveTeamMembersResponse } from '../models/apiResponses';
 import QuizrEditableTextfield from './controls/QuizrEditableTextfield.vue';
 import QuizrEditableTextarea from './controls/QuizrEditableTextarea.vue';
+import { GameState } from '../models/models';
 
 @Component({
   components: {
@@ -112,6 +113,10 @@ export default class TeamLobby extends mixins(
 
   get game() {
     return this.$store.state.game || {};
+  }
+
+  get gameState() {
+    return this.game.state;
   }
   get teamName() {
     return this.$store.getters.teamName;
@@ -159,6 +164,13 @@ export default class TeamLobby extends mixins(
       .finally(() => {
         this.newName = this.teamName;
       });
+  }
+
+  @Watch('gameState')
+  public OnGameStateChanged(value: GameState, oldValue: GameState) {
+    if (value === GameState.Running) {
+      this.$router.replace({ name: 'TeamInGame' });
+    }
   }
 
   @Watch('isLoggedIn') public OnLoggedInChanged(

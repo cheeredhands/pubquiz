@@ -34,7 +34,7 @@ namespace Pubquiz.Logic.Handlers
                 return;
             }
 
-            var answer = team.Answers.FirstOrDefault(a => a.QuestionId == message.QuestionId);
+            var answer = team.Answers.FirstOrDefault(a => a.QuestionId == message.QuizItemId);
             if (answer == null)
             {
                 // log it somewhere, or send a message (with a DomainException?) to the hub so the quizmaster knows something went wrong?
@@ -42,7 +42,7 @@ namespace Pubquiz.Logic.Handlers
             }
 
             var questionCollection = _unitOfWork.GetCollection<QuizItem>();
-            var question = await questionCollection.GetAsync(message.QuestionId);
+            var question = await questionCollection.GetAsync(message.QuizItemId);
             if (question == null)
             {
                 // log it somewhere, or send a message (with a DomainException?) to the hub so the quizmaster knows something went wrong?

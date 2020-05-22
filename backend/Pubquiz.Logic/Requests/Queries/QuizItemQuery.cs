@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.ViewModels;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
@@ -16,7 +15,7 @@ namespace Pubquiz.Logic.Requests.Queries
         public string ActorId { get; set; }
         public string GameId { get; set; }
         public string QuizItemId { get; set; }
-        
+
         public QuizItemQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
@@ -25,13 +24,20 @@ namespace Pubquiz.Logic.Requests.Queries
         {
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
-            var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            
+
+
             var game = await gameCollection.GetAsync(GameId);
-            
-            var quiz = await quizCollection.GetAsync(game.QuizId);
 
             var user = await UnitOfWork.GetCollection<User>().GetAsync(ActorId);
+
+            if (user.UserRole == UserRole.Team)
+            {
+                if (game.CurrentQuizItemId != QuizItemId)
+                {
+                    throw new DomainException(ResultCode.TeamCantAccessQuizItemOtherThanTheCurrent,
+                        "Can't access other quizitems than the current.", true);
+                }
+            }
 
             if (user.UserRole != UserRole.Admin)
             {
@@ -42,15 +48,18 @@ namespace Pubquiz.Logic.Requests.Queries
                 }
             }
 
+            var quizCollection = UnitOfWork.GetCollection<Quiz>();
+            var quiz = await quizCollection.GetAsync(game.QuizId);
+
             if (!quiz.QuizItemIds.Contains(QuizItemId))
             {
                 throw new DomainException(ResultCode.QuizMasterUnauthorizedForQuizItem,
                     "Requested quiz item is not in any games the current user is authorized for.", true);
             }
+
             var quizItem = await quizItemCollection.GetAsync(QuizItemId);
 
             return quizItem;
-
         }
     }
 }

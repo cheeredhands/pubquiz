@@ -3,8 +3,8 @@ import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { User, GameState, ItemNavigatedMessage, QuizItem, Team, Game } from '../models/models';
-import { TeamLoggedOutMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage } from '@/models/messages';
-import { TeamFeedViewModel, TeamRankingViewModel } from '@/models/viewModels';
+import { TeamLoggedOutMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, InteractionResponseAddedMessage } from '../models/messages';
+import { TeamFeedViewModel, TeamRankingViewModel, QuizItemViewModel } from '../models/viewModels';
 
 Vue.use(Vuex);
 
@@ -15,6 +15,8 @@ interface RootState {
   game?: Game;
   quizItem?: QuizItem;
   quizItems: Map<string, QuizItem>;
+  quizItemViewModel?: QuizItemViewModel;
+  quizItemViewModels: Map<string, QuizItemViewModel>;
   signalrconnection?: HubConnection;
 
   user?: User;
@@ -22,6 +24,8 @@ interface RootState {
   gameIds: string[];
   teamFeed?: TeamFeedViewModel;
   teamRanking?: TeamRankingViewModel;
+
+  debounceMs: number;
 }
 
 const storeOpts: StoreOptions<RootState> = {
@@ -32,23 +36,29 @@ const storeOpts: StoreOptions<RootState> = {
     game: undefined,
     quizItem: undefined,
     quizItems: new Map<string, QuizItem>(),
+    quizItemViewModel: undefined,
+    quizItemViewModels: new Map<string, QuizItemViewModel>(),
     signalrconnection: undefined,
 
     user: undefined,
     currentGameId: undefined,
     gameIds: [],
     teamFeed: undefined,
-    teamRanking: undefined
+    teamRanking: undefined,
+    debounceMs: parseInt(process.env.VUE_APP_DEBOUNCE_MS || '500', 10)
   },
   getters: {
     game: state => state.game || {},
     userId: state => state.user?.userId || '',
     quizItem: state => state.quizItem || {},
+    quizItemViewModel: state => state.quizItemViewModel || {},
     teamId: state => state.team?.teamId || '',
     teamName: state => state.team?.teamName || '',
     memberNames: state => state.team?.memberNames || '',
     teamFeed: state => state.teamFeed || {},
-    teamRanking: state => state.teamRanking || {}
+    teamRanking: state => state.teamRanking || {},
+    currentQuizItemId: state => state.game?.currentQuizItemId || '',
+    debounceMs: state => state.debounceMs
   },
   mutations: {
     // mutations are sync store updates
@@ -161,6 +171,16 @@ const storeOpts: StoreOptions<RootState> = {
       const quizItem = state.quizItems.get(quizItemId);
       state.quizItem = quizItem;
     },
+    setQuizItemViewModel(state, quizItemViewModel: QuizItemViewModel) {
+      state.quizItemViewModel = quizItemViewModel;
+      if (!state.quizItemViewModels.has(quizItemViewModel.id)) {
+        state.quizItemViewModels.set(quizItemViewModel.id, quizItemViewModel);
+      }
+    },
+    setQuizItemViewModelFromCache(state, quizItemId: string) {
+      const quizItemViewModel = state.quizItemViewModels.get(quizItemId);
+      state.quizItemViewModel = quizItemViewModel;
+    },
     logout(state) {
       state.team = undefined;
       state.isLoggedIn = false;
@@ -243,6 +263,9 @@ const storeOpts: StoreOptions<RootState> = {
         return;
       }
       commit('setCurrentItem', itemNavigatedMessage);
+    },
+    processInteractionResponseAdded({ commit, state }, interactionResponseAddedMessage: InteractionResponseAddedMessage) {
+      // TODO update teamfeed
     }
   }
 };

@@ -21,7 +21,7 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = 1,
                 Response = string.Empty,
-                QuestionId = Quiz.QuizSections[1].QuestionItemRefs[0].Id
+                QuizItemId = Quiz.QuizSections[1].QuestionItemRefs[0].Id
             };
 
             // act & assert
@@ -41,13 +41,13 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = 1,
                 Response = string.Empty,
-                QuestionId = Guid.Empty.ToShortGuidString()
+                QuizItemId = Guid.Empty.ToShortGuidString()
             };
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
             Assert.AreEqual(ResultCode.InvalidQuizItemId, exception.ResultCode);
-            Assert.AreEqual("Invalid QuestionId.", exception.Message);
+            Assert.AreEqual("Invalid QuizItemId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
 
@@ -61,7 +61,7 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = 1,
                 Response = string.Empty,
-                QuestionId = OtherQuestions[0].Id
+                QuizItemId = OtherQuestions[0].Id
             };
 
             // act & assert
@@ -82,7 +82,7 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = 1,
                 Response = string.Empty,
-                QuestionId = Quiz.QuizSections[2].QuestionItemRefs[0].Id
+                QuizItemId = Quiz.QuizSections[2].QuestionItemRefs[0].Id
             };
 
             // act & assert
@@ -102,7 +102,7 @@ namespace Pubquiz.Domain.Tests
                 ChoiceOptionIds = new List<int> {3},
                 InteractionId = -1,
                 Response = string.Empty,
-                QuestionId = Quiz.QuizSections[1].QuestionItemRefs[0].Id
+                QuizItemId = Quiz.QuizSections[1].QuestionItemRefs[0].Id
             };
 
             // act & assert

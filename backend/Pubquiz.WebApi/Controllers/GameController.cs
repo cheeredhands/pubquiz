@@ -41,12 +41,6 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.Team)]
         public async Task<IActionResult> SubmitInteractionResponse(SubmitInteractionResponseNotification notification)
         {
-            var teamId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(notification.TeamId) && teamId != notification.TeamId)
-            {
-                return Forbid();
-            }
-
             notification.TeamId = User.GetId();
             await notification.Execute();
             return Ok(new {Code = ResultCode.Ok, Message = "Response submitted ok."});
@@ -56,7 +50,20 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.Team)]
         public async Task<IActionResult> GetTeamInGame()
         {
-            var query = new TeamInGameViewModelQuery(_unitOfWork) { ActorId = User.GetId()};
+            var query = new TeamInGameViewModelQuery(_unitOfWork) {ActorId = User.GetId()};
+            var result = await query.Execute();
+            return Ok(result);
+        }
+
+        [HttpGet("{gameId}/getteamquizitem/{quizItemId}")]
+        [Authorize(AuthPolicy.Team)]
+        public async Task<IActionResult> GetTeamQuizItem(string gameId, string quizItemId)
+        {
+            var query = new QuizItemViewModelQuery(_unitOfWork)
+            {
+                ActorId = User.GetId(), GameId = gameId, QuizItemId = quizItemId
+            };
+
             var result = await query.Execute();
             return Ok(result);
         }
@@ -78,7 +85,7 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> GetQuizMasterInGame()
         {
-            var query = new QmInGameViewModelQuery(_unitOfWork) { ActorId = User.GetId()};
+            var query = new QmInGameViewModelQuery(_unitOfWork) {ActorId = User.GetId()};
             var result = await query.Execute();
             return Ok(result);
         }

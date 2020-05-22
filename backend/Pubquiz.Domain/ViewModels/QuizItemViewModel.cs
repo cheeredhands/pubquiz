@@ -6,6 +6,7 @@ namespace Pubquiz.Domain.ViewModels
 {
     public class QuizItemViewModel
     {
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
         public List<MediaObject> Media { get; set; }
@@ -20,6 +21,7 @@ namespace Pubquiz.Domain.ViewModels
 
         public QuizItemViewModel(QuizItem quizItem)
         {
+            Id = quizItem.Id;
             Title = quizItem.Title;
             Body = quizItem.Body;
             Media = quizItem.MediaObjects;

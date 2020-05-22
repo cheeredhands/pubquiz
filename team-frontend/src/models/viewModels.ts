@@ -26,6 +26,9 @@ export interface InteractionViewModel {
     interactionType: InteractionType;
     choiceOptions: ChoiceOption[];
     maxScore: number;
+    response: string;
+    chosenOptions: number[];
+    chosenOption: number;  
 }
 
 export interface QmLobbyViewModel {

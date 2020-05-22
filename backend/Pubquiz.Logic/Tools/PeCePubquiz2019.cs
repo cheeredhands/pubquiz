@@ -95,7 +95,7 @@ namespace Pubquiz.Logic.Tools
                 QuizItemType = QuizItemType.ShortAnswer
             };
 
-            question.Interactions.Add(new Interaction(1)
+            question.Interactions.Add(new Interaction(0)
             {
                 Text = "Beschrijving",
                 Solution = new Solution(new[] {"oppervlakte onder een grafiek"}),
@@ -118,7 +118,7 @@ namespace Pubquiz.Logic.Tools
                 QuizItemType = QuizItemType.ShortAnswer
             };
 
-            question.Interactions.Add(new Interaction(1)
+            question.Interactions.Add(new Interaction(0)
             {
                 Text = "Betekenis",
                 Solution = new Solution(new[] {"virtual private network"}),
@@ -140,14 +140,14 @@ namespace Pubquiz.Logic.Tools
                 QuizItemType = QuizItemType.ShortAnswer
             };
 
-            question.Interactions.Add(new Interaction(1)
+            question.Interactions.Add(new Interaction(0)
             {
                 Text = "Hoeveel hazen had Eliud Kipchoge bij zich tijdens zijn recordpoging?",
                 Solution = new Solution(new[] {"7", "zeven"}),
                 InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
-            question.Interactions.Add(new Interaction(2)
+            question.Interactions.Add(new Interaction(1)
             {
                 Text = "Wat is de naam van de sponsor van het evenement?",
                 Solution = new Solution(new[] {"INEOS"}),
@@ -168,14 +168,14 @@ namespace Pubquiz.Logic.Tools
                 QuizItemType = QuizItemType.MultipleChoice
             };
 
-            question.Interactions.Add(new Interaction(1)
+            question.Interactions.Add(new Interaction(0)
             {
                 Text = "Choose",
                 ChoiceOptions = new List<ChoiceOption>
                 {
-                    new ChoiceOption(1, "Brut"),
-                    new ChoiceOption(2, "Sec"),
-                    new ChoiceOption(3, "Doux"),
+                    new ChoiceOption(0, "Brut"),
+                    new ChoiceOption(1, "Sec"),
+                    new ChoiceOption(2, "Doux"),
                 },
                 Solution = new Solution(new[] {1}),
                 InteractionType = InteractionType.MultipleChoice,
@@ -196,7 +196,7 @@ namespace Pubquiz.Logic.Tools
                 QuizItemType = QuizItemType.ShortAnswer
             };
 
-            question.Interactions.Add(new Interaction(1)
+            question.Interactions.Add(new Interaction(0)
             {
                 Text = "Naam",
                 Solution = new Solution(new[] {"Douglas Adams"}),
@@ -218,21 +218,21 @@ namespace Pubquiz.Logic.Tools
                 QuizItemType = QuizItemType.ShortAnswer
             };
 
-            question.Interactions.Add(new Interaction(1)
+            question.Interactions.Add(new Interaction(0)
             {
                 Text = "Titel",
                 Solution = new Solution(new[] {"Personal Jesus"}),
                 InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
-            question.Interactions.Add(new Interaction(2)
+            question.Interactions.Add(new Interaction(1)
             {
                 Text = "Uitvoerende artiest",
                 Solution = new Solution(new[] {"Johnny Cash"}),
                 InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
-            question.Interactions.Add(new Interaction(3)
+            question.Interactions.Add(new Interaction(2)
             {
                 Text = "Originele artiest",
                 Solution = new Solution(new[] {"Depeche Mode"}),

@@ -24,7 +24,7 @@ namespace Pubquiz.WebApi.Helpers
                 select assemblyType).ToArray();
             foreach (var commandType in commandTypes)
             {
-                serviceCollection.AddScoped(commandType);
+                serviceCollection.AddTransient(commandType);
             }
 
             var notificationTypes = (from assemblyType in sourceAssembly.GetTypes()
@@ -32,7 +32,7 @@ namespace Pubquiz.WebApi.Helpers
                 select assemblyType).ToArray();
             foreach (var notificationType in notificationTypes)
             {
-                serviceCollection.AddScoped(notificationType);
+                serviceCollection.AddTransient(notificationType);
             }
 
             var queryTypes = (from assemblyType in sourceAssembly.GetTypes()
@@ -40,7 +40,7 @@ namespace Pubquiz.WebApi.Helpers
                 select assemblyType).ToArray();
             foreach (var queryType in queryTypes)
             {
-                serviceCollection.AddScoped(queryType);
+                serviceCollection.AddTransient(queryType);
             }
 
             return serviceCollection;

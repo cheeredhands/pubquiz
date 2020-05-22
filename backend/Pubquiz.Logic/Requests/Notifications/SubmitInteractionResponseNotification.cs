@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Domain.ViewModels;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
@@ -14,11 +16,11 @@ namespace Pubquiz.Logic.Requests.Notifications
     /// Notification to submit an interaction response for a certain <see cref="Interaction"/> in a <see cref="QuizItem"/>
     /// </summary>
     [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "TeamId")]
-    [ValidateEntity(EntityType = typeof(QuizItem), IdPropertyName = "QuestionId")]
+    [ValidateEntity(EntityType = typeof(QuizItem), IdPropertyName = "QuizItemId")]
     public class SubmitInteractionResponseNotification : Notification
     {
         public string TeamId { get; set; }
-        public string QuestionId { get; set; }
+        public string QuizItemId { get; set; }
         public int InteractionId { get; set; }
         public List<int> ChoiceOptionIds { get; set; }
         public string Response { get; set; }
@@ -31,8 +33,8 @@ namespace Pubquiz.Logic.Requests.Notifications
         {
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
-            var questionCollection = UnitOfWork.GetCollection<QuizItem>();
-            var question = await questionCollection.GetAsync(QuestionId);
+            var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
+            var quizItem = await quizItemCollection.GetAsync(QuizItemId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(team.CurrentGameId);
             var quizId = game.QuizId;
@@ -41,7 +43,7 @@ namespace Pubquiz.Logic.Requests.Notifications
             var quiz = await quizCollection.GetAsync(quizId);
 
             var quizSectionId = quiz.QuizSections
-                .FirstOrDefault(qs => qs.QuestionItemRefs.Any(q => q.Id == QuestionId))?.Id;
+                .FirstOrDefault(qs => qs.QuestionItemRefs.Any(q => q.Id == QuizItemId))?.Id;
             if (string.IsNullOrWhiteSpace(quizSectionId))
             {
                 throw new DomainException(ResultCode.QuestionNotInQuiz, "This question doesn't belong to the quiz.",
@@ -54,34 +56,38 @@ namespace Pubquiz.Logic.Requests.Notifications
                     "This question doesn't belong to the current quiz section.", true);
             }
 
-            if (question.Interactions.All(i => i.Id != InteractionId))
+            if (quizItem.Interactions.All(i => i.Id != InteractionId))
             {
                 throw new DomainException(ResultCode.InvalidInteractionId, "Invalid InteractionId.", true);
             }
 
 
             // save response
-            var answer = team.Answers.FirstOrDefault(a => a.QuestionId == QuestionId);
+            var answer = team.Answers.FirstOrDefault(a => a.QuestionId == QuizItemId);
             if (answer == null)
             {
-                answer = new Answer(quizSectionId, QuestionId);
+                answer = new Answer(quizSectionId, QuizItemId);
                 team.Answers.Add(answer);
             }
 
             answer.SetInteractionResponse(InteractionId, ChoiceOptionIds, Response);
+
             UnitOfWork.Commit();
 
-            // send a domain event: InteractionResponseAdded, which will be picked up by:
-            // - the scoring handler
-            // - a client notification handler
-            var response = string.IsNullOrEmpty(Response) ? GetChoiceOptionTexts(question, ChoiceOptionIds) : Response;
+            var response = string.IsNullOrWhiteSpace(Response)
+                ? GetChoiceOptionTexts(quizItem, ChoiceOptionIds)
+                : Response;
             await Bus.Publish(
-                new InteractionResponseAdded(TeamId, team.Name, quizSectionId, QuestionId, response));
-            //answer.Score(question);
+                new InteractionResponseAdded(game.Id, TeamId, quizSectionId, QuizItemId, response));
         }
 
         private string GetChoiceOptionTexts(QuizItem question, List<int> choiceOptionIds)
         {
+            if (choiceOptionIds == null)
+            {
+                return string.Empty;
+            }
+
             var choiceOptionTexts = new List<string>();
             foreach (var choiceOptionId in choiceOptionIds)
             {

@@ -30,6 +30,10 @@ namespace Pubquiz.Domain.Models
 
             foreach (var answer in Answers)
             {
+                if (!ScorePerQuizSection.ContainsKey(answer.QuizSectionId))
+                {
+                    ScorePerQuizSection[answer.QuizSectionId] = 0;
+                }
                 ScorePerQuizSection[answer.QuizSectionId] += answer.TotalScore;
             }
         }

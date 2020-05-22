@@ -65,36 +65,12 @@ namespace Pubquiz.Logic.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         Task ItemNavigated(ItemNavigated message);
-        //        /// <summary>
-        //        /// Called when a team is typing an answer.
-        //        /// </summary>
-        //        /// <param name="team">The current team.</param>
-        //        /// <param name="question">The current question the team is typing an answer for.</param>
-        //        /// <param name="isTyping">true, if the team is typing an answer, otherwise false.</param>
-        //        /// <returns></returns>
-        //        Task TeamIsTypingAsync(Team team, Question question, bool isTyping);
-        //        
-        //        /// <summary>
-        //        /// Called when an answer can not be scored automatically and the quiz master must
-        //        /// score manually.
-        //        /// </summary>
-        //        /// <param name="answer"></param>
-        //        /// <returns></returns>
-        //        Task AnswerRequiresReviewAsync(Answer answer);
 
-
-        //        /// <summary>
-        //        /// Called when the quiz master navigates to the another question.
-        //        /// </summary>
-        //        /// <param name="game"></param>
-        //        /// <returns></returns>
-        //        Task CurrentQuestionIndexChangedAsync(Game game);
-        //        
-        //        /// <summary>
-        //        /// Called when the quiz master releases the scores for the game.
-        //        /// </summary>
-        //        /// <param name="game"></param>
-        //        /// <returns></returns>
-        //        Task ScoresReleasedAsync(Game game);
+        /// <summary>
+        /// Called when a team answers (part of) a quiz item.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task InteractionResponseAdded(InteractionResponseAdded message);
     }
 }

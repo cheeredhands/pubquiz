@@ -55,4 +55,11 @@ export interface GameStateChangedMessage {
     /** The new game state */
     newGameState: GameState;
   }
+
+  export interface InteractionResponseAddedMessage {
+      teamId: string;
+      quizSectionId: string;
+      quizItemId: string;
+      response: string;
+  }
   

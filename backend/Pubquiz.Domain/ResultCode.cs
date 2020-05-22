@@ -17,6 +17,7 @@ namespace Pubquiz.Domain
         InvalidUserId,
         QuizMasterUnauthorizedForGame,
         QuizMasterUnauthorizedForQuizItem,
+        TeamCantAccessQuizItemOtherThanTheCurrent,
         LobbyUnavailableBecauseOfGameState,
         NoRoleClaimForUser,
         NoCurrentGameIdClaimForUser,
