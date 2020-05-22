@@ -16,7 +16,7 @@ export interface User {
 export interface Game {
   id: string;
   title: string;
-  quizTitle:string;
+  quizTitle: string;
   state: GameState;
   totalQuestionCount: number;
   totalQuizItemCount: number;
@@ -58,7 +58,7 @@ export interface QuizItem {
   id: string;
   title: string;
   body: string;
-  media: []// MediaObject[];
+  mediaObjects:  MediaObject[];
   quizItemType: QuizItemType;
   maxScore: number;
   interactions: Interaction[];
@@ -70,11 +70,40 @@ export interface Interaction {
   interactionType: InteractionType;
   choiceOptions: ChoiceOption[];
   maxScore: number;
+  solution: Solution;
+}
+
+export interface Solution {
+  choiceOptionIds: number[];
+  responses: string[];
 }
 
 export interface ChoiceOption {
   id: string;
   text: string;
+}
+
+export interface MediaObject {
+  id: string;
+  title: string;
+  Uri: string;
+  dimensions: Dimensions;
+  mediaType: MediaType;
+}
+
+export interface Dimensions {
+  originalWidth: number;
+  originalHeight: number;
+  width: number;
+  height: number;
+  durationInSeconds: number;
+}
+
+export enum MediaType {
+
+  Image = 'Image',
+  Video = 'Video',
+  Audio = 'Audio'
 }
 /** Type of the question */
 export enum QuizItemType {

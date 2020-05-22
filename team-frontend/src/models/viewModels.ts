@@ -1,8 +1,31 @@
-import { GameState, QuizItemType, Team, Game, QuizItem } from './models';
+import { GameState, QuizItemType, Team, Game, QuizItem, InteractionType, ChoiceOption } from './models';
 
 export interface TeamLobbyViewModel {
     game: Game;
     otherTeamsInGame: Team[];
+}
+
+export interface TeamInGameViewModel {
+    game: Game;
+    quizItemViewModel: QuizItemViewModel;
+}
+
+export interface QuizItemViewModel  {
+    id: string;
+    title: string;
+    body: string;
+    media: []// MediaObject[];
+    quizItemType: QuizItemType;
+    maxScore: number;
+    interactions: InteractionViewModel[];
+}
+
+export interface InteractionViewModel {
+    id: string;
+    text: string;
+    interactionType: InteractionType;
+    choiceOptions: ChoiceOption[];
+    maxScore: number;
 }
 
 export interface QmLobbyViewModel {
