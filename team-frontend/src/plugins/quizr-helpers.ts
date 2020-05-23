@@ -22,22 +22,17 @@ export class QuizrHelpers {
 }
 
 const quizrHelpersInstance = new QuizrHelpers();
-
 const Plugin: PluginObject<any> = {
   install: vue => {
-    const quizrHelpersInstance = new QuizrHelpers();
     vue.$quizrhelpers = quizrHelpersInstance;
-  }
-};
-Plugin.install = vue => {
-  vue.$quizrhelpers = quizrHelpersInstance;
-  Object.defineProperties(vue.prototype, {
-    $quizrhelpers: {
-      get() {
-        return quizrHelpersInstance;
+    Object.defineProperties(vue.prototype, {
+      $quizrhelpers: {
+        get() {
+          return quizrHelpersInstance;
+        }
       }
-    }
-  });
+    });
+  }
 };
 
 Vue.use(Plugin);
