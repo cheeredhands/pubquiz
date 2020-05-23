@@ -45,7 +45,7 @@ export interface Team {
   /** false when the user has logged out / left game */
   isLoggedIn: boolean;
   /** Score per quiz section */
-  ScorePerQuizSection: Map<string,number>
+  ScorePerQuizSection: Map<string, number>
   totalScore: number;
 }
 
@@ -60,7 +60,7 @@ export interface QuizItem {
   id: string;
   title: string;
   body: string;
-  mediaObjects:  MediaObject[];
+  mediaObjects: MediaObject[];
   quizItemType: QuizItemType;
   maxScore: number;
   interactions: Interaction[];
@@ -73,6 +73,20 @@ export interface Interaction {
   choiceOptions: ChoiceOption[];
   maxScore: number;
   solution: Solution;
+}
+
+export interface InteractionResponse {
+  interactionId: number;
+  choiceOptionIds: number[];
+  response: string;
+
+  flaggedForManualCorrection: boolean;
+  /** true if the answer was manually corrected */
+  manuallyCorrected: boolean;
+  /** wether or not the answer  was deemed correct by the manual scorer */
+  manualCorrectionOutcome: boolean;
+  /** awarded score for this part of the question (interaction) */
+  awardedScore: number;
 }
 
 export interface Solution {

@@ -54,7 +54,17 @@ namespace Pubquiz.Logic.Handlers
             team.UpdateScore();
             
             // send AnswerScored message, so the clients will be notified and the team scores and dashboard will be updated
-            await _bus.Publish(new AnswerScored());
+            await _bus.Publish(new AnswerScored
+            {
+                TeamId = team.Id,
+                GameId = message.GameId,
+                QuizItemId = message.QuizItemId,
+                InteractionId = message.InteractionId,
+                Response = message.Response,
+                QuizItemScore = answer.TotalScore,
+                TotalTeamScore = team.TotalScore,
+                InteractionResponses = answer.InteractionResponses
+            });
         }
     }
 }

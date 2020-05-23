@@ -1,4 +1,4 @@
-import { GameState } from './models';
+import { GameState, InteractionResponse } from './models';
 
 export interface TeamRegisteredMessage {
     /** The team Id */
@@ -61,5 +61,16 @@ export interface GameStateChangedMessage {
       quizItemId: string;
       interactionId: number;
       response: string;
+  }
+
+  export interface AnswerScoredMessage {
+      teamId: string;
+      gameId: string;
+      quizItemId: string;
+      interactionId: number;
+      response: string;
+      quizItemScore: number;
+      totalTeamScore: number;
+      interactionResponses: InteractionResponse[];
   }
   
