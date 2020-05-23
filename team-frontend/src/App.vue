@@ -13,6 +13,7 @@ import NavBarPart from './components/parts/NavBarPart.vue';
 import FooterPart from './components/parts/FooterPart.vue';
 import HelperMixin from './services/helper-mixin';
 import { WhoAmIResponse } from './models/apiResponses';
+import { TeamRegisteredMessage } from './models/messages';
 
 @Component({
   components: { NavBarPart, FooterPart }
@@ -29,13 +30,14 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
         }
         if (response.data.userRole === UserRole.Team) {
           this.$store
-            .dispatch('initTeam', {
-              teamId: response.data.userId,
-              teamName: response.data.teamName,
+            .dispatch('initTeam', { 
+              id: response.data.userId,
+              name: response.data.name,
               memberNames: response.data.memberNames,
               currentGameId: response.data.currentGameId,
-              isLoggedIn: true
-            } as Team)
+              isLoggedIn: true,
+              gameId: response.data.currentGameId
+            })
             .then(() => {
               this.$router.replace({ name: 'TeamLobby' });
             });
@@ -44,7 +46,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
             .dispatch('initQuizMaster', {
               userId: response.data.userId,
               userName: response.data.userName
-            } as User)
+            })
             .then(() => {
               this.$router.replace({ name: 'QuizMasterLobby' });
             });

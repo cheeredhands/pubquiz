@@ -77,12 +77,13 @@ namespace Pubquiz.WebApi.Controllers
                     Message = "Logged in as team.",
                     UserName = team.UserName,
                     UserId = User.GetId(),
-                    TeamName = team.Name,
+                    Name = team.Name,
                     MemberNames = team.MemberNames,
                     CurrentGameId = team.CurrentGameId,
                     UserRole = User.GetUserRole()
                 });
             }
+
             return Ok(new WhoAmiResponse
             {
                 Code = ResultCode.ThatsYou,
@@ -109,8 +110,9 @@ namespace Pubquiz.WebApi.Controllers
                 Jwt = jwt,
                 TeamId = team.Id,
                 GameId = team.CurrentGameId,
-                TeamName = team.Name,
-                MemberNames = team.MemberNames
+                Name = team.Name,
+                MemberNames = team.MemberNames,
+                RecoveryCode = team.RecoveryCode
             });
         }
 
@@ -250,18 +252,20 @@ namespace Pubquiz.WebApi.Controllers
         [HttpPost("logout")]
         public async Task<ActionResult<ApiResponse>> Logout()
         {
-            var actorId = User.GetId();
-            var actorRole = User.GetUserRole();
-
-            if (actorRole == UserRole.Team)
+            if (User != null)
             {
-                var notification = new LogoutTeamNotification(_unitOfWork, _bus) {TeamId = actorId};
-                await notification.Execute();
-            }
-            else
-            {
-                var notification = new LogoutUserNotification(_unitOfWork, _bus) {UserId = actorId};
-                await notification.Execute();
+                var actorId = User.GetId();
+                var actorRole = User.GetUserRole();
+                if (actorRole == UserRole.Team)
+                {
+                    var notification = new LogoutTeamNotification(_unitOfWork, _bus) {TeamId = actorId};
+                    await notification.Execute();
+                }
+                else
+                {
+                    var notification = new LogoutUserNotification(_unitOfWork, _bus) {UserId = actorId};
+                    await notification.Execute();
+                }
             }
 
             return Ok(new ApiResponse

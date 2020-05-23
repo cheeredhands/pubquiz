@@ -4,15 +4,15 @@
     {
         public string TeamId { get; }
         public string GameId { get; }
-        public string OldTeamName { get; }
-        public string TeamName { get; }
+        public string OldName { get; }
+        public string Name { get; }
 
-        public TeamNameUpdated(string teamId, string gameId, string oldTeamName, string teamName)
+        public TeamNameUpdated(string teamId, string gameId, string oldName, string name)
         {
             TeamId = teamId;
             GameId = gameId;
-            OldTeamName = oldTeamName;
-            TeamName = teamName;
+            OldName = oldName;
+            Name = name;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithCorrectNewTeam_TeamRegistered()
         {
             // arrange
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "Team 4", Code = "JOINME"};
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "Team 4", Code = "JOINME"};
 
             // act
             var team = command.Execute().Result;
@@ -33,7 +33,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithCorrectNewTeam_TeamInGame()
         {
             // arrange
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "Team 4", Code = "JOINME"};
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "Team 4", Code = "JOINME"};
 
             // act
             var team = command.Execute().Result;
@@ -53,7 +53,7 @@ namespace Pubquiz.Domain.Tests
             // arrange 
             var firstTeamId = Game.TeamIds[0];
             var firstTeam = UnitOfWork.GetCollection<Team>().GetAsync(firstTeamId).Result;
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "", Code = firstTeam.RecoveryCode};
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "", Code = firstTeam.RecoveryCode};
 
             // act
             var team = command.Execute().Result;
@@ -68,7 +68,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithInvalidCode_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "Team 4", Code = "INVALIDCODE"};
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "Team 4", Code = "INVALIDCODE"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -81,7 +81,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithExistingTeamName_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {TeamName = "Team 3", Code = "JOINME"};
+            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "Team 3", Code = "JOINME"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;

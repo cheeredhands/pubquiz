@@ -9,7 +9,8 @@
       <b-container>
         <b-row>
           <b-col>
-            <h1>{{ $t('TEAMLOBBY_WELCOME')}}</h1>
+            <h1 @click="showRecoveryCode=!showRecoveryCode">{{ $t('TEAMLOBBY_WELCOME')}}</h1>
+            <code v-if="showRecoveryCode">{{recoveryCode}}</code>
             <p>{{ $t('TEAMLOBBY_SIT_BACK')}}</p>
           </b-col>
         </b-row>
@@ -46,7 +47,7 @@
                 :key="index"
               >
                 <div>
-                  <h5 class="mt-0 mb-1">{{ otherTeam.teamName }}</h5>
+                  <h5 class="mt-0 mb-1">{{ otherTeam.name }}</h5>
                   <p class="mb-0 small">{{ otherTeam.memberNames }}</p>
                 </div>
                 <b-badge v-if="!otherTeam.isLoggedIn" pill>{{ $t('LOGGED_OUT')}}</b-badge>
@@ -75,7 +76,8 @@ import GameServiceMixin from '../services/game-service-mixin';
 import { ApiResponse, SaveTeamMembersResponse } from '../models/apiResponses';
 import QuizrEditableTextfield from './controls/QuizrEditableTextfield.vue';
 import QuizrEditableTextarea from './controls/QuizrEditableTextarea.vue';
-import { GameState } from '../models/models';
+import { GameState, Game } from '../models/models';
+import { TeamViewModel } from '../models/viewModels';
 
 @Component({
   components: {
@@ -103,7 +105,7 @@ export default class TeamLobby extends mixins(
 ) {
   public name: string = 'TeamLobby';
   public teamId: string = this.$store.getters.teamId;
-
+  public showRecoveryCode = false;
   public newName: string = this.teamName;
   public newMemberNames: string = this.memberNames;
 
@@ -111,8 +113,12 @@ export default class TeamLobby extends mixins(
     return this.$store.state.isLoggedIn || false;
   }
 
+  get recoveryCode() {
+    return this.$store.getters.recoveryCode || '';
+  }
+
   get game() {
-    return this.$store.state.game || {};
+    return (this.$store.state.game || {}) as Game;
   }
 
   get gameState() {
@@ -127,7 +133,7 @@ export default class TeamLobby extends mixins(
   }
 
   get teams() {
-    return this.$store.state.teams || [];
+    return (this.$store.state.teams || []) as TeamViewModel[];
   }
 
   public created() {

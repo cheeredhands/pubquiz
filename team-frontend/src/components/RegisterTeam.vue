@@ -77,6 +77,7 @@ import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
 import { RegisterForGameResponse, ApiResponse } from '../models/apiResponses';
+import { Team } from '../models/models';
 
 @Component({
   components: { NavBarPart, FooterPart }
@@ -101,10 +102,12 @@ export default class RegisterTeam extends mixins(
         this.$store.dispatch('storeToken', response.data.jwt).then(() => {
           this.$store
             .dispatch('initTeam', {
-              teamId: response.data.teamId,
-              teamName: response.data.teamName,
+              id: response.data.teamId,
+              name: response.data.name,
+              gameId: response.data.gameId,
               memberNames: response.data.memberNames,
-              isLoggedIn: true
+              isLoggedIn: true,
+              recoveryCode: response.data.recoveryCode
             })
             .then(() => {
               this.$router.push({ name: 'TeamLobby' });

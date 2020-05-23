@@ -15,7 +15,7 @@ namespace Pubquiz.Logic.Requests.Commands
     /// </summary>
     public class RegisterForGameCommand : Command<Team>
     {
-        public string TeamName;
+        public string Name;
         public string Code;
 
         public RegisterForGameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
@@ -55,9 +55,9 @@ namespace Pubquiz.Logic.Requests.Commands
             if (team == null)
             {
                 // check if team name is taken, otherwise throw DomainException
-                var isTeamNameTaken = !string.IsNullOrWhiteSpace(TeamName) &&
+                var isTeamNameTaken = !string.IsNullOrWhiteSpace(Name) &&
                                       await teamCollection.AnyAsync(t =>
-                                          String.Equals(t.Name, TeamName, StringComparison.CurrentCultureIgnoreCase) &&
+                                          String.Equals(t.Name, Name, StringComparison.CurrentCultureIgnoreCase) &&
                                           t.CurrentGameId == game.Id);
                 if (isTeamNameTaken)
                 {
@@ -65,7 +65,7 @@ namespace Pubquiz.Logic.Requests.Commands
                 }
 
                 // register team and return team object
-                var userName = TeamName.Trim();
+                var userName = Name.Trim();
                 var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
                 team = new Team
                 {
@@ -83,7 +83,7 @@ namespace Pubquiz.Logic.Requests.Commands
             else
             {
                 team.IsLoggedIn = true;
-                team.Name = string.IsNullOrWhiteSpace(TeamName) ? team.Name : TeamName;
+                team.Name = string.IsNullOrWhiteSpace(Name) ? team.Name : Name;
                 await teamCollection.UpdateAsync(team);
             }
 

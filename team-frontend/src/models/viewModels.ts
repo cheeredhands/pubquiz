@@ -1,8 +1,19 @@
 import { GameState, QuizItemType, Team, Game, QuizItem, InteractionType, ChoiceOption } from './models';
 
+export interface TeamViewModel {
+    /** The team Id */
+    id: string;
+    /** The Team Name */
+    name: string;
+    /** Team member names */
+    memberNames: string;
+    /** false when the user has logged out / left game */
+    isLoggedIn: boolean;
+  }
+
 export interface TeamLobbyViewModel {
     game: Game;
-    otherTeamsInGame: Team[];
+    otherTeamsInGame: TeamViewModel[];
 }
 
 export interface TeamInGameViewModel {

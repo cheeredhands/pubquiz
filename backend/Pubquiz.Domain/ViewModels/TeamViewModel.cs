@@ -4,21 +4,17 @@ namespace Pubquiz.Domain.ViewModels
 {
     public class TeamViewModel
     {
-        public string TeamId { get; set; }
-        public string CurrentGameId { get; set; }
-        public string TeamName { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
         public string MemberNames { get; set; }
         public bool IsLoggedIn { get; set; }
-        public int TotalScore { get; set; }
 
         public TeamViewModel(Team team)
         {
-            TeamId = team.Id;
-            CurrentGameId = team.CurrentGameId;
-            TeamName = team.Name;
+            Id = team.Id;
+            Name = team.Name;
             MemberNames = team.MemberNames;
             IsLoggedIn = team.IsLoggedIn;
-            TotalScore = team.TotalScore;
         }
     }
 }

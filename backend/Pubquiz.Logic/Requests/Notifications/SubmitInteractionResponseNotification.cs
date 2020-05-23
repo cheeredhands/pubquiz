@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Domain.ViewModels;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
@@ -78,7 +76,7 @@ namespace Pubquiz.Logic.Requests.Notifications
                 ? GetChoiceOptionTexts(quizItem, ChoiceOptionIds)
                 : Response;
             await Bus.Publish(
-                new InteractionResponseAdded(game.Id, TeamId, quizSectionId, QuizItemId, response));
+                new InteractionResponseAdded(game.Id, TeamId, QuizItemId, InteractionId, response));
         }
 
         private string GetChoiceOptionTexts(QuizItem question, List<int> choiceOptionIds)

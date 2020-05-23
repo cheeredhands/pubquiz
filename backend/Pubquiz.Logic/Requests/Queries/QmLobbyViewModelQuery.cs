@@ -8,7 +8,7 @@ using Pubquiz.Persistence;
 namespace Pubquiz.Logic.Requests.Queries
 {
     /// <summary>
-    /// Query to get the <see cref="QuizMasterLobbyViewModel"/> for a specific <see cref="User"/>.
+    /// Query to get the <see cref="QmLobbyViewModel"/> for a specific <see cref="User"/>.
     /// </summary>
     [ValidateEntity(EntityType = typeof(User), IdPropertyName = "UserId")]
     public class QmLobbyViewModelQuery : Query<QmLobbyViewModel>
@@ -26,7 +26,7 @@ namespace Pubquiz.Logic.Requests.Queries
             var game = await gameCollection.GetAsync(user.CurrentGameId);
             var teamCollection = UnitOfWork.GetCollection<Team>();
 
-            var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.Select(t => new TeamViewModel(t));
+            var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result;
 
             var model = new QmLobbyViewModel
             {

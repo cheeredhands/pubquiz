@@ -31,7 +31,7 @@ import { UserRole } from '../../models/models';
 import Component, { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../../services/account-service-mixin';
 import { ResultCode } from '../../models/ResultCode';
-import { ApiResponse } from '@/models/apiResponses';
+import { ApiResponse } from '../../models/apiResponses';
 
 @Component
 export default class NavBarPart extends mixins(AccountServiceMixin) {
@@ -50,7 +50,7 @@ export default class NavBarPart extends mixins(AccountServiceMixin) {
   }
 
   get userName() {
-    return this.team.teamName || this.user.userName;
+    return this.team.name || this.user.userName;
   }
 
   public logOut() {

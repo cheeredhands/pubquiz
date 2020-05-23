@@ -6,7 +6,7 @@ export interface TeamRegisteredMessage {
     /** The game Id */
     gameId: string;
     /** The Team Name */
-    teamName: string;
+    name: string;
     /** Team member names */
     memberNames: string;
 }
@@ -24,7 +24,7 @@ export interface TeamLoggedOutMessage {
     /** The game Id */
     gameId: string;
     /** The Team Name */
-    teamName: string;
+    name: string;
 }
 
 export interface TeamMembersChangedMessage {
@@ -33,7 +33,7 @@ export interface TeamMembersChangedMessage {
     /** The current game Id */
     gameId: string;
     /** The Team Name */
-    teamName: string;
+    name: string;
     /** Team member names */
     memberNames: string;
 }
@@ -44,9 +44,9 @@ export interface TeamNameUpdatedMessage {
     /** The current game Id */
     gameId: string;
     /** The Team Name */
-    oldTeamName: string;
+    oldName: string;
     /** The Team Name */
-    teamName: string;
+    name: string;
 }
 
 export interface GameStateChangedMessage {

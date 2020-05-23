@@ -6,14 +6,14 @@ namespace Pubquiz.Logic.Messages
     {
         public string GameId { get; }
         public string TeamId { get; }
-        public string TeamName { get; }
+        public string Name { get; }
         public string MemberNames { get; }
 
-        public TeamMembersChanged(string gameId, string teamId, string teamName, string memberNames)
+        public TeamMembersChanged(string gameId, string teamId, string name, string memberNames)
         {
             GameId = gameId;
             TeamId = teamId;
-            TeamName = teamName;
+            Name = name;
             MemberNames = memberNames;
         }
     }

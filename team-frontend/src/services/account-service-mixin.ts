@@ -11,8 +11,8 @@ export default class AccountServiceMixin extends Vue {
     public $_accountService_logOutCurrentUser(): Promise<AxiosResponse<ApiResponse>> {
         return this.$axios.post('/api/account/logout', { withCredentials: true });
     }
-    public $_accountService_registerForGame(teamName: string, code: string): Promise<AxiosResponse<RegisterForGameResponse>> {
-        return this.$axios.post('/api/account/register', { teamName, code }, { withCredentials: true });
+    public $_accountService_registerForGame(name: string, code: string): Promise<AxiosResponse<RegisterForGameResponse>> {
+        return this.$axios.post('/api/account/register', { name, code }, { withCredentials: true });
     }
     public $_accountService_loginUser(userName: string, password: string): Promise<AxiosResponse<LoginResponse>> {
         return this.$axios.post('/api/account/login', { userName, password }, { withCredentials: true });

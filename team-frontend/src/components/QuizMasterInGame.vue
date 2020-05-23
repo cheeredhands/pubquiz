@@ -38,7 +38,7 @@
                 <h1 :title="$t('TOTAL_NUMBER_OF_POINTS')">{{team.totalScore}}</h1>
                 <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
               </template>
-              <h5 class="mt-0 mb-1">{{team.teamName}}</h5>
+              <h5 class="mt-0 mb-1">{{team.name}}</h5>
               <p class="mb-0">Trend (going up or sinking).</p>
             </b-media>
           </ul>

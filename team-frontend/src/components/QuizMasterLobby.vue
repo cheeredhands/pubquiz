@@ -21,12 +21,12 @@
             <p v-else>{{ $t('CURRENT_TEAMS_IN_GAME')}}</p>
             <b-list-group>
               <b-list-group-item v-for="(team, index) in teams" :key="index">
-                <strong>{{ team.teamName }}</strong> -
+                <strong :title="team.recoveryCode">{{ team.name }}</strong> -
                 <span>{{team.memberNames}}</span>&nbsp;
                 <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
                 <font-awesome-icon
                   icon="trash-alt"
-                  @click="kickTeam(team.teamId, team.teamName)"
+                  @click="kickTeam(team.teamId, team.name)"
                   pull="right"
                   style="cursor:pointer;"
                   :title="$t('KICK_OUT')"
@@ -106,11 +106,11 @@ export default class QuizMasterLobby extends mixins(
     }
   }
 
-  public kickTeam(teamId: string, teamName: string) {
+  public kickTeam(teamId: string, name: string) {
     this.$_accountService_deleteTeam(teamId)
       .then(() => {
         this.$bvToast.toast(
-          this.$t('TEAM_KICKED_OUT', { teamName }).toString(),
+          this.$t('TEAM_KICKED_OUT', { name }).toString(),
           {
             title: this.$t('REMOVED').toString(),
             variant: 'warning'

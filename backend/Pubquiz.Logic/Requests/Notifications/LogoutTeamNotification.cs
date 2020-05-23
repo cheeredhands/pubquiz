@@ -18,7 +18,11 @@ namespace Pubquiz.Logic.Requests.Notifications
         {
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(TeamId);
-
+            if (team==null)
+            {
+                // Unknown team (probably old session with inmemory db), proceed with logout.
+                return;
+            }
             team.IsLoggedIn = false;
 
             await teamCollection.UpdateAsync(team);

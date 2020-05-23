@@ -7,7 +7,7 @@ namespace Pubquiz.Domain.ViewModels
     {
         public string UserId { get; set; }
         public Game Game { get; set; }
-        public List<TeamViewModel> TeamsInGame { get; set; }
+        public List<Team> TeamsInGame { get; set; }
         
         
     }

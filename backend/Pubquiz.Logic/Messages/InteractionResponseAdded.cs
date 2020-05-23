@@ -1,22 +1,20 @@
-using System;
-
 namespace Pubquiz.Logic.Messages
 {
     public class InteractionResponseAdded
     {
-        public string GameId { get; set; }
+        public string GameId { get; }
         public string TeamId { get; }
-        public string QuizSectionId { get; }
         public string QuizItemId { get; }
+        public int InteractionId { get; }
         public string Response { get; }
 
-        public InteractionResponseAdded(string gameId, string teamId, string quizSectionId, string quizItemId,
+        public InteractionResponseAdded(string gameId, string teamId, string quizItemId, int interactionId,
             string response)
         {
             GameId = gameId;
             TeamId = teamId;
-            QuizSectionId = quizSectionId;
             QuizItemId = quizItemId;
+            InteractionId = interactionId;
             Response = response;
         }
     }

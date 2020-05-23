@@ -33,17 +33,19 @@ export interface Game {
 
 export interface Team {
   /** The team Id */
-  teamId: string;
+  id: string;
   /** The game Id */
   gameId: string;
   /** The Team Name */
-  teamName: string;
+  name: string;
   /** Team member names */
   memberNames: string;
-  /** the current game Id */
-  currentGameId: string;
+  /** recovery code */
+  recoveryCode: string;
   /** false when the user has logged out / left game */
   isLoggedIn: boolean;
+  /** Score per quiz section */
+  ScorePerQuizSection: Map<string,number>
   totalScore: number;
 }
 

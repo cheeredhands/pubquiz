@@ -4,14 +4,14 @@ import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { User, GameState, ItemNavigatedMessage, QuizItem, Team, Game } from '../models/models';
 import { TeamLoggedOutMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, InteractionResponseAddedMessage } from '../models/messages';
-import { TeamFeedViewModel, TeamRankingViewModel, QuizItemViewModel } from '../models/viewModels';
+import { TeamFeedViewModel, TeamRankingViewModel, QuizItemViewModel, TeamViewModel } from '../models/viewModels';
 
 Vue.use(Vuex);
 
 interface RootState {
   isLoggedIn: boolean;
   team?: Team;
-  teams: Team[];
+  teams: TeamViewModel[];
   game?: Game;
   quizItem?: QuizItem;
   quizItems: Map<string, QuizItem>;
@@ -52,27 +52,26 @@ const storeOpts: StoreOptions<RootState> = {
     userId: state => state.user?.userId || '',
     quizItem: state => state.quizItem || {},
     quizItemViewModel: state => state.quizItemViewModel || {},
-    teamId: state => state.team?.teamId || '',
-    teamName: state => state.team?.teamName || '',
+    teamId: state => state.team?.id || '',
+    teamName: state => state.team?.name || '',
     memberNames: state => state.team?.memberNames || '',
     teamFeed: state => state.teamFeed || {},
     teamRanking: state => state.teamRanking || {},
     currentQuizItemId: state => state.game?.currentQuizItemId || '',
-    debounceMs: state => state.debounceMs
+    debounceMs: state => state.debounceMs,
+    recoveryCode: state =>state.team?.recoveryCode || ''
   },
   mutations: {
     // mutations are sync store updates
     setUser(state, user: User) {
-      // called when a quizmaster logs in succesfully
       state.user = user;
       state.isLoggedIn = true;
       state.currentGameId = user.currentGameId;
       state.gameIds = user.gameIds;
     },
     setTeam(state, team: Team) {
-      // called when the current team registers succesfully
       state.team = team;
-      state.currentGameId = team.currentGameId;
+      state.currentGameId = team.gameId;
       state.isLoggedIn = true;
     },
     setTeamFeed(state, teamFeed: TeamFeedViewModel) {
@@ -81,39 +80,42 @@ const storeOpts: StoreOptions<RootState> = {
     setTeamRanking(state, teamRanking: TeamRankingViewModel) {
       state.teamRanking = teamRanking;
     },
-    addTeam(state, team: Team) {
-      // called by the signalr stuff when a new team registers
-      console.log(`addTeam: ${team.teamName}`);
-      team.isLoggedIn = true;
-      const teamInStore = state.teams.find(i => i.teamId === team.teamId);
+    addTeam(state, team: TeamRegisteredMessage) {
+      console.log(`addTeam: ${team.name}`);
+      const teamInStore = state.teams.find(i => i.id === team.teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = true;
-        teamInStore.teamName = team.teamName;
+        teamInStore.name = team.name;
         teamInStore.memberNames = team.memberNames;
       } else {
-        state.teams.push(team);
+        state.teams.push({
+          id: team.teamId,
+          name: team.name,
+          memberNames: team.memberNames,
+          isLoggedIn: true
+        });
       }
     },
-    removeTeam(state, team: Team) {
-      console.log(`removeTeam: ${team.teamId}`);
-      const teamInStore = state.teams.find(i => i.teamId === team.teamId);
+    removeTeam(state, team: TeamViewModel) {
+      console.log(`removeTeam: ${team.id}`);
+      const teamInStore = state.teams.find(i => i.id === team.id);
       if (teamInStore !== undefined) {
-        state.teams = state.teams.filter(t => t.teamId !== team.teamId);
+        state.teams = state.teams.filter(t => t.id !== team.id);
       }
     },
     setTeamLoggedOut(state, team: TeamLoggedOutMessage) {
-      console.log(`setOtherTeamLoggedOut: ${team.teamName}`);
-      const teamInStore = state.teams.find(i => i.teamId === team.teamId);
+      console.log(`setOtherTeamLoggedOut: ${team.name}`);
+      const teamInStore = state.teams.find(i => i.id === team.teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = false;
       }
     },
-    setTeams(state, teams: Team[]) {
+    setTeams(state, teams: TeamViewModel[]) {
       state.teams = teams;
     },
     setOwnTeamName(state, newName) {
       if (state.team !== undefined) {
-        state.team.teamName = newName;
+        state.team.name = newName;
       }
     },
     setOwnTeamMembers(state, newMemberNames) {
@@ -121,19 +123,19 @@ const storeOpts: StoreOptions<RootState> = {
         state.team.memberNames = newMemberNames;
       }
     },
-    setOtherTeamName(state, team: Team) {
-      console.log(`setOtherTeamName: ${team.teamName}`);
+    setOtherTeamName(state, team: TeamViewModel) {
+      console.log(`setOtherTeamName: ${team.name}`);
       const teamInStore = state.teams.find(
-        item => item.teamId === team.teamId
+        item => item.id === team.id
       );
       if (teamInStore !== undefined) {
-        teamInStore.teamName = team.teamName;
+        teamInStore.name = team.name;
       }
     },
-    setOtherTeamMembers(state, team: Team) {
+    setOtherTeamMembers(state, team: TeamViewModel) {
       console.log(`setOtherTeamMembers: ${team.memberNames}`);
       const teamInStore = state.teams.find(
-        item => item.teamId === team.teamId
+        item => item.id === team.id
       );
       if (teamInStore !== undefined) {
         teamInStore.memberNames = team.memberNames;
@@ -215,7 +217,7 @@ const storeOpts: StoreOptions<RootState> = {
       localStorage.removeItem('token');
     },
     processTeamNameUpdated({ commit }, team: TeamNameUpdatedMessage) {
-      console.log(`processTeamNameUpdated: ${team.teamName}`);
+      console.log(`processTeamNameUpdated: ${team.name}`);
       commit('setOtherTeamName', team);
     },
     processTeamMembersChanged({ commit }, team: TeamMembersChangedMessage) {
@@ -223,18 +225,18 @@ const storeOpts: StoreOptions<RootState> = {
       commit('setOtherTeamMembers', team);
     },
     processTeamRegistered({ commit, state }, team: TeamRegisteredMessage) {
-      console.log(`processTeamRegistered: ${team.teamName}`);
+      console.log(`processTeamRegistered: ${team.name}`);
       if (state.user !== undefined) {
         commit('addTeam', team);
-      } else if (state.team !== undefined && team.teamId !== state.team.teamId) {
+      } else if (state.team !== undefined && team.teamId !== state.team.id) {
         commit('addTeam', team);
       }
     },
     processTeamLoggedOut({ commit, state }, team: TeamLoggedOutMessage) {
-      console.log(`processTeamLoggedOut: ${team.teamName}`);
+      console.log(`processTeamLoggedOut: ${team.name}`);
       if (state.user !== undefined) {
         commit('setTeamLoggedOut', team);
-      } else if (state.team !== undefined && team.teamId !== state.team.teamId) {
+      } else if (state.team !== undefined && team.teamId !== state.team.id) {
         commit('setTeamLoggedOut', team);
       }
     },
@@ -252,7 +254,7 @@ const storeOpts: StoreOptions<RootState> = {
       commit('setGameState', gameStateChangedMessage.newGameState);
     },
     processTeamDeleted({ commit, state }, team: TeamDeletedMessage) {
-      if (state.team !== undefined && team.teamId === state.team.teamId) {
+      if (state.team !== undefined && team.teamId === state.team.id) {
         commit('logout');
       } else {
         commit('removeTeam', team);

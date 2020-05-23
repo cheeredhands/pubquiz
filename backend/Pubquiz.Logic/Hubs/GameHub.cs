@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
@@ -41,6 +42,13 @@ namespace Pubquiz.Logic.Hubs
             var user = userRole == UserRole.Team
                 ? _unitOfWork.GetCollection<Team>().GetAsync(userId).Result
                 : _unitOfWork.GetCollection<User>().GetAsync(userId).Result;
+
+            if (user == null)
+            {
+                await base.OnConnectedAsync();
+                return;
+            }
+
             var currentGameId = user.CurrentGameId;
             switch (userRole)
             {
@@ -58,6 +66,7 @@ namespace Pubquiz.Logic.Hubs
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             _logger.LogInformation($"User {Context.User.Identity.Name} connected with role {userRole}");
             await base.OnConnectedAsync();
         }
@@ -69,6 +78,11 @@ namespace Pubquiz.Logic.Hubs
             var user = userRole == UserRole.Team
                 ? _unitOfWork.GetCollection<Team>().GetAsync(userId).Result
                 : _unitOfWork.GetCollection<User>().GetAsync(userId).Result;
+            if (user==null)
+            {
+                await base.OnDisconnectedAsync(exception);
+                return;
+            }
             var currentGameId = user.CurrentGameId;
             switch (userRole)
             {
@@ -89,6 +103,5 @@ namespace Pubquiz.Logic.Hubs
 
             await base.OnDisconnectedAsync(exception);
         }
-       
     }
 }

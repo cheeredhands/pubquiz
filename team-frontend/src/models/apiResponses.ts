@@ -19,14 +19,15 @@ export interface ApiResponse {
     jwt: string;
     teamId: string;
     gameId: string;
-    teamName: string;
+    name: string;
     memberNames: string;
+    recoveryCode: string;
   }
   
   export interface WhoAmIResponse extends ApiResponse {
     userName: string;
     userId: string;
-    teamName: string;
+    name: string;
     memberNames: string;
     currentGameId: string;
     userRole: UserRole;
