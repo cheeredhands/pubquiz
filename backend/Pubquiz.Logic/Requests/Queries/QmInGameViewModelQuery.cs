@@ -23,15 +23,15 @@ namespace Pubquiz.Logic.Requests.Queries
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var game = await gameCollection.GetAsync(user.CurrentGameId);
             var teamCollection = UnitOfWork.GetCollection<Team>();
-            var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.Select(t => new TeamViewModel(t));
+            //var teamViewModels = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.Select(t => new TeamViewModel(t));
+            var teams = await teamCollection.GetAsync(game.TeamIds.ToArray());
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
             var quizItem = await quizItemCollection.GetAsync(game.CurrentQuizItemId);
             var model = new QmInGameViewModel
             {
                 Game = game,
-                QmTeamFeed = new QmTeamFeedViewModel(teams),
                 CurrentQuizItem = quizItem,
-                QmTeamRanking = new QmTeamRankingViewModel(teams)
+                Teams = teams.ToList()
             };
 
             return model;

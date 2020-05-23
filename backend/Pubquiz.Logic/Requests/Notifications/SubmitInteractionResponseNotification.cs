@@ -61,7 +61,7 @@ namespace Pubquiz.Logic.Requests.Notifications
 
 
             // save response
-            var answer = team.Answers.FirstOrDefault(a => a.QuestionId == QuizItemId);
+            var answer = team.Answers.FirstOrDefault(a => a.QuizItemId == QuizItemId);
             if (answer == null)
             {
                 answer = new Answer(quizSectionId, QuizItemId);

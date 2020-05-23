@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.ViewModels;
@@ -14,10 +15,11 @@ namespace Pubquiz.Logic.Requests.Queries
     public class QmLobbyViewModelQuery : Query<QmLobbyViewModel>
     {
         public string UserId { get; set; }
+
         public QmLobbyViewModelQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
-        
+
         protected override async Task<QmLobbyViewModel> DoExecute()
         {
             var userCollection = UnitOfWork.GetCollection<User>();
@@ -26,13 +28,18 @@ namespace Pubquiz.Logic.Requests.Queries
             var game = await gameCollection.GetAsync(user.CurrentGameId);
             var teamCollection = UnitOfWork.GetCollection<Team>();
 
-            var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result;
+            var teams = teamCollection.GetAsync(game.TeamIds.ToArray()).Result.ToList();
+            //clear the answers per team, not needed in the lobby.
+            foreach (var team in teams)
+            {
+                team.Answers = new List<Answer>();
+            }
 
             var model = new QmLobbyViewModel
             {
                 UserId = UserId,
                 Game = game,
-                TeamsInGame = teams.ToList()
+                TeamsInGame = teams
             };
 
             return model;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Pubquiz.Domain;
@@ -67,6 +68,7 @@ namespace Pubquiz.Logic.Requests.Commands
                 // register team and return team object
                 var userName = Name.Trim();
                 var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
+
                 team = new Team
                 {
                     Name = userName,

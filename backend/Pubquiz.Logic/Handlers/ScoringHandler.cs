@@ -34,7 +34,7 @@ namespace Pubquiz.Logic.Handlers
                 return;
             }
 
-            var answer = team.Answers.FirstOrDefault(a => a.QuestionId == message.QuizItemId);
+            var answer = team.Answers.FirstOrDefault(a => a.QuizItemId == message.QuizItemId);
             if (answer == null)
             {
                 // log it somewhere, or send a message (with a DomainException?) to the hub so the quizmaster knows something went wrong?

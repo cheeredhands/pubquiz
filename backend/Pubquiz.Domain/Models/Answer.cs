@@ -11,15 +11,15 @@ namespace Pubquiz.Domain.Models
     public class Answer
     {
         public string QuizSectionId { get; set; }
-        public string QuestionId { get; set; }
+        public string QuizItemId { get; set; }
         public List<InteractionResponse> InteractionResponses { get; set; }
         public int TotalScore { get; set; }
         public bool FlaggedForManualCorrection { get; set; }
 
-        public Answer(string quizSectionId, string questionId)
+        public Answer(string quizSectionId, string quizItemId)
         {
             QuizSectionId = quizSectionId;
-            QuestionId = questionId;
+            QuizItemId = quizItemId;
             InteractionResponses = new List<InteractionResponse>();
         }
 

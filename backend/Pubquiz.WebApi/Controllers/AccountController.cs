@@ -69,6 +69,9 @@ namespace Pubquiz.WebApi.Controllers
                 });
             }
 
+            var gameCollection = _unitOfWork.GetCollection<Game>();
+            var game = await gameCollection.GetAsync(user.CurrentGameId);
+
             if (user is Team team)
             {
                 return Ok(new WhoAmiResponse
@@ -80,6 +83,7 @@ namespace Pubquiz.WebApi.Controllers
                     Name = team.Name,
                     MemberNames = team.MemberNames,
                     CurrentGameId = team.CurrentGameId,
+                    GameState = game.State,
                     UserRole = User.GetUserRole()
                 });
             }
@@ -91,6 +95,7 @@ namespace Pubquiz.WebApi.Controllers
                 UserName = user.UserName,
                 UserId = User.GetId(),
                 CurrentGameId = user.CurrentGameId,
+                GameState = game.State,
                 UserRole = User.GetUserRole()
             });
         }
