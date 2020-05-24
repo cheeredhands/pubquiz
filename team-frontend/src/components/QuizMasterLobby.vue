@@ -26,7 +26,7 @@
                 <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
                 <font-awesome-icon
                   icon="trash-alt"
-                  @click="kickTeam(team.teamId, team.name)"
+                  @click="kickTeam(team.id, team.name)"
                   pull="right"
                   style="cursor:pointer;"
                   :title="$t('KICK_OUT')"

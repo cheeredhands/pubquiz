@@ -86,11 +86,11 @@ const storeOpts: StoreOptions<RootState> = {
         });
       }
     },
-    removeTeam(state, team: TeamViewModel) {
-      console.log(`removeTeam: ${team.id}`);
-      const teamInStore = state.teams.find(i => i.id === team.id);
+    removeTeam(state, teamId: string) {
+      console.log(`removeTeam: ${teamId}`);
+      const teamInStore = state.teams.find(i => i.id === teamId);
       if (teamInStore !== undefined) {
-        state.teams = state.teams.filter(t => t.id !== team.id);
+        state.teams = state.teams.filter(t => t.id !== teamId);
       }
     },
     setTeamLoggedOut(state, team: TeamLoggedOutMessage) {
@@ -125,19 +125,19 @@ const storeOpts: StoreOptions<RootState> = {
         state.team.memberNames = newMemberNames;
       }
     },
-    setOtherTeamName(state, team: TeamViewModel) {
+    setOtherTeamName(state, team: TeamNameUpdatedMessage) {
       console.log(`setOtherTeamName: ${team.name}`);
       const teamInStore = state.teams.find(
-        item => item.id === team.id
+        item => item.id === team.teamId
       );
       if (teamInStore !== undefined) {
         teamInStore.name = team.name;
       }
     },
-    setOtherTeamMembers(state, team: TeamViewModel) {
+    setOtherTeamMembers(state, team: TeamMembersChangedMessage) {
       console.log(`setOtherTeamMembers: ${team.memberNames}`);
       const teamInStore = state.teams.find(
-        item => item.id === team.id
+        item => item.id === team.teamId
       );
       if (teamInStore !== undefined) {
         teamInStore.memberNames = team.memberNames;
@@ -257,7 +257,7 @@ const storeOpts: StoreOptions<RootState> = {
       if (state.team !== undefined && team.teamId === state.team.id) {
         commit('logout');
       } else {
-        commit('removeTeam', team);
+        commit('removeTeam', team.teamId);
       }
     },
     processItemNavigated({ commit, state }, itemNavigatedMessage: ItemNavigatedMessage) {
