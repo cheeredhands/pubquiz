@@ -1,4 +1,4 @@
-import { UserRole } from './models';
+import { UserRole, GameState } from './models';
 
 export interface ApiResponse {
     errorCode: string;

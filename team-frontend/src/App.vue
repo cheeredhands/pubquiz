@@ -6,7 +6,7 @@
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import Component, { mixins } from 'vue-class-component';
-import { UserRole, Team, User } from './models/models';
+import { UserRole, Team, User, GameState } from './models/models';
 import AccountServiceMixin from './services/account-service-mixin';
 import NavBarPart from './components/parts/NavBarPart.vue';
 import FooterPart from './components/parts/FooterPart.vue';
