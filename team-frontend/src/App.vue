@@ -7,7 +7,6 @@ import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import Component, { mixins } from 'vue-class-component';
 import { UserRole, Team, User } from './models/models';
-import { ResultCode } from './models/ResultCode';
 import AccountServiceMixin from './services/account-service-mixin';
 import NavBarPart from './components/parts/NavBarPart.vue';
 import FooterPart from './components/parts/FooterPart.vue';
@@ -24,7 +23,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
   public mounted() {
     this.$_accountService_getWhoAmI()
       .then((response: AxiosResponse<WhoAmIResponse>) => {
-        if (response.data.code === ResultCode.LoggedOut) {
+        if (response.data.code === 'LoggedOut') {
           this.$store.dispatch('logout');
           return;
         }

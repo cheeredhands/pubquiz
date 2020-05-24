@@ -1,9 +1,8 @@
 import { UserRole } from './models';
-import { ResultCode } from './ResultCode';
 
 export interface ApiResponse {
-    errorCode: ResultCode;
-    code: ResultCode;
+    errorCode: string;
+    code: string;
     message: string;
   }
   
