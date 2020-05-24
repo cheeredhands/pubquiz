@@ -1,4 +1,3 @@
-import { ResultCode } from './ResultCode';
 
 export interface User {
   /** The user Id */
