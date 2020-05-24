@@ -14,7 +14,7 @@ export default {
   },
   init() {
     const connection = new SignalR.HubConnectionBuilder()
-      .withUrl(process.env.VUE_APP_BACKEND_URI + 'gamehub', {accessTokenFactory: () => localStorage.getItem('token') || '' })
+      .withUrl(process.env.VUE_APP_BACKEND_URI + 'gamehub', { accessTokenFactory: () => localStorage.getItem('token') || '' })
       .configureLogging(SignalR.LogLevel.Information)
       .build();
     this.closing = false;
@@ -46,11 +46,11 @@ export default {
     })
 
     connection.on('TeamNameUpdated', data => {
-      console.log(data); 
+      console.log(data);
       store.dispatch('processTeamNameUpdated', data);
     });
 
-    connection.on('TeamMembersChanged', data =>{
+    connection.on('TeamMembersChanged', data => {
       console.log(data);
       store.dispatch('processTeamMembersChanged', data);
     })
@@ -72,7 +72,12 @@ export default {
 
     connection.on('InteractionResponseAdded', data => {
       console.log(data);
-      store.dispatch('processInteractionResponseAdded',data)
+      store.dispatch('processInteractionResponseAdded', data);
+    })
+
+    connection.on('AnswerScored', data => {
+      console.log(data);
+      store.dispatch('processAnswerScored', data);
     })
     return start().catch(err => {
       return console.error(err.toString());

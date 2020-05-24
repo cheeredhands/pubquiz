@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pubquiz.Domain.ViewModels;
 using Pubquiz.Persistence;
 
@@ -16,11 +17,11 @@ namespace Pubquiz.Domain.Models
         public int TotalScore { get; set; }
         public Dictionary<string, int> ScorePerQuizSection { get; set; }
 
-        public List<Answer> Answers { get; set; }
+        public Dictionary<string, Answer> Answers { get; set; }
 
         public Team()
         {
-            Answers = new List<Answer>();
+            Answers = new Dictionary<string, Answer>();
             ScorePerQuizSection = new Dictionary<string, int>();
         }
 
@@ -28,7 +29,7 @@ namespace Pubquiz.Domain.Models
         {
             ScorePerQuizSection = new Dictionary<string, int>();
 
-            foreach (var answer in Answers)
+            foreach (var answer in Answers.Values)
             {
                 if (!ScorePerQuizSection.ContainsKey(answer.QuizSectionId))
                 {
@@ -36,6 +37,8 @@ namespace Pubquiz.Domain.Models
                 }
                 ScorePerQuizSection[answer.QuizSectionId] += answer.TotalScore;
             }
+
+            TotalScore = ScorePerQuizSection.Values.Sum();
         }
     }
 }

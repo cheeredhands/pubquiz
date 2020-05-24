@@ -1,4 +1,4 @@
-import { UserRole } from './models';
+import { UserRole, GameState } from './models';
 import { ResultCode } from './ResultCode';
 
 export interface ApiResponse {
@@ -30,6 +30,7 @@ export interface ApiResponse {
     name: string;
     memberNames: string;
     currentGameId: string;
+    gameState: GameState;
     userRole: UserRole;
   }
   

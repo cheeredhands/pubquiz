@@ -32,14 +32,14 @@
         </div>
 
         <div class="ranking">
-          <ul class="list-unstyled" v-for="team in teamRanking.teams" :key="team.id">
+          <ul class="list-unstyled" v-for="team in qmTeamsSorted" :key="team.id">
             <b-media tag="li">
               <template v-slot:aside>
                 <h1 :title="$t('TOTAL_NUMBER_OF_POINTS')">{{team.totalScore}}</h1>
                 <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
               </template>
               <h5 class="mt-0 mb-1">{{team.name}}</h5>
-              <p class="mb-0">Trend (going up or sinking).</p>
+              <p class="mb-0">TODO: score in this quiz section, trend (going up or sinking).</p>
             </b-media>
           </ul>
         </div>
@@ -57,7 +57,7 @@ import Component, { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
 import store from '../store';
 import { AxiosResponse, AxiosError } from 'axios';
-import { GameState } from '../models/models';
+import { GameState, Team } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import QmQuestionPart from './qm-gameparts/QmQuestionPart.vue';
@@ -88,8 +88,8 @@ export default class QuizMasterInGame extends mixins(
 ) {
   public name: string = 'QuizMasterInGame';
   public runningState = GameState.Running;
-  public created() {
-    this.$_gameService_getQmInGame();
+  public async created() {
+    await this.$_gameService_getQmInGame();
     document.title = 'In Game - ' + this.game.title;
   }
 
@@ -97,8 +97,12 @@ export default class QuizMasterInGame extends mixins(
     return this.$store.getters.game;
   }
 
-  get teamRanking() {
-    return this.$store.getters.teamRanking;
+  get qmTeams() {
+    return this.$store.getters.qmTeams;
+  }
+
+  get qmTeamsSorted() {
+    return this.$store.getters.qmTeams.sort((a: Team,b: Team)=>b.totalScore-a.totalScore);
   }
 
   get userId() {

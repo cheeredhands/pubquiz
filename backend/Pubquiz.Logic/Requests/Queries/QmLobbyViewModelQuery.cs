@@ -32,7 +32,7 @@ namespace Pubquiz.Logic.Requests.Queries
             //clear the answers per team, not needed in the lobby.
             foreach (var team in teams)
             {
-                team.Answers = new List<Answer>();
+                team.Answers = new Dictionary<string, Answer>();
             }
 
             var model = new QmLobbyViewModel

@@ -9,10 +9,10 @@ using Rebus.Handlers;
 namespace Pubquiz.Logic.Handlers
 {
     public class ClientNotificationHandler :
-        IHandleMessages<AnswerScored>, IHandleMessages<InteractionResponseAdded>, IHandleMessages<TeamMembersChanged>,
+        IHandleMessages<AnswerScored>, IHandleMessages<TeamMembersChanged>,
         IHandleMessages<ErrorOccurred>, IHandleMessages<TeamRegistered>, IHandleMessages<GameStateChanged>,
         IHandleMessages<TeamNameUpdated>, IHandleMessages<TeamLoggedOut>, IHandleMessages<UserLoggedOut>,
-        IHandleMessages<TeamDeleted>, IHandleMessages<ItemNavigated>
+        IHandleMessages<TeamDeleted>, IHandleMessages<ItemNavigated>, IHandleMessages<InteractionResponseAdded>
     {
         private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
         private readonly ILogger _logger;
@@ -25,8 +25,10 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(AnswerScored message)
         {
-            // todo implement
-            await Task.CompletedTask;
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).AnswerScored(message);
         }
 
         public async Task Handle(InteractionResponseAdded message)

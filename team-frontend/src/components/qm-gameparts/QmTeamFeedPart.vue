@@ -1,20 +1,36 @@
 <template>
   <div class="teamfeed-container">
     <div class="title-bar">
-      <h4 class="mt-1 mb-0 ml-1">Team feed (12 teams)</h4>
+      <h4 class="mt-1 mb-0 ml-1">Team feed ({{qmTeams.length}} teams)</h4>
     </div>
     <div class="feed">
+      
+      <!-- <p>quizItemId: {{game.currentQuizItemId}}</p> -->
+      <!-- <p>my team: {{qmTeams.find(t=>t.name==='saxcasdf')}}</p> -->
       <ul class="list-unstyled">
-        <b-media tag="li" v-for="team in teamFeed.teams" :key="team.id">
+        <b-media  class="mb-2" tag="li" v-for="team in qmTeams" :key="team.id">
           <template v-slot:aside>
             <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img>
           </template>
-          <h5 class="mt-0 mb-1">{{team.teamName}}</h5>
-          <p class="mb-0">
+          <!-- <p class="mb-0 text-right" style="font-size: 0.6em; width: 30em; display:none">
             The team avatar to the left has a status badge overlay.
             This area shows the answers a team gives to the current question (as they are typing).
             The score and correctness of a team is shown. When automatic scoring is not possible, buttons are shown to mark the answer.
-          </p>
+          </p> -->
+          <h5 class="mt-0 mb-1">{{team.name}} <span v-if="team.memberNames!==undefined" class="smaller">({{team.memberNames}})</span></h5>
+          <div v-if="team.answers[game.currentQuizItemId]!==undefined">
+           <font-awesome-icon
+              icon="glasses"
+              class="float-right mr-3"
+              title="Flagged for manual correction"
+              v-if="team.answers[game.currentQuizItemId].flaggedForManualCorrection"
+            />
+            <p
+              v-for="interactionResponse in team.answers[game.currentQuizItemId].interactionResponses"
+              :key="interactionResponse.id"
+            >{{getInteraction(interactionResponse.interactionId).text}}: <code class="border rounded-sm p-1" :class="{correct : !team.answers[game.currentQuizItemId].flaggedForManualCorrection}">{{getResponseText(interactionResponse)}}</code></p>
+            
+          </div>
         </b-media>
       </ul>
     </div>
@@ -24,26 +40,59 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import {
+  Game,
+  Team,
+  Interaction,
+  InteractionType,
+  QuizItem,
+  InteractionResponse
+} from '../../models/models';
 
 @Component
 export default class QmTeamFeedPart extends Vue {
   public name: string = 'QmTeamFeedPart';
 
+  // public game = this.$store.getters.game as Game;
+  // public qmTeams = this.$store.state.qmTeams;
   // public created() {}
 
-  get teamFeed() {
-    return this.$store.getters.teamFeed;
+  get game() {
+    return this.$store.getters.game as Game;
+  }
+
+  get quizItem() {
+    return this.$store.getters.quizItem as QuizItem;
+  }
+
+  get qmTeams() {
+    return this.$store.getters.qmTeams;
+  }
+
+  public getInteraction(interactionId: number): Interaction {
+    return this.quizItem.interactions[interactionId];
+  }
+
+  public getResponseText(interactionResponse: InteractionResponse): string {
+    const interaction = this.getInteraction(interactionResponse.interactionId);
+    if (
+      interaction.interactionType === InteractionType.MultipleChoice ||
+      interaction.interactionType === InteractionType.MultipleResponse
+    ) {
+      return interactionResponse.choiceOptionIds
+        .map(i => interaction.choiceOptions[i].text)
+        .join(',');
+    } else {
+      return interactionResponse.response;
+    }
   }
 }
 </script>
 
 <style scoped>
-h5 {
-  font-size: 1em;
-}
 
-p {
-  font-size: smaller;
+span.smaller, p {
+  font-size: small;
 }
 
 .teamfeed-container {
@@ -64,5 +113,11 @@ p {
   grid-area: feed;
   height: 100%;
   overflow: auto;
+  padding: 5px;
 }
+
+code.correct {
+  color: green;
+}
+
 </style>

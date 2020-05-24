@@ -9,9 +9,8 @@ namespace Pubquiz.Logic.Messages
         public string GameId { get; set; }
         public string QuizItemId { get; set; }
         public int InteractionId { get; set; }
-        public string Response { get; set; }
-        public int QuizItemScore { get; set; }
         public int TotalTeamScore { get; set; }
-        public List<InteractionResponse> InteractionResponses { get; set; }
+        public Dictionary<string, int> ScorePerQuizSection { get; set; }
+        public Answer Answer { get; set; }
     }
 }

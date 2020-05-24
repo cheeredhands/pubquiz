@@ -82,11 +82,6 @@ export default class TeamQuestionPart extends mixins(
   public shortAnswer: InteractionType = InteractionType.ShortAnswer;
   public extendedText: InteractionType = InteractionType.ExtendedText;
 
-  public shortAnswers: string[] = [];
-  public mcAnswers: string[] = [];
-  public mrAnswers: string[] = [];
-  public extendedAnswers: string[] = [];
-
   public submitTextAnswer = debounce(async (interactionId: number) => {
     await this.$_gameService_submitInteractionResponse(
       this.currentQuizItemId,
@@ -126,16 +121,7 @@ export default class TeamQuestionPart extends mixins(
     value: string,
     oldValue: string
   ) {
-    // todo save answers
-
-    // clear answers
-    this.shortAnswers = [];
-    this.mcAnswers = [];
-    this.mrAnswers = [];
-    this.extendedAnswers = [];
     this.$_gameService_getQuizItemViewModel(this.game.id, value);
-
-    // todo reload answers
   }
 }
 </script>

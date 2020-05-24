@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 
 namespace Pubquiz.Logic.Hubs
@@ -72,5 +73,12 @@ namespace Pubquiz.Logic.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         Task InteractionResponseAdded(InteractionResponseAdded message);
+
+        /// <summary>
+        /// Called when the system has scored (part of) an answer.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task AnswerScored(AnswerScored message);
     }
 }

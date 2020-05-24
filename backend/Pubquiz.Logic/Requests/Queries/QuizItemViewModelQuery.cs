@@ -38,8 +38,10 @@ namespace Pubquiz.Logic.Requests.Queries
             }
 
             var quizItem = await quizItemCollection.GetAsync(QuizItemId);
-
-            return new QuizItemViewModel(quizItem);
+            var teamCollection = UnitOfWork.GetCollection<Team>();
+            var team = await teamCollection.GetAsync(ActorId);
+            team.Answers.TryGetValue(QuizItemId, out var answer);
+            return new QuizItemViewModel(quizItem, answer);
         }
     }
 }

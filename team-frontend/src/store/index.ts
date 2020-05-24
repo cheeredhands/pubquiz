@@ -3,7 +3,7 @@ import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { User, GameState, ItemNavigatedMessage, QuizItem, Team, Game } from '../models/models';
-import { TeamLoggedOutMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, InteractionResponseAddedMessage } from '../models/messages';
+import { TeamLoggedOutMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, InteractionResponseAddedMessage, AnswerScoredMessage } from '../models/messages';
 import { TeamFeedViewModel, TeamRankingViewModel, QuizItemViewModel, TeamViewModel } from '../models/viewModels';
 
 Vue.use(Vuex);
@@ -14,17 +14,15 @@ interface RootState {
   teams: TeamViewModel[];
   game?: Game;
   quizItem?: QuizItem;
-  quizItems: Map<string, QuizItem>;
+  quizItems: Record<string, QuizItem>; //  { [id: string]: QuizItem; };
   quizItemViewModel?: QuizItemViewModel;
-  quizItemViewModels: Map<string, QuizItemViewModel>;
+  quizItemViewModels: Record<string, QuizItemViewModel>;
   signalrconnection?: HubConnection;
 
   user?: User;
   currentGameId?: string;
   gameIds: string[];
-  teamFeed?: TeamFeedViewModel;
-  teamRanking?: TeamRankingViewModel;
-
+  qmTeams: Team[];
   debounceMs: number;
 }
 
@@ -35,16 +33,15 @@ const storeOpts: StoreOptions<RootState> = {
     teams: [],
     game: undefined,
     quizItem: undefined,
-    quizItems: new Map<string, QuizItem>(),
+    quizItems: {},
     quizItemViewModel: undefined,
-    quizItemViewModels: new Map<string, QuizItemViewModel>(),
+    quizItemViewModels: {},
     signalrconnection: undefined,
 
     user: undefined,
     currentGameId: undefined,
     gameIds: [],
-    teamFeed: undefined,
-    teamRanking: undefined,
+    qmTeams: [],
     debounceMs: parseInt(process.env.VUE_APP_DEBOUNCE_MS || '500', 10)
   },
   getters: {
@@ -55,11 +52,10 @@ const storeOpts: StoreOptions<RootState> = {
     teamId: state => state.team?.id || '',
     teamName: state => state.team?.name || '',
     memberNames: state => state.team?.memberNames || '',
-    teamFeed: state => state.teamFeed || {},
-    teamRanking: state => state.teamRanking || {},
     currentQuizItemId: state => state.game?.currentQuizItemId || '',
     debounceMs: state => state.debounceMs,
-    recoveryCode: state =>state.team?.recoveryCode || ''
+    recoveryCode: state => state.team?.recoveryCode || '',
+    qmTeams: state => state.qmTeams
   },
   mutations: {
     // mutations are sync store updates
@@ -73,12 +69,6 @@ const storeOpts: StoreOptions<RootState> = {
       state.team = team;
       state.currentGameId = team.gameId;
       state.isLoggedIn = true;
-    },
-    setTeamFeed(state, teamFeed: TeamFeedViewModel) {
-      state.teamFeed = teamFeed;
-    },
-    setTeamRanking(state, teamRanking: TeamRankingViewModel) {
-      state.teamRanking = teamRanking;
     },
     addTeam(state, team: TeamRegisteredMessage) {
       console.log(`addTeam: ${team.name}`);
@@ -112,6 +102,18 @@ const storeOpts: StoreOptions<RootState> = {
     },
     setTeams(state, teams: TeamViewModel[]) {
       state.teams = teams;
+    },
+    setQmTeams(state, teams: Team[]) {
+      state.qmTeams = teams;
+    },
+    setQmTeamProps(state, info: AnswerScoredMessage) {
+      const team = state.qmTeams.find(t => t.id === info.teamId);
+      if (team === undefined) { return; }
+      team.totalScore = info.totalTeamScore;
+      team.scorePerQuizSection = info.scorePerQuizSection;
+      // Change detection caveats https://vuejs.org/v2/guide/reactivity.html#For-Arrays
+      Vue.set(team.answers, info.quizItemId, info.answer);
+      // team.answers[info.quizItemId] = info.answer;
     },
     setOwnTeamName(state, newName) {
       if (state.team !== undefined) {
@@ -165,22 +167,20 @@ const storeOpts: StoreOptions<RootState> = {
     },
     setQuizItem(state, quizItem: QuizItem) {
       state.quizItem = quizItem;
-      if (!state.quizItems.has(quizItem.id)) {
-        state.quizItems.set(quizItem.id, quizItem);
-      }
+      Vue.set(state.quizItems, quizItem.id, quizItem);
+      // state.quizItems[quizItem.id] = quizItem;
     },
     setQuizItemFromCache(state, quizItemId: string) {
-      const quizItem = state.quizItems.get(quizItemId);
+      const quizItem = state.quizItems[quizItemId];
       state.quizItem = quizItem;
     },
     setQuizItemViewModel(state, quizItemViewModel: QuizItemViewModel) {
       state.quizItemViewModel = quizItemViewModel;
-      if (!state.quizItemViewModels.has(quizItemViewModel.id)) {
-        state.quizItemViewModels.set(quizItemViewModel.id, quizItemViewModel);
-      }
+      Vue.set(state.quizItemViewModels, quizItemViewModel.id, quizItemViewModel);
+      // state.quizItemViewModels[quizItemViewModel.id] = quizItemViewModel;
     },
     setQuizItemViewModelFromCache(state, quizItemId: string) {
-      const quizItemViewModel = state.quizItemViewModels.get(quizItemId);
+      const quizItemViewModel = state.quizItemViewModels[quizItemId];
       state.quizItemViewModel = quizItemViewModel;
     },
     logout(state) {
@@ -268,6 +268,11 @@ const storeOpts: StoreOptions<RootState> = {
     },
     processInteractionResponseAdded({ commit, state }, interactionResponseAddedMessage: InteractionResponseAddedMessage) {
       // TODO update teamfeed
+    },
+    processAnswerScored({ commit, state }, answerScoredMessage: AnswerScoredMessage) {
+      // const team = state.qmTeams.find(t => t.id === answerScoredMessage.teamId);
+      // if (team === undefined) { return; }
+      commit('setQmTeamProps', answerScoredMessage);
     }
   }
 };

@@ -6,7 +6,7 @@
 import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import Component, { mixins } from 'vue-class-component';
-import { UserRole, Team, User } from './models/models';
+import { UserRole, Team, User, GameState } from './models/models';
 import { ResultCode } from './models/ResultCode';
 import AccountServiceMixin from './services/account-service-mixin';
 import NavBarPart from './components/parts/NavBarPart.vue';
@@ -30,7 +30,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
         }
         if (response.data.userRole === UserRole.Team) {
           this.$store
-            .dispatch('initTeam', { 
+            .dispatch('initTeam', {
               id: response.data.userId,
               name: response.data.name,
               memberNames: response.data.memberNames,
@@ -39,7 +39,12 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
               gameId: response.data.currentGameId
             })
             .then(() => {
-              this.$router.replace({ name: 'TeamLobby' });
+              if (response.data.gameState === GameState.Open) {
+                this.$router.replace({ name: 'TeamLobby' });
+              }
+              if (response.data.gameState === GameState.Running) {
+                this.$router.replace({ name: 'TeamInGame' });
+              }
             });
         } else {
           this.$store
@@ -48,7 +53,12 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
               userName: response.data.userName
             })
             .then(() => {
-              this.$router.replace({ name: 'QuizMasterLobby' });
+              if (response.data.gameState === GameState.Open) {
+                this.$router.replace({ name: 'QuizMasterLobby' });
+              }
+              if (response.data.gameState === GameState.Running) {
+                this.$router.replace({ name: 'QuizMasterInGame' });
+              }
             });
         }
       })

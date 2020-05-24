@@ -1,5 +1,5 @@
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
@@ -13,46 +13,52 @@ namespace Pubquiz.Logic.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBus _bus;
+        private readonly ILogger<ScoringHandler> _logger;
 
-        public ScoringHandler(IUnitOfWork unitOfWork, IBus bus)
+        public ScoringHandler(IUnitOfWork unitOfWork, IBus bus, ILoggerFactory loggerFactory)
         {
             _unitOfWork = unitOfWork;
             _bus = bus;
+            _logger = loggerFactory.CreateLogger<ScoringHandler>();
         }
 
         public async Task Handle(InteractionResponseAdded message)
         {
+            _logger.LogInformation($"Done scoring an answer.");
             // score it
             var teamCollection = _unitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(message.TeamId);
             if (team == null)
             {
-                // log it somewhere, or send a message (with a DomainException?) to the hub so the quizmaster knows something went wrong?
+                _logger.LogInformation($"Scoring: Team is null.");
                 // something like:
                 var exception = new DomainException(ResultCode.InvalidTeamId, "Team could not be found while scoring answer.", true);
                 await _bus.Publish(new ErrorOccurred(exception));
                 return;
             }
-
-            var answer = team.Answers.FirstOrDefault(a => a.QuizItemId == message.QuizItemId);
+            
+            team.Answers.TryGetValue(message.QuizItemId, out var answer);
             if (answer == null)
             {
-                // log it somewhere, or send a message (with a DomainException?) to the hub so the quizmaster knows something went wrong?
+                _logger.LogInformation($"Scoring: Answer is null.");
                 return;
             }
 
-            var questionCollection = _unitOfWork.GetCollection<QuizItem>();
-            var question = await questionCollection.GetAsync(message.QuizItemId);
-            if (question == null)
+            var quizItemCollection = _unitOfWork.GetCollection<QuizItem>();
+            var quizItem = await quizItemCollection.GetAsync(message.QuizItemId);
+            if (quizItem == null)
             {
-                // log it somewhere, or send a message (with a DomainException?) to the hub so the quizmaster knows something went wrong?
+                _logger.LogInformation($"Scoring: QuizItem is null.");
                 return;
             }
 
             // score it!
-            question.Score(answer);
+            quizItem.Score(answer);
             team.UpdateScore();
+
+            await teamCollection.UpdateAsync(team);
             
+            _logger.LogInformation($"Done scoring an answer.");
             // send AnswerScored message, so the clients will be notified and the team scores and dashboard will be updated
             await _bus.Publish(new AnswerScored
             {
@@ -60,10 +66,9 @@ namespace Pubquiz.Logic.Handlers
                 GameId = message.GameId,
                 QuizItemId = message.QuizItemId,
                 InteractionId = message.InteractionId,
-                Response = message.Response,
-                QuizItemScore = answer.TotalScore,
                 TotalTeamScore = team.TotalScore,
-                InteractionResponses = answer.InteractionResponses
+                ScorePerQuizSection = team.ScorePerQuizSection,
+                Answer = answer
             });
         }
     }

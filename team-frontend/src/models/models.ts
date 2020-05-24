@@ -45,8 +45,9 @@ export interface Team {
   /** false when the user has logged out / left game */
   isLoggedIn: boolean;
   /** Score per quiz section */
-  ScorePerQuizSection: Map<string, number>
+  scorePerQuizSection: Record<string,number>;
   totalScore: number;
+  answers: Record<string, Answer>;
 }
 
 export interface QuizItemRef {
@@ -73,6 +74,14 @@ export interface Interaction {
   choiceOptions: ChoiceOption[];
   maxScore: number;
   solution: Solution;
+}
+
+export interface Answer {
+  quizSectionId: string;
+  quizItemId: string;
+  interactionResponses: InteractionResponse[];
+  totalScore: number;
+  flaggedForManualCorrection: boolean;
 }
 
 export interface InteractionResponse {

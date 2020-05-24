@@ -9,7 +9,11 @@ export interface TeamViewModel {
     memberNames: string;
     /** false when the user has logged out / left game */
     isLoggedIn: boolean;
-  }
+}
+
+// export interface QmTeamViewModel{
+
+// }
 
 export interface TeamLobbyViewModel {
     game: Game;
@@ -21,7 +25,7 @@ export interface TeamInGameViewModel {
     quizItemViewModel: QuizItemViewModel;
 }
 
-export interface QuizItemViewModel  {
+export interface QuizItemViewModel {
     id: string;
     title: string;
     body: string;
@@ -39,7 +43,7 @@ export interface InteractionViewModel {
     maxScore: number;
     response: string;
     chosenOptions: number[];
-    chosenOption: number;  
+    chosenOption: number;
 }
 
 export interface QmLobbyViewModel {
@@ -49,14 +53,9 @@ export interface QmLobbyViewModel {
 }
 
 export interface QmInGameViewModel {
-    qmTeamFeed: TeamFeedViewModel;
-    qmTeamRanking: TeamRankingViewModel;
     game: Game;
     currentQuizItem: QuizItem;
-    // teamfeed
-    // game info
-    // current quiz itm
-    // ranking
+    teams: Team[];
 }
 
 export interface TeamFeedViewModel {

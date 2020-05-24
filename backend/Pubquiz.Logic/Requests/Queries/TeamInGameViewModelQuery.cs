@@ -24,10 +24,11 @@ namespace Pubquiz.Logic.Requests.Queries
             var game = await gameCollection.GetAsync(team.CurrentGameId);
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
             var quizItem = await quizItemCollection.GetAsync(game.CurrentQuizItemId);
+            team.Answers.TryGetValue(quizItem.Id, out var answer);
             var model = new TeamInGameViewModel
             {
                 Game = game,
-                QuizItemViewModel = new QuizItemViewModel(quizItem)
+                QuizItemViewModel = new QuizItemViewModel(quizItem, answer)
             };
 
             return model;

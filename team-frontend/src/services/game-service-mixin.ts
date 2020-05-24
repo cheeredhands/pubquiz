@@ -46,10 +46,9 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
         this.$axios
             .get('/api/game/quizmasteringame')
             .then((response: AxiosResponse<QmInGameViewModel>) => {
-                this.$store.commit('setTeamFeed', response.data.qmTeamFeed);
-                this.$store.commit('setTeamRanking', response.data.qmTeamRanking)
                 this.$store.commit('setGame', response.data.game);
                 this.$store.commit('setQuizItem', response.data.currentQuizItem)
+                this.$store.commit('setQmTeams', response.data.teams);
             })
             .catch((error: AxiosError<ApiResponse>) => {
                 this.$_helper_toastError(error);
@@ -81,7 +80,7 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
     }
 
     public async $_gameService_getQuizItem(gameId: string, quizItemId: string) {
-        if (this.$store.state.quizItems.has(quizItemId)) {
+        if (this.$store.state.quizItems[quizItemId]) {
             this.$store.commit('setQuizItemFromCache', quizItemId);
             return;
         }
@@ -95,7 +94,7 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
         );
     }
     public async $_gameService_getQuizItemViewModel(gameId: string, quizItemId: string) {
-        if (this.$store.state.quizItemViewModels.has(quizItemId)) {
+        if (this.$store.state.quizItemViewModels[quizItemId]) {
             this.$store.commit('setQuizItemViewModelFromCache', quizItemId);
             return;
         }

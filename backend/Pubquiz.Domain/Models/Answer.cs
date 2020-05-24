@@ -25,7 +25,6 @@ namespace Pubquiz.Domain.Models
 
         public Answer()
         {
-            
         }
 
         public void SetInteractionResponse(int interactionId, IEnumerable<int> choiceOptionIds, string response)
@@ -33,19 +32,21 @@ namespace Pubquiz.Domain.Models
             var interactionResponse = InteractionResponses.FirstOrDefault(r => r.InteractionId == interactionId);
             if (interactionResponse == null)
             {
-                if (choiceOptionIds==null)
+                if (choiceOptionIds == null)
                 {
                     interactionResponse = new InteractionResponse(interactionId, response);
                 }
                 else
                 {
-                    interactionResponse = new InteractionResponse(interactionId, choiceOptionIds, response);    
+                    interactionResponse = new InteractionResponse(interactionId, choiceOptionIds, response);
                 }
+
                 InteractionResponses.Add(interactionResponse);
             }
             else
             {
-                interactionResponse.ChoiceOptionIds = choiceOptionIds.ToList();
+                interactionResponse.ChoiceOptionIds =
+                    choiceOptionIds == null ? new List<int>() : choiceOptionIds.ToList();
                 interactionResponse.Response = response;
             }
         }
@@ -125,8 +126,8 @@ namespace Pubquiz.Domain.Models
 
         public InteractionResponse()
         {
-            
         }
+
         public InteractionResponse(int interactionId)
         {
             InteractionId = interactionId;

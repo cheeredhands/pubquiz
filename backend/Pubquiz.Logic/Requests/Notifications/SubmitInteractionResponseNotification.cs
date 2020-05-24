@@ -61,16 +61,16 @@ namespace Pubquiz.Logic.Requests.Notifications
 
 
             // save response
-            var answer = team.Answers.FirstOrDefault(a => a.QuizItemId == QuizItemId);
+            team.Answers.TryGetValue(QuizItemId, out var answer);
             if (answer == null)
             {
                 answer = new Answer(quizSectionId, QuizItemId);
-                team.Answers.Add(answer);
+                team.Answers.Add(QuizItemId, answer);
             }
 
             answer.SetInteractionResponse(InteractionId, ChoiceOptionIds, Response);
 
-            UnitOfWork.Commit();
+            await teamCollection.UpdateAsync(team);
 
             var response = string.IsNullOrWhiteSpace(Response)
                 ? GetChoiceOptionTexts(quizItem, ChoiceOptionIds)

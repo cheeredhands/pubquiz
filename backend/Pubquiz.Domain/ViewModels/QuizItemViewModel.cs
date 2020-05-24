@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pubquiz.Domain.Models;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Pubquiz.Domain.ViewModels
 {
@@ -19,7 +21,7 @@ namespace Pubquiz.Domain.ViewModels
         {
         }
 
-        public QuizItemViewModel(QuizItem quizItem)
+        public QuizItemViewModel(QuizItem quizItem, Answer answer)
         {
             Id = quizItem.Id;
             Title = quizItem.Title;
@@ -27,7 +29,16 @@ namespace Pubquiz.Domain.ViewModels
             Media = quizItem.MediaObjects;
             QuizItemType = quizItem.QuizItemType;
             MaxScore = quizItem.MaxScore;
-            Interactions = quizItem.Interactions.Select(i => new InteractionViewModel(i)).ToList();
+            if (answer != null)
+            {
+                Interactions = quizItem.Interactions
+                    .Select((i, index) => new InteractionViewModel(i, answer.InteractionResponses[index])).ToList();
+            }
+            else
+            {
+                Interactions = quizItem.Interactions
+                    .Select((i, index) => new InteractionViewModel(i)).ToList();
+            }
         }
     }
 
@@ -38,6 +49,10 @@ namespace Pubquiz.Domain.ViewModels
         public int MaxScore { get; set; }
         public List<ChoiceOption> ChoiceOptions { get; set; }
         public InteractionType InteractionType { get; set; }
+
+        public string Response { get; set; }
+        public List<int> ChosenOptions { get; set; }
+        public int ChosenOption { get; set; }
 
         public InteractionViewModel()
         {
@@ -50,6 +65,25 @@ namespace Pubquiz.Domain.ViewModels
             MaxScore = interaction.MaxScore;
             ChoiceOptions = interaction.ChoiceOptions;
             InteractionType = interaction.InteractionType;
+        }
+
+        public InteractionViewModel(Interaction interaction, InteractionResponse interactionResponse) : this(interaction)
+        {
+            switch (InteractionType)
+            {
+                case InteractionType.MultipleChoice:
+                    ChosenOption = interactionResponse.ChoiceOptionIds.FirstOrDefault();
+                    break;
+                case InteractionType.MultipleResponse:
+                    ChosenOptions = interactionResponse.ChoiceOptionIds;
+                    break;
+                case InteractionType.ShortAnswer:
+                case InteractionType.ExtendedText:
+                    Response = interactionResponse.Response;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

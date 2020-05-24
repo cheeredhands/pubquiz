@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pubquiz.Domain.ViewModels;
 using Pubquiz.Persistence;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -43,7 +42,10 @@ namespace Pubquiz.Domain.Models
                             correctOptionIds.All(responseOptionIds.Contains))
                         {
                             interactionResponse.AwardedScore = interaction.MaxScore;
-                            //TotalScore += interaction.MaxScore;
+                        }
+                        else
+                        {
+                            interactionResponse.AwardedScore = 0;
                         }
 
                         break;
@@ -58,10 +60,12 @@ namespace Pubquiz.Domain.Models
                         if (solution.Responses.Contains(interactionResponse.Response))
                         {
                             interactionResponse.AwardedScore = interaction.MaxScore;
+                            interactionResponse.FlaggedForManualCorrection = false;
                         }
                         else
                         {
                             // todo levenshtein/soundex whatever checks
+                            interactionResponse.AwardedScore = 0;
                             interactionResponse.FlaggedForManualCorrection = true;
                         }
 
