@@ -112,7 +112,7 @@ export default class QuizMasterInGame extends mixins(
   public toggleGame() {
     this.$_gameService_setGameState(
       this.userId,
-      this.game.gameId,
+      this.game.id,
       this.game.state === GameState.Running
         ? GameState.Paused
         : GameState.Running
