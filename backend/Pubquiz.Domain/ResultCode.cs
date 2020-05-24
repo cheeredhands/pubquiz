@@ -20,7 +20,7 @@ namespace Pubquiz.Domain
         TeamCantAccessQuizItemOtherThanTheCurrent,
         LobbyUnavailableBecauseOfGameState,
         NoRoleClaimForUser,
-        NoCurrentGameIdClaimForUser,
+        // NoCurrentGameIdClaimForUser,
         UnauthorizedRole,
         TeamAlreadyLoggedIn,
         ValidationError,
