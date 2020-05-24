@@ -1,9 +1,8 @@
-import { UserRole, GameState } from './models';
-import { ResultCode } from './ResultCode';
+import { UserRole } from './models';
 
 export interface ApiResponse {
-    errorCode: ResultCode;
-    code: ResultCode;
+    errorCode: string;
+    code: string;
     message: string;
   }
   
