@@ -11,7 +11,8 @@ export default class HelperMixin extends Vue {
         const errorMessage = error.response?.data.message ?? '';
         this.$bvToast.toast(errorMessage, {
             title: `${this.$t('ERROR_MESSAGE_TITLE').toString()}: ${this.$t(errorCode).toString()}`,
-            variant: 'error'
+            variant: 'danger',
+            solid: true
         });
 
     }
