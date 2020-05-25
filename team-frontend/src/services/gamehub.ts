@@ -39,6 +39,10 @@ export default {
     connection.on('TeamRegistered', data => {
       store.dispatch('processTeamRegistered', data);
     });
+    
+    connection.on('QmTeamRegistered', data => {
+      store.dispatch('processQmTeamRegistered', data);
+    });
 
     connection.on('TeamLoggedOut', data => {
       console.log(data);

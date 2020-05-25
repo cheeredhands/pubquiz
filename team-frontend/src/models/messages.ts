@@ -1,4 +1,4 @@
-import { GameState, InteractionResponse, Answer } from './models';
+import { GameState, Answer, Team } from './models';
 
 export interface TeamRegisteredMessage {
     /** The team Id */
@@ -9,6 +9,12 @@ export interface TeamRegisteredMessage {
     name: string;
     /** Team member names */
     memberNames: string;
+}
+
+export interface QmTeamRegisteredMessage {
+    team: Team;
+    /** The game Id */
+    gameId: string;
 }
 
 export interface TeamDeletedMessage {

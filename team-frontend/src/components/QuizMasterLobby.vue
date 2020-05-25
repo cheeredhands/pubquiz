@@ -125,7 +125,7 @@ export default class QuizMasterLobby extends mixins(
   }
 
   get teams() {
-    return (this.$store.state.teams || []) as TeamViewModel[];
+    return (this.$store.state.qmTeams || []) as Team[];
   }
 
   get game() {
