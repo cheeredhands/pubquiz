@@ -90,7 +90,7 @@ namespace Pubquiz.Logic.Requests.Commands
             }
 
             await Bus.Publish(new TeamRegistered(team.Id, team.Name, team.CurrentGameId, team.MemberNames));
-
+            await Bus.Publish(new QmTeamRegistered {GameId = team.CurrentGameId, Team = team});
             return team;
         }
     }

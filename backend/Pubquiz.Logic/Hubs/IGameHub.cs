@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 
 namespace Pubquiz.Logic.Hubs
@@ -8,15 +7,21 @@ namespace Pubquiz.Logic.Hubs
     public interface IGameHub : IClientProxy
     {
         /// <summary>
-        /// Called when a team registered for a game. Notifies other teams and the quizmaster
-        /// within the current game.
+        /// Called when a team registered for a game. Notifies other teams.
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
         Task TeamRegistered(TeamRegistered message);
 
         /// <summary>
-        /// Called when a team logs out (leaves the game). Notifies other teams and the quizmaster
+        /// Called when a team registered for a game. Notifies the quiz masters within the current game.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task QmTeamRegistered(QmTeamRegistered message);
+        
+        /// <summary>
+        /// Called when a team logs out (leaves the game). Notifies other teams and the qui master
         /// within the current game.
         /// </summary>
         /// <param name="message"></param>
@@ -24,7 +29,7 @@ namespace Pubquiz.Logic.Hubs
         Task TeamLoggedOut(TeamLoggedOut message);
 
         /// <summary>
-        /// Called when a user logs out (leaves the game). Notifies other teams and the quizmaster
+        /// Called when a user logs out (leaves the game). Notifies other teams and the quiz master
         /// within the current game.
         /// </summary>
         /// <param name="message"></param>
