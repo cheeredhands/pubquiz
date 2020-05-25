@@ -43,8 +43,8 @@
             <b-list-group>
               <b-list-group-item
                 class="d-flex justify-content-between align-items-center"
-                v-for="(otherTeam, index) in teams"
-                :key="index"
+                v-for="otherTeam in teams"
+                :key="otherTeam.id"
               >
                 <div>
                   <h5 class="mt-0 mb-1">{{ otherTeam.name }}</h5>
