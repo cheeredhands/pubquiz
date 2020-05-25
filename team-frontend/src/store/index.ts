@@ -71,7 +71,6 @@ const storeOpts: StoreOptions<RootState> = {
       state.isLoggedIn = true;
     },
     addTeam(state, team: TeamRegisteredMessage) {
-      console.log(`addTeam: ${team.name}`);
       const teamInStore = state.teams.find(i => i.id === team.teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = true;
@@ -87,15 +86,13 @@ const storeOpts: StoreOptions<RootState> = {
       }
     },
     removeTeam(state, teamId: string) {
-      console.log(`removeTeam: ${teamId}`);
       const teamInStore = state.teams.find(i => i.id === teamId);
       if (teamInStore !== undefined) {
         state.teams = state.teams.filter(t => t.id !== teamId);
       }
     },
-    setTeamLoggedOut(state, team: TeamLoggedOutMessage) {
-      console.log(`setOtherTeamLoggedOut: ${team.name}`);
-      const teamInStore = state.teams.find(i => i.id === team.teamId);
+    setTeamLoggedOut(state, teamId: string) {
+      const teamInStore = state.teams.find(i => i.id === teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = false;
       }
@@ -113,7 +110,6 @@ const storeOpts: StoreOptions<RootState> = {
       team.scorePerQuizSection = info.scorePerQuizSection;
       // Change detection caveats https://vuejs.org/v2/guide/reactivity.html#For-Arrays
       Vue.set(team.answers, info.quizItemId, info.answer);
-      // team.answers[info.quizItemId] = info.answer;
     },
     setOwnTeamName(state, newName) {
       if (state.team !== undefined) {
@@ -126,25 +122,19 @@ const storeOpts: StoreOptions<RootState> = {
       }
     },
     setOtherTeamName(state, team: TeamNameUpdatedMessage) {
-      console.log(`setOtherTeamName: ${team.name}`);
-      const teamInStore = state.teams.find(
-        item => item.id === team.teamId
-      );
+      const teamInStore = state.teams.find(t => t.id === team.teamId);
       if (teamInStore !== undefined) {
         teamInStore.name = team.name;
       }
     },
     setOtherTeamMembers(state, team: TeamMembersChangedMessage) {
-      console.log(`setOtherTeamMembers: ${team.memberNames}`);
-      const teamInStore = state.teams.find(
-        item => item.id === team.teamId
-      );
+      const teamInStore = state.teams.find(t => t.id === team.teamId);
       if (teamInStore !== undefined) {
-        teamInStore.memberNames = team.memberNames;
+        // use Vue.set in case memberNames is undefined (https://vuejs.org/v2/guide/reactivity.html#For-Objects)
+        Vue.set(teamInStore, 'memberNames', team.memberNames);
       }
     },
     setGameState(state, newGameState: GameState) {
-      console.log(`set game state: ${newGameState}`);
       if (state.game === undefined) {
         return;
       }
@@ -234,11 +224,7 @@ const storeOpts: StoreOptions<RootState> = {
     },
     processTeamLoggedOut({ commit, state }, team: TeamLoggedOutMessage) {
       console.log(`processTeamLoggedOut: ${team.name}`);
-      if (state.user !== undefined) {
-        commit('setTeamLoggedOut', team);
-      } else if (state.team !== undefined && team.teamId !== state.team.id) {
-        commit('setTeamLoggedOut', team);
-      }
+      commit('setTeamLoggedOut', team.teamId);
     },
     processUserLoggedOut({ commit, state }, userLoggedOut: User) {
       // todo notify teams that the quizmaster left?
