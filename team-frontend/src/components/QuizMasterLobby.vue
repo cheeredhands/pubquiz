@@ -20,9 +20,9 @@
             <p v-if="game.state===openState">{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
             <p v-else>{{ $t('CURRENT_TEAMS_IN_GAME')}}</p>
             <b-list-group>
-              <b-list-group-item v-for="(team, index) in teams" :key="index">
-                <strong :title="team.recoveryCode">{{ team.name }}</strong> -
-                <span>{{team.memberNames}}</span>&nbsp;
+              <b-list-group-item v-for="team in teams" :key="team.id">
+                <strong :title="team.recoveryCode">{{ team.name }} </strong>
+                <span class="teamMembers" v-if="team.memberNames">({{team.memberNames}})</span>&nbsp;
                 <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
                 <font-awesome-icon
                   icon="trash-alt"
@@ -53,8 +53,9 @@ import GameServiceMixin from '../services/game-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
-import { GameState } from '../models/models';
+import { Game, Team, GameState } from '../models/models';
 import { ApiResponse } from '../models/apiResponses';
+import { TeamViewModel } from '../models/viewModels';
 
 @Component({
   components: { NavBarPart, FooterPart },
@@ -80,13 +81,10 @@ export default class QuizMasterLobby extends mixins(
   public pausedState = GameState.Paused;
 
   public created() {
-    this.$_gameService_getQmLobby();
-    document.title = 'Lobby - ' + this.game.title;
+    this.$_gameService_getQmLobby().then(() => {
+      document.title = 'Lobby - ' + this.game.title;
+    });
   }
-
-  // public mounted() {
-  //   document.title = this.game.title;
-  // }
 
   public startGame() {
     if (this.game.state === GameState.Open) {
@@ -109,13 +107,10 @@ export default class QuizMasterLobby extends mixins(
   public kickTeam(teamId: string, name: string) {
     this.$_accountService_deleteTeam(teamId)
       .then(() => {
-        this.$bvToast.toast(
-          this.$t('TEAM_KICKED_OUT', { name }).toString(),
-          {
-            title: this.$t('REMOVED').toString(),
-            variant: 'warning'
-          }
-        );
+        this.$bvToast.toast(this.$t('TEAM_KICKED_OUT', { name }).toString(), {
+          title: this.$t('REMOVED').toString(),
+          variant: 'warning'
+        });
       })
       .catch((error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);
@@ -130,11 +125,11 @@ export default class QuizMasterLobby extends mixins(
   }
 
   get teams() {
-    return this.$store.state.teams || [];
+    return (this.$store.state.teams || []) as TeamViewModel[];
   }
 
   get game() {
-    return this.$store.state.game || {};
+    return (this.$store.state.game || {}) as Game;
   }
 
   get userName() {
