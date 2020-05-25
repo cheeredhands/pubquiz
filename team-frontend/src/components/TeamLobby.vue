@@ -30,8 +30,7 @@
             <quizr-editable-textarea
               v-model="newMemberNames"
               :label="$t('MEMBERS')"
-              :description="$t('MEMBER_NAMES')"
-              :placeholder="$t('TEAM_MEMBERS_HERE')"
+              :placeholder="$t('MEMBER_NAMES')"
               :rows="5"
               :minlength="5"
               :maxlength="140"
