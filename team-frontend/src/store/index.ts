@@ -2,8 +2,8 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import { User, GameState, ItemNavigatedMessage, QuizItem, Team, Game } from '../models/models';
-import { TeamLoggedOutMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, InteractionResponseAddedMessage, AnswerScoredMessage, QmTeamRegisteredMessage } from '../models/messages';
+import { User, GameState, QuizItem, Team, Game } from '../models/models';
+import { TeamLoggedOutMessage,ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, InteractionResponseAddedMessage, AnswerScoredMessage, QmTeamRegisteredMessage } from '../models/messages';
 import { TeamFeedViewModel, TeamRankingViewModel, QuizItemViewModel, TeamViewModel } from '../models/viewModels';
 
 Vue.use(Vuex);

@@ -33,6 +33,17 @@ export interface TeamLoggedOutMessage {
     name: string;
 }
 
+export interface ItemNavigatedMessage {
+    gameId: string;
+    newSectionId: string;
+    newQuizItemId: string;
+    newSectionIndex: number;
+    newSectionQuizItemCount: number;
+    newQuizItemIndexInSection: number;
+    newQuizItemIndexInTotal: number;
+    newQuestionIndexInTotal: number;
+  }
+
 export interface TeamMembersChangedMessage {
     /** The team Id */
     teamId: string;

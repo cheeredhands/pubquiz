@@ -145,17 +145,6 @@ export enum QuizItemType {
   Information = 'Information'
 }
 
-export interface ItemNavigatedMessage {
-  gameId: string;
-  newSectionId: string;
-  newQuizItemId: string;
-  newSectionIndex: number;
-  newSectionQuizItemCount: number;
-  newQuizItemIndexInSection: number;
-  newQuizItemIndexInTotal: number;
-  newQuestionIndexInTotal: number;
-}
-
 export enum GameState {
   Closed = 'Closed',
   Open = 'Open',
