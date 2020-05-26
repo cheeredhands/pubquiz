@@ -6,8 +6,5 @@
   ],
   "settings": {   
     "debug.allowBreakpointsEverywhere": true,
-    "javascript.preferences.quoteStyle": "single",
-    "typescript.preferences.quoteStyle": "single",
-    "vetur.format.defaultFormatter.ts": "prettier-tslint"
   }
 }
