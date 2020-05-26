@@ -9,6 +9,24 @@
     </nav-bar-part>
     <TeamQuestionPart />
     <footer-part>Team game screen footer</footer-part>
+    <b-modal
+      size="xl"
+      v-model="isPaused"
+      id="modalPaused"
+      header-bg-variant="warning"
+      centered
+      no-close-on-backdrop
+      no-close-on-esc
+      :title="$t('PAUSED')"
+    >
+      <template v-slot:modal-header>
+        <h1>{{$t('PAUSED')}}</h1>
+      </template>
+      <template v-slot:default>
+        <p class="my-4">{{$t('THE_GAME_IS_PAUSED')}}</p>
+      </template>
+      <template v-slot:modal-footer>{{$t('WAIT_FOR_RESUME')}}</template>
+    </b-modal>
   </div>
 </template>
 
@@ -27,6 +45,7 @@ import AccountServiceMixin from '../services/account-service-mixin';
 import GameServiceMixin from '../services/game-service-mixin';
 import HelperMixin from '../services/helper-mixin';
 import { ApiResponse } from '../models/apiResponses';
+import { Watch } from 'vue-property-decorator';
 
 @Component({
   components: { NavBarPart, FooterPart, TeamQuestionPart },
@@ -49,6 +68,7 @@ export default class TeamInGame extends mixins(
 ) {
   public name: string = 'TeamInGame';
   public runningState = GameState.Running;
+
   public created() {
     this.$_gameService_getTeamInGame();
   }
@@ -56,10 +76,30 @@ export default class TeamInGame extends mixins(
   get game() {
     return this.$store.getters.game;
   }
+  get gameState() {
+    return this.game.state;
+  }
+  get isPaused() {
+    return this.gameState === GameState.Paused;
+  }
 
+  @Watch('gameState')
+  public OnGameStateChanged(value: GameState, oldValue: GameState) {
+    if (value === GameState.Finished) {
+      // todo route to end
+    }
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+body.modal-open #app {
+  -webkit-filter: blur(12px);
+  -moz-filter: blur(12px);
+  -o-filter: blur(12px);
+  -ms-filter: blur(12px);
+  filter: blur(12px);
+  filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='12');
+}
 </style>
