@@ -18,7 +18,7 @@
             The score and correctness of a team is shown. When automatic scoring is not possible, buttons are shown to mark the answer.
           </p> -->
           <h5 class="mt-0 mb-1">{{team.name}} <span v-if="team.memberNames!==undefined" class="smaller">({{team.memberNames}})</span></h5>
-          <div v-if="team.answers[game.currentQuizItemId]!==undefined">
+          <div v-if="team.answers[game.currentQuizItemId]!==undefined" :class="{correct : team.answers[game.currentQuizItemId].totalScore===quizItem.maxScore}">
            <font-awesome-icon
               icon="glasses"
               class="float-right mr-3"
@@ -27,8 +27,8 @@
             />
             <p
               v-for="interactionResponse in team.answers[game.currentQuizItemId].interactionResponses"
-              :key="interactionResponse.id"
-            >{{getInteraction(interactionResponse.interactionId).text}}: <code class="border rounded-sm p-1" :class="{correct : !team.answers[game.currentQuizItemId].flaggedForManualCorrection}">{{getResponseText(interactionResponse)}}</code></p>
+              :key="interactionResponse.id" :class="{correct : interactionResponse.awardedScore>0}"
+            >{{getInteraction(interactionResponse.interactionId).text}}: <code>{{getResponseText(interactionResponse)}}</code></p>
             
           </div>
         </b-media>
@@ -116,8 +116,13 @@ span.smaller, p {
   padding: 5px;
 }
 
-code.correct {
-  color: green;
+p.correct {
+  background-color: lightgreen;
 }
+
+code{
+  color: black;
+}
+
 
 </style>
