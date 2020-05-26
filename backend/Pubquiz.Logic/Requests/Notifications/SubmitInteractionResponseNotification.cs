@@ -54,6 +54,12 @@ namespace Pubquiz.Logic.Requests.Notifications
                     "This question doesn't belong to the current quiz section.", true);
             }
 
+            if (game.State == GameState.Paused || game.State == GameState.Finished)
+            {
+                throw new DomainException(ResultCode.GameIsPausedOrFinished,
+                    "The game is paused or finished. Submitting answers is not allowed.", true);
+            }
+
             if (quizItem.Interactions.All(i => i.Id != InteractionId))
             {
                 throw new DomainException(ResultCode.InvalidInteractionId, "Invalid InteractionId.", true);

@@ -23,7 +23,8 @@ namespace Pubquiz.Domain
         UnauthorizedRole,
         TeamAlreadyLoggedIn,
         ValidationError,
-
+        GameIsPausedOrFinished,
+        
         /* Success codes */
         Ok,
         ThatsYou,
