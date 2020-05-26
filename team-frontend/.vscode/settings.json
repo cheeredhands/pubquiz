@@ -1,5 +1,7 @@
 {
+  "debug.allowBreakpointsEverywhere": true,
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
-  "debug.allowBreakpointsEverywhere": true
+  "vetur.format.defaultFormatter.js": "prettier-eslint",
+  "vetur.format.defaultFormatter.ts": "prettier"
 }

@@ -4,11 +4,10 @@
       <h4 class="mt-1 mb-0 ml-1">Team feed ({{qmTeams.length}} teams)</h4>
     </div>
     <div class="feed">
-      
       <!-- <p>quizItemId: {{game.currentQuizItemId}}</p> -->
       <!-- <p>my team: {{qmTeams.find(t=>t.name==='saxcasdf')}}</p> -->
       <ul class="list-unstyled">
-        <b-media  class="mb-2" tag="li" v-for="team in qmTeams" :key="team.id">
+        <b-media class="mb-2" tag="li" v-for="team in qmTeams" :key="team.id">
           <template v-slot:aside>
             <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img>
           </template>
@@ -16,10 +15,16 @@
             The team avatar to the left has a status badge overlay.
             This area shows the answers a team gives to the current question (as they are typing).
             The score and correctness of a team is shown. When automatic scoring is not possible, buttons are shown to mark the answer.
-          </p> -->
-          <h5 class="mt-0 mb-1">{{team.name}} <span v-if="team.memberNames!==undefined" class="smaller">({{team.memberNames}})</span></h5>
-          <div v-if="team.answers[game.currentQuizItemId]!==undefined" :class="{correct : team.answers[game.currentQuizItemId].totalScore===quizItem.maxScore}">
-           <font-awesome-icon
+          </p>-->
+          <h5 class="mt-0 mb-1">
+            {{team.name}}
+            <span v-if="team.memberNames!==undefined" class="smaller">({{team.memberNames}})</span>
+          </h5>
+          <div
+            v-if="team.answers[game.currentQuizItemId]!==undefined"
+            :class="{correct : team.answers[game.currentQuizItemId].totalScore===quizItem.maxScore}"
+          >
+            <font-awesome-icon
               icon="glasses"
               class="float-right mr-3"
               title="Flagged for manual correction"
@@ -27,9 +32,12 @@
             />
             <p
               v-for="interactionResponse in team.answers[game.currentQuizItemId].interactionResponses"
-              :key="interactionResponse.id" :class="{correct : interactionResponse.awardedScore>0}"
-            >{{getInteraction(interactionResponse.interactionId).text}}: <code>{{getResponseText(interactionResponse)}}</code></p>
-            
+              :key="interactionResponse.id"
+              :class="{correct : interactionResponse.awardedScore>0}"
+            >
+              {{getInteraction(interactionResponse.interactionId).text}}:
+              <code>{{getResponseText(interactionResponse)}}</code>
+            </p>
           </div>
         </b-media>
       </ul>
@@ -90,8 +98,8 @@ export default class QmTeamFeedPart extends Vue {
 </script>
 
 <style scoped>
-
-span.smaller, p {
+span.smaller,
+p {
   font-size: small;
 }
 
@@ -120,9 +128,7 @@ p.correct {
   background-color: lightgreen;
 }
 
-code{
+code {
   color: black;
 }
-
-
 </style>

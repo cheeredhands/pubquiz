@@ -7,7 +7,6 @@
     "octref.vetur",
     "msjsdiag.debugger-for-chrome",
     "firefox-devtools.vscode-firefox-debug",
-    "ms-vscode.vscode-typescript-tslint-plugin",
     "dbaeumer.vscode-eslint",
     "chiadem.cs2ts-vscode-extension",
     "eg2.vscode-npm-script",

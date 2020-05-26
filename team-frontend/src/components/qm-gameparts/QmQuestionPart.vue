@@ -61,7 +61,7 @@ export default class QmQuestionPart extends mixins(
 
   get game() {
     return this.$store.getters.game;
-  }
+  } 
 
   get quizItem() {
     return this.$store.getters.quizItem;
