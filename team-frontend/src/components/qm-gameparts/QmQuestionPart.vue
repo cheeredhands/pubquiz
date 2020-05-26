@@ -4,19 +4,24 @@
       <h1 :title="`id: ${quizItem.id} type: ${quizItem.quizItemType}`">{{quizItem.title}}</h1>
       <p v-html="quizItem.body"></p>
       <div v-for="interaction in quizItem.interactions" :key="interaction.id">
-        <p :title="interaction.id">{{interaction.text}} ({{interaction.maxScore}} {{$t('POINTS')}})</p>
+        <p  class="mb-0" :title="interaction.id">{{interaction.text}} ({{interaction.maxScore}} {{$t('POINTS')}})</p>
         <div
           v-if="interaction.interactionType===multipleChoice || interaction.interactionType===multipleResponse"
         >
           <ul>
             <li
+              :class="{correct: interaction.solution.choiceOptionIds.includes(choiceOption.id)}"
               v-for="choiceOption in interaction.choiceOptions"
               :key="choiceOption.id"
             >{{choiceOption.text}}</li>
           </ul>
         </div>
-        <div v-else-if="interaction.interactionType===shortAnswer"></div>
-        <div v-else-if="interaction.interactionType===extendedText"></div>
+        <div v-else-if="interaction.interactionType===shortAnswer">
+          <strong>{{interaction.solution.responses.join(', ')}}</strong>
+        </div>
+        <div v-else-if="interaction.interactionType===extendedText">
+          <strong>{{interaction.solution.responses.join(', ')}}</strong>
+        </div>
       </div>
       <!-- <p v-if="quizItem.media.length>0">media: {{quizItem.media}}</p> -->
     </div>
@@ -86,5 +91,9 @@ export default class QmQuestionPart extends mixins(
 
 .question-nav {
   grid-area: question-nav;
+}
+
+li.correct {
+  font-weight: bold;
 }
 </style>
