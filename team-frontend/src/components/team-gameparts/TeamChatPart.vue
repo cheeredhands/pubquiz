@@ -27,7 +27,7 @@ import Component from 'vue-class-component';
 
 @Component
 export default class TeamChatPart extends Vue {
-  public name: string = 'TeamChatPart';
+  public name = 'TeamChatPart';
 
   // public created() {}
 }

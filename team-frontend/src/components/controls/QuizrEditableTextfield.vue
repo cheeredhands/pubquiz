@@ -25,9 +25,8 @@
   </b-form>
 </template>
 
- <script lang="ts">
+<script lang="ts">
 import Vue from 'vue';
-import { resolve } from 'dns';
 export default Vue.extend({
   data() {
     return {
@@ -50,7 +49,6 @@ export default Vue.extend({
   methods: {
     clickPen() {
       this.editable = true;
-      (this.$refs.the_input as any).focus();
     },
     enterEditMode() {
       if (!this.editable) {
@@ -59,7 +57,7 @@ export default Vue.extend({
       }
     },
     exitEditMode(evt: Event) {
-      if (!this.$quizrhelpers.formIsValid(evt, this.$refs.form as any)) {
+      if (!this.$quizrhelpers.formIsValid(evt, this.$refs.form as HTMLFormElement)) {
         return;
       }
       if (this.initialFieldValue === this.value) {

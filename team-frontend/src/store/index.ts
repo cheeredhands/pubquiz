@@ -3,8 +3,8 @@ import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { User, GameState, QuizItem, Team, Game } from '../models/models';
-import { TeamLoggedOutMessage,ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, InteractionResponseAddedMessage, AnswerScoredMessage, QmTeamRegisteredMessage } from '../models/messages';
-import { TeamFeedViewModel, TeamRankingViewModel, QuizItemViewModel, TeamViewModel } from '../models/viewModels';
+import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage } from '../models/messages';
+import { QuizItemViewModel, TeamViewModel } from '../models/viewModels';
 
 Vue.use(Vuex);
 
@@ -249,7 +249,7 @@ const storeOpts: StoreOptions<RootState> = {
       console.log(`processTeamLoggedOut: ${message.name}`);
       commit('setTeamLoggedOut', message.teamId);
     },
-    processUserLoggedOut({ commit, state }, userLoggedOut: User) {
+    processUserLoggedOut() { // { commit, state }, userLoggedOut: User) {
       // todo notify teams that the quizmaster left?
     },
     processGameStateChanged({ commit, state }, message: GameStateChangedMessage) {
@@ -275,10 +275,10 @@ const storeOpts: StoreOptions<RootState> = {
       }
       commit('setCurrentItem', message);
     },
-    processInteractionResponseAdded({ commit, state }, message: InteractionResponseAddedMessage) {
+    processInteractionResponseAdded() { // { commit, state }, message: InteractionResponseAddedMessage) {
       // TODO remove?
     },
-    processAnswerScored({ commit, state }, message: AnswerScoredMessage) {
+    processAnswerScored({ commit }, message: AnswerScoredMessage) {
       // const team = state.qmTeams.find(t => t.id === answerScoredMessage.teamId);
       // if (team === undefined) { return; }
       commit('setQmTeamAnswer', message);

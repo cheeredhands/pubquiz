@@ -27,6 +27,6 @@ import FooterPart from './parts/FooterPart.vue';
   components: { NavBarPart, FooterPart }
 })
 export default class About extends Vue {
-  public name: string = 'About';
+  public name = 'About';
 }
 </script>

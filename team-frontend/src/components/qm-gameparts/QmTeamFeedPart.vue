@@ -48,18 +48,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {
-  Game,
-  Team,
-  Interaction,
-  InteractionType,
-  QuizItem,
-  InteractionResponse
-} from '../../models/models';
+import { Game, Interaction, InteractionType, QuizItem, InteractionResponse } from '../../models/models';
 
 @Component
 export default class QmTeamFeedPart extends Vue {
-  public name: string = 'QmTeamFeedPart';
+  public name = 'QmTeamFeedPart';
 
   // public game = this.$store.getters.game as Game;
   // public qmTeams = this.$store.state.qmTeams;

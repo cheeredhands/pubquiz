@@ -56,7 +56,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import { LoginResponse, ApiResponse } from '../models/apiResponses';
 import Component, { mixins } from 'vue-class-component';
@@ -72,9 +71,9 @@ export default class QuizMasterLogin extends mixins(
   AccountServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'QuizMasterLogin';
-  public userName: string = '';
-  public password: string = '';
+  public name = 'QuizMasterLogin';
+  public userName = '';
+  public password = '';
 
   // public created() {  }
 

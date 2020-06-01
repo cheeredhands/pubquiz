@@ -50,13 +50,10 @@
   </div>
 </template>
 
-
 <script lang="ts">
-import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
 import store from '../store';
-import { AxiosResponse, AxiosError } from 'axios';
 import { GameState, Team } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
@@ -65,7 +62,6 @@ import QmTeamFeedPart from './qm-gameparts/QmTeamFeedPart.vue';
 import AccountServiceMixin from '../services/account-service-mixin';
 import GameServiceMixin from '../services/game-service-mixin';
 import HelperMixin from '../services/helper-mixin';
-import { ApiResponse } from '../models/apiResponses';
 
 @Component({
   components: { NavBarPart, FooterPart, QmQuestionPart, QmTeamFeedPart },
@@ -86,7 +82,7 @@ export default class QuizMasterInGame extends mixins(
   GameServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'QuizMasterInGame';
+  public name = 'QuizMasterInGame';
   public runningState = GameState.Running;
   public async created() {
     await this.$_gameService_getQmInGame();
@@ -102,7 +98,7 @@ export default class QuizMasterInGame extends mixins(
   }
 
   get qmTeamsSorted() {
-    return this.$store.getters.qmTeams.sort((a: Team,b: Team)=>b.totalScore-a.totalScore);
+    return this.$store.getters.qmTeams.sort((a: Team, b: Team) => b.totalScore - a.totalScore);
   }
 
   get userId() {
@@ -136,9 +132,6 @@ export default class QuizMasterInGame extends mixins(
           this.game.gameId,
           GameState.Finished
         );
-      })
-      .catch(err => {
-        // An error occurred
       });
   }
 }

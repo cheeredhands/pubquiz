@@ -5,16 +5,16 @@ export interface ApiResponse {
     code: string;
     message: string;
   }
-  
-  export interface LoginResponse extends ApiResponse {
+
+export interface LoginResponse extends ApiResponse {
     jwt: string;
     userId: string;
     userName: string;
     currentGameId: string;
     gameIds: string[];
   }
-  
-  export interface RegisterForGameResponse extends ApiResponse {
+
+export interface RegisterForGameResponse extends ApiResponse {
     jwt: string;
     teamId: string;
     gameId: string;
@@ -22,8 +22,8 @@ export interface ApiResponse {
     memberNames: string;
     recoveryCode: string;
   }
-  
-  export interface WhoAmIResponse extends ApiResponse {
+
+export interface WhoAmIResponse extends ApiResponse {
     userName: string;
     userId: string;
     name: string;
@@ -32,11 +32,11 @@ export interface ApiResponse {
     gameState: GameState;
     userRole: UserRole;
   }
-  
-  export interface SaveTeamMembersResponse extends ApiResponse {
+
+export interface SaveTeamMembersResponse extends ApiResponse {
     teamMembers: string;
   }
-  
-  export interface NavigateItemResponse extends ApiResponse {
+
+export interface NavigateItemResponse extends ApiResponse {
     quizItemId: string;
   }

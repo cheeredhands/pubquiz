@@ -51,11 +51,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
-import { AxiosError } from 'axios';
 import { InteractionType, Game } from '../../models/models';
 import { Watch } from 'vue-property-decorator';
 import { debounce } from 'lodash';
@@ -73,16 +71,18 @@ export default class TeamQuestionPart extends mixins(
   get currentQuizItemId() {
     return this.$store.getters.currentQuizItemId as string;
   }
+
   get quizItem() {
     return this.$store.getters.quizItemViewModel as QuizItemViewModel;
   }
-  public name: string = 'team-question-part';
+
+  public name = 'team-question-part';
   public multipleChoice: InteractionType = InteractionType.MultipleChoice;
   public multipleResponse: InteractionType = InteractionType.MultipleResponse;
   public shortAnswer: InteractionType = InteractionType.ShortAnswer;
   public extendedText: InteractionType = InteractionType.ExtendedText;
 
-  public submitTextAnswer = debounce(async (interactionId: number) => {
+  public submitTextAnswer = debounce(async(interactionId: number) => {
     await this.$_gameService_submitInteractionResponse(
       this.currentQuizItemId,
       interactionId,
@@ -91,8 +91,7 @@ export default class TeamQuestionPart extends mixins(
     );
   }, this.$store.getters.debounceMs);
 
-  public submitMcAnswer = debounce(async (interactionId: number) => {
-    // console.log(this.quizItem.interactions[interactionId]);
+  public submitMcAnswer = debounce(async(interactionId: number) => {
     const mcAnswer = this.quizItem.interactions[interactionId].chosenOption;
     await this.$_gameService_submitInteractionResponse(
       this.currentQuizItemId,
@@ -102,8 +101,7 @@ export default class TeamQuestionPart extends mixins(
     );
   }, this.$store.getters.debounceMs);
 
-  public submitMrAnswer = debounce(async (interactionId: number) => {
-    // console.log(this.quizItem.interactions[interactionId]);
+  public submitMrAnswer = debounce(async(interactionId: number) => {
     const mcAnswer = this.quizItem.interactions[interactionId].chosenOptions;
     await this.$_gameService_submitInteractionResponse(
       this.currentQuizItemId,
@@ -117,10 +115,7 @@ export default class TeamQuestionPart extends mixins(
     this.$_gameService_navigateItem(this.game.id, offset);
   }
 
-  @Watch('currentQuizItemId') public OnCurrentItemChanged(
-    value: string,
-    oldValue: string
-  ) {
+  @Watch('currentQuizItemId') public OnCurrentItemChanged(value: string) {
     this.$_gameService_getQuizItemViewModel(this.game.id, value);
   }
 }

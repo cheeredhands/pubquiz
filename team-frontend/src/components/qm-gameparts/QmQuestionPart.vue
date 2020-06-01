@@ -40,11 +40,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
-import { AxiosError } from 'axios';
 import { InteractionType } from '../../models/models';
 
 @Component
@@ -52,7 +50,7 @@ export default class QmQuestionPart extends mixins(
   GameServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'qm-question-part';
+  public name = 'qm-question-part';
   public multipleChoice: InteractionType = InteractionType.MultipleChoice;
   public multipleResponse: InteractionType = InteractionType.MultipleResponse;
   public shortAnswer: InteractionType = InteractionType.ShortAnswer;
@@ -61,7 +59,7 @@ export default class QmQuestionPart extends mixins(
 
   get game() {
     return this.$store.getters.game;
-  } 
+  }
 
   get quizItem() {
     return this.$store.getters.quizItem;

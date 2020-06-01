@@ -9,7 +9,7 @@
             <b-button
               variant="primary"
               size="lg"
-              :to="{name: 'RegisterTeam'}"
+              :to="{name:'RegisterTeam'}"
             >{{ $t('HOME_REGISTERHERE') }}</b-button>
           </b-col>
         </b-row>
@@ -18,7 +18,7 @@
     <footer-part>
       Home footer text
       <template v-slot:footeractions>
-        <b-link :to="{name: 'QuizMasterLogin'}">{{ $t('HOME_QUIZMASTERLOGIN') }} |</b-link>
+        <b-link :to="{name:'QuizMasterLogin'}">{{ $t('HOME_QUIZMASTERLOGIN') }} |</b-link>
       </template>
     </footer-part>
   </div>
@@ -34,6 +34,6 @@ import FooterPart from './parts/FooterPart.vue';
   components: { NavBarPart, FooterPart }
 })
 export default class Home extends Vue {
-  public name: string = 'Home';
+  public name = 'Home';
 }
 </script>

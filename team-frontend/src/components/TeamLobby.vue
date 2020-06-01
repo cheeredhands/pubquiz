@@ -61,7 +61,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
@@ -102,7 +101,7 @@ export default class TeamLobby extends mixins(
   GameServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'TeamLobby';
+  public name = 'TeamLobby';
   public teamId: string = this.$store.getters.teamId;
   public showRecoveryCode = false;
   public newName: string = this.teamName;
@@ -123,6 +122,7 @@ export default class TeamLobby extends mixins(
   get gameState() {
     return this.game.state;
   }
+
   get teamName() {
     return this.$store.getters.teamName;
   }
@@ -160,7 +160,7 @@ export default class TeamLobby extends mixins(
         teamId: this.teamId,
         newName: this.newName
       })
-      .then((response: AxiosResponse<ApiResponse>) => {
+      .then(() => {
         this.$store.commit('setOwnTeamName', this.newName);
       })
       .catch((error: AxiosError<ApiResponse>) => {
@@ -172,7 +172,7 @@ export default class TeamLobby extends mixins(
   }
 
   @Watch('gameState')
-  public OnGameStateChanged(value: GameState, oldValue: GameState) {
+  public OnGameStateChanged(value: GameState) {
     if (value === GameState.Running) {
       this.$router.replace({ name: 'TeamInGame' });
     }
@@ -188,7 +188,7 @@ export default class TeamLobby extends mixins(
           title: this.$t('REMOVED').toString(),
           centered: true
         })
-        .then(_ => {
+        .then(() => {
           this.$router.push({ name: 'RegisterTeam' });
         });
     }

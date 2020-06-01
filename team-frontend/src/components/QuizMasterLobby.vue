@@ -42,11 +42,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 import store from '../store';
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../services/account-service-mixin';
 import GameServiceMixin from '../services/game-service-mixin';
@@ -55,7 +54,6 @@ import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
 import { Game, Team, GameState } from '../models/models';
 import { ApiResponse } from '../models/apiResponses';
-import { TeamViewModel } from '../models/viewModels';
 
 @Component({
   components: { NavBarPart, FooterPart },
@@ -75,7 +73,7 @@ export default class QuizMasterLobby extends mixins(
   GameServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'QuizMasterLobby';
+  public name = 'QuizMasterLobby';
   public openState = GameState.Open;
   public runningState = GameState.Running;
   public pausedState = GameState.Paused;

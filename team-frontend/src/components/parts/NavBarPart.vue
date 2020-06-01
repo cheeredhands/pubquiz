@@ -25,9 +25,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { AxiosResponse, AxiosError } from 'axios';
-import { UserRole } from '../../models/models';
+import { AxiosResponse } from 'axios';
 import Component, { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../../services/account-service-mixin';
 // import { ResultCode } from '../../models/ResultCode';
@@ -35,7 +33,7 @@ import { ApiResponse } from '../../models/apiResponses';
 
 @Component
 export default class NavBarPart extends mixins(AccountServiceMixin) {
-  public name: string = 'NavBarPart';
+  public name = 'NavBarPart';
 
   get isLoggedIn() {
     return this.$store.state.isLoggedIn || false;

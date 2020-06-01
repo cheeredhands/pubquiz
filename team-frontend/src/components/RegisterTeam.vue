@@ -68,16 +68,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 import { AxiosResponse, AxiosError } from 'axios';
-import VueI18n from 'vue-i18n';
 import AccountServiceMixin from '../services/account-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
 import { RegisterForGameResponse, ApiResponse } from '../models/apiResponses';
-import { Team } from '../models/models';
 
 @Component({
   components: { NavBarPart, FooterPart }
@@ -86,11 +84,9 @@ export default class RegisterTeam extends mixins(
   AccountServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'RegisterTeam';
-  public teamName: string = '';
-  public code: string = '';
-
-  // public created() { }
+  public name = 'RegisterTeam';
+  public teamName = '';
+  public code = '';
 
   public register(evt: Event) {
     if (!this.$quizrhelpers.formIsValid(evt)) {

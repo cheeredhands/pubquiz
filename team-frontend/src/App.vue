@@ -3,22 +3,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import { AxiosResponse, AxiosError } from 'axios';
 import Component, { mixins } from 'vue-class-component';
-import { UserRole, Team, User, GameState } from './models/models';
+import { UserRole, GameState } from './models/models';
 import AccountServiceMixin from './services/account-service-mixin';
 import NavBarPart from './components/parts/NavBarPart.vue';
 import FooterPart from './components/parts/FooterPart.vue';
 import HelperMixin from './services/helper-mixin';
 import { WhoAmIResponse } from './models/apiResponses';
-import { TeamRegisteredMessage } from './models/messages';
 
 @Component({
   components: { NavBarPart, FooterPart }
 })
 export default class App extends mixins(AccountServiceMixin, HelperMixin) {
-  public name: string = 'App';
+  public name = 'App';
 
   public mounted() {
     this.$_accountService_getWhoAmI()

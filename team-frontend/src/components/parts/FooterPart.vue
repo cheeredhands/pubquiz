@@ -1,9 +1,9 @@
 <template>
   <footer class="footer font-small">
     <slot>footer</slot>
-    
+
     <b-link class="float-right" :to="{name: 'About'}">| {{ $t('MENU_ABOUT') }}</b-link>
-    
+
     <div class="float-right">
       <slot name="footeractions"></slot>
     </div>
@@ -16,6 +16,6 @@ import Component from 'vue-class-component';
 
 @Component
 export default class FooterPart extends Vue {
-  public name: string = 'FooterPart';
+  public name = 'FooterPart';
 }
 </script>

@@ -1,3 +1,6 @@
 {
   "debug.allowBreakpointsEverywhere": true,
+  "vetur.format.defaultFormatter.ts": "vscode-typescript",
+  "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "eslint.format.enable": true,
 }

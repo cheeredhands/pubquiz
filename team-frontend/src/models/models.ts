@@ -44,7 +44,7 @@ export interface Team {
   /** false when the user has logged out / left game */
   isLoggedIn: boolean;
   /** Score per quiz section */
-  scorePerQuizSection: Record<string,number>;
+  scorePerQuizSection: Record<string, number>;
   totalScore: number;
   answers: Record<string, Answer>;
 }

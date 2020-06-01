@@ -73,14 +73,14 @@ export interface GameStateChangedMessage {
     newGameState: GameState;
   }
 
-  export interface InteractionResponseAddedMessage {
+export interface InteractionResponseAddedMessage {
       teamId: string;
       quizItemId: string;
       interactionId: number;
       response: string;
   }
 
-  export interface AnswerScoredMessage {
+export interface AnswerScoredMessage {
       teamId: string;
       gameId: string;
       quizItemId: string;
@@ -89,4 +89,3 @@ export interface GameStateChangedMessage {
       scorePerQuizSection: Record<string, number>;
       answer: Answer;
   }
-  

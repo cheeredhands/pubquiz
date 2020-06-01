@@ -29,7 +29,7 @@ export default {
       }
     };
 
-    connection.onclose(async () => {
+    connection.onclose(async() => {
       if (!this.closing) {
         await start();
       }
@@ -39,15 +39,15 @@ export default {
     connection.on('TeamRegistered', data => {
       store.dispatch('processTeamRegistered', data);
     });
-    
+
     connection.on('QmTeamRegistered', data => {
       store.dispatch('processQmTeamRegistered', data);
     });
 
     connection.on('TeamLoggedOut', data => {
       console.log(data);
-      store.dispatch('processTeamLoggedOut', data)
-    })
+      store.dispatch('processTeamLoggedOut', data);
+    });
 
     connection.on('TeamNameUpdated', data => {
       console.log(data);
@@ -57,32 +57,32 @@ export default {
     connection.on('TeamMembersChanged', data => {
       console.log(data);
       store.dispatch('processTeamMembersChanged', data);
-    })
+    });
 
     connection.on('GameStateChanged', data => {
       console.log(data);
       store.dispatch('processGameStateChanged', data);
-    })
+    });
 
     connection.on('TeamDeleted', data => {
       console.log(data);
       store.dispatch('processTeamDeleted', data);
-    })
+    });
 
     connection.on('ItemNavigated', data => {
       console.log(data);
       store.dispatch('processItemNavigated', data);
-    })
+    });
 
     connection.on('InteractionResponseAdded', data => {
       console.log(data);
       store.dispatch('processInteractionResponseAdded', data);
-    })
+    });
 
     connection.on('AnswerScored', data => {
       console.log(data);
       store.dispatch('processAnswerScored', data);
-    })
+    });
     return start().catch(err => {
       return console.error(err.toString());
     });

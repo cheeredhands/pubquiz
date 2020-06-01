@@ -30,13 +30,10 @@
   </div>
 </template>
 
-
 <script lang="ts">
-import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
 import store from '../store';
-import { AxiosResponse, AxiosError } from 'axios';
 import { GameState } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
@@ -44,7 +41,6 @@ import TeamQuestionPart from './team-gameparts/TeamQuestionPart.vue';
 import AccountServiceMixin from '../services/account-service-mixin';
 import GameServiceMixin from '../services/game-service-mixin';
 import HelperMixin from '../services/helper-mixin';
-import { ApiResponse } from '../models/apiResponses';
 import { Watch } from 'vue-property-decorator';
 
 @Component({
@@ -66,7 +62,7 @@ export default class TeamInGame extends mixins(
   GameServiceMixin,
   HelperMixin
 ) {
-  public name: string = 'TeamInGame';
+  public name = 'TeamInGame';
   public runningState = GameState.Running;
 
   public created() {
@@ -76,15 +72,17 @@ export default class TeamInGame extends mixins(
   get game() {
     return this.$store.getters.game;
   }
+
   get gameState() {
     return this.game.state;
   }
+
   get isPaused() {
     return this.gameState === GameState.Paused;
   }
 
   @Watch('gameState')
-  public OnGameStateChanged(value: GameState, oldValue: GameState) {
+  public OnGameStateChanged(value: GameState) {
     if (value === GameState.Finished) {
       // todo route to end
     }

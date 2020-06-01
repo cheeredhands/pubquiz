@@ -1,7 +1,6 @@
 import Vue, { PluginObject } from 'vue';
 
 export class QuizrHelpers {
-
   public formIsValid(evt: Event, form?: HTMLFormElement): boolean {
     // check validation
     evt.preventDefault();
