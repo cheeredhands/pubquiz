@@ -110,9 +110,10 @@ export interface ChoiceOption {
 export interface MediaObject {
   id: string;
   title: string;
-  Uri: string;
+  uri: string;
   dimensions: Dimensions;
   mediaType: MediaType;
+  mimeType: string;
 }
 
 export interface Dimensions {

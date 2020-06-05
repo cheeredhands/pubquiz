@@ -180,10 +180,11 @@ namespace Pubquiz.Domain.Models
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public string Uri { get; }
+        public string Uri { get; set; }
         public Dimensions Dimensions { get; set; }
-        public MediaType MediaType { get; }
-
+        public MediaType MediaType { get; set; }
+        public string MimeType { get; set; }
+        
         public MediaObject(string uri, MediaType mediaType)
         {
             Id = Guid.NewGuid();

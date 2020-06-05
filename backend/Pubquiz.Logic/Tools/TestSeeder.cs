@@ -16,7 +16,7 @@ namespace Pubquiz.Logic.Tools
             _logger = loggerFactory.CreateLogger<TestSeeder>();
         }
 
-        public void SeedSeedSet()
+        public void SeedSeedSet(string mediaBaseUrl)
         {
             _logger.LogInformation("Seeding the seed set.");
             var quizCollection = _unitOfWork.GetCollection<Quiz>();
@@ -25,7 +25,7 @@ namespace Pubquiz.Logic.Tools
             var gameCollection = _unitOfWork.GetCollection<Game>();
             var quizItemCollection = _unitOfWork.GetCollection<QuizItem>();
             var users = SeedUsers.GetUsers();
-            var quizFactory = new PeCePubquiz2019();
+            var quizFactory = new PeCePubquiz2019(mediaBaseUrl);
             var quiz = quizFactory.GetQuiz();
             var quizItems = quizFactory.QuizItems;
             var game = SeedGame.GetGame(users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), quiz);

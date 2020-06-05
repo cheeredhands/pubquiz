@@ -89,7 +89,7 @@ namespace Pubquiz.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
 
-            SeedStuff(app);
+            SeedStuff(app, env);
         }
 
         private void AddDefaultWebApiStuff(IServiceCollection services)
@@ -256,7 +256,7 @@ namespace Pubquiz.WebApi
             });
         }
 
-        private void SeedStuff(IApplicationBuilder app)
+        private void SeedStuff(IApplicationBuilder app, IWebHostEnvironment env)
         {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
             var mongoDbIsEmpty = _configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
@@ -267,7 +267,15 @@ namespace Pubquiz.WebApi
                 //var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
                 var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
                 var seeder = new TestSeeder(unitOfWork, loggerFactory);
-                seeder.SeedSeedSet();
+                if (env.IsDevelopment())
+                {
+                    seeder.SeedSeedSet("https://localhost:5001");    
+                }
+                else
+                {
+                    seeder.SeedSeedSet("https://decemberist.nl");
+                }
+                
             }
         }
     }

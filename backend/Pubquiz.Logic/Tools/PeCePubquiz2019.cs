@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence.Extensions;
 
@@ -9,17 +10,18 @@ namespace Pubquiz.Logic.Tools
     {
         public List<QuizItem> QuizItems { get; set; }
 
-        public PeCePubquiz2019()
+        public PeCePubquiz2019(string mediaBaseUrl)
         {
             QuizItems = new List<QuizItem>
             {
-                GetIntroItem(),
+                GetIntroItem(mediaBaseUrl),
                 GetS1Q1(),
                 GetS1Q2(),
                 GetS1Q3(),
+                GetS1Q4(mediaBaseUrl),
                 GetS2Q1(),
-                GetS2Q2(), 
-                GetS2Q3()
+                GetS2Q2(),
+                GetS2Q3(mediaBaseUrl)
             };
         }
 
@@ -42,7 +44,8 @@ namespace Pubquiz.Logic.Tools
                 {
                     new QuizItemRef(QuizItems[1]),
                     new QuizItemRef(QuizItems[2]),
-                    new QuizItemRef(QuizItems[3])
+                    new QuizItemRef(QuizItems[3]),
+                    new QuizItemRef(QuizItems[4])
                 }
             };
 
@@ -52,9 +55,9 @@ namespace Pubquiz.Logic.Tools
                 Title = "Vanalles 2",
                 QuizItemRefs = new List<QuizItemRef>
                 {
-                    new QuizItemRef(QuizItems[4]),
                     new QuizItemRef(QuizItems[5]),
-                    new QuizItemRef(QuizItems[6])
+                    new QuizItemRef(QuizItems[6]),
+                    new QuizItemRef(QuizItems[7])
                 }
             };
 
@@ -70,7 +73,7 @@ namespace Pubquiz.Logic.Tools
             return quiz;
         }
 
-        private static QuizItem GetIntroItem()
+        private static QuizItem GetIntroItem(string baseUrl)
         {
             var introItem = new QuizItem
             {
@@ -78,7 +81,9 @@ namespace Pubquiz.Logic.Tools
                 Body =
                     "Gebruik van apparatuur met een<br>scherm is (uiteraard) niet toegestaan.<br>Over de uitslag kan worden gecorrespondeerd,<br>nmaar de quizmaster heeft altijd gelijk.",
                 Title = "Huisregels",
-                QuizItemType = QuizItemType.Information
+                QuizItemType = QuizItemType.Information,
+                MediaObjects = new List<MediaObject>
+                    {new MediaObject($"{baseUrl}/mediaobjects/welcome.jpg", MediaType.Image) {Title = "Welcome image"}}
             };
 
             return introItem;
@@ -90,7 +95,7 @@ namespace Pubquiz.Logic.Tools
             {
                 Id = Guid.NewGuid().ToShortGuidString(),
                 Body = "Wat bereken je met een integraalberekening?",
-                Title = "Vanalles 1 - 1",
+                Title = "Vanalles 1 - vraag 1",
                 MaxScore = 1,
                 QuizItemType = QuizItemType.ShortAnswer
             };
@@ -113,7 +118,7 @@ namespace Pubquiz.Logic.Tools
                 Id = Guid.NewGuid().ToShortGuidString(),
                 Body =
                     "Bij Cito gebruiken we VPN-software genaamd Pulse Secure om thuis te werken. Waar staat VPN voor?",
-                Title = "Vanalles 1 - 2",
+                Title = "Vanalles 1 - vraag 2",
                 MaxScore = 1,
                 QuizItemType = QuizItemType.ShortAnswer
             };
@@ -135,7 +140,7 @@ namespace Pubquiz.Logic.Tools
             {
                 Id = Guid.NewGuid().ToShortGuidString(),
                 Body = "(filmpje)",
-                Title = "Vanalles 1 - 3",
+                Title = "Vanalles 1 - vraag 3",
                 MaxScore = 2,
                 QuizItemType = QuizItemType.ShortAnswer
             };
@@ -156,6 +161,29 @@ namespace Pubquiz.Logic.Tools
             });
             return question;
         }
+        
+        private static QuizItem GetS1Q4(string baseUrl)
+        {
+            var question = new QuizItem
+            {
+                Id = Guid.NewGuid().ToShortGuidString(),
+                Body = "(filmpje)",
+                Title = "Vanalles 1 - vraag 4",
+                MaxScore = 2,
+                QuizItemType = QuizItemType.ShortAnswer,
+                MediaObjects = new List<MediaObject>{new MediaObject($"{baseUrl}/mediaobjects/s1q4.mp4", MediaType.Video)}
+            };
+
+            question.Interactions.Add(new Interaction(0)
+            {
+                Text = "Hoe heet de componist?",
+                Solution = new Solution(new[] {"Brahms", "Johannes Brahms"}),
+                InteractionType = InteractionType.ShortAnswer,
+                MaxScore = 1
+            });
+          
+            return question;
+        }
 
         private static QuizItem GetS2Q1()
         {
@@ -163,7 +191,7 @@ namespace Pubquiz.Logic.Tools
             {
                 Id = Guid.NewGuid().ToShortGuidString(),
                 Body = "Wat is de naam van de droogste champagnesoort?",
-                Title = "Vanalles 2 - 1",
+                Title = "Vanalles 2 - vraag 1",
                 MaxScore = 1,
                 QuizItemType = QuizItemType.MultipleChoice
             };
@@ -191,7 +219,7 @@ namespace Pubquiz.Logic.Tools
             {
                 Id = Guid.NewGuid().ToShortGuidString(),
                 Body = "Hoe heet de schrijver van ‘The Hitchhiker's Guide to the Galaxy’?",
-                Title = "Vanalles 2 - 2",
+                Title = "Vanalles 2  vraag 2",
                 MaxScore = 1,
                 QuizItemType = QuizItemType.ShortAnswer
             };
@@ -207,15 +235,16 @@ namespace Pubquiz.Logic.Tools
             return question;
         }
 
-        private static QuizItem GetS2Q3()
+        private static QuizItem GetS2Q3(string baseUrl)
         {
             var question = new QuizItem
             {
                 Id = Guid.NewGuid().ToShortGuidString(),
                 Body = "(audiofragment)",
-                Title = "Vanalles 2 - 3",
+                Title = "Vanalles 2 - vraag 3",
                 MaxScore = 3,
-                QuizItemType = QuizItemType.ShortAnswer
+                QuizItemType = QuizItemType.ShortAnswer,
+                MediaObjects = new List<MediaObject> {new MediaObject($"{baseUrl}/mediaobjects/s2q3.mp3", MediaType.Audio)}
             };
 
             question.Interactions.Add(new Interaction(0)
