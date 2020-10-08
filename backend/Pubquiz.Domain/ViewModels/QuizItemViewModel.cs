@@ -11,7 +11,7 @@ namespace Pubquiz.Domain.ViewModels
         public string Id { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
-        public List<MediaObject> Media { get; set; }
+        public List<MediaObject> MediaObjects { get; set; }
 
         public QuizItemType QuizItemType { get; set; }
         public int MaxScore { get; set; }
@@ -26,9 +26,10 @@ namespace Pubquiz.Domain.ViewModels
             Id = quizItem.Id;
             Title = quizItem.Title;
             Body = quizItem.Body;
-            Media = quizItem.MediaObjects;
+            MediaObjects = quizItem.MediaObjects;
             QuizItemType = quizItem.QuizItemType;
             MaxScore = quizItem.MaxScore;
+            
             if (answer != null)
             {
                 Interactions = quizItem.Interactions

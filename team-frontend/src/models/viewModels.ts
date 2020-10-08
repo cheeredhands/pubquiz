@@ -1,4 +1,4 @@
-import { QuizItemType, Team, Game, QuizItem, InteractionType, ChoiceOption } from './models';
+import { QuizItemType, Team, Game, QuizItem, InteractionType, ChoiceOption, MediaObject } from './models';
 
 export interface TeamViewModel {
     /** The team Id */
@@ -33,6 +33,7 @@ export interface QuizItemViewModel {
     quizItemType: QuizItemType;
     maxScore: number;
     interactions: InteractionViewModel[];
+    mediaObjects: MediaObject[];
 }
 
 export interface InteractionViewModel {
