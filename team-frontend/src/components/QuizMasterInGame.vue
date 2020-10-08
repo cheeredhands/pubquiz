@@ -5,17 +5,24 @@
       <b-nav-item>
         <b-button
           @click="toggleGame"
-          :variant="game.state===runningState ? 'secondary' : 'success' "
+          :variant="game.state === runningState ? 'secondary' : 'success'"
         >
-          <font-awesome-icon :icon="game.state===runningState ? 'pause' : 'play'" />
-          {{ game.state===runningState ? $t('PAUSE_GAME') : $t('RESUME_GAME') }}
-        </b-button>&nbsp;
+          <font-awesome-icon
+            :icon="game.state === runningState ? 'pause' : 'play'"
+          />
+          {{
+            game.state === runningState ? $t("PAUSE_GAME") : $t("RESUME_GAME")
+          }} </b-button
+        >&nbsp;
         <b-button @click="finishGame" variant="danger">
           <font-awesome-icon icon="power-off" />
-          {{ $t('FINISH_GAME') }}
+          {{ $t("FINISH_GAME") }}
         </b-button>
       </b-nav-item>
-      <template v-slot:centercontent>{{game.title}} (Quiz: '{{game.quizTitle}}' {{ $t(game.state) }})</template>
+      <template v-slot:centercontent
+        >{{ game.title }} (Quiz: '{{ game.quizTitle }}'
+        {{ $t(game.state) }})</template
+      >
       <template v-slot:rightcontent>
         <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
       </template>
@@ -32,14 +39,22 @@
         </div>
 
         <div class="ranking">
-          <ul class="list-unstyled" v-for="team in qmTeamsSorted" :key="team.id">
+          <ul
+            class="list-unstyled"
+            v-for="team in qmTeamsSorted"
+            :key="team.id"
+          >
             <b-media tag="li">
               <template v-slot:aside>
-                <h1 :title="$t('TOTAL_NUMBER_OF_POINTS')">{{team.totalScore}}</h1>
+                <h1 :title="$t('TOTAL_NUMBER_OF_POINTS')">
+                  {{ team.totalScore }}
+                </h1>
                 <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
               </template>
-              <h5 class="mt-0 mb-1">{{team.name}}</h5>
-              <p class="mb-0">TODO: score in this quiz section, trend (going up or sinking).</p>
+              <h5 class="mt-0 mb-1">{{ team.name }}</h5>
+              <p class="mb-0">
+                TODO: score in this quiz section, trend (going up or sinking).
+              </p>
             </b-media>
           </ul>
         </div>
@@ -129,7 +144,7 @@ export default class QuizMasterInGame extends mixins(
         }
         this.$_gameService_setGameState(
           this.userId,
-          this.game.gameId,
+          this.game.id,
           GameState.Finished
         );
       });
