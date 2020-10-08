@@ -2,7 +2,7 @@
 <template>
   <div id="app">
     <nav-bar-part>
-      <template v-slot:centercontent>{{game.title}} ({{ $t(game.state) }})</template>
+      <template v-slot:centercontent>{{game.quizTitle}} ({{ $t(game.state) }})</template>
       <template v-slot:rightcontent>
         <b-nav-item to="/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
       </template>
