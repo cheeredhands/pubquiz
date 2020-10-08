@@ -69,7 +69,7 @@
   "QuestionNotInCurrentQuizSection": "Onbekende vraag voor huidige quiz sectie.",
   "Ok": "Ok",
   "InvalidInteractionId": "Ongeldige interactie id.",
-  "InvalidGameStateTransition": "Ongeldige transitie van spel status.",
+  "InvalidGameStateTransition": "Ongeldige transitie van spelstatus.",
   "InvalidGameId": "Ongeldig game id.",
   "InvalidUserNameOrPassword": "Ongeldige gebruikersnaam of wachtwoord.",
   "InvalidUserId": "Ongeldige gebruikersnaam",
