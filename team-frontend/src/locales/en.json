@@ -34,7 +34,7 @@
   "KICKED_OUT": "You've been kicked out by the quizmaster. Click OK to go to the registration page.",
   "KICK_OUT": "Kick this team out of the game!",
   "REMOVED": "Removed",
-  "ERROR_MESSAGE_TITLE": "Oopsie",
+  "ERROR_MESSAGE_TITLE": "Error",
   "PASSWORD": "Password",
   "PASSWORD_LENGTH": "A password consists of at least 2 characters.",
   "LOGIN": "Log in",
