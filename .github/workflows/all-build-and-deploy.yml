@@ -40,9 +40,9 @@ jobs:
     - name: npm install
       working-directory: team-frontend
       run: npm install
-    - name: npm run build-prod
+    - name: npm run build
       working-directory: team-frontend
-      run: npm run build-prod
+      run: npm run build
     - name: npm run test
       working-directory: team-frontend
       run: npm run test --if-present
