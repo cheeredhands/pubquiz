@@ -30,28 +30,29 @@ import Component, { mixins } from 'vue-class-component';
 import AccountServiceMixin from '../../services/account-service-mixin';
 // import { ResultCode } from '../../models/ResultCode';
 import { ApiResponse } from '../../models/apiResponses';
+import { Team, User } from '../../models/models';
 
 @Component
 export default class NavBarPart extends mixins(AccountServiceMixin) {
   public name = 'NavBarPart';
 
-  get isLoggedIn() {
+  get isLoggedIn(): boolean {
     return this.$store.state.isLoggedIn || false;
   }
 
-  get team() {
-    return this.$store.state.team || '';
+  get team(): Team {
+    return this.$store.getters.team || {};
   }
 
-  get user() {
-    return this.$store.state.user || '';
+  get user(): User {
+    return this.$store.getters.user || {};
   }
 
-  get userName() {
+  get userName(): string {
     return this.team.name || this.user.userName;
   }
 
-  public logOut() {
+  public logOut(): void {
     this.$_accountService_logOutCurrentUser().then(
       (response: AxiosResponse<ApiResponse>) => {
         if (response.data.code === 'LoggedOut') {

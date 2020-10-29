@@ -48,26 +48,22 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Game, Interaction, InteractionType, QuizItem, InteractionResponse } from '../../models/models';
+import { Game, Interaction, InteractionType, QuizItem, InteractionResponse, Team } from '../../models/models';
 
 @Component
 export default class QmTeamFeedPart extends Vue {
   public name = 'QmTeamFeedPart';
 
-  // public game = this.$store.getters.game as Game;
-  // public qmTeams = this.$store.state.qmTeams;
-  // public created() {}
-
-  get game() {
-    return this.$store.getters.game as Game;
+  get game(): Game {
+    return (this.$store.getters.game || {}) as Game;
   }
 
-  get quizItem() {
+  get quizItem(): QuizItem {
     return this.$store.getters.quizItem as QuizItem;
   }
 
-  get qmTeams() {
-    return this.$store.getters.qmTeams;
+  get qmTeams(): Team[] {
+    return (this.$store.getters.qmTeams || []) as Team[];
   }
 
   public getInteraction(interactionId: number): Interaction {

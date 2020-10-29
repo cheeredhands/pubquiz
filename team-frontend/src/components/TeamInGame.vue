@@ -34,7 +34,7 @@
 import Component, { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
 import store from '../store';
-import { GameState } from '../models/models';
+import { Game, GameState } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import TeamQuestionPart from './team-gameparts/TeamQuestionPart.vue';
@@ -65,24 +65,24 @@ export default class TeamInGame extends mixins(
   public name = 'TeamInGame';
   public runningState = GameState.Running;
 
-  public created() {
+  public created(): void {
     this.$_gameService_getTeamInGame();
   }
 
-  get game() {
-    return this.$store.getters.game;
+  get game(): Game {
+    return (this.$store.getters.game || {}) as Game;
   }
 
-  get gameState() {
+  get gameState(): GameState {
     return this.game.state;
   }
 
-  get isPaused() {
+  get isPaused(): boolean {
     return this.gameState === GameState.Paused;
   }
 
   @Watch('gameState')
-  public OnGameStateChanged(value: GameState) {
+  public OnGameStateChanged(value: GameState): void {
     if (value === GameState.Finished) {
       // todo route to end
     }

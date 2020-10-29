@@ -68,7 +68,7 @@
 import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
-import { InteractionType, MediaType } from '../../models/models';
+import { Game, InteractionType, MediaType, QuizItem } from '../../models/models';
 
 @Component
 export default class QmQuestionPart extends mixins(
@@ -83,17 +83,16 @@ export default class QmQuestionPart extends mixins(
   public imageType: MediaType = MediaType.Image;
   public videoType: MediaType = MediaType.Video;
   public audioType: MediaType = MediaType.Audio;
-  // public created() {}
 
-  get game() {
-    return this.$store.getters.game;
+  get game(): Game {
+    return (this.$store.getters.game || {}) as Game;
   }
 
-  get quizItem() {
+  get quizItem(): QuizItem {
     return this.$store.getters.quizItem;
   }
 
-  public navigateItem(offset: number) {
+  public navigateItem(offset: number): void {
     this.$_gameService_navigateItem(this.game.id, offset);
   }
 }

@@ -69,7 +69,7 @@
 import Component, { mixins } from 'vue-class-component';
 import { Route } from 'vue-router';
 import store from '../store';
-import { GameState, Team } from '../models/models';
+import { Game, GameState, Team } from '../models/models';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import QmQuestionPart from './qm-gameparts/QmQuestionPart.vue';
@@ -99,28 +99,28 @@ export default class QuizMasterInGame extends mixins(
 ) {
   public name = 'QuizMasterInGame';
   public runningState = GameState.Running;
-  public async created() {
+  public async created(): Promise<void> {
     await this.$_gameService_getQmInGame();
     document.title = 'In Game - ' + this.game.title;
   }
 
-  get game() {
-    return this.$store.getters.game;
+  get game(): Game {
+    return (this.$store.getters.game || {}) as Game;
   }
 
-  get qmTeams() {
-    return this.$store.getters.qmTeams;
+  get qmTeams(): Team[] {
+    return (this.$store.getters.qmTeams || []) as Team[];
   }
 
-  get qmTeamsSorted() {
+  get qmTeamsSorted(): Team[] {
     return this.$store.getters.qmTeams.sort((a: Team, b: Team) => b.totalScore - a.totalScore);
   }
 
-  get userId() {
+  get userId(): string {
     return this.$store.getters.userId;
   }
 
-  public toggleGame() {
+  public toggleGame(): void {
     this.$_gameService_setGameState(
       this.userId,
       this.game.id,
@@ -130,7 +130,7 @@ export default class QuizMasterInGame extends mixins(
     );
   }
 
-  public finishGame() {
+  public finishGame(): void {
     this.$bvModal
       .msgBoxConfirm(this.$t('CONFIRM_END_GAME').toString(), {
         title: this.$t('PLEASE_CONFIRM').toString(),

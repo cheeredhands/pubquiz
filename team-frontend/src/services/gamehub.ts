@@ -3,7 +3,7 @@ import store from '../store/index';
 
 export default {
   closing: false,
-  async close() {
+  async close():Promise<void> {
     const connection = store.state.signalrconnection;
     if (connection !== undefined) {
       this.closing = true;
@@ -12,7 +12,7 @@ export default {
       });
     }
   },
-  init() {
+  init():Promise<void> {
     const connection = new SignalR.HubConnectionBuilder()
       .withUrl(process.env.VUE_APP_BACKEND_URI + 'gamehub', { accessTokenFactory: () => localStorage.getItem('token') || '' })
       .configureLogging(SignalR.LogLevel.Information)
@@ -27,7 +27,7 @@ export default {
         console.log(err);
         setTimeout(() => start(), 5000);
       }
-    };
+    }
 
     connection.onclose(async() => {
       if (!this.closing) {

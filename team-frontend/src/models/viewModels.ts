@@ -20,9 +20,15 @@ export interface TeamLobbyViewModel {
     otherTeamsInGame: TeamViewModel[];
 }
 
-export interface TeamInGameViewModel {
-    game: Game;
-    quizItemViewModel: QuizItemViewModel;
+export interface InteractionViewModel {
+    id: string;
+    text: string;
+    interactionType: InteractionType;
+    choiceOptions: ChoiceOption[];
+    maxScore: number;
+    response: string;
+    chosenOptions: number[];
+    chosenOption: number;
 }
 
 export interface QuizItemViewModel {
@@ -36,15 +42,9 @@ export interface QuizItemViewModel {
     mediaObjects: MediaObject[];
 }
 
-export interface InteractionViewModel {
-    id: string;
-    text: string;
-    interactionType: InteractionType;
-    choiceOptions: ChoiceOption[];
-    maxScore: number;
-    response: string;
-    chosenOptions: number[];
-    chosenOption: number;
+export interface TeamInGameViewModel {
+    game: Game;
+    quizItemViewModel: QuizItemViewModel;
 }
 
 export interface QmLobbyViewModel {

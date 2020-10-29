@@ -109,15 +109,15 @@ export default class TeamQuestionPart extends mixins(
   GameServiceMixin,
   HelperMixin
 ) {
-  get game() {
-    return this.$store.getters.game as Game;
+  get game(): Game {
+    return (this.$store.state.game || {}) as Game;
   }
 
-  get currentQuizItemId() {
+  get currentQuizItemId(): string {
     return this.$store.getters.currentQuizItemId as string;
   }
 
-  get quizItem() {
+  get quizItem(): QuizItemViewModel {
     return this.$store.getters.quizItemViewModel as QuizItemViewModel;
   }
 
@@ -159,11 +159,11 @@ export default class TeamQuestionPart extends mixins(
     );
   }, this.$store.getters.debounceMs);
 
-  public navigateItem(offset: number) {
+  public navigateItem(offset: number): void {
     this.$_gameService_navigateItem(this.game.id, offset);
   }
 
-  @Watch('currentQuizItemId') public OnCurrentItemChanged(value: string) {
+  @Watch('currentQuizItemId') public OnCurrentItemChanged(value: string): void {
     this.$_gameService_getQuizItemViewModel(this.game.id, value);
   }
 }

@@ -77,7 +77,7 @@ export default class QuizMasterLogin extends mixins(
 
   // public created() {  }
 
-  public login(evt: Event) {
+  public login(evt: Event): void {
     if (!this.$quizrhelpers.formIsValid(evt)) {
       return;
     }

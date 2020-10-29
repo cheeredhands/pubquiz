@@ -88,7 +88,7 @@ export default class RegisterTeam extends mixins(
   public teamName = '';
   public code = '';
 
-  public register(evt: Event) {
+  public register(evt: Event): void {
     if (!this.$quizrhelpers.formIsValid(evt)) {
       return;
     }

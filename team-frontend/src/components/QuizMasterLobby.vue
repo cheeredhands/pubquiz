@@ -78,13 +78,13 @@ export default class QuizMasterLobby extends mixins(
   public runningState = GameState.Running;
   public pausedState = GameState.Paused;
 
-  public created() {
+  public created(): void {
     this.$_gameService_getQmLobby().then(() => {
       document.title = 'Lobby - ' + this.game.title;
     });
   }
 
-  public startGame() {
+  public startGame(): void {
     if (this.game.state === GameState.Open) {
       this.$_gameService_setGameState(
         this.userId,
@@ -102,7 +102,7 @@ export default class QuizMasterLobby extends mixins(
     }
   }
 
-  public kickTeam(teamId: string, name: string) {
+  public kickTeam(teamId: string, name: string): void {
     this.$_accountService_deleteTeam(teamId)
       .then(() => {
         this.$bvToast.toast(this.$t('TEAM_KICKED_OUT', { name }).toString(), {
@@ -115,27 +115,27 @@ export default class QuizMasterLobby extends mixins(
       });
   }
 
-  public messageTeam() {
+  public messageTeam(): void {
     this.$bvToast.toast('todo: send message to team', {
       title: 'todo',
       variant: 'warning'
     });
   }
 
-  get teams() {
-    return (this.$store.state.qmTeams || []) as Team[];
+  get teams(): Team[] {
+    return (this.$store.getters.qmTeams || []) as Team[];
   }
 
-  get game() {
-    return (this.$store.state.game || {}) as Game;
+  get game(): Game {
+    return (this.$store.getters.game || {}) as Game;
   }
 
-  get userName() {
+  get userName(): string {
     return this.$store.state.user.userName || '';
   }
 
-  get userId() {
-    return this.$store.state.userId || '';
+  get userId(): string {
+    return this.$store.getters.userId || '';
   }
 }
 </script>

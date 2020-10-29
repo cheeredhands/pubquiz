@@ -18,7 +18,7 @@ import { WhoAmIResponse } from './models/apiResponses';
 export default class App extends mixins(AccountServiceMixin, HelperMixin) {
   public name = 'App';
 
-  public mounted() {
+  public mounted(): void {
     this.$_accountService_getWhoAmI()
       .then((response: AxiosResponse<WhoAmIResponse>) => {
         if (response.data.code === 'LoggedOut') {

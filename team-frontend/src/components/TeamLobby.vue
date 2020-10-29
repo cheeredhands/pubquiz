@@ -111,35 +111,35 @@ export default class TeamLobby extends mixins(
     return this.$store.state.isLoggedIn || false;
   }
 
-  get recoveryCode() {
+  get recoveryCode(): string {
     return this.$store.getters.recoveryCode || '';
   }
 
-  get game() {
+  get game(): Game {
     return (this.$store.state.game || {}) as Game;
   }
 
-  get gameState() {
+  get gameState(): GameState {
     return this.game.state;
   }
 
-  get teamName() {
+  get teamName(): string {
     return this.$store.getters.teamName;
   }
 
-  get memberNames() {
+  get memberNames(): string {
     return this.$store.getters.memberNames;
   }
 
-  get teams() {
+  get teams(): TeamViewModel[] {
     return (this.$store.state.teams || []) as TeamViewModel[];
   }
 
-  public created() {
+  public created(): void {
     this.$_gameService_getTeamLobby();
   }
 
-  public saveMembers() {
+  public saveMembers(): void {
     this.$axios
       .post('api/account/changeteammembers', {
         teamMembers: this.newMemberNames
@@ -154,7 +154,7 @@ export default class TeamLobby extends mixins(
       });
   }
 
-  public applyTeamNameChange() {
+  public applyTeamNameChange(): void {
     this.$axios
       .post('/api/account/changeteamname', {
         teamId: this.teamId,
@@ -172,7 +172,7 @@ export default class TeamLobby extends mixins(
   }
 
   @Watch('gameState')
-  public OnGameStateChanged(value: GameState) {
+  public OnGameStateChanged(value: GameState): void {
     if (value === GameState.Running) {
       this.$router.replace({ name: 'TeamInGame' });
     }
@@ -181,7 +181,7 @@ export default class TeamLobby extends mixins(
   @Watch('isLoggedIn') public OnLoggedInChanged(
     value: boolean,
     oldValue: boolean
-  ) {
+  ): void {
     if (oldValue && !value) {
       this.$bvModal
         .msgBoxOk(this.$t('KICKED_OUT').toString(), {

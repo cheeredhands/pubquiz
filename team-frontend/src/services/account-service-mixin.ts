@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { AxiosResponse } from 'axios';
 import Component from 'vue-class-component';
 import { WhoAmIResponse, ApiResponse, RegisterForGameResponse, LoginResponse } from '../models/apiResponses';
-/* eslint @typescript-eslint/camelcase: "off" */
+/* eslint camelcase: "off" */
 @Component
 export default class AccountServiceMixin extends Vue {
   public $_accountService_getWhoAmI(): Promise<AxiosResponse<WhoAmIResponse>> {
