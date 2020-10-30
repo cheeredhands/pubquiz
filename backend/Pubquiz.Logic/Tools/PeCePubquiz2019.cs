@@ -148,7 +148,7 @@ namespace Pubquiz.Logic.Tools
             question.Interactions.Add(new Interaction(0)
             {
                 Text = "Hoeveel hazen had Eliud Kipchoge bij zich tijdens zijn recordpoging?",
-                Solution = new Solution(new[] {"7", "zeven"}),
+                Solution = new Solution(new[] {"7", "zeven"}, levenshteinTolerance:0),
                 InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
