@@ -98,6 +98,10 @@ const storeOpts: StoreOptions<RootState> = {
       if (teamInStore !== undefined) {
         state.teams = state.teams.filter(t => t.id !== teamId);
       }
+      const qmTeamInStore = state.qmTeams.find(i => i.id === teamId);
+      if (qmTeamInStore !== undefined) {
+        state.qmTeams = state.qmTeams.filter(t => t.id !== teamId);
+      }
     },
     setTeamLoggedOut(state, teamId: string) {
       const teamInStore = state.teams.find(i => i.id === teamId);

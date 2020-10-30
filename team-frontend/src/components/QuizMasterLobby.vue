@@ -105,7 +105,7 @@ export default class QuizMasterLobby extends mixins(
   public kickTeam(teamId: string, name: string): void {
     this.$_accountService_deleteTeam(teamId)
       .then(() => {
-        this.$bvToast.toast(this.$t('TEAM_KICKED_OUT', { name }).toString(), {
+        this.$bvToast.toast(this.$t('TEAM_KICKED_OUT', { teamName: name }).toString(), {
           title: this.$t('REMOVED').toString(),
           variant: 'warning'
         });
