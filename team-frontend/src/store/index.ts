@@ -7,8 +7,7 @@ import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, Team
 import { QuizItemViewModel, TeamViewModel } from '../models/viewModels';
 
 Vue.use(Vuex);
-
-interface RootState {
+export interface RootState {
   isLoggedIn: boolean;
   team?: Team;
   teams: TeamViewModel[];
@@ -47,6 +46,7 @@ const storeOpts: StoreOptions<RootState> = {
   getters: {
     game: state => state.game || {},
     userId: state => state.user?.userId || '',
+    userName: state => state.user?.userName || '',
     quizItem: state => state.quizItem || {},
     quizItemViewModel: state => state.quizItemViewModel || {},
     teamId: state => state.team?.id || '',

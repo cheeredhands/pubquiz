@@ -105,15 +105,15 @@ export default class QuizMasterInGame extends mixins(
   }
 
   get game(): Game {
-    return (this.$store.getters.game || {}) as Game;
+    return this.$store.getters.game as Game;
   }
 
   get qmTeams(): Team[] {
-    return (this.$store.getters.qmTeams || []) as Team[];
+    return this.$store.state.qmTeams;
   }
 
   get qmTeamsSorted(): Team[] {
-    return this.$store.getters.qmTeams.sort((a: Team, b: Team) => b.totalScore - a.totalScore);
+    return this.$store.state.qmTeams.sort((a: Team, b: Team) => b.totalScore - a.totalScore);
   }
 
   get userId(): string {

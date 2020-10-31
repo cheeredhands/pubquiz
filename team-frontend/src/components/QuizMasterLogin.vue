@@ -68,14 +68,11 @@ import HelperMixin from '../services/helper-mixin';
   components: { NavBarPart, FooterPart }
 })
 export default class QuizMasterLogin extends mixins(
-  AccountServiceMixin,
-  HelperMixin
+  AccountServiceMixin, HelperMixin
 ) {
   public name = 'QuizMasterLogin';
   public userName = '';
   public password = '';
-
-  // public created() {  }
 
   public login(evt: Event): void {
     if (!this.$quizrhelpers.formIsValid(evt)) {

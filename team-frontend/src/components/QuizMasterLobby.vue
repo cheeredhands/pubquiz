@@ -123,19 +123,19 @@ export default class QuizMasterLobby extends mixins(
   }
 
   get teams(): Team[] {
-    return (this.$store.getters.qmTeams || []) as Team[];
+    return this.$store.state.qmTeams;
   }
 
   get game(): Game {
-    return (this.$store.getters.game || {}) as Game;
+    return this.$store.getters.game as Game;
   }
 
   get userName(): string {
-    return this.$store.state.user.userName || '';
+    return this.$store.getters.userName;
   }
 
   get userId(): string {
-    return this.$store.getters.userId || '';
+    return this.$store.getters.userId;
   }
 }
 </script>

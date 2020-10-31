@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import './plugins/quizr-helpers';
 import App from './App.vue';
-import router from './router/index';
-import store from './store/index';
+import router from './router';
+import store from './store';
 import BootstrapVue from 'bootstrap-vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSignOutAlt, faTrashAlt, faPlay, faPause, faStop, faPowerOff, faUser, faArrowLeft, faArrowRight, faPen, faCheck, faGlasses } from '@fortawesome/free-solid-svg-icons';
