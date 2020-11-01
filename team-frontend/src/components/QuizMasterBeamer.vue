@@ -74,7 +74,7 @@ import HelperMixin from '../services/helper-mixin';
 import { Game, InteractionType, MediaType, QuizItem } from '../models/models';
 
 @Component
-export default class QmQuestionPart extends mixins(
+export default class QuizMasterBeamer extends mixins(
   GameServiceMixin,
   HelperMixin
 ) {

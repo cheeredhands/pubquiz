@@ -25,6 +25,7 @@
       >
       <template v-slot:rightcontent>
         <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
+        <b-nav-item to="/qm/beamer" :title="$t('BEAMER_TITLE')" target="_blank">Beamer  <font-awesome-icon icon="external-link-square-alt" /></b-nav-item>
       </template>
     </nav-bar-part>
 
@@ -101,7 +102,7 @@ export default class QuizMasterInGame extends mixins(
   public runningState = GameState.Running;
   public async created(): Promise<void> {
     await this.$_gameService_getQmInGame();
-    document.title = 'In Game - ' + this.game.title;
+    document.title = 'In Game - ' + this.game.quizTitle;
   }
 
   get game(): Game {
