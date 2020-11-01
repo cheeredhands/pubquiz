@@ -37,7 +37,9 @@
               </div>
             </div>
           </b-col>
-          <b-col>
+          <b-col
+            v-if="quizItem.mediaObjects && quizItem.mediaObjects.length > 0"
+          >
             <div
               v-for="mediaObject in quizItem.mediaObjects"
               :key="mediaObject.id"
@@ -79,7 +81,6 @@ import { QuizItemViewModel } from '../models/viewModels';
 export default class Beamer extends mixins(GameServiceMixin) {
   public async created(): Promise<void> {
     await this.$_gameService_getTeamInGame();
-    document.title = 'Beamer - ' + this.quizItem.title;
   }
 
   get game(): Game {
@@ -103,8 +104,9 @@ export default class Beamer extends mixins(GameServiceMixin) {
   public videoType: MediaType = MediaType.Video;
   public audioType: MediaType = MediaType.Audio;
 
-  @Watch('currentQuizItemId') public OnCurrentItemChanged(value: string): void {
-    this.$_gameService_getQuizItemViewModel(this.game.id, value);
+  @Watch('currentQuizItemId') public async OnCurrentItemChanged(value: string): Promise<void> {
+    await this.$_gameService_getQuizItemViewModel(this.game.id, value);
+    document.title = 'Beamer - ' + this.quizItem.title;
   }
 }
 </script>
