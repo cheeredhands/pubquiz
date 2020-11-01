@@ -67,7 +67,7 @@ namespace Pubquiz.WebApi.Controllers
             var result = await query.Execute();
             return Ok(result);
         }
-
+        
         #endregion
 
         #region Admin and quiz master actions

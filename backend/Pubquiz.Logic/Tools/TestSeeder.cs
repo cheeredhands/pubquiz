@@ -32,6 +32,7 @@ namespace Pubquiz.Logic.Tools
             users.First(u => u.UserName == "Quiz master 1").GameIds.Add(game.Id);
             users.First(u => u.UserName == "Quiz master 1").CurrentGameId = game.Id;
             var teams = SeedTeams.GetTeams(teamCollection, game.Id);
+            var teamUsers = SeedTeams.GetUsersFromTeams(teams);
             foreach (var team in teams)
             {
                 _logger.LogInformation($"{team.Name}: {team.RecoveryCode}");
@@ -53,6 +54,11 @@ namespace Pubquiz.Logic.Tools
             foreach (var user in users)
             {
                 userCollection.AddAsync(user).Wait();
+            }
+
+            foreach (var teamUser in teamUsers)
+            {
+                userCollection.AddAsync(teamUser).Wait();
             }
 
             gameCollection.AddAsync(game).Wait();

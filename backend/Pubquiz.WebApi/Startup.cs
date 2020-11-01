@@ -147,7 +147,7 @@ namespace Pubquiz.WebApi
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(AuthPolicy.Team,
-                    policy => policy.RequireClaim(ClaimTypes.Role, "Team")
+                    policy => policy.RequireClaim(ClaimTypes.Role, "Team", "QuizMaster")
                         .RequireAuthenticatedUser());
                 options.AddPolicy(AuthPolicy.Admin,
                     policy => policy.RequireClaim(ClaimTypes.Role, "Admin")

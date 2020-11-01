@@ -21,7 +21,7 @@ namespace Pubquiz.Domain.ViewModels
         {
         }
 
-        public QuizItemViewModel(QuizItem quizItem, Answer answer)
+        public QuizItemViewModel(QuizItem quizItem, Answer answer = null)
         {
             Id = quizItem.Id;
             Title = quizItem.Title;

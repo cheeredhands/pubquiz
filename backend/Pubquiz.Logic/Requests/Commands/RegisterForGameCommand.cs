@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
@@ -26,7 +27,7 @@ namespace Pubquiz.Logic.Requests.Commands
         protected override async Task<Team> DoExecute()
         {
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var teamCollection = UnitOfWork.GetCollection<Team>();
+            
 
             // check validity of invite code, otherwise throw DomainException
             var game = gameCollection.AsQueryable().FirstOrDefault(g => g.InviteCode == Code);
@@ -36,6 +37,7 @@ namespace Pubquiz.Logic.Requests.Commands
                 throw new DomainException(ResultCode.InvalidCode, "Invalid or expired code.", true);
             }
 
+            var teamCollection = UnitOfWork.GetCollection<Team>();
             Team team = null;
             if (game == null)
             {
@@ -78,8 +80,20 @@ namespace Pubquiz.Logic.Requests.Commands
                     UserRole = UserRole.Team,
                     IsLoggedIn = true
                 };
+                var user = new User
+                {
+                    Id = team.Id,
+                    UserName = userName,
+                    CurrentGameId = game.Id,
+                    RecoveryCode = recoveryCode,
+                    UserRole = UserRole.Team,
+                    IsLoggedIn = true, 
+                };
+                
                 game.TeamIds.Add(team.Id);
                 await teamCollection.AddAsync(team);
+                var userCollection = UnitOfWork.GetCollection<User>();
+                await userCollection.AddAsync(user);
                 await gameCollection.UpdateAsync(game);
             }
             else

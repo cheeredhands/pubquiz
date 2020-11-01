@@ -50,12 +50,12 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
               userName: response.data.userName
             })
             .then(() => {
-              if (response.data.gameState === GameState.Open) {
-                this.$router.replace({ name: 'QuizMasterLobby' });
-              }
-              if (response.data.gameState === GameState.Running) {
-                this.$router.replace({ name: 'QuizMasterInGame' });
-              }
+              // if (response.data.gameState === GameState.Open) {
+              //   this.$router.replace({ name: 'QuizMasterLobby' });
+              // }
+              // if (response.data.gameState === GameState.Running) {
+              //   this.$router.replace({ name: 'QuizMasterInGame' });
+              // }
             });
         }
       })
@@ -74,7 +74,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
   overflow: hidden;
 } */
 
-#app {
+#main {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   /* font-size: 0.8rem; */
   -webkit-font-smoothing: antialiased;

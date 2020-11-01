@@ -29,7 +29,7 @@
       "type": "chrome",
       "request": "launch",
       "name": "vuejs: chromium",
-      "runtimeExecutable": "/usr/bin/chromium-browser",
+      "runtimeExecutable": "/usr/bin/chromium",
       "runtimeArgs": ["--remote-debugging-port=9222"],
       "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}",

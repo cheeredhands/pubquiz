@@ -1,6 +1,6 @@
 
 <template>
-  <div id="app">
+  <div id="main">
     <nav-bar-part>
       <template v-slot:centercontent>{{game.quizTitle}} ({{ $t(game.state) }})</template>
       <template v-slot:rightcontent>

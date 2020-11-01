@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="main">
     <nav-bar-part>{{ $t('QUIZMASTER_LOGIN') }}</nav-bar-part>
     <div class="main-container">
       <b-container>

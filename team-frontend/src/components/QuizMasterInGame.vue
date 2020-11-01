@@ -1,6 +1,6 @@
 
 <template>
-  <div id="app">
+  <div id="main">
     <nav-bar-part>
       <b-nav-item>
         <b-button
@@ -25,7 +25,7 @@
       >
       <template v-slot:rightcontent>
         <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
-        <b-nav-item to="/qm/beamer" :title="$t('BEAMER_TITLE')" target="_blank">Beamer  <font-awesome-icon icon="external-link-square-alt" /></b-nav-item>
+        <b-nav-item to="/beamer" :title="$t('BEAMER_TITLE')" target="_blank">Beamer  <font-awesome-icon icon="external-link-square-alt" /></b-nav-item>
       </template>
     </nav-bar-part>
 

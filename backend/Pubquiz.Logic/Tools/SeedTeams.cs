@@ -55,7 +55,9 @@ namespace Pubquiz.Logic.Tools
                 {
                     Id = team.Id,
                     UserName = team.UserName,
-                    RecoveryCode = team.RecoveryCode
+                    RecoveryCode = team.RecoveryCode,
+                    CurrentGameId = team.CurrentGameId,
+                    UserRole = UserRole.Team
                 };
             }
         }

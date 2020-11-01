@@ -8,7 +8,6 @@ using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Requests.Queries
 {
-    [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "ActorId")]
     [ValidateEntity(EntityType = typeof(QuizItem), IdPropertyName = "QuizItemId")]
     [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
     public class QuizItemViewModelQuery : Query<QuizItemViewModel>
@@ -29,8 +28,6 @@ namespace Pubquiz.Logic.Requests.Queries
 
             var game = await gameCollection.GetAsync(GameId);
 
-            var user = await UnitOfWork.GetCollection<User>().GetAsync(ActorId);
-
             if (game.CurrentQuizItemId != QuizItemId)
             {
                 throw new DomainException(ResultCode.TeamCantAccessQuizItemOtherThanTheCurrent,
@@ -40,8 +37,13 @@ namespace Pubquiz.Logic.Requests.Queries
             var quizItem = await quizItemCollection.GetAsync(QuizItemId);
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(ActorId);
-            team.Answers.TryGetValue(QuizItemId, out var answer);
-            return new QuizItemViewModel(quizItem, answer);
+            if (team != null)
+            {
+                team.Answers.TryGetValue(QuizItemId, out var answer);
+                return new QuizItemViewModel(quizItem, answer);
+            }
+
+            return new QuizItemViewModel(quizItem);
         }
     }
 }

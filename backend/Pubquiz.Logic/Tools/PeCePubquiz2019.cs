@@ -198,7 +198,7 @@ namespace Pubquiz.Logic.Tools
 
             question.Interactions.Add(new Interaction(0)
             {
-                Text = "Choose",
+                Text = "Kies een optie",
                 ChoiceOptions = new List<ChoiceOption>
                 {
                     new ChoiceOption(0, "Brut"),

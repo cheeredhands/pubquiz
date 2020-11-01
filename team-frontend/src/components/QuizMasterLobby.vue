@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="main">
     <nav-bar-part>
       <b-nav-item>
         <b-button

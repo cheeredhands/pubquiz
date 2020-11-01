@@ -8,7 +8,7 @@ import TeamLobby from '../components/TeamLobby.vue';
 import QuizMasterLogin from '../components/QuizMasterLogin.vue';
 import QuizMasterLobby from '../components/QuizMasterLobby.vue';
 import QuizMasterInGame from '../components/QuizMasterInGame.vue';
-import QuizMasterBeamer from '../components/QuizMasterBeamer.vue';
+import Beamer from '../components/Beamer.vue';
 import TeamInGame from '../components/TeamInGame.vue';
 
 Vue.use(Router);
@@ -55,9 +55,9 @@ export default new Router({
       component: QuizMasterInGame
     },
     {
-      path: '/qm/beamer',
-      name: 'QuizMasterBeamer',
-      component: QuizMasterBeamer
+      path: '/beamer',
+      name: 'Beamer',
+      component: Beamer
     },
     {
       path: '/game',

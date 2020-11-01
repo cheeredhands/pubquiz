@@ -7,7 +7,7 @@ using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Requests.Queries
 {
-    [ValidateEntity(EntityType = typeof(Team), IdPropertyName = "ActorId")]
+    //[ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
     public class TeamInGameViewModelQuery: Query<TeamInGameViewModel>
     {
         public string ActorId { get; set; }
@@ -18,13 +18,21 @@ namespace Pubquiz.Logic.Requests.Queries
 
         protected override async Task<TeamInGameViewModel> DoExecute()
         {
-            var teamCollection = UnitOfWork.GetCollection<Team>();
-            var team = await teamCollection.GetAsync(ActorId);
+            var userCollection = UnitOfWork.GetCollection<User>();
+            var user = await userCollection.GetAsync(ActorId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var game = await gameCollection.GetAsync(team.CurrentGameId);
+            var game = await gameCollection.GetAsync(user.CurrentGameId);
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
             var quizItem = await quizItemCollection.GetAsync(game.CurrentQuizItemId);
-            team.Answers.TryGetValue(quizItem.Id, out var answer);
+
+            Answer answer = null;
+            if (user.UserRole==UserRole.Team)
+            {
+                var teamCollection = UnitOfWork.GetCollection<Team>();
+                var team = await teamCollection.GetAsync(ActorId);
+                team.Answers.TryGetValue(quizItem.Id, out answer);
+            }
+            
             var model = new TeamInGameViewModel
             {
                 Game = game,
