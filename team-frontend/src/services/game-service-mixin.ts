@@ -117,4 +117,14 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
       }
     );
   }
+
+  public async $_gameService_correctInteraction(teamId: string, quizItemId: string, interactionId: string, correct: boolean): Promise<void> {
+    await this.$axios.post<ApiResponse>('api/game/correctinteraction', { teamId, quizItemId, interactionId, correct }).then(() => {
+      // nothing
+    }).catch(
+      (error: AxiosError<ApiResponse>) => {
+        this.$_helper_toastError(error);
+      }
+    );
+  }
 }

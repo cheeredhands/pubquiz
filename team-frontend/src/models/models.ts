@@ -94,7 +94,7 @@ export enum MediaType {
   Audio = 'Audio'
 }
 
-export interface Dimensions {
+export interface MediaDimensions {
   originalWidth: number;
   originalHeight: number;
   width: number;
@@ -106,7 +106,7 @@ export interface MediaObject {
   id: string;
   title: string;
   uri: string;
-  dimensions: Dimensions;
+  dimensions: MediaDimensions;
   mediaType: MediaType;
   mimeType: string;
 }

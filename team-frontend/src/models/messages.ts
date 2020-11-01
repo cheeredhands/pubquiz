@@ -80,6 +80,14 @@ export interface InteractionResponseAddedMessage {
       response: string;
   }
 
+export interface InteractionCorrectedMessage {
+     gameId: string;
+     teamId: string;
+     quizItemId: string;
+     interactionId: string;
+     outcome: boolean;
+}
+
 export interface AnswerScoredMessage {
       teamId: string;
       gameId: string;

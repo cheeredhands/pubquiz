@@ -27,6 +27,21 @@ namespace Pubquiz.Domain.Models
         {
         }
 
+        public void CorrectInteraction(int interactionId, bool correct)
+        {
+            var interactionResponse = InteractionResponses.FirstOrDefault(r => r.InteractionId == interactionId);
+            if (interactionResponse == null)
+            {
+                interactionResponse = new InteractionResponse(interactionId);
+                interactionResponse.Correct(correct);
+                InteractionResponses.Add(interactionResponse);
+            }
+            else
+            {
+                interactionResponse.Correct(correct);
+            }
+        }
+
         public void SetInteractionResponse(int interactionId, IEnumerable<int> choiceOptionIds, string response)
         {
             var interactionResponse = InteractionResponses.FirstOrDefault(r => r.InteractionId == interactionId);
@@ -68,7 +83,6 @@ namespace Pubquiz.Domain.Models
                             correctOptionIds.All(responseOptionIds.Contains))
                         {
                             interactionResponse.AwardedScore = interaction.MaxScore;
-                            //TotalScore += interaction.MaxScore;
                         }
 
                         break;
@@ -110,45 +124,6 @@ namespace Pubquiz.Domain.Models
 
             FlaggedForManualCorrection =
                 InteractionResponses.Any(i => i.FlaggedForManualCorrection && !i.ManuallyCorrected);
-        }
-    }
-
-    public class InteractionResponse
-    {
-        public int InteractionId { get; set; }
-        public List<int> ChoiceOptionIds { get; set; }
-        public string Response { get; set; }
-
-        public bool FlaggedForManualCorrection { get; set; }
-        public bool ManuallyCorrected { get; set; }
-        public bool ManualCorrectionOutcome { get; set; }
-        public int AwardedScore { get; set; }
-
-        public InteractionResponse()
-        {
-        }
-
-        public InteractionResponse(int interactionId)
-        {
-            InteractionId = interactionId;
-        }
-
-        public InteractionResponse(int interactionId, IEnumerable<int> choiceOptionIds, string response = "") : this(
-            interactionId)
-        {
-            ChoiceOptionIds = choiceOptionIds.ToList();
-            Response = response;
-        }
-
-        public InteractionResponse(int interactionId, string response) : this(interactionId)
-        {
-            Response = response;
-        }
-
-        public void Correct(bool outcome)
-        {
-            ManualCorrectionOutcome = outcome;
-            ManuallyCorrected = true;
         }
     }
 }

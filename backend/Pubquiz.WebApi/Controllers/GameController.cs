@@ -39,11 +39,12 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("submitresponse")]
         [Authorize(AuthPolicy.Team)]
-        public async Task<IActionResult> SubmitInteractionResponse(SubmitInteractionResponseNotification notification)
+        public async Task<IActionResult> querySubmitInteractionResponse(
+            SubmitInteractionResponseNotification notification)
         {
             notification.TeamId = User.GetId();
             await notification.Execute();
-            return Ok(new {Code = ResultCode.Ok, Message = "Response submitted ok."});
+            return Ok(new ApiResponse {Code = ResultCode.Ok, Message = "Response submitted ok."});
         }
 
         [HttpGet("teamingame")]
@@ -67,7 +68,7 @@ namespace Pubquiz.WebApi.Controllers
             var result = await query.Execute();
             return Ok(result);
         }
-        
+
         #endregion
 
         #region Admin and quiz master actions
@@ -112,7 +113,7 @@ namespace Pubquiz.WebApi.Controllers
             notification.ActorId = User.GetId();
             await notification.Execute();
 
-            return Ok(new
+            return Ok(new ApiResponse
             {
                 Code = ResultCode.Ok,
                 Message = $"Game state changed to {notification.NewGameState}."
@@ -146,6 +147,15 @@ namespace Pubquiz.WebApi.Controllers
             var result = await query.Execute();
 
             return Ok(result);
+        }
+
+        [HttpPost("correctinteraction")]
+        [Authorize(AuthPolicy.QuizMaster)]
+        public async Task<IActionResult> CorrectInteraction(CorrectInteractionNotification notification)
+        {
+            notification.ActorId = User.GetId();
+            await notification.Execute();
+            return Ok(new ApiResponse {Code = ResultCode.Ok, Message = "Interaction corrected."});
         }
 
         #endregion
