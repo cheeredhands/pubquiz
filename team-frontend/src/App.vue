@@ -36,11 +36,13 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
               gameId: response.data.currentGameId
             })
             .then(() => {
-              if (response.data.gameState === GameState.Open) {
-                this.$router.replace({ name: 'TeamLobby' });
-              }
-              if (response.data.gameState === GameState.Running) {
-                this.$router.replace({ name: 'TeamInGame' });
+              if (this.$router.currentRoute.name !== 'Beamer') {
+                if (response.data.gameState === GameState.Open) {
+                  this.$router.replace({ name: 'TeamLobby' });
+                }
+                if (response.data.gameState === GameState.Running) {
+                  this.$router.replace({ name: 'TeamInGame' });
+                }
               }
             });
         } else {
@@ -50,12 +52,14 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
               userName: response.data.userName
             })
             .then(() => {
-              // if (response.data.gameState === GameState.Open) {
-              //   this.$router.replace({ name: 'QuizMasterLobby' });
-              // }
-              // if (response.data.gameState === GameState.Running) {
-              //   this.$router.replace({ name: 'QuizMasterInGame' });
-              // }
+              if (this.$router.currentRoute.name !== 'Beamer') {
+                if (response.data.gameState === GameState.Open) {
+                  this.$router.replace({ name: 'QuizMasterLobby' });
+                }
+                if (response.data.gameState === GameState.Running) {
+                  this.$router.replace({ name: 'QuizMasterInGame' });
+                }
+              }
             });
         }
       })
