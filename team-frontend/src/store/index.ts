@@ -86,9 +86,9 @@ const storeOpts: StoreOptions<RootState> = {
       }
     },
     addQmTeam(state, team: Team) {
-      let teamInStore = state.qmTeams.find(i => i.id === team.id);
-      if (teamInStore !== undefined) {
-        teamInStore = team;
+      const teamInStoreIndex = state.qmTeams.findIndex(i => i.id === team.id);
+      if (teamInStoreIndex !== -1) {
+        Vue.set(state.qmTeams, teamInStoreIndex, team);
       } else {
         state.qmTeams.push(team);
       }
@@ -107,6 +107,10 @@ const storeOpts: StoreOptions<RootState> = {
       const teamInStore = state.teams.find(i => i.id === teamId);
       if (teamInStore !== undefined) {
         teamInStore.isLoggedIn = false;
+      }
+      const qmTeamInStore = state.qmTeams.find(i => i.id === teamId);
+      if (qmTeamInStore !== undefined) {
+        qmTeamInStore.isLoggedIn = false;
       }
     },
     setTeams(state, teams: TeamViewModel[]) {

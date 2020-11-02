@@ -104,7 +104,7 @@ export default class QmTeamFeedPart extends mixins(GameServiceMixin) {
   }
 
   get qmTeams(): Team[] {
-    return (this.$store.getters.qmTeams || []) as Team[];
+    return this.$store.getters.qmTeams as Team[];
   }
 
   public getInteraction(interactionId: number): Interaction {
