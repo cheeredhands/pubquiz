@@ -39,7 +39,7 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
   }
 
   public async $_gameService_getQmInGame(): Promise<void> {
-    this.$axios
+    return this.$axios
       .get('/api/game/quizmasteringame')
       .then((response: AxiosResponse<QmInGameViewModel>) => {
         this.$store.commit('setGame', response.data.game);
@@ -52,7 +52,7 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
   }
 
   public async $_gameService_getTeamInGame(): Promise<void> {
-    this.$axios
+    return this.$axios
       .get('/api/game/teamingame')
       .then((response: AxiosResponse<TeamInGameViewModel>) => {
         this.$store.commit('setGame', response.data.game);
