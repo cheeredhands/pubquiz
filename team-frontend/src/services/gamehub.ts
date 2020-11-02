@@ -12,7 +12,8 @@ export default {
       });
     }
   },
-  init():Promise<void> {
+  async init():Promise<void> {
+    await this.close();
     const connection = new SignalR.HubConnectionBuilder()
       .withUrl(process.env.VUE_APP_BACKEND_URI + 'gamehub', { accessTokenFactory: () => localStorage.getItem('token') || '' })
       .configureLogging(SignalR.LogLevel.Information)
@@ -37,10 +38,12 @@ export default {
 
     // define methods for each server-side call first before starting the hub.
     connection.on('TeamRegistered', data => {
+      console.log(data);
       store.dispatch('processTeamRegistered', data);
     });
 
     connection.on('QmTeamRegistered', data => {
+      console.log(data);
       store.dispatch('processQmTeamRegistered', data);
     });
 
