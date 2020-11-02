@@ -21,7 +21,7 @@
             This area shows the answers a team gives to the current question (as they are typing).
             The score and correctness of a team is shown. When automatic scoring is not possible, buttons are shown to mark the answer.
           </p>-->
-          <h5 class="mt-0 mb-1">
+          <h5 class="mt-0 mb-1" :title="team.recoveryCode" :class="{ 'text-muted': team.isLoggedIn === false }">
             {{ team.name }}
             <span v-if="team.memberNames !== undefined" class="smaller"
               >({{ team.memberNames }})</span
@@ -135,6 +135,7 @@ export default class QmTeamFeedPart extends mixins(GameServiceMixin) {
 span.smaller,
 p {
   font-size: small;
+  margin-bottom: 0;
 }
 
 .teamfeed-container {
