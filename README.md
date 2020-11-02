@@ -1,7 +1,8 @@
 # Pubquiz system [![volkswagen status](https://auchenberg.github.io/volkswagen/volkswargen_ci.svg?v=1)](https://github.com/auchenberg/volkswagen)
 
+![all - build, test and deploy](https://github.com/thtm88/pubquiz/workflows/all%20-%20build,%20test%20and%20deploy/badge.svg)
 
- - ![.NET Core](https://github.com/thtm88/pubquiz/workflows/.NET%20Core/badge.svg) backend - dotnet core WebAPI backend for the fantastic pubquiz app that doesn't exist yet. 
+ - backend - dotnet core WebAPI backend for the fantastic pubquiz app that doesn't exist yet. 
  - team-frontend - vue.js frontend for participating teams
 
 # Startup info:
