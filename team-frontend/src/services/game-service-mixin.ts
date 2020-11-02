@@ -66,8 +66,6 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
   public async $_gameService_navigateItem(gameId: string, offset: number): Promise<void> {
     await this.$axios.post<NavigateItemResponse>('api/game/navigate', {
       gameId, offset
-    }).then(async response => {
-      await this.$_gameService_getQuizItem(gameId, response.data.quizItemId);
     }).catch(
       (error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);

@@ -4,45 +4,69 @@
       <b-container fluid>
         <b-row>
           <b-col>
-            <h1 :title="`id: ${quizItem.id} type: ${quizItem.quizItemType}`">{{quizItem.title}}</h1>
+            <h1 :title="`id: ${quizItem.id} type: ${quizItem.quizItemType}`">
+              {{ quizItem.title }}
+            </h1>
           </b-col>
         </b-row>
         <b-row>
           <b-col>
             <p v-html="quizItem.body"></p>
-            <div v-for="interaction in quizItem.interactions" :key="interaction.id">
-              <p
-                class="mb-0"
-                :title="interaction.id"
-              >{{interaction.text}} ({{interaction.maxScore}} {{$t('POINTS')}})</p>
+            <div
+              v-for="interaction in quizItem.interactions"
+              :key="interaction.id"
+            >
+              <p class="mb-0" :title="interaction.id">
+                {{ interaction.text }} ({{ interaction.maxScore }}
+                {{ $t("POINTS") }})
+              </p>
               <div
-                v-if="interaction.interactionType===multipleChoice || interaction.interactionType===multipleResponse"
+                v-if="
+                  interaction.interactionType === multipleChoice ||
+                  interaction.interactionType === multipleResponse
+                "
               >
                 <ul>
                   <li
-                    :class="{correct: interaction.solution.choiceOptionIds.includes(choiceOption.id)}"
+                    :class="{
+                      correct: interaction.solution.choiceOptionIds.includes(
+                        choiceOption.id
+                      ),
+                    }"
                     v-for="choiceOption in interaction.choiceOptions"
                     :key="choiceOption.id"
-                  >{{choiceOption.text}}</li>
+                  >
+                    {{ choiceOption.text }}
+                  </li>
                 </ul>
               </div>
-              <div v-else-if="interaction.interactionType===shortAnswer">
-                <strong>{{interaction.solution.responses.join(', ')}}</strong>
+              <div v-else-if="interaction.interactionType === shortAnswer">
+                <strong>{{ interaction.solution.responses.join(", ") }}</strong>
               </div>
-              <div v-else-if="interaction.interactionType===extendedText">
-                <strong>{{interaction.solution.responses.join(', ')}}</strong>
+              <div v-else-if="interaction.interactionType === extendedText">
+                <strong>{{ interaction.solution.responses.join(", ") }}</strong>
               </div>
             </div>
           </b-col>
           <b-col>
-            <div v-for="mediaObject in quizItem.mediaObjects" :key="mediaObject.id">
-              <img v-if="mediaObject.mediaType===imageType" :src="mediaObject.uri" />
-              <audio controls v-if="mediaObject.mediaType===audioType" :src="mediaObject.uri"></audio>
+            <div
+              v-for="mediaObject in quizItem.mediaObjects"
+              :key="mediaObject.id"
+            >
+              <img
+                v-if="mediaObject.mediaType === imageType"
+                :src="mediaObject.uri"
+              />
+              <audio
+                controls
+                v-if="mediaObject.mediaType === audioType"
+                :src="mediaObject.uri"
+              ></audio>
               <video
                 width="320"
                 height="240"
                 controls
-                v-if="mediaObject.mediaType===videoType"
+                v-if="mediaObject.mediaType === videoType"
                 :src="mediaObject.uri"
               ></video>
             </div>
@@ -53,11 +77,13 @@
     <div class="question-nav">
       <b-button @click="navigateItem(-1)" variant="secondary">
         <font-awesome-icon icon="arrow-left" />
-        {{ $t('PREVIOUS_ITEM') }}
+        {{ $t("PREVIOUS_ITEM") }}
       </b-button>
-      {{$t('SECTION')}} {{game.currentSectionIndex}} : {{$t('QUIZ_ITEM')}} {{game.currentQuizItemIndexInSection}} {{$t('OF')}} {{game.currentSectionQuizItemCount}})
+      {{ $t("SECTION") }} {{ game.currentSectionIndex }} :
+      {{ $t("QUIZ_ITEM") }} {{ game.currentQuizItemIndexInSection }}
+      {{ $t("OF") }} {{ game.currentSectionQuizItemCount }})
       <b-button @click="navigateItem(1)" variant="secondary">
-        {{ $t('NEXT_ITEM') }}
+        {{ $t("NEXT_ITEM") }}
         <font-awesome-icon icon="arrow-right" />
       </b-button>
     </div>
@@ -69,6 +95,7 @@ import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
 import { Game, InteractionType, MediaType, QuizItem } from '../../models/models';
+import { Watch } from 'vue-property-decorator';
 
 @Component
 export default class QmQuestionPart extends mixins(
@@ -92,8 +119,16 @@ export default class QmQuestionPart extends mixins(
     return this.$store.getters.quizItem;
   }
 
+  get currentQuizItemId(): string {
+    return this.$store.getters.currentQuizItemId as string;
+  }
+
   public navigateItem(offset: number): void {
     this.$_gameService_navigateItem(this.game.id, offset);
+  }
+
+  @Watch('currentQuizItemId') public async OnCurrentItemChanged(value: string): Promise<void> {
+    await this.$_gameService_getQuizItem(this.game.id, value);
   }
 }
 </script>
