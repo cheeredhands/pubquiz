@@ -3,7 +3,7 @@ import store from '../store/index';
 
 export default {
   closing: false,
-  async close():Promise<void> {
+  async close(): Promise<void> {
     const connection = store.state.signalrconnection;
     if (connection !== undefined) {
       this.closing = true;
@@ -12,7 +12,7 @@ export default {
       });
     }
   },
-  async init():Promise<void> {
+  async init(): Promise<void> {
     await this.close();
     const connection = new SignalR.HubConnectionBuilder()
       .withUrl(process.env.VUE_APP_BACKEND_URI + 'gamehub', { accessTokenFactory: () => localStorage.getItem('token') || '' })
@@ -36,7 +36,11 @@ export default {
       }
     });
 
-    // define methods for each server-side call first before starting the hub.
+    connection.on('TeamConnectionChanged', data => {
+      console.log(data);
+      store.dispatch('processTeamConnectionChanged', data);
+    });
+
     connection.on('TeamRegistered', data => {
       console.log(data);
       store.dispatch('processTeamRegistered', data);

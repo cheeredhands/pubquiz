@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
@@ -77,8 +75,7 @@ namespace Pubquiz.Logic.Requests.Commands
                     UserName = userName,
                     CurrentGameId = game.Id,
                     RecoveryCode = recoveryCode,
-                    UserRole = UserRole.Team,
-                    IsLoggedIn = true
+                    UserRole = UserRole.Team
                 };
                 var user = new User
                 {
@@ -86,8 +83,7 @@ namespace Pubquiz.Logic.Requests.Commands
                     UserName = userName,
                     CurrentGameId = game.Id,
                     RecoveryCode = recoveryCode,
-                    UserRole = UserRole.Team,
-                    IsLoggedIn = true, 
+                    UserRole = UserRole.Team
                 };
                 
                 game.TeamIds.Add(team.Id);
@@ -98,7 +94,6 @@ namespace Pubquiz.Logic.Requests.Commands
             }
             else
             {
-                team.IsLoggedIn = true;
                 team.Name = string.IsNullOrWhiteSpace(Name) ? team.Name : Name;
                 await teamCollection.UpdateAsync(team);
             }

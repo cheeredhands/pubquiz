@@ -1,5 +1,16 @@
 import { GameState, Answer, Team } from './models';
 
+export interface TeamConnectionChangedMessage {
+        /** The team Id */
+        teamId: string;
+        /** The game Id */
+        gameId: string;
+        /** The Team Name */
+        name: string;
+        /** Connection count */
+        connectionCount: number;
+}
+
 export interface TeamRegisteredMessage {
     /** The team Id */
     teamId: string;

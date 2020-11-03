@@ -12,7 +12,8 @@ namespace Pubquiz.Domain.Models
         public UserRole UserRole { get; set; }
         public List<string> GameIds { get; set; }
         public string CurrentGameId { get; set; }
-        public bool IsLoggedIn { get; set; }
+        public bool IsLoggedIn => ConnectionCount > 0;
+        public int ConnectionCount { get; set; }
 
         public User()
         {

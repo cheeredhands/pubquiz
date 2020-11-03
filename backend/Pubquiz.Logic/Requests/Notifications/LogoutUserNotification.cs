@@ -23,10 +23,6 @@ namespace Pubquiz.Logic.Requests.Notifications
             {
                 throw new DomainException(ResultCode.InvalidUserId, "Invalid User id", false);
             }
-
-            user.IsLoggedIn = false;
-
-            await userCollection.UpdateAsync(user);
             
             await Bus.Publish(new UserLoggedOut(user.Id, user.UserName, user.CurrentGameId));
         }

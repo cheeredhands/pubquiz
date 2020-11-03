@@ -3,7 +3,7 @@ import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { User, GameState, QuizItem, Team, Game } from '../models/models';
-import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage } from '../models/messages';
+import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage, TeamConnectionChangedMessage } from '../models/messages';
 import { QuizItemViewModel, TeamViewModel } from '../models/viewModels';
 
 Vue.use(Vuex);
@@ -81,7 +81,8 @@ const storeOpts: StoreOptions<RootState> = {
           id: team.teamId,
           name: team.name,
           memberNames: team.memberNames,
-          isLoggedIn: true
+          isLoggedIn: true,
+          connectionCount: 1
         });
       }
     },
@@ -111,6 +112,18 @@ const storeOpts: StoreOptions<RootState> = {
       const qmTeamInStore = state.qmTeams.find(i => i.id === teamId);
       if (qmTeamInStore !== undefined) {
         qmTeamInStore.isLoggedIn = false;
+      }
+    },
+    setTeamConnectionCount(state, message: TeamConnectionChangedMessage) {
+      const teamInStore = state.teams.find(i => i.id === message.teamId);
+      if (teamInStore !== undefined) {
+        teamInStore.connectionCount = message.connectionCount;
+        teamInStore.isLoggedIn = teamInStore.connectionCount > 0;
+      }
+      const qmTeamInStore = state.qmTeams.find(i => i.id === message.teamId);
+      if (qmTeamInStore !== undefined) {
+        qmTeamInStore.connectionCount = message.connectionCount;
+        qmTeamInStore.isLoggedIn = qmTeamInStore.connectionCount > 0;
       }
     },
     setTeams(state, teams: TeamViewModel[]) {
@@ -230,6 +243,14 @@ const storeOpts: StoreOptions<RootState> = {
       commit('logout');
       await gamehub.close();
       localStorage.removeItem('token');
+    },
+    processTeamConnectionChanged({ commit, state }, message: TeamConnectionChangedMessage) {
+      console.log(`processTeamConnectionChanged: ${message.name}`);
+      if (state.user !== undefined) {
+        commit('setTeamConnectionCount', message);
+      } else if (state.team !== undefined && message.teamId !== state.team.id) {
+        commit('setTeamConnectionCount', message);
+      }
     },
     processTeamNameUpdated({ commit }, message: TeamNameUpdatedMessage) {
       console.log(`processTeamNameUpdated: ${message.name}`);

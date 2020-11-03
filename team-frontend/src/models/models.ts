@@ -162,6 +162,8 @@ export interface Team {
   recoveryCode: string;
   /** false when the user has logged out / left game */
   isLoggedIn: boolean;
+  /** number of signalr connections (concurrent users logged in for the same team) */
+  connectionCount: number;
   /** Score per quiz section */
   scorePerQuizSection: Record<string, number>;
   totalScore: number;

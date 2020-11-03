@@ -19,7 +19,14 @@ namespace Pubquiz.Logic.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         Task QmTeamRegistered(QmTeamRegistered message);
-        
+
+        /// <summary>
+        /// Called when a team connects with signalr.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task TeamConnectionChanged(TeamConnectionChanged message);
+
         /// <summary>
         /// Called when a team logs out (leaves the game). Notifies other teams and the qui master
         /// within the current game.

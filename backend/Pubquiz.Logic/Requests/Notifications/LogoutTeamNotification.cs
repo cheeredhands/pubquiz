@@ -23,9 +23,6 @@ namespace Pubquiz.Logic.Requests.Notifications
                 // Unknown team (probably old session with inmemory db), proceed with logout.
                 return;
             }
-            team.IsLoggedIn = false;
-
-            await teamCollection.UpdateAsync(team);
             
             await Bus.Publish(new TeamLoggedOut(team.Id, team.Name, team.CurrentGameId));
         }

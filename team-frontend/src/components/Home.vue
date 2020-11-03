@@ -1,14 +1,13 @@
 <template>
   <div id="main">
     <nav-bar-part>
-      <template v-slot:centercontent>{{$t('REGISTER_TEAM')}}</template>
+      <template v-slot:centercontent>{{ $t("REGISTER_TEAM") }}</template>
     </nav-bar-part>
     <div class="main-container">
       <b-container>
         <b-row>
           <b-col>
-            <h1>{{$t('HOME_WELCOME')}}</h1>
-            <hr />
+            <h1 class="mt-3 mb-5">{{ $t("HOME_WELCOME") }}</h1>
           </b-col>
         </b-row>
         <b-form @submit="register" novalidate>
@@ -57,16 +56,20 @@
           </b-form-row>
           <b-form-row>
             <b-col>
-              <b-button type="submit" variant="primary">{{ $t('REGISTER') }}</b-button>
+              <b-button type="submit" variant="primary">{{
+                $t("REGISTER")
+              }}</b-button>
             </b-col>
           </b-form-row>
         </b-form>
       </b-container>
     </div>
-        <footer-part>
-      Home footer text
+    <footer-part>
+      Quizr 1.0
       <template v-slot:footeractions>
-        <b-link :to="{name:'QuizMasterLogin'}">{{ $t('HOME_QUIZMASTERLOGIN') }} |</b-link>
+        <b-link :to="{ name: 'QuizMasterLogin' }">{{
+          $t("HOME_QUIZMASTERLOGIN")
+        }}</b-link>
       </template>
     </footer-part>
   </div>

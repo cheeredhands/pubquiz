@@ -24,7 +24,7 @@
           <h5 class="mt-0 mb-1" :title="team.recoveryCode" :class="{ 'text-muted': team.isLoggedIn === false }">
             {{ team.name }}
             <span v-if="team.memberNames !== undefined" class="smaller"
-              >({{ team.memberNames }})</span
+              >({{ team.memberNames }}) <b-badge pill :title="$t('NUMBER_OF_CONNECTIONS')" variant="primary" v-if="team.connectionCount>1" >{{team.connectionCount}}</b-badge></span
             >
           </h5>
           <div

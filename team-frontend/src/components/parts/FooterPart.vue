@@ -1,11 +1,9 @@
 <template>
   <footer class="footer font-small">
     <slot>footer</slot>
-
-    <b-link class="float-right" :to="{name: 'About'}">| {{ $t('MENU_ABOUT') }}</b-link>
-
+    <b-link class="float-right" :to="{name: 'About'}">{{ $t('MENU_ABOUT') }}</b-link>
     <div class="float-right">
-      <slot name="footeractions"></slot>
+      <slot name="footeractions"></slot>/
     </div>
   </footer>
 </template>

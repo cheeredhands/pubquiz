@@ -9,6 +9,8 @@ export interface TeamViewModel {
     memberNames: string;
     /** false when the user has logged out / left game */
     isLoggedIn: boolean;
+    /** number of signalr connections (concurrent users logged in for the same team) */
+    connectionCount: number;
 }
 
 // export interface QmTeamViewModel{
