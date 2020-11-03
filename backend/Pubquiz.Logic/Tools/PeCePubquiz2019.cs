@@ -148,7 +148,7 @@ namespace Pubquiz.Logic.Tools
             question.Interactions.Add(new Interaction(0)
             {
                 Text = "Hoeveel hazen had Eliud Kipchoge bij zich tijdens zijn recordpoging?",
-                Solution = new Solution(new[] {"7", "zeven"}, levenshteinTolerance:0),
+                Solution = new Solution(new[] {"7", "zeven"}, levenshteinTolerance: 0),
                 InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
@@ -161,7 +161,7 @@ namespace Pubquiz.Logic.Tools
             });
             return question;
         }
-        
+
         private static QuizItem GetS1Q4(string baseUrl)
         {
             var question = new QuizItem
@@ -171,7 +171,8 @@ namespace Pubquiz.Logic.Tools
                 Title = "Vanalles 1 - vraag 4",
                 MaxScore = 2,
                 QuizItemType = QuizItemType.ShortAnswer,
-                MediaObjects = new List<MediaObject>{new MediaObject($"{baseUrl}/mediaobjects/s1q4.mp4", MediaType.Video)}
+                MediaObjects = new List<MediaObject>
+                    {new MediaObject($"{baseUrl}/mediaobjects/s1q4.mp4", MediaType.Video)}
             };
 
             question.Interactions.Add(new Interaction(0)
@@ -181,7 +182,7 @@ namespace Pubquiz.Logic.Tools
                 InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
-          
+
             return question;
         }
 
@@ -227,7 +228,7 @@ namespace Pubquiz.Logic.Tools
             question.Interactions.Add(new Interaction(0)
             {
                 Text = "Naam",
-                Solution = new Solution(new[] {"Douglas Adams"}),
+                Solution = new Solution(new[] {"Douglas Adams"}, flagIfWithinTolerance: true),
                 InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
@@ -244,7 +245,8 @@ namespace Pubquiz.Logic.Tools
                 Title = "Vanalles 2 - vraag 3",
                 MaxScore = 3,
                 QuizItemType = QuizItemType.ShortAnswer,
-                MediaObjects = new List<MediaObject> {new MediaObject($"{baseUrl}/mediaobjects/s2q3.mp3", MediaType.Audio)}
+                MediaObjects = new List<MediaObject>
+                    {new MediaObject($"{baseUrl}/mediaobjects/s2q3.mp3", MediaType.Audio)}
             };
 
             question.Interactions.Add(new Interaction(0)
