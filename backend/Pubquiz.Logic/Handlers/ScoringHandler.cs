@@ -24,7 +24,7 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(InteractionResponseAdded message)
         {
-            _logger.LogInformation($"Start scoring an answer.");
+            _logger.LogDebug($"Start scoring an answer.");
             // score it
             var teamCollection = _unitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(message.TeamId);
@@ -54,11 +54,12 @@ namespace Pubquiz.Logic.Handlers
 
             // score it!
             quizItem.Score(answer);
+            _logger.LogDebug($"scored", quizItem.Interactions);
             team.UpdateScore();
 
             await teamCollection.UpdateAsync(team);
             
-            _logger.LogInformation($"Done scoring an answer.");
+            _logger.LogDebug($"Done scoring an answer.");
             
             await _bus.Publish(new AnswerScored
             {

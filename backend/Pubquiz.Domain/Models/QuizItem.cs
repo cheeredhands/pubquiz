@@ -72,7 +72,7 @@ namespace Pubquiz.Domain.Models
                         }
                         else
                         {
-                            // todo levenshtein/soundex whatever checks
+                            // levenshtein checks
                             var smallestLevenshteinDistance = solution.Responses.Min(s =>
                                 LevenshteinDistance.Compute(s.ToLowerInvariant(), interactionResponse.Response.ToLowerInvariant()));
                             if (smallestLevenshteinDistance <= solution.LevenshteinTolerance)

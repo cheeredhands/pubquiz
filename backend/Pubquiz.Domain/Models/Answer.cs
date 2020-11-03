@@ -55,7 +55,7 @@ namespace Pubquiz.Domain.Models
                 {
                     interactionResponse = new InteractionResponse(interactionId, choiceOptionIds, response);
                 }
-
+                
                 InteractionResponses.Add(interactionResponse);
             }
             else
@@ -64,6 +64,10 @@ namespace Pubquiz.Domain.Models
                     choiceOptionIds == null ? new List<int>() : choiceOptionIds.ToList();
                 interactionResponse.Response = response;
             }
+            
+            // reset the manual correction flags
+            interactionResponse.ManuallyCorrected = false;
+            interactionResponse.FlaggedForManualCorrection = false;
         }
 
         public void Score(QuizItem question)

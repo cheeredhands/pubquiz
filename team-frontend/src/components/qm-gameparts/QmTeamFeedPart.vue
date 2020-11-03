@@ -4,8 +4,6 @@
       <h4 class="mt-1 mb-0 ml-1">Team feed ({{ qmTeams.length }} teams)</h4>
     </div>
     <div class="feed">
-      <!-- <p>quizItemId: {{game.currentQuizItemId}}</p> -->
-      <!-- <p>my team: {{qmTeams.find(t=>t.name==='saxcasdf')}}</p> -->
       <ul class="list-unstyled">
         <b-media class="mb-2" tag="li" v-for="team in qmTeams" :key="team.id">
           <template v-slot:aside>
@@ -21,59 +19,82 @@
             This area shows the answers a team gives to the current question (as they are typing).
             The score and correctness of a team is shown. When automatic scoring is not possible, buttons are shown to mark the answer.
           </p>-->
-          <h5 class="mt-0 mb-1" :title="team.recoveryCode" :class="{ 'text-muted': team.isLoggedIn === false }">
+          <h5
+            class="mt-0 mb-1"
+            :title="team.recoveryCode"
+            :class="{ 'text-muted': team.isLoggedIn === false }"
+          >
             {{ team.name }}
             <span v-if="team.memberNames !== undefined" class="smaller"
-              >({{ team.memberNames }}) <b-badge pill :title="$t('NUMBER_OF_CONNECTIONS')" variant="primary" v-if="team.connectionCount>1" >{{team.connectionCount}}</b-badge></span
+              >({{ team.memberNames }})
+              <b-badge
+                pill
+                :title="$t('NUMBER_OF_CONNECTIONS')"
+                variant="primary"
+                v-if="team.connectionCount > 1"
+                >{{ team.connectionCount }}</b-badge
+              ></span
             >
           </h5>
-          <div
-            v-if="team.answers[game.currentQuizItemId] !== undefined"
-          >
-            <font-awesome-icon
-              icon="glasses"
-              class="float-right mr-3"
-              title="Flagged for manual correction"
-              v-if="
-                team.answers[game.currentQuizItemId].flaggedForManualCorrection
-              "
-            />
+          <div v-if="team.answers[game.currentQuizItemId] !== undefined">
             <p
               v-for="interactionResponse in team.answers[game.currentQuizItemId]
                 .interactionResponses"
               :key="interactionResponse.id"
-              :class="{ correct: interactionResponse.awardedScore > 0,
-               incorrect: interactionResponse.awardedScore===0,
-              flagged: interactionResponse.flaggedForManualCorrection }"
+              class="small mb-0"
             >
-             <font-awesome-icon
-              :title="$t('SET_OUTCOME_CORRECT')"
-              class="mr-1"
-              icon="check-circle"
-              @click="
-                correctInteraction(
-                  team.id,
-                  quizItem.id,
-                  interactionResponse.interactionId,
-                  true
-                )
-              "
-            />
-            <font-awesome-icon
-              :title="$t('SET_OUTCOME_INCORRECT')"
-              class="mr-1"
-              icon="times-circle"
-              @click="
-                correctInteraction(
-                  team.id,
-                  quizItem.id,
-                  interactionResponse.interactionId,
-                  false
-                )
-              "
-            />
+              <font-awesome-icon
+                icon="glasses"
+                class="float-right mr-1 mt-1"
+                title="Flagged for manual correction"
+                v-if="interactionResponse.flaggedForManualCorrection"
+              />
+              <b-badge
+                href="#"
+                pill
+                variant="success"
+                class="ml-1 mb-1"
+                @click="
+                  correctInteraction(
+                    team.id,
+                    quizItem.id,
+                    interactionResponse.interactionId,
+                    true
+                  )
+                "
+              >
+                <font-awesome-icon
+                  :title="$t('SET_OUTCOME_CORRECT')"
+                  icon="check-circle"
+              /></b-badge>
+              <b-badge
+                href="#"
+                pill
+                variant="danger"
+                class="ml-1 mb-1"
+                @click="
+                  correctInteraction(
+                    team.id,
+                    quizItem.id,
+                    interactionResponse.interactionId,
+                    false
+                  )
+                "
+              >
+                <font-awesome-icon
+                  :title="$t('SET_OUTCOME_INCORRECT')"
+                  icon="times-circle"
+              /></b-badge>
               {{ getInteraction(interactionResponse.interactionId).text }}:
-              <code>{{ getResponseText(interactionResponse) }}</code>
+              <code
+              class="rounded p-1"
+                :class="{
+                  correct: interactionResponse.awardedScore > 0,
+                  incorrect: interactionResponse.awardedScore === 0,
+                  flagged: interactionResponse.flaggedForManualCorrection,
+                }"
+                >{{ getResponseText(interactionResponse) }}</code
+              >
             </p>
           </div>
         </b-media>
@@ -129,8 +150,7 @@ export default class QmTeamFeedPart extends mixins(GameServiceMixin) {
 </script>
 
 <style scoped>
-span.smaller,
-p {
+span.smaller {
   font-size: small;
   margin-bottom: 0;
 }
@@ -156,15 +176,14 @@ p {
   padding: 5px;
 }
 
-p.correct {
+.correct {
   background-color: lightgreen;
 }
-p.incorrect {
-background-color: lightpink;
+.incorrect {
+  background-color: lightpink;
 }
-p.flagged {
+.flagged {
   background-color: lightsalmon;
-
 }
 
 code {
