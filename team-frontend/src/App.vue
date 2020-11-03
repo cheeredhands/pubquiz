@@ -74,10 +74,6 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~bootstrap-vue/dist/bootstrap-vue.css";
 
-/* body {
-  overflow: hidden;
-} */
-
 #main {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   /* font-size: 0.8rem; */
