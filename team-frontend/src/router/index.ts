@@ -29,12 +29,6 @@ export default new Router({
       component: About
     },
     {
-      path: '/registerteam',
-      name: 'RegisterTeam',
-      props: true,
-      component: RegisterTeam
-    },
-    {
       path: '/lobby',
       name: 'TeamLobby',
       component: TeamLobby
