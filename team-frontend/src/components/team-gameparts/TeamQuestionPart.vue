@@ -17,15 +17,18 @@
             <!-- <p :title="interaction.id">{{interaction.text}} ({{interaction.maxScore}} {{$t('POINTS')}})</p> -->
             <div v-if="interaction.interactionType === multipleChoice">
               <b-form-group :label="interaction.text">
-                <b-form-radio
+                <b-form-radio-group
                   v-model="interaction.chosenOption"
-                  v-for="choiceOption in interaction.choiceOptions"
-                  :key="choiceOption.id"
-                  :name="`mc${interaction.id}`"
-                  :value="choiceOption.id"
-                  @click="submitMcAnswer(interaction.id)"
-                  >{{ choiceOption.text }}</b-form-radio
+                  @change.native="submitMcAnswer(interaction.id)" stacked
                 >
+                  <b-form-radio
+                    v-for="choiceOption in interaction.choiceOptions"
+                    :key="choiceOption.id"
+                    :name="`mc${interaction.id}`"
+                    :value="choiceOption.id"
+                    >{{ choiceOption.text }}</b-form-radio
+                  >
+                </b-form-radio-group>
               </b-form-group>
             </div>
             <div v-else-if="interaction.interactionType === multipleResponse">
@@ -36,7 +39,7 @@
                   :key="choiceOption.id"
                   :name="`mr${interaction.id}`"
                   :value="choiceOption.id"
-                  @click="submitMrAnswer(interaction.id)"
+                  @change.native="submitMrAnswer(interaction.id)"
                   >{{ choiceOption.text }}</b-form-checkbox
                 >
               </b-form-group>
