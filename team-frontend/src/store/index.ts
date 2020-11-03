@@ -22,7 +22,7 @@ export interface RootState {
   currentGameId?: string;
   gameIds: string[];
   qmTeams: Team[];
-  debounceMs: number;
+  throttleMs: number;
 }
 
 const storeOpts: StoreOptions<RootState> = {
@@ -41,7 +41,7 @@ const storeOpts: StoreOptions<RootState> = {
     currentGameId: undefined,
     gameIds: [],
     qmTeams: [],
-    debounceMs: parseInt(process.env.VUE_APP_DEBOUNCE_MS || '500', 10)
+    throttleMs: parseInt(process.env.VUE_APP_THROTTLE_MS || '1500')
   },
   getters: {
     game: state => state.game || {},
@@ -53,7 +53,7 @@ const storeOpts: StoreOptions<RootState> = {
     teamName: state => state.team?.name || '',
     memberNames: state => state.team?.memberNames || '',
     currentQuizItemId: state => state.game?.currentQuizItemId || '',
-    debounceMs: state => state.debounceMs,
+    throttleMs: state => state.throttleMs,
     recoveryCode: state => state.team?.recoveryCode || '',
     qmTeams: state => state.qmTeams
   },

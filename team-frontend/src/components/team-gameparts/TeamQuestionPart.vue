@@ -23,7 +23,7 @@
                   :key="choiceOption.id"
                   :name="`mc${interaction.id}`"
                   :value="choiceOption.id"
-                  @change="submitMcAnswer(interaction.id)"
+                  @click="submitMcAnswer(interaction.id)"
                   >{{ choiceOption.text }}</b-form-radio
                 >
               </b-form-group>
@@ -36,7 +36,7 @@
                   :key="choiceOption.id"
                   :name="`mr${interaction.id}`"
                   :value="choiceOption.id"
-                  @change="submitMrAnswer(interaction.id)"
+                  @click="submitMrAnswer(interaction.id)"
                   >{{ choiceOption.text }}</b-form-checkbox
                 >
               </b-form-group>
@@ -67,7 +67,7 @@
             </div>
           </div>
         </b-col>
-        <b-col v-if="quizItem.mediaObjects && quizItem.mediaObjects.length>0">
+        <b-col v-if="quizItem.mediaObjects && quizItem.mediaObjects.length > 0">
           <div
             v-for="mediaObject in quizItem.mediaObjects"
             :key="mediaObject.id"
@@ -101,8 +101,9 @@ import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
 import { InteractionType, Game, MediaType } from '../../models/models';
 import { Watch } from 'vue-property-decorator';
-import { debounce } from 'lodash';
+import { throttle } from 'lodash';
 import { QuizItemViewModel } from '../../models/viewModels';
+/* eslint space-before-function-paren: "off" */
 
 @Component
 export default class TeamQuestionPart extends mixins(
@@ -130,34 +131,34 @@ export default class TeamQuestionPart extends mixins(
   public videoType: MediaType = MediaType.Video;
   public audioType: MediaType = MediaType.Audio;
 
-  public submitTextAnswer = debounce(async(interactionId: number) => {
+  public submitTextAnswer = throttle(async (interactionId: number) => {
     await this.$_gameService_submitInteractionResponse(
       this.currentQuizItemId,
       interactionId,
       undefined,
       this.quizItem.interactions[interactionId].response
     );
-  }, this.$store.getters.debounceMs);
+  }, this.$store.getters.throttleMs);
 
-  public submitMcAnswer = debounce(async(interactionId: number) => {
+  public submitMcAnswer(interactionId: number): void {
     const mcAnswer = this.quizItem.interactions[interactionId].chosenOption;
-    await this.$_gameService_submitInteractionResponse(
+    this.$_gameService_submitInteractionResponse(
       this.currentQuizItemId,
       interactionId,
       [mcAnswer],
       undefined
     );
-  }, this.$store.getters.debounceMs);
+  }
 
-  public submitMrAnswer = debounce(async(interactionId: number) => {
+  public submitMrAnswer(interactionId: number): void {
     const mcAnswer = this.quizItem.interactions[interactionId].chosenOptions;
-    await this.$_gameService_submitInteractionResponse(
+    this.$_gameService_submitInteractionResponse(
       this.currentQuizItemId,
       interactionId,
       mcAnswer,
       undefined
     );
-  }, this.$store.getters.debounceMs);
+  }
 
   public navigateItem(offset: number): void {
     this.$_gameService_navigateItem(this.game.id, offset);
