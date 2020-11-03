@@ -40,6 +40,7 @@ namespace Pubquiz.Domain.Models
                         {
                             interactionResponse.AwardedScore =
                                 interactionResponse.ManualCorrectionOutcome ? interaction.MaxScore : 0;
+                            interactionResponse.FlaggedForManualCorrection = false;
                             break;
                         }
                         var correctOptionIds = solution.ChoiceOptionIds;
@@ -60,6 +61,7 @@ namespace Pubquiz.Domain.Models
                         {
                             interactionResponse.AwardedScore =
                                 interactionResponse.ManualCorrectionOutcome ? interaction.MaxScore : 0;
+                            interactionResponse.FlaggedForManualCorrection = false;
                             break;
                         }
 
@@ -94,6 +96,7 @@ namespace Pubquiz.Domain.Models
                         {
                             interactionResponse.AwardedScore =
                                 interactionResponse.ManualCorrectionOutcome ? interaction.MaxScore : 0;
+                            interactionResponse.FlaggedForManualCorrection = false;
                             break;
                         }
 

@@ -29,11 +29,6 @@
           </h5>
           <div
             v-if="team.answers[game.currentQuizItemId] !== undefined"
-            :class="{
-              correct:
-                team.answers[game.currentQuizItemId].totalScore ===
-                quizItem.maxScore,
-            }"
           >
             <font-awesome-icon
               icon="glasses"
@@ -47,7 +42,9 @@
               v-for="interactionResponse in team.answers[game.currentQuizItemId]
                 .interactionResponses"
               :key="interactionResponse.id"
-              :class="{ correct: interactionResponse.awardedScore > 0 }"
+              :class="{ correct: interactionResponse.awardedScore > 0,
+               incorrect: interactionResponse.awardedScore===0,
+              flagged: interactionResponse.flaggedForManualCorrection }"
             >
              <font-awesome-icon
               :title="$t('SET_OUTCOME_CORRECT')"
@@ -161,6 +158,13 @@ p {
 
 p.correct {
   background-color: lightgreen;
+}
+p.incorrect {
+background-color: lightpink;
+}
+p.flagged {
+  background-color: lightsalmon;
+
 }
 
 code {
