@@ -23,7 +23,7 @@
               <b-list-group-item v-for="team in teams" :key="team.id">
                 <strong :title="team.recoveryCode">{{ team.name }} </strong>
                 <span class="teamMembers" v-if="team.memberNames">({{team.memberNames}})</span>&nbsp;
-                <b-badge pill :title="$t('NUMBER_OF_CONNECTIONS')" variant="secondary" v-if="team.connectionCount>0" >{{team.connectionCount}}</b-badge>
+                <b-badge pill :title="$t('NUMBER_OF_CONNECTIONS')" variant="secondary" v-if="team.connectionCount>1" >{{team.connectionCount}}</b-badge>
                 <b-badge v-if="!team.isLoggedIn">{{ $t('LOGGED_OUT') }}</b-badge>
                 <font-awesome-icon
                   icon="trash-alt"
