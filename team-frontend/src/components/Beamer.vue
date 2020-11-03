@@ -74,7 +74,6 @@ import GameServiceMixin from '../services/game-service-mixin';
 import HelperMixin from '../services/helper-mixin';
 import { InteractionType, Game, MediaType, QuizItem } from '../models/models';
 import { Watch } from 'vue-property-decorator';
-import { debounce } from 'lodash';
 import { QuizItemViewModel } from '../models/viewModels';
 
 @Component
