@@ -23,7 +23,7 @@ export interface TeamLobbyViewModel {
 }
 
 export interface InteractionViewModel {
-    id: string;
+    id: number;
     text: string;
     interactionType: InteractionType;
     choiceOptions: ChoiceOption[];

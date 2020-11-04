@@ -14,12 +14,13 @@
             v-for="interaction in quizItem.interactions"
             :key="interaction.id"
           >
-            <!-- <p :title="interaction.id">{{interaction.text}} ({{interaction.maxScore}} {{$t('POINTS')}})</p> -->
+            <p :title="interaction.id">{{interaction.text}} ({{interaction.maxScore}}{{$t('POINTS')}})</p>
             <div v-if="interaction.interactionType === multipleChoice">
-              <b-form-group :label="interaction.text">
+              <b-form-group>
                 <b-form-radio-group
                   v-model="interaction.chosenOption"
-                  @change.native="submitMcAnswer(interaction.id)" stacked
+                  @change.native="submitMcAnswer(interaction.id)"
+                  stacked
                 >
                   <b-form-radio
                     v-for="choiceOption in interaction.choiceOptions"
@@ -45,30 +46,29 @@
               </b-form-group>
             </div>
             <div v-else-if="interaction.interactionType === shortAnswer">
-              <b-form-group
-                :label="`${interaction.text} (${interaction.maxScore})`"
-              >
+              <b-form-group>
                 <b-input-group>
                   <b-form-input
-                    @keyup="submitTextAnswer(interaction.id)"
+                    @keyup="submitTextAnswer(interaction.id)()"
                     v-model="interaction.response"
                   ></b-form-input>
                 </b-input-group>
               </b-form-group>
             </div>
             <div v-else-if="interaction.interactionType === extendedText">
-              <b-form-group
-                :label="`${interaction.text} (${interaction.maxScore})`"
-              >
+              <b-form-group>
                 <b-input-group>
                   <b-form-textarea
-                    @keyup="submitTextAnswer(interaction.id)"
+                    @keyup="submitTextAnswer(interaction.id)()"
                     v-model="interaction.response"
                   ></b-form-textarea>
                 </b-input-group>
               </b-form-group>
             </div>
           </div>
+          <p v-if="showChangesSaved" class="text-muted">
+            {{ $t("CHANGES_SAVED") }}
+          </p>
         </b-col>
         <b-col v-if="quizItem.mediaObjects && quizItem.mediaObjects.length > 0">
           <div
@@ -104,7 +104,7 @@ import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
 import { InteractionType, Game, MediaType } from '../../models/models';
 import { Watch } from 'vue-property-decorator';
-import { throttle } from 'lodash';
+import { throttle, debounce, DebouncedFunc } from 'lodash';
 import { QuizItemViewModel } from '../../models/viewModels';
 /* eslint space-before-function-paren: "off" */
 
@@ -125,6 +125,8 @@ export default class TeamQuestionPart extends mixins(
     return this.$store.getters.quizItemViewModel as QuizItemViewModel;
   }
 
+  public throttledTextSubmits: DebouncedFunc<() => Promise<void>>[] = [];
+
   public name = 'team-question-part';
   public multipleChoice: InteractionType = InteractionType.MultipleChoice;
   public multipleResponse: InteractionType = InteractionType.MultipleResponse;
@@ -134,23 +136,39 @@ export default class TeamQuestionPart extends mixins(
   public videoType: MediaType = MediaType.Video;
   public audioType: MediaType = MediaType.Audio;
 
-  public submitTextAnswer = throttle(async (interactionId: number) => {
-    await this.$_gameService_submitInteractionResponse(
-      this.currentQuizItemId,
-      interactionId,
-      undefined,
-      this.quizItem.interactions[interactionId].response
-    );
-  }, this.$store.getters.throttleMs);
+  public showChangesSaved = true;
+
+  public submitTextAnswer(interactionId: number): DebouncedFunc<() => Promise<void>> {
+    if (this.throttledTextSubmits[interactionId] !== undefined) {
+      console.log(interactionId);
+      return this.throttledTextSubmits[interactionId];
+    }
+    this.throttledTextSubmits[interactionId] = throttle(async () => {
+      console.log(`${interactionId} dus`);
+      this.showChangesSaved = false;
+      await this.$_gameService_submitInteractionResponse(
+        this.currentQuizItemId,
+        interactionId,
+        undefined,
+        this.quizItem.interactions[interactionId].response
+      ).then(() => {
+        this.showChangesSaved = true;
+      });
+    }, this.$store.getters.throttleMs);
+    return this.throttledTextSubmits[interactionId];
+  }
 
   public submitMcAnswer(interactionId: number): void {
+    this.showChangesSaved = false;
     const mcAnswer = this.quizItem.interactions[interactionId].chosenOption;
     this.$_gameService_submitInteractionResponse(
       this.currentQuizItemId,
       interactionId,
       [mcAnswer],
       undefined
-    );
+    ).then(() => {
+      this.showChangesSaved = true;
+    });
   }
 
   public submitMrAnswer(interactionId: number): void {
