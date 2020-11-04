@@ -26,8 +26,7 @@
       <template v-slot:rightcontent>
         <b-nav-item v-b-tooltip.hover to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
         <b-nav-item v-b-tooltip.hover to="/beamer" :title="$t('BEAMER_TITLE')" target="_blank"
-          >Beamer <font-awesome-icon icon="external-link-square-alt"
-        /></b-nav-item>
+          >Beamer <b-icon-arrow-up-right/></b-nav-item>
       </template>
     </nav-bar-part>
 

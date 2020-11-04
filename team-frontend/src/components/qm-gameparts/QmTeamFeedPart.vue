@@ -29,7 +29,7 @@
             v-b-tooltip.click.right
             :title="team.recoveryCode"
           >
-            {{ team.name }}
+            {{ team.name }}<b-icon-exclamation-triangle class="ml-1" :title="$t('TEAM_OFFLINE')" v-if="!team.isLoggedIn"></b-icon-exclamation-triangle>
           </h5>
           <b-badge
             pill
