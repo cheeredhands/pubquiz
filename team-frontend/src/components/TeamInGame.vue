@@ -17,10 +17,10 @@
       centered
       no-close-on-backdrop
       no-close-on-esc
-      :title="$t('PAUSED')"
+      :title="$t('Paused')"
     >
       <template v-slot:modal-header>
-        <h1>{{$t('PAUSED')}}</h1>
+        <h1>{{$t('Paused')}}</h1>
       </template>
       <template v-slot:default>
         <p class="my-4">{{$t('THE_GAME_IS_PAUSED')}}</p>
@@ -92,7 +92,7 @@ export default class TeamInGame extends mixins(
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-body.modal-open #app {
+body.modal-open #main {
   -webkit-filter: blur(12px);
   -moz-filter: blur(12px);
   -o-filter: blur(12px);

@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
@@ -25,7 +25,7 @@
     "vuex": "^3.5.1"
   },
   "devDependencies": {
-    "@kazupon/vue-i18n-loader": "^0.5.0",
+    "@intlify/vue-i18n-loader": "^1.0.0",
     "@types/lodash": "^4.14.163",
     "@types/node": "^14.14.6",
     "@types/webpack": "^4.41.24",

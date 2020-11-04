@@ -22,7 +22,6 @@
   "KEEP_IT_CLEAN": "Houd het netjes!",
   "CODE_ORIGIN": "De code krijg je van de quizmaster.",
   "CODE_LENGTH": "Een code is minimaal 4 tekens.",
-  "REGISTER_SUCCES": "Welkom!",
   "TEAMLOBBY_WELCOME": "Welkom in de lobby!",
   "TEAMLOBBY_SIT_BACK": "Sit back and relax..",
   "MEMBERS": "Teamleden",
@@ -59,7 +58,7 @@
   "LOBBY_TITLE": "Terug naar de lobby",
   "POINTS": "p",
   "TOTAL_NUMBER_OF_POINTS": "Totaal aantal punten",
-  "SECTION": "sectie",
+  "SECTION": "onderdeel",
   "InvalidCode": "Ongeldige code",
   "TeamNameIsTaken": "Teamnaam is al in gebruik.",
   "InvalidQuizItemId": "Ongeldig quiz item id.",
@@ -83,5 +82,17 @@
   "GameIsPausedOrFinished": "Het spel is gepauseerd of afgelopen. De actie die je probeert uit te voeren mag nu niet.",
   "ThatsYou": "Hallo!",
   "LoggedOut": "U bent uitgelogd.",
-  "TeamCantAccessQuizItemOtherThanTheCurrent": "U mag alleen het huidige item zien."
+  "TeamCantAccessQuizItemOtherThanTheCurrent": "U mag alleen het huidige item zien.",
+  "SET_OUTCOME_CORRECT": "Antwoord goedkeuren",
+  "SET_OUTCOME_INCORRECT": "Antwoord afkeuren",
+  "NUMBER_OF_CONNECTIONS": "Aantal verbindingen",
+  "BEAMER_TITLE": "Open het beamerscherm",
+  "CONFIRM_END_GAME": "Weet je zeker dat je het spel wilt beëindigen?",
+  "PLEASE_CONFIRM": "Bevestigen",
+  "YES": "Ja",
+  "NO": "Nee",
+  "THE_GAME_IS_PAUSED": "Het spel is gepauzeerd",
+  "WAIT_FOR_RESUME": "Wacht tot het spel hervat wordt",
+  "EDIT": "Bewerken"
+
 }
