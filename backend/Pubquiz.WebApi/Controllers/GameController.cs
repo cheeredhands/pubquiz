@@ -39,7 +39,7 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("submitresponse")]
         [Authorize(AuthPolicy.Team)]
-        public async Task<IActionResult> querySubmitInteractionResponse(
+        public async Task<IActionResult> SubmitInteractionResponse(
             SubmitInteractionResponseNotification notification)
         {
             notification.TeamId = User.GetId();
