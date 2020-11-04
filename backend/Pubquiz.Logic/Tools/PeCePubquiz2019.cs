@@ -155,7 +155,7 @@ namespace Pubquiz.Logic.Tools
             question.Interactions.Add(new Interaction(1)
             {
                 Text = "Wat is de naam van de sponsor van het evenement?",
-                Solution = new Solution(new[] {"INEOS"}),
+                Solution = new Solution(new[] {"INEOS"}, levenshteinTolerance: 1, flagIfWithinTolerance:true),
                 InteractionType = InteractionType.ShortAnswer,
                 MaxScore = 1
             });
