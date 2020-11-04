@@ -69,13 +69,18 @@
               </b-form-group>
             </div>
           </div>
-          <p v-if="showChangesSaved" class="text-muted">
+          <small
+            v-if="showChangesSaved && quizItem.interactions.length > 0"
+            class="text-muted fade-in"
+          >
             {{ $t("CHANGES_SAVED") }}
-          </p>
+          </small>
         </b-col>
         <b-col v-if="quizItem.mediaObjects && quizItem.mediaObjects.length > 0">
           <div
-            v-for="mediaObject in quizItem.mediaObjects"
+            v-for="mediaObject in quizItem.mediaObjects.filter(
+              (m) => m.teamVisible
+            )"
             :key="mediaObject.id"
           >
             <b-img
@@ -129,7 +134,7 @@ export default class TeamQuestionPart extends mixins(
     return this.$store.getters.quizItemViewModel as QuizItemViewModel;
   }
 
-  public throttledTextSubmits: DebouncedFunc<() => Promise<void>>[] = [];
+  public debouncedTextSubmits: DebouncedFunc<() => Promise<void>>[] = [];
 
   public name = 'team-question-part';
   public multipleChoice: InteractionType = InteractionType.MultipleChoice;
@@ -140,16 +145,14 @@ export default class TeamQuestionPart extends mixins(
   public videoType: MediaType = MediaType.Video;
   public audioType: MediaType = MediaType.Audio;
 
-  public showChangesSaved = true;
+  public showChangesSaved = false;
 
   public submitTextAnswer(interactionId: number): DebouncedFunc<() => Promise<void>> {
-    if (this.throttledTextSubmits[interactionId] !== undefined) {
-      console.log(interactionId);
-      return this.throttledTextSubmits[interactionId];
+    this.showChangesSaved = false;
+    if (this.debouncedTextSubmits[interactionId] !== undefined) {
+      return this.debouncedTextSubmits[interactionId];
     }
-    this.throttledTextSubmits[interactionId] = throttle(async () => {
-      console.log(`${interactionId} dus`);
-      this.showChangesSaved = false;
+    this.debouncedTextSubmits[interactionId] = debounce(async () => {
       await this.$_gameService_submitInteractionResponse(
         this.currentQuizItemId,
         interactionId,
@@ -159,7 +162,7 @@ export default class TeamQuestionPart extends mixins(
         this.showChangesSaved = true;
       });
     }, this.$store.getters.throttleMs);
-    return this.throttledTextSubmits[interactionId];
+    return this.debouncedTextSubmits[interactionId];
   }
 
   public submitMcAnswer(interactionId: number): void {
@@ -199,5 +202,57 @@ export default class TeamQuestionPart extends mixins(
 .question-container {
   padding: 1em;
   height: 100%;
+}
+
+.fade-in {
+  animation: fadeIn ease 1s;
+  -webkit-animation: fadeIn ease 1s;
+  -moz-animation: fadeIn ease 1s;
+  -o-animation: fadeIn ease 1s;
+  -ms-animation: fadeIn ease 1s;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

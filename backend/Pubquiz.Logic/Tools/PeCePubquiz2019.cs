@@ -83,7 +83,7 @@ namespace Pubquiz.Logic.Tools
                 Title = "Huisregels",
                 QuizItemType = QuizItemType.Information,
                 MediaObjects = new List<MediaObject>
-                    {new MediaObject($"{baseUrl}/mediaobjects/welcome.jpg", MediaType.Image) {Title = "Welcome image"}}
+                    {new MediaObject($"{baseUrl}/mediaobjects/welcome.jpg", MediaType.Image) {Title = "Welcome image", TeamVisible = true}}
             };
 
             return introItem;
@@ -139,7 +139,7 @@ namespace Pubquiz.Logic.Tools
             var question = new QuizItem
             {
                 Id = Guid.NewGuid().ToShortGuidString(),
-                Body = "(filmpje)",
+                Body = "(todo: filmpje toevoegen)",
                 Title = "Vanalles 1 - vraag 3",
                 MaxScore = 2,
                 QuizItemType = QuizItemType.ShortAnswer

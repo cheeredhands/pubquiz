@@ -26,10 +26,10 @@ namespace Pubquiz.Domain.ViewModels
             Id = quizItem.Id;
             Title = quizItem.Title;
             Body = quizItem.Body;
-            MediaObjects = quizItem.MediaObjects;
+            MediaObjects = quizItem.MediaObjects.Where(m => m.TeamVisible).ToList();
             QuizItemType = quizItem.QuizItemType;
             MaxScore = quizItem.MaxScore;
-            
+
             if (answer != null)
             {
                 Interactions = quizItem.Interactions
@@ -68,7 +68,8 @@ namespace Pubquiz.Domain.ViewModels
             InteractionType = interaction.InteractionType;
         }
 
-        public InteractionViewModel(Interaction interaction, InteractionResponse interactionResponse) : this(interaction)
+        public InteractionViewModel(Interaction interaction, InteractionResponse interactionResponse) : this(
+            interaction)
         {
             switch (InteractionType)
             {

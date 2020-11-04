@@ -10,12 +10,17 @@ namespace Pubquiz.Domain.Models
         public MediaDimensions Dimensions { get; set; }
         public MediaType MediaType { get; set; }
         public string MimeType { get; set; }
+        /// <summary>
+        /// Indicates whether media object are visible to teams.
+        /// </summary>
+        public bool TeamVisible { get; set; }
         
         public MediaObject(string uri, MediaType mediaType)
         {
             Id = Guid.NewGuid();
             Uri = uri;
             MediaType = mediaType;
+            TeamVisible = false;
         }
 
         public MediaObject()

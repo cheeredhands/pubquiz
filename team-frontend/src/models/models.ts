@@ -109,6 +109,7 @@ export interface MediaObject {
   dimensions: MediaDimensions;
   mediaType: MediaType;
   mimeType: string;
+  teamVisible: boolean;
 }
 
 export interface QuizItem {
