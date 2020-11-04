@@ -169,7 +169,7 @@ namespace Pubquiz.Logic.Tools
                 Id = Guid.NewGuid().ToShortGuidString(),
                 Body = "(filmpje)",
                 Title = "Vanalles 1 - vraag 4",
-                MaxScore = 2,
+                MaxScore = 1,
                 QuizItemType = QuizItemType.ShortAnswer,
                 MediaObjects = new List<MediaObject>
                     {new MediaObject($"{baseUrl}/mediaobjects/s1q4.mp4", MediaType.Video)}
