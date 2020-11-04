@@ -79,7 +79,7 @@ export enum InteractionType {
 }
 
 export interface Interaction {
-  id: string;
+  id: number;
   text: string;
   interactionType: InteractionType;
   choiceOptions: ChoiceOption[];

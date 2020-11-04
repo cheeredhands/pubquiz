@@ -1,12 +1,13 @@
 <template>
   <div id="main">
-    <nav-bar-part>{{ $t('QUIZMASTER_LOGIN') }}</nav-bar-part>
+    <nav-bar-part>
+      <template v-slot:centercontent>{{ $t("QUIZMASTER_LOGIN") }}</template>
+    </nav-bar-part>
     <div class="main-container">
       <b-container>
         <b-row>
           <b-col>
-            <h1>{{ $t('QUIZMASTER_LOGIN') }}</h1>
-            <hr />
+            <h1 class="mt-3 mb-5">{{ $t("QUIZMASTER_LOGIN") }}</h1>
           </b-col>
         </b-row>
         <b-form @submit="login" novalidate>
@@ -23,7 +24,9 @@
                   minlength="5"
                   maxlength="30"
                 />
-                <b-form-invalid-feedback>{{ $t('USERNAME_LENGTH') }}</b-form-invalid-feedback>
+                <b-form-invalid-feedback>{{
+                  $t("USERNAME_LENGTH")
+                }}</b-form-invalid-feedback>
               </b-form-group>
             </b-col>
           </b-form-row>
@@ -39,19 +42,23 @@
                   required
                   minlength="2"
                 />
-                <b-form-invalid-feedback>{{ $t('PASSWORD_LENGTH') }}</b-form-invalid-feedback>
+                <b-form-invalid-feedback>{{
+                  $t("PASSWORD_LENGTH")
+                }}</b-form-invalid-feedback>
               </b-form-group>
             </b-col>
           </b-form-row>
           <b-form-row>
             <b-col md="6" lg="4">
-              <b-button type="submit" variant="primary">{{ $t('LOGIN') }}</b-button>
+              <b-button type="submit" variant="primary">{{
+                $t("LOGIN")
+              }}</b-button>
             </b-col>
           </b-form-row>
         </b-form>
       </b-container>
     </div>
-    <footer-part></footer-part>
+    <footer-part>Quizr 1.0</footer-part>
   </div>
 </template>
 

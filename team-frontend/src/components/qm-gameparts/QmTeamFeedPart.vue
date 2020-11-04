@@ -4,38 +4,49 @@
       <h4 class="mt-1 mb-0 ml-1">Team feed ({{ qmTeams.length }} teams)</h4>
     </div>
     <div class="feed">
-      <ul class="list-unstyled">
-        <b-media class="mb-2" tag="li" v-for="team in qmTeams" :key="team.id">
-          <template v-slot:aside>
+      <b-list-group flush>
+        <b-list-group-item
+          class="w-100"
+          v-for="team in qmTeams"
+          :key="team.id"
+          :variant="getListVariant(team)"
+        >
+          <!-- <template v-slot:aside>
             <b-img
               blank
               blank-color="#abc"
               width="64"
               alt="placeholder"
             ></b-img>
-          </template>
+          </template> -->
           <!-- <p class="mb-0 text-right" style="font-size: 0.6em; width: 30em; display:none">
             The team avatar to the left has a status badge overlay.
             This area shows the answers a team gives to the current question (as they are typing).
             The score and correctness of a team is shown. When automatic scoring is not possible, buttons are shown to mark the answer.
           </p>-->
           <h5
-            class="mt-0 mb-1"
+            class="mt-0 mb-1 d-inline-block"
+            v-b-tooltip.click.right
             :title="team.recoveryCode"
-            :class="{ 'text-muted': team.isLoggedIn === false }"
           >
             {{ team.name }}
-            <span v-if="team.memberNames !== undefined" class="smaller"
-              >({{ team.memberNames }})
-              <b-badge
-                pill
-                :title="$t('NUMBER_OF_CONNECTIONS')"
-                variant="primary"
-                v-if="team.connectionCount > 1"
-                >{{ team.connectionCount }}</b-badge
-              ></span
-            >
           </h5>
+          <b-badge
+            pill
+            :title="$t('NUMBER_OF_CONNECTIONS')"
+            v-b-tooltip.hover
+            variant="primary"
+            class="ml-1 mb-1"
+            v-if="team.connectionCount > 1"
+            >{{ team.connectionCount }}</b-badge
+          >
+          <small
+            v-if="team.memberNames !== undefined && team.memberNames !== ''"
+            class="d-inline-block align-bottom mb-1 ml-2 w-75 text-truncate"
+          >
+            {{ team.memberNames }}
+          </small>
+
           <div v-if="team.answers[game.currentQuizItemId] !== undefined">
             <p
               v-for="interactionResponse in team.answers[game.currentQuizItemId]
@@ -49,6 +60,13 @@
                 title="Flagged for manual correction"
                 v-if="interactionResponse.flaggedForManualCorrection"
               />
+
+              {{ getInteraction(interactionResponse.interactionId).text }}:
+              <code
+                class="rounded p-1"
+                :class="getResponseBackgroundClass(interactionResponse)"
+                >{{ getResponseText(interactionResponse) }}</code
+              >
               <b-badge
                 href="#"
                 pill
@@ -85,20 +103,10 @@
                   :title="$t('SET_OUTCOME_INCORRECT')"
                   icon="times-circle"
               /></b-badge>
-              {{ getInteraction(interactionResponse.interactionId).text }}:
-              <code
-              class="rounded p-1"
-                :class="{
-                  correct: interactionResponse.awardedScore > 0,
-                  incorrect: interactionResponse.awardedScore === 0,
-                  flagged: interactionResponse.flaggedForManualCorrection,
-                }"
-                >{{ getResponseText(interactionResponse) }}</code
-              >
             </p>
           </div>
-        </b-media>
-      </ul>
+        </b-list-group-item>
+      </b-list-group>
     </div>
   </div>
 </template>
@@ -123,6 +131,26 @@ export default class QmTeamFeedPart extends mixins(GameServiceMixin) {
 
   get qmTeams(): Team[] {
     return this.$store.getters.qmTeams as Team[];
+  }
+
+  public getListVariant(team: Team): string {
+    // if (team === undefined) return '';
+    if (!team.isLoggedIn) return 'light';
+    if (Object.keys(team.answers).length > 0) {
+      const answer = team.answers[this.game.currentQuizItemId];
+      if (answer === undefined) return '';
+      if (answer.flaggedForManualCorrection) return 'warning';
+      return (answer.totalScore === this.quizItem.maxScore) ? 'success' : 'secondary';
+    }
+    return '';
+  }
+
+  public getResponseBackgroundClass(interactionResponse: InteractionResponse): string {
+    if (interactionResponse.awardedScore === 0) return 'incorrect';
+    if (interactionResponse.flaggedForManualCorrection) return 'flagged';
+    const interaction = this.quizItem.interactions.find(i => i.id === interactionResponse.interactionId);
+    if (interaction?.maxScore === interactionResponse.awardedScore) return 'correct';
+    return '';
   }
 
   public getInteraction(interactionId: number): Interaction {
@@ -166,14 +194,14 @@ span.smaller {
 
 .title-bar {
   grid-area: title-bar;
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
 }
 
 .feed {
   grid-area: feed;
   height: 100%;
   overflow: auto;
-  padding: 5px;
+  /* padding: 5px; */
 }
 
 .correct {

@@ -87,9 +87,10 @@ const storeOpts: StoreOptions<RootState> = {
       }
     },
     addQmTeam(state, team: Team) {
-      const teamInStoreIndex = state.qmTeams.findIndex(i => i.id === team.id);
-      if (teamInStoreIndex !== -1) {
-        Vue.set(state.qmTeams, teamInStoreIndex, team);
+      let teamInStore = state.qmTeams.find(i => i.id === team.id);
+      if (teamInStore !== undefined) {
+        teamInStore = team;
+        // Vue.set(state.qmTeams, teamInStoreIndex, team);
       } else {
         state.qmTeams.push(team);
       }

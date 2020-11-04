@@ -24,8 +24,10 @@
         {{ $t(game.state) }})</template
       >
       <template v-slot:rightcontent>
-        <b-nav-item to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
-        <b-nav-item to="/beamer" :title="$t('BEAMER_TITLE')" target="_blank">Beamer  <font-awesome-icon icon="external-link-square-alt" /></b-nav-item>
+        <b-nav-item v-b-tooltip.hover to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
+        <b-nav-item v-b-tooltip.hover to="/beamer" :title="$t('BEAMER_TITLE')" target="_blank"
+          >Beamer <font-awesome-icon icon="external-link-square-alt"
+        /></b-nav-item>
       </template>
     </nav-bar-part>
 
@@ -40,24 +42,22 @@
         </div>
 
         <div class="ranking">
-          <ul
-            class="list-unstyled"
-            v-for="team in qmTeamsSorted"
-            :key="team.id"
-          >
-            <b-media tag="li">
-              <template v-slot:aside>
-                <h1 :title="$t('TOTAL_NUMBER_OF_POINTS')">
-                  {{ team.totalScore }}
-                </h1>
-                <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
-              </template>
-              <h5 class="mt-0 mb-1">{{ team.name }}</h5>
-              <p class="mb-0">
-                TODO: score in this quiz section, trend (going up or sinking).
-              </p>
-            </b-media>
-          </ul>
+          <b-list-group flush>
+            <b-list-group-item v-for="team in qmTeamsSorted" :key="team.id">
+              <b-media>
+                <template #aside>
+                  <h1 :title="$t('TOTAL_NUMBER_OF_POINTS')">
+                    {{ team.totalScore }}
+                  </h1>
+                  <!-- <b-img blank blank-color="#abc" width="64" alt="placeholder"></b-img> -->
+                </template>
+                <h5 class="mt-0 mb-1">{{ team.name }}</h5>
+                <p class="mb-0">
+                  TODO: score in this quiz section, trend (going up or sinking).
+                </p></b-media
+              >
+            </b-list-group-item>
+          </b-list-group>
         </div>
       </div>
     </div>
@@ -157,7 +157,7 @@ export default class QuizMasterInGame extends mixins(
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: 5fr 6fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: "teamfeed quiz-container";
   overflow: hidden;
@@ -165,7 +165,7 @@ export default class QuizMasterInGame extends mixins(
 
 .grid-container > * {
   border-right: 4px solid #212529;
-  padding: 0.5em;
+  /* padding: 0.5em; */
 }
 .teamfeed {
   grid-area: teamfeed;
@@ -183,13 +183,9 @@ export default class QuizMasterInGame extends mixins(
   overflow: hidden;
 }
 
-.quiz-container > * {
-  padding: 0.5em;
-}
-
 .question {
   grid-area: question;
-  padding: 0px;
+  /* padding: 0.5em; */
   border-bottom: 4px solid #212529;
 }
 
