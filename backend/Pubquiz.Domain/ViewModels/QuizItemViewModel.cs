@@ -53,7 +53,7 @@ namespace Pubquiz.Domain.ViewModels
 
         public string Response { get; set; }
         public List<int> ChosenOptions { get; set; }
-        public int ChosenOption { get; set; }
+        public int ChosenOption { get; set; } = -1;
 
         public InteractionViewModel()
         {
