@@ -44,7 +44,9 @@
               v-for="mediaObject in quizItem.mediaObjects"
               :key="mediaObject.id"
             >
-              <img
+              <b-img
+                fluid
+                rounded
                 v-if="mediaObject.mediaType === imageType"
                 :src="mediaObject.uri"
               />
@@ -53,13 +55,12 @@
                 v-if="mediaObject.mediaType === audioType"
                 :src="mediaObject.uri"
               ></audio>
-              <video
-                width="320"
-                height="240"
-                controls
+              <b-embed
                 v-if="mediaObject.mediaType === videoType"
+                type="video"
+                controls
                 :src="mediaObject.uri"
-              ></video>
+              ></b-embed>
             </div>
           </b-col>
         </b-row>

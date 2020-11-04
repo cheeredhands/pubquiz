@@ -14,7 +14,10 @@
             v-for="interaction in quizItem.interactions"
             :key="interaction.id"
           >
-            <p :title="interaction.id">{{interaction.text}} ({{interaction.maxScore}}{{$t('POINTS')}})</p>
+            <p :title="interaction.id">
+              {{ interaction.text }} ({{ interaction.maxScore
+              }}{{ $t("POINTS") }})
+            </p>
             <div v-if="interaction.interactionType === multipleChoice">
               <b-form-group>
                 <b-form-radio-group
@@ -75,7 +78,9 @@
             v-for="mediaObject in quizItem.mediaObjects"
             :key="mediaObject.id"
           >
-            <img
+            <b-img
+              fluid
+              rounded
               v-if="mediaObject.mediaType === imageType"
               :src="mediaObject.uri"
             />
@@ -84,13 +89,12 @@
               v-if="mediaObject.mediaType === audioType"
               :src="mediaObject.uri"
             ></audio>
-            <video
-              width="320"
-              height="240"
-              controls
+            <b-embed
               v-if="mediaObject.mediaType === videoType"
+              type="video"
+              controls
               :src="mediaObject.uri"
-            ></video>
+            ></b-embed>
           </div>
         </b-col>
       </b-row>
