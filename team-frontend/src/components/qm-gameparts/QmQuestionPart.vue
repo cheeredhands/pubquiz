@@ -48,7 +48,7 @@
               </div>
             </div>
           </b-col>
-          <b-col>
+          <b-col v-if="quizItem.mediaObjects && quizItem.mediaObjects.length > 0">
             <div
               v-for="mediaObject in quizItem.mediaObjects"
               :key="mediaObject.id"
