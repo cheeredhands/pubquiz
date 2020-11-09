@@ -21,7 +21,10 @@ namespace Pubquiz.Domain.Models
         /// <summary>
         /// Only the questions in this section.
         /// </summary>
-        public List<QuizItemRef> QuestionItemRefs => QuizItemRefs.Where(q => q.ItemType != QuizItemType.Information).ToList();
+        public List<QuizItemRef> QuestionItemRefs
+        {
+            get { return QuizItemRefs.Where(q => q.ItemType != QuizItemType.Information).ToList(); }
+        }
 
         public QuizSection()
         {
