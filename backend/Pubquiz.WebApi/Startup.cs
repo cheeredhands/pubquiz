@@ -39,7 +39,7 @@ namespace Pubquiz.WebApi
         private readonly IConfiguration _configuration;
         private readonly string _secretKey;
         private readonly SymmetricSecurityKey _signingKey;
-
+        
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -203,6 +203,11 @@ namespace Pubquiz.WebApi
             services.AddRequests(Assembly.Load("Pubquiz.Logic"));
             services.AddSignalR().AddJsonProtocol(options =>
                 options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            
+            var quizrSettings = new QuizrSettings();
+            _configuration.Bind("QuizrSettings", quizrSettings);
+            quizrSettings.ContentPath = Path.Combine(_hostingEnvironment.WebRootPath, quizrSettings.ContentPath);
+            services.AddSingleton(quizrSettings);
         }
 
         private void AddSwagger(IServiceCollection services)

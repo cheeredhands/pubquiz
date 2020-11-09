@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,19 +33,20 @@ namespace Pubquiz.Domain.Tests
         protected List<QuizItem> QuestionsInQuiz;
         protected List<QuizItem> OtherQuestions;
         protected IBus Bus;
-        private ILoggerFactory _loggerFactory;
+        protected ILoggerFactory LoggerFactory;
         private InMemorySubscriberStore _inMemorySubscriberStore;
 
         [TestInitialize]
         public void Initialize()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
             var serviceProvider = new ServiceCollection()
                 .AddLogging(builder => builder.AddConsole()).BuildServiceProvider();
-            _loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            LoggerFactory = serviceProvider.GetService<ILoggerFactory>();
             
             ICollectionOptions inMemoryCollectionOptions = new InMemoryDatabaseOptions();
-            UnitOfWork = new NoActionUnitOfWork(memoryCache, _loggerFactory, inMemoryCollectionOptions);
+            UnitOfWork = new NoActionUnitOfWork(memoryCache, LoggerFactory, inMemoryCollectionOptions);
 
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
             var userCollection = UnitOfWork.GetCollection<User>();
@@ -71,8 +73,8 @@ namespace Pubquiz.Domain.Tests
 
             // set up bus
             var activator = new BuiltinHandlerActivator();
-            activator.Register((bus, messageContext) => new ScoringHandler(UnitOfWork, bus, _loggerFactory));
-            activator.Register(() => new ClientNotificationHandler(_loggerFactory, null));
+            activator.Register((bus, messageContext) => new ScoringHandler(UnitOfWork, bus, LoggerFactory));
+            activator.Register(() => new ClientNotificationHandler(LoggerFactory, null));
 
             // needed so the inmemory subscription store will be centralized
             _inMemorySubscriberStore = new InMemorySubscriberStore();

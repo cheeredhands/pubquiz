@@ -15,6 +15,7 @@
         <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
         <PackageReference Include="Rebus" Version="6.4.1" />
         <PackageReference Include="System.Interactive.Async" Version="4.1.1" />
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,4 +23,13 @@
         <ProjectReference Include="..\Pubquiz.Logic\Pubquiz.Logic.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="testfiles/**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="uploads/**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="uploads/.keep" />
+    </ItemGroup>
 </Project>
