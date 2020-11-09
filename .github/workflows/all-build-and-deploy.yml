@@ -93,7 +93,7 @@ jobs:
         path: ${{env.DOTNET_ROOT}}/myapp    
         # path: backend/Pubquiz.WebApi/bin/Release/netcoreapp3.1
     - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v1
+      uses: azure/webapps-deploy@v2
       with:
         app-name: 'quizr-web'
         slot-name: 'production'
