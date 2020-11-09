@@ -11,28 +11,28 @@ namespace Pubquiz.Domain.Tests
     [TestClass]
     public class ExcelImportTests : InitializedTestBase
     {
-        [TestMethod]
-        public async Task PeCeExcelQuizPackage_Import_CorrectQuizNameImported()
-        {
-            // arrange
-            var quizrSettings = new QuizrSettings
-            {
-                ContentPath = "uploads"
-            };
-            await using var stream = File.OpenRead("testfiles/PeCe.zip");
-            var command =
-                new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "PeCe.zip", quizrSettings, LoggerFactory);
-            // act
-
-            var quizrPackageId = await command.Execute();
-
-            // assert
-            var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
-            var quizrPackage = await quizrPackageCollection.GetAsync(quizrPackageId);
-            Assert.AreEqual(1, quizrPackage.QuizIds.Count);
-            var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quiz = await quizCollection.GetAsync(quizrPackage.QuizIds.First());
-            Assert.AreEqual("PéCé-pubquiz 2019", quiz.Title);
-        }
+        // [TestMethod]
+        // public async Task PeCeExcelQuizPackage_Import_CorrectQuizNameImported()
+        // {
+        //     // arrange
+        //     var quizrSettings = new QuizrSettings
+        //     {
+        //         ContentPath = "uploads"
+        //     };
+        //     await using var stream = File.OpenRead("testfiles/PeCe.zip");
+        //     var command =
+        //         new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "PeCe.zip", quizrSettings, LoggerFactory);
+        //     // act
+        //
+        //     var quizrPackageId = await command.Execute();
+        //
+        //     // assert
+        //     var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
+        //     var quizrPackage = await quizrPackageCollection.GetAsync(quizrPackageId);
+        //     Assert.AreEqual(1, quizrPackage.QuizIds.Count);
+        //     var quizCollection = UnitOfWork.GetCollection<Quiz>();
+        //     var quiz = await quizCollection.GetAsync(quizrPackage.QuizIds.First());
+        //     Assert.AreEqual("PéCé-pubquiz 2019", quiz.Title);
+        // }
     }
 }
