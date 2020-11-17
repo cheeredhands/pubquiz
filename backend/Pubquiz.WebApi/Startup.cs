@@ -262,9 +262,10 @@ namespace Pubquiz.WebApi
             });
         }
 
-        private void SeedStuff(IApplicationBuilder app, IWebHostEnvironment env)
+        private void SeedStuff(IApplicationBuilder app, IHostEnvironment env)
         {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+            var quizrSettings = app.ApplicationServices.GetService<QuizrSettings>();
             var mongoDbIsEmpty = _configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
                                  unitOfWork.GetCollection<Team>().GetCountAsync().Result == 0;
             // Seed the test data when using in-memory-database
@@ -273,15 +274,7 @@ namespace Pubquiz.WebApi
                 //var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
                 var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
                 var seeder = new TestSeeder(unitOfWork, loggerFactory);
-                if (env.IsDevelopment())
-                {
-                    seeder.SeedSeedSet("https://localhost:5001");    
-                }
-                else
-                {
-                    seeder.SeedSeedSet("https://decemberist.nl");
-                }
-                
+                seeder.SeedSeedSet(quizrSettings.BaseUrl);
             }
         }
     }

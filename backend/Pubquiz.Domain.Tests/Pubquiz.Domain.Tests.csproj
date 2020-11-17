@@ -27,9 +27,12 @@
         <None Update="testfiles/**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="uploads/**">
+        <None Update="quiz/**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Include="uploads/.keep" />
+        <None Include="quiz\.keep" />
+        <None Update="testfiles\PeCe.zip">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>
