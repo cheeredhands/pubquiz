@@ -15,7 +15,7 @@ export default {
   async init(): Promise<void> {
     await this.close();
     const connection = new SignalR.HubConnectionBuilder()
-      .withUrl(process.env.VUE_APP_BACKEND_URI + 'gamehub', { accessTokenFactory: () => localStorage.getItem('token') || '' })
+      .withUrl(process.env.VUE_APP_BACKEND_URI + 'gamehub', { accessTokenFactory: () => localStorage.getItem('token') || '' }, HttpTransportType.WebSockets | HttpTransportType.LongPolling)
       .configureLogging(SignalR.LogLevel.Information)
       .build();
     this.closing = false;
