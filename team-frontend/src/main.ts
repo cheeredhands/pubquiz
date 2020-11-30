@@ -5,12 +5,12 @@ import router from './router';
 import store from './store';
 import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight } from 'bootstrap-vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSignOutAlt, faTrashAlt, faPlay, faPause, faStop, faPowerOff, faUser, faArrowLeft, faArrowRight, faPen, faCheck, faGlasses, faExternalLinkSquareAlt, faCheckSquare, faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faTrashAlt, faPlay, faPause, faStop, faPowerOff, faUser, faArrowLeft, faArrowRight, faPen, faCheck, faGlasses, faExternalLinkSquareAlt, faCheckSquare, faCheckCircle, faTimesCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from 'axios';
 import i18n from './plugins/i18n';
 
-library.add(faGlasses, faSignOutAlt, faTrashAlt, faPlay, faPause, faStop, faPowerOff, faUser, faArrowLeft, faArrowRight, faPen, faCheck, faExternalLinkSquareAlt, faCheckCircle, faTimesCircle);
+library.add(faGlasses, faSignOutAlt, faTrashAlt, faPlay, faPause, faStop, faPowerOff, faUser, faArrowLeft, faArrowRight, faPen, faCheck, faExternalLinkSquareAlt, faCheckCircle, faTimesCircle, faPlus);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
@@ -42,6 +42,19 @@ axiosInstanceBackend.interceptors.request.use(
 
 Vue.prototype.$axios = axiosInstanceBackend;
 Vue.prototype.$http = axios;
+
+Vue.filter('formatSize', function(size: number) {
+  if (size > 1024 * 1024 * 1024 * 1024) {
+    return (size / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' TB';
+  } else if (size > 1024 * 1024 * 1024) {
+    return (size / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+  } else if (size > 1024 * 1024) {
+    return (size / 1024 / 1024).toFixed(2) + ' MB';
+  } else if (size > 1024) {
+    return (size / 1024).toFixed(2) + ' KB';
+  }
+  return size.toString() + ' B';
+});
 
 new Vue({
   router,

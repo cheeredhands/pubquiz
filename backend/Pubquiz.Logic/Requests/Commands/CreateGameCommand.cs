@@ -57,7 +57,10 @@ namespace Pubquiz.Logic.Requests.Commands
             // add game to quiz master
             foreach (var quizMaster in quizMasters)
             {
-                quizMaster.GameRefs.Add(new GameRef {Id = game.Id, Title = game.Title, QuizTitle = game.QuizTitle});
+                var gameRef = new GameRef {Id = game.Id, Title = game.Title, QuizTitle = game.QuizTitle, InviteCode = game.InviteCode};
+                quizMaster.GameRefs.Add(gameRef);
+                var quizRef = quizMaster.QuizRefs.First(r => r.Id == QuizId);
+                quizRef.GameRefs.Add(gameRef);
                 await userCollection.UpdateAsync(quizMaster);
             }
 

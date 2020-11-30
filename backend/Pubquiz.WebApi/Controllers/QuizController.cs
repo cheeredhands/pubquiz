@@ -44,10 +44,11 @@ namespace Pubquiz.WebApi.Controllers
             var command =
                 new ImportZippedExcelQuizCommand(_unitOfWork, _bus, fileStream, formFile.FileName, _quizrSettings,
                     _loggerFactory);
+            command.ActorId = User.GetId();
             var result = await command.Execute();
 
             return Ok(new ImportZippedExcelQuizResponse
-                {Code = ResultCode.Ok, Message = "Quiz successfully imported.", QuizId = result.Id});
+                {Code = ResultCode.Ok, Message = "Quiz successfully imported.", QuizRefs = result.QuizRefs});
         }
     }
 }

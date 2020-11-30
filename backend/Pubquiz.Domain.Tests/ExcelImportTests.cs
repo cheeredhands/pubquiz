@@ -30,10 +30,10 @@ namespace Pubquiz.Domain.Tests
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
-            Assert.AreEqual(1, quizrPackage.QuizIds.Count);
+            Assert.AreEqual(1, quizrPackage.QuizRefs.Count);
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quiz = await quizCollection.GetAsync(quizrPackage.QuizIds.First());
-            Assert.AreEqual("PéCé-pubquiz 2019", quiz.Title);
+            var quizRef = await quizCollection.GetAsync(quizrPackage.QuizRefs.First().Id);
+            Assert.AreEqual("PéCé-pubquiz 2019", quizRef.Title);
         }
         [TestMethod]
         public async Task Oki2020QuizExcelQuizPackage_Import_CorrectQuizNameImported()
@@ -54,10 +54,10 @@ namespace Pubquiz.Domain.Tests
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
-            Assert.AreEqual(1, quizrPackage.QuizIds.Count);
+            Assert.AreEqual(1, quizrPackage.QuizRefs.Count);
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quiz = await quizCollection.GetAsync(quizrPackage.QuizIds.First());
-            Assert.AreEqual("OKI-Kerstquiz 2020", quiz.Title);
+            var quizRef = await quizCollection.GetAsync(quizrPackage.QuizRefs.First().Id);
+            Assert.AreEqual("OKI-Kerstquiz 2020", quizRef.Title);
         }
     }
 }

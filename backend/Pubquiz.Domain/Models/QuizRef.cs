@@ -6,6 +6,11 @@ namespace Pubquiz.Domain.Models
     {
         public string Id { get; set; }
         public string Title { get; set; }
-        public List<Game> Games { get; set; }
+        public List<GameRef> GameRefs { get; set; }
+
+        public QuizRef()
+        {
+            GameRefs = new List<GameRef>();
+        }
     }
 }

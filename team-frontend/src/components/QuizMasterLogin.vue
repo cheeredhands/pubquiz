@@ -89,12 +89,7 @@ export default class QuizMasterLogin extends mixins(
       .then((response: AxiosResponse<LoginResponse>) => {
         this.$store.dispatch('storeToken', response.data.jwt).then(() => {
           this.$store
-            .dispatch('initQuizMaster', {
-              userId: response.data.userId,
-              userName: response.data.userName,
-              gameIds: response.data.gameIds,
-              isLoggedIn: true
-            })
+            .dispatch('initQuizMaster', response.data)
             .then(() => {
               // and goto lobby
               this.$router.push({ name: 'QuizMasterLobby' });

@@ -27,7 +27,9 @@ namespace Pubquiz.Logic.Requests.Queries
 
             foreach (var quizRef in quizRefs)
             {
-                quizRef.Games = gameCollection.AsQueryable().Where(g => g.QuizId == quizRef.Id).ToList();
+                quizRef.GameRefs = gameCollection.AsQueryable().Where(g => g.QuizId == quizRef.Id)
+                    .Select(g => new GameRef
+                        {Id = g.Id, Title = g.Title, QuizTitle = g.QuizTitle, InviteCode = g.InviteCode}).ToList();
             }
 
             return quizRefs;

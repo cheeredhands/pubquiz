@@ -57,8 +57,11 @@ namespace Pubquiz.Domain.Tests
             Users = TestUsers.GetUsers();
             Quiz = TestQuiz.GetQuiz();
             Game = TestGame.GetGame(Users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), Quiz);
-            Users.First(u => u.UserName == "Quiz master 1").GameRefs.Add(new GameRef
-                {Id = Game.Id, Title = Game.Title, QuizTitle = Game.QuizTitle});
+            var gameRef = new GameRef
+                {Id = Game.Id, Title = Game.Title, QuizTitle = Game.QuizTitle, InviteCode = Game.InviteCode};
+            Users.First(u => u.UserName == "Quiz master 1").GameRefs.Add(gameRef);
+            Users.First(u => u.UserName == "Quiz master 1").QuizRefs.Add(new QuizRef
+                {Id = Quiz.Id, Title = Quiz.Title, GameRefs = new List<GameRef> {gameRef}});
             Teams = TestTeams.GetTeams(teamCollection, Game.Id);
             Game.QuizId = Quiz.Id;
             Game.TeamIds = Teams.Select(t => t.Id).ToList();

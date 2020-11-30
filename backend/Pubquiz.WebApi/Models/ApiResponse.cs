@@ -19,6 +19,7 @@ namespace Pubquiz.WebApi.Models
         public string Name { get; set; }
         public string MemberNames { get; set; }
         public string CurrentGameId { get; set; }
+        public List<QuizRef> QuizRefs { get; set; }
         public List<GameRef> GameRefs { get; set; }
         public GameState GameState { get; set; }
         public UserRole UserRole { get; set; }
@@ -40,6 +41,7 @@ namespace Pubquiz.WebApi.Models
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string CurrentGameId { get; set; }
+        public List<QuizRef> QuizRefs { get; set; }
         public List<GameRef> GameRefs { get; set; }
     }
 
@@ -70,6 +72,6 @@ namespace Pubquiz.WebApi.Models
 
     public class ImportZippedExcelQuizResponse : ApiResponse
     {
-        public string QuizId { get; set; }
+        public List<QuizRef> QuizRefs { get; set; }
     }
 }

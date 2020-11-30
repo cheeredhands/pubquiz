@@ -95,6 +95,7 @@ namespace Pubquiz.WebApi.Controllers
                 UserName = user.UserName,
                 UserId = User.GetId(),
                 CurrentGameId = user.CurrentGameId,
+                QuizRefs = user.QuizRefs,
                 GameRefs = user.GameRefs,
                 GameState = game.State,
                 UserRole = User.GetUserRole()
@@ -136,6 +137,7 @@ namespace Pubquiz.WebApi.Controllers
                 UserId = user.Id,
                 UserName = user.UserName,
                 CurrentGameId = user.CurrentGameId,
+                QuizRefs = user.QuizRefs,
                 GameRefs = user.GameRefs
             });
         }

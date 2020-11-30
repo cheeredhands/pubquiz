@@ -1,4 +1,17 @@
 
+export interface GameRef {
+  id: string;
+  title: string;
+  quizTitle: string;
+  inviteCode: string;
+}
+
+export interface QuizRef {
+  id: string;
+  title: string;
+  gameRefs: GameRef[];
+}
+
 export interface User {
   /** The user Id */
   userId: string;
@@ -8,8 +21,10 @@ export interface User {
   isLoggedIn: boolean;
   /** the current game Id */
   currentGameId: string;
+  /** the quiz ids this user is an owner of  */
+  quizRefs: QuizRef[];
   /** the game ids this user is involved in */
-  gameIds: string[];
+  gameRefs: GameRef[];
 }
 
 export enum GameState {

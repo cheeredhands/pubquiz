@@ -5,5 +5,6 @@ namespace Pubquiz.Domain.Models
         public string Id { get; set; }
         public string Title { get; set; }
         public string QuizTitle { get; set; }
+        public string InviteCode { get; set; }
     }
 }

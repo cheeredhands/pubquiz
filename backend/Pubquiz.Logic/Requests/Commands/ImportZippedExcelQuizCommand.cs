@@ -16,8 +16,10 @@ using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Commands
 {
+    [ValidateEntity(EntityType = typeof(User), IdPropertyName = "ActorId")]
     public class ImportZippedExcelQuizCommand : Command<QuizrPackage>
     {
+        public string ActorId { get; set; }
         private readonly Stream _fileStream;
         private readonly string _fileName;
         private readonly QuizrSettings _quizrSettings;
@@ -105,7 +107,7 @@ namespace Pubquiz.Logic.Requests.Commands
             foreach (var excelFile in excelFiles)
             {
                 var errors = new List<string>();
-                var quiz = new Quiz();
+                var quiz = new Quiz {OwnerId = ActorId};
                 await using var stream = excelFile.OpenRead();
                 using var reader = ExcelReaderFactory.CreateReader(stream);
                 var dataSet = reader.AsDataSet();
@@ -133,7 +135,7 @@ namespace Pubquiz.Logic.Requests.Commands
             foreach (var quiz in quizzes)
             {
                 await quizCollection.AddAsync(quiz);
-                _package.QuizIds.Add(quiz.Id);
+                _package.QuizRefs.Add(new QuizRef {Id = quiz.Id, Title = quiz.Title});
             }
 
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();

@@ -47,10 +47,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
             });
         } else {
           this.$store
-            .dispatch('initQuizMaster', {
-              userId: response.data.userId,
-              userName: response.data.userName
-            })
+            .dispatch('initQuizMaster', response.data)
             .then(() => {
               if (this.$router.currentRoute.name !== 'Beamer') {
                 if (response.data.gameState === GameState.Open) {

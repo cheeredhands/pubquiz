@@ -1,4 +1,4 @@
-import { UserRole, GameState } from './models';
+import { UserRole, GameState, QuizRef } from './models';
 
 export interface ApiResponse {
     errorCode: string;
@@ -40,3 +40,7 @@ export interface SaveTeamMembersResponse extends ApiResponse {
 export interface NavigateItemResponse extends ApiResponse {
     quizItemId: string;
   }
+
+export interface ImportZippedExcelQuizResponse extends ApiResponse {
+  quizRefs: QuizRef[];
+}

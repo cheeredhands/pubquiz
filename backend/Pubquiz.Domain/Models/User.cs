@@ -10,6 +10,7 @@ namespace Pubquiz.Domain.Models
         public string Password { get; set; }
         public string RecoveryCode { get; set; }
         public UserRole UserRole { get; set; }
+        public List<QuizRef> QuizRefs { get; set; }
         public List<GameRef> GameRefs { get; set; }
         public string CurrentGameId { get; set; }
         public bool IsLoggedIn => ConnectionCount > 0;
@@ -18,6 +19,7 @@ namespace Pubquiz.Domain.Models
         public User()
         {
             GameRefs = new List<GameRef>();
+            QuizRefs = new List<QuizRef>();
         }
     }
 

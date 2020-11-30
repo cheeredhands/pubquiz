@@ -2,9 +2,10 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import { User, GameState, QuizItem, Team, Game } from '../models/models';
+import { User, GameState, QuizItem, Team, Game, GameRef, QuizRef } from '../models/models';
 import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage, TeamConnectionChangedMessage } from '../models/messages';
 import { QuizItemViewModel, TeamViewModel } from '../models/viewModels';
+import { WhoAmIResponse } from '@/models/apiResponses';
 
 Vue.use(Vuex);
 export interface RootState {
@@ -20,7 +21,8 @@ export interface RootState {
 
   user?: User;
   currentGameId?: string;
-  gameIds: string[];
+  quizRefs: QuizRef[];
+  gameRefs: GameRef[];
   qmTeams: Team[];
   debounceMs: number;
 }
@@ -39,7 +41,8 @@ const storeOpts: StoreOptions<RootState> = {
 
     user: undefined,
     currentGameId: undefined,
-    gameIds: [],
+    quizRefs: [],
+    gameRefs: [],
     qmTeams: [],
     debounceMs: parseInt(process.env.VUE_APP_DEBOUNCE_MS || '1500')
   },
@@ -55,7 +58,9 @@ const storeOpts: StoreOptions<RootState> = {
     currentQuizItemId: state => state.game?.currentQuizItemId || '',
     throttleMs: state => state.debounceMs,
     recoveryCode: state => state.team?.recoveryCode || '',
-    qmTeams: state => state.qmTeams
+    qmTeams: state => state.qmTeams || [],
+    quizRefs: state => state.quizRefs || [],
+    gameRefs: state => state.gameRefs || []
   },
   mutations: {
     // mutations are sync store updates
@@ -63,7 +68,8 @@ const storeOpts: StoreOptions<RootState> = {
       state.user = user;
       state.isLoggedIn = true;
       state.currentGameId = user.currentGameId;
-      state.gameIds = user.gameIds;
+      state.quizRefs = user.quizRefs;
+      state.gameRefs = user.gameRefs;
     },
     setTeam(state, team: Team) {
       state.team = team;

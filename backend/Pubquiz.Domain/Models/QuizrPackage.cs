@@ -9,11 +9,11 @@ namespace Pubquiz.Domain.Models
         public string FullPath { get; set; }
         public string Filename { get; set; }
         public string PackageMetadata { get; set; }
-        public List<string> QuizIds { get; set; }
+        public List<QuizRef> QuizRefs { get; set; }
 
         public QuizrPackage()
         {
-            QuizIds = new List<string>();
+            QuizRefs = new List<QuizRef>();
         }
     }
 }
