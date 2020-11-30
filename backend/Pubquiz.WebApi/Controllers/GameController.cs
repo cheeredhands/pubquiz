@@ -158,6 +158,23 @@ namespace Pubquiz.WebApi.Controllers
             return Ok(new ApiResponse {Code = ResultCode.Ok, Message = "Interaction corrected."});
         }
 
+        [HttpGet("getquizzes")]
+        [Authorize(AuthPolicy.Admin)]
+        public async Task<IActionResult> GetQuizzes()
+        {
+            var query = new GetQuizzesQuery(_unitOfWork) {ActorId = User.GetId()};
+            var result = await query.Execute();
+            return Ok(result);
+        }
+
+        [HttpPost("creategame")]
+        [Authorize(AuthPolicy.Admin)]
+        public async Task<IActionResult> CreateGame(CreateGameCommand command)
+        {
+            command.ActorId = User.GetId();
+            var result = await command.Execute();
+            return Ok(result);
+        }
         #endregion
     }
 }
