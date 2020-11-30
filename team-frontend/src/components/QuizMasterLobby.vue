@@ -17,8 +17,8 @@
       <b-container>
         <b-row>
           <b-col lg="6">
-            <p v-if="game.state===openState">{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
-            <p v-else>{{ $t('CURRENT_TEAMS_IN_GAME')}}</p>
+            <p class="mt-3" v-if="game.state===openState">{{ $t('CURRENT_TEAMS_IN_LOBBY')}}</p>
+            <p class="mt-3" v-else>{{ $t('CURRENT_TEAMS_IN_GAME')}}</p>
             <b-list-group>
               <b-list-group-item v-for="team in teams" :key="team.id">
                 <strong :title="team.recoveryCode">{{ team.name }} </strong>
@@ -28,6 +28,22 @@
                 <font-awesome-icon
                   icon="trash-alt"
                   @click="kickTeam(team.id, team.name)"
+                  pull="right"
+                  style="cursor:pointer;"
+                  :title="$t('KICK_OUT')"
+                />
+              </b-list-group-item>
+            </b-list-group>
+          </b-col>
+          <b-col lg="6">
+            <p class="mt-3">{{ $t('OTHER_GAMES')}}</p>
+            <b-list-group>
+              <b-list-group-item v-for="gameRef in gameRefs.filter(r=>r.id===game.id)" :key="gameRef.id">
+                <strong>{{ game.title }} </strong>
+                <span class="smaller">({{game.quizTitle}})</span>&nbsp;
+                <font-awesome-icon
+                  icon="trash-alt"
+                  @click="kickTeam(game.id)"
                   pull="right"
                   style="cursor:pointer;"
                   :title="$t('KICK_OUT')"
@@ -53,7 +69,7 @@ import GameServiceMixin from '../services/game-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
-import { Game, Team, GameState } from '../models/models';
+import { Game, Team, GameState, GameRef } from '../models/models';
 import { ApiResponse } from '../models/apiResponses';
 
 @Component({
@@ -137,6 +153,10 @@ export default class QuizMasterLobby extends mixins(
 
   get userId(): string {
     return this.$store.getters.userId;
+  }
+
+  get gameRefs(): GameRef[] {
+    return this.$store.getters.gameRefs;
   }
 }
 </script>

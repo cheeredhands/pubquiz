@@ -18,13 +18,13 @@ namespace Pubquiz.Logic.Requests.Queries
         public GetGamesQuery(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
-        
+
         protected override async Task<List<Game>> DoExecute()
         {
             var userCollection = UnitOfWork.GetCollection<User>();
             var user = await userCollection.GetAsync(UserId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var games = gameCollection.GetAsync(user.GameIds.ToArray()).Result;
+            var games = gameCollection.GetAsync(user.GameRefs.Select(r => r.Id).ToArray()).Result;
 
             return games.ToList();
         }

@@ -32,7 +32,7 @@ namespace Pubquiz.Logic.Requests.Commands
             // TODO link all quiz masters for now
             var userCollection = UnitOfWork.GetCollection<User>();
             var quizMasters = userCollection.AsQueryable().Where(u => u.UserRole == UserRole.QuizMaster);
-                
+
 
             var game = new Game
             {
@@ -41,7 +41,7 @@ namespace Pubquiz.Logic.Requests.Commands
                 Title = GameTitle,
                 QuizTitle = quiz.Title,
                 InviteCode = InviteCode,
-                QuizMasterIds = quizMasters.Select(q=>q.Id).ToList(),
+                QuizMasterIds = quizMasters.Select(q => q.Id).ToList(),
                 TotalQuestionCount = quiz.TotalQuestionCount,
                 TotalQuizItemCount = quiz.TotalQuizItemCount,
                 CurrentSectionQuizItemCount = quiz.QuizSections[0].QuizItemRefs.Count,
@@ -53,11 +53,11 @@ namespace Pubquiz.Logic.Requests.Commands
                 CurrentQuestionIndexInTotal = 0,
                 State = GameState.Open
             };
-            
+
             // add game to quiz master
             foreach (var quizMaster in quizMasters)
             {
-                quizMaster.GameIds.Add(game.Id);
+                quizMaster.GameRefs.Add(new GameRef {Id = game.Id, Title = game.Title, QuizTitle = game.QuizTitle});
                 await userCollection.UpdateAsync(quizMaster);
             }
 

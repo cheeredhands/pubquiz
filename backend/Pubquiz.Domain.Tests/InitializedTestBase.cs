@@ -44,7 +44,7 @@ namespace Pubquiz.Domain.Tests
             var serviceProvider = new ServiceCollection()
                 .AddLogging(builder => builder.AddConsole()).BuildServiceProvider();
             LoggerFactory = serviceProvider.GetService<ILoggerFactory>();
-            
+
             ICollectionOptions inMemoryCollectionOptions = new InMemoryDatabaseOptions();
             UnitOfWork = new NoActionUnitOfWork(memoryCache, LoggerFactory, inMemoryCollectionOptions);
 
@@ -57,7 +57,8 @@ namespace Pubquiz.Domain.Tests
             Users = TestUsers.GetUsers();
             Quiz = TestQuiz.GetQuiz();
             Game = TestGame.GetGame(Users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), Quiz);
-            Users.First(u => u.UserName == "Quiz master 1").GameIds.Add(Game.Id);
+            Users.First(u => u.UserName == "Quiz master 1").GameRefs.Add(new GameRef
+                {Id = Game.Id, Title = Game.Title, QuizTitle = Game.QuizTitle});
             Teams = TestTeams.GetTeams(teamCollection, Game.Id);
             Game.QuizId = Quiz.Id;
             Game.TeamIds = Teams.Select(t => t.Id).ToList();

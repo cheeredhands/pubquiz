@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
@@ -30,14 +31,14 @@ namespace Pubquiz.Logic.Requests.Notifications
                 throw new DomainException(ResultCode.UnauthorizedRole, "You can't do that with this role.", true);
             }
 
-            if (!user.GameIds.Contains(GameId))
+            if (user.GameRefs.All(r => r.Id != GameId))
             {
                 throw new DomainException(ResultCode.QuizMasterUnauthorizedForGame,
                     $"Actor with id {ActorId} is not authorized for game '{GameId}'", true);
             }
 
             user.CurrentGameId = GameId;
-            await userCollection.UpdateAsync(user); 
+            await userCollection.UpdateAsync(user);
         }
     }
 }

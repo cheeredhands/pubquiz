@@ -19,6 +19,7 @@ namespace Pubquiz.WebApi.Models
         public string Name { get; set; }
         public string MemberNames { get; set; }
         public string CurrentGameId { get; set; }
+        public List<GameRef> GameRefs { get; set; }
         public GameState GameState { get; set; }
         public UserRole UserRole { get; set; }
     }
@@ -39,7 +40,7 @@ namespace Pubquiz.WebApi.Models
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string CurrentGameId { get; set; }
-        public List<string> GameIds { get; set; }
+        public List<GameRef> GameRefs { get; set; }
     }
 
     public class SelectGameResponse : ApiResponse
