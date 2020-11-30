@@ -206,7 +206,7 @@ namespace Pubquiz.WebApi
             
             var quizrSettings = new QuizrSettings();
             _configuration.Bind("QuizrSettings", quizrSettings);
-            quizrSettings.ContentPath = Path.Combine(_hostingEnvironment.WebRootPath, quizrSettings.ContentPath);
+            quizrSettings.WebRootPath = _hostingEnvironment.WebRootPath;
             services.AddSingleton(quizrSettings);
         }
 

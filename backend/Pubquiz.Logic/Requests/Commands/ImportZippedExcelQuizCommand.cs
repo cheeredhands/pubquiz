@@ -16,7 +16,7 @@ using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Commands
 {
-    public class ImportZippedExcelQuizCommand : Command<string>
+    public class ImportZippedExcelQuizCommand : Command<QuizrPackage>
     {
         private readonly Stream _fileStream;
         private readonly string _fileName;
@@ -35,7 +35,7 @@ namespace Pubquiz.Logic.Requests.Commands
             _logger = loggerFactory.CreateLogger<ImportZippedExcelQuizCommand>();
         }
 
-        protected override async Task<string> DoExecute()
+        protected override async Task<QuizrPackage> DoExecute()
         {
             if (_fileStream == null)
             {
@@ -46,7 +46,7 @@ namespace Pubquiz.Logic.Requests.Commands
             var hashBytes = md5.ComputeHash(_fileStream);
             var hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
             _fileStream.Position = 0;
-            var filePath = Path.Combine(_quizrSettings.ContentPath, _fileName);
+            var filePath = Path.Combine(_quizrSettings.WebRootPath, _quizrSettings.ContentPath, _fileName);
             await using (var fileStream = File.OpenWrite(filePath))
             {
                 await _fileStream.CopyToAsync(fileStream);
@@ -82,13 +82,18 @@ namespace Pubquiz.Logic.Requests.Commands
                 };
                 await packageCollection.AddAsync(_package);
             }
+            else
+            {
+                _logger.LogInformation($"Package with hash {hash} was previously imported, returning existing id.");
+                return _package;
+            }
 
             await Unzip();
 
             await ImportExcel();
             await packageCollection.UpdateAsync(_package);
 
-            return _package.Id;
+            return _package;
         }
 
         private async Task ImportExcel()
@@ -495,7 +500,7 @@ namespace Pubquiz.Logic.Requests.Commands
         private async Task Unzip()
         {
             // unzip the package
-            _packagePath = Path.Combine(_quizrSettings.ContentPath, _package.Hash);
+            _packagePath = Path.Combine(_quizrSettings.WebRootPath, _quizrSettings.ContentPath, _package.Hash);
             _logger.LogInformation($"Extracting to {_packagePath}");
             await Task.Run(() => ZipFile.ExtractToDirectory(_package.FullPath, _packagePath, true));
         }

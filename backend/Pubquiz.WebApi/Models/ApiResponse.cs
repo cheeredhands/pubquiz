@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Pubquiz.WebApi.Models
@@ -64,5 +65,10 @@ namespace Pubquiz.WebApi.Models
     public class NavigateItemResponse : ApiResponse
     {
         public string QuizItemId { get; set; }
+    }
+
+    public class ImportZippedExcelQuizResponse : ApiResponse
+    {
+        public string QuizId { get; set; }
     }
 }

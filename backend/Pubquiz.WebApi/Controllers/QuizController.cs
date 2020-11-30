@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Pubquiz.Domain;
 using Pubquiz.Logic.Requests.Commands;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
@@ -20,7 +21,8 @@ namespace Pubquiz.WebApi.Controllers
         private readonly QuizrSettings _quizrSettings;
         private readonly ILoggerFactory _loggerFactory;
 
-        public QuizController(IUnitOfWork unitOfWork, IBus bus, QuizrSettings quizrSettings, ILoggerFactory loggerFactory)
+        public QuizController(IUnitOfWork unitOfWork, IBus bus, QuizrSettings quizrSettings,
+            ILoggerFactory loggerFactory)
         {
             _unitOfWork = unitOfWork;
             _bus = bus;
@@ -40,10 +42,12 @@ namespace Pubquiz.WebApi.Controllers
         {
             await using var fileStream = formFile.OpenReadStream();
             var command =
-                new ImportZippedExcelQuizCommand(_unitOfWork, _bus, fileStream, formFile.Name, _quizrSettings, _loggerFactory);
+                new ImportZippedExcelQuizCommand(_unitOfWork, _bus, fileStream, formFile.FileName, _quizrSettings,
+                    _loggerFactory);
             var result = await command.Execute();
 
-            return Ok(result);
+            return Ok(new ImportZippedExcelQuizResponse
+                {Code = ResultCode.Ok, Message = "Quiz successfully imported.", QuizId = result.Id});
         }
     }
 }
