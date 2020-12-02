@@ -333,3 +333,6 @@ ASALocalRun/
 
 # Apple crap
 .DS_Store
+
+**/quiz/*
+!.keep
