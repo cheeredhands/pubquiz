@@ -3,12 +3,13 @@
     <nav-bar-part>
       <b-nav-item>
         <b-button
+          size="sm"
           v-if="game.state === runningState || game.state === pausedState"
           @click="startGame"
           variant="success"
           >{{ $t("CONTINUE_GAME") }}</b-button
         >
-        <b-button v-else @click="startGame" variant="success">{{
+        <b-button size="sm" v-else @click="startGame" variant="success">{{
           $t("START_GAME")
         }}</b-button>
       </b-nav-item>
@@ -92,11 +93,16 @@
                   />
                 </b-list-group-item> </b-list-group
             ></b-card>
-            <b-card
-              no-body
-              class="example-drag mt-5"
-              :header="$t('MY_QUIZZES')"
-            >
+            <b-card no-body class="example-drag mt-5" header-tag="header">
+              <template #header>
+                <span v-if="game.state === openState">
+                  {{ $t("MY_QUIZZES") }}
+                  <h5 class="float-right mb-0" v-b-tooltip :title="$t('ADD_QUIZ')" style="cursor: pointer">
+                    <b-icon-file-earmark-plus></b-icon-file-earmark-plus>
+                  </h5>
+                </span>
+                <span v-else>{{ $t("CURRENT_TEAMS_IN_GAME") }}</span>
+              </template>
               <b-list-group flush>
                 <b-list-group-item
                   v-for="quizRef in quizRefs"
@@ -112,16 +118,17 @@
                       >s</span
                     > </span
                   >&nbsp;
-                  <font-awesome-icon
-                    v-b-tooltip
-                    icon="plus"
-                    @click="kickTeam(quizRef.id)"
+                  <b-button
+                    class="float-right"
+                    variant="secondary"
+                    size="sm"
                     pull="right"
-                    style="cursor: pointer"
-                    :title="$t('ADD_GAME_FOR_QUIZ')"
-                  />
-                </b-list-group-item> </b-list-group
-            ></b-card>
+                  >
+                    {{ $t("ADD_GAME_FOR_QUIZ") }}
+                  </b-button>
+                </b-list-group-item>
+              </b-list-group></b-card
+            >
           </b-col>
         </b-row>
         <b-row
