@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="sm" type="dark" variant="info">
+  <b-navbar toggleable="sm" type="light" variant="info">
     <b-navbar-brand to="/" :title="$t('HOME_TITLE')">{{ $t('APP_TITLE')}}</b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse is-nav id="nav-collapse">

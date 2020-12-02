@@ -107,7 +107,7 @@ namespace Pubquiz.Logic.Requests.Commands
             foreach (var excelFile in excelFiles)
             {
                 var errors = new List<string>();
-                var quiz = new Quiz {OwnerId = ActorId};
+                var quiz = new Quiz();
                 await using var stream = excelFile.OpenRead();
                 using var reader = ExcelReaderFactory.CreateReader(stream);
                 var dataSet = reader.AsDataSet();
@@ -132,11 +132,17 @@ namespace Pubquiz.Logic.Requests.Commands
             }
 
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
+            var userCollection = UnitOfWork.GetCollection<User>();
+            var user = await userCollection.GetAsync(ActorId);
+            
             foreach (var quiz in quizzes)
             {
                 await quizCollection.AddAsync(quiz);
-                _package.QuizRefs.Add(new QuizRef {Id = quiz.Id, Title = quiz.Title});
+                var quizRef = new QuizRef {Id = quiz.Id, Title = quiz.Title};
+                _package.QuizRefs.Add(quizRef);
+                user.QuizRefs.Add(quizRef);
             }
+            await userCollection.UpdateAsync(user);
 
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
             foreach (var quizItem in quizItemList)

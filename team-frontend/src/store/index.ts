@@ -103,6 +103,9 @@ const storeOpts: StoreOptions<RootState> = {
         state.qmTeams.push(team);
       }
     },
+    addQuizRefs(state, quizRefs: QuizRef[]) {
+      state.quizRefs.push(...quizRefs);
+    },
     removeTeam(state, teamId: string) {
       const teamInStore = state.teams.find(i => i.id === teamId);
       if (teamInStore !== undefined) {

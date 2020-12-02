@@ -97,7 +97,12 @@
               <template #header>
                 <span v-if="game.state === openState">
                   {{ $t("MY_QUIZZES") }}
-                  <h5 class="float-right mb-0" v-b-tooltip :title="$t('ADD_QUIZ')" style="cursor: pointer">
+                  <h5
+                    class="float-right mb-0"
+                    v-b-tooltip
+                    :title="$t('ADD_QUIZ')"
+                    style="cursor: pointer"
+                  >
                     <b-icon-file-earmark-plus></b-icon-file-earmark-plus>
                   </h5>
                 </span>
@@ -136,7 +141,8 @@
             <b-card class="example-drag mt-5" :header="$t('UPLOAD_QUIZ')">
               <div>
                 <!-- Styled -->
-                <!-- <b-form-file
+                <b-form-file
+                  accept="application/zip"
                   v-model="quizFile"
                   :state="Boolean(quizFile)"
                   placeholder="Choose a file or drop it here..."
@@ -144,7 +150,8 @@
                 ></b-form-file>
                 <div class="mt-3">
                   Selected file: {{ quizFile ? quizFile.name : "" }}
-                </div> -->
+                </div>
+                <b-button @click="uploadFile()">Upload</b-button>
               </div>
             </b-card>
           </b-col></b-row
@@ -168,6 +175,7 @@ import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
 import { Game, Team, GameState, GameRef, QuizRef } from '../models/models';
 import { ApiResponse } from '../models/apiResponses';
+import QuizServiceMixin from '@/services/quiz-service-mixin';
 
 @Component({
   components: { NavBarPart, FooterPart },
@@ -183,6 +191,7 @@ import { ApiResponse } from '../models/apiResponses';
   }
 })
 export default class QuizMasterLobby extends mixins(
+  QuizServiceMixin,
   AccountServiceMixin,
   GameServiceMixin,
   HelperMixin
@@ -191,13 +200,21 @@ export default class QuizMasterLobby extends mixins(
   public openState = GameState.Open;
   public runningState = GameState.Running;
   public pausedState = GameState.Paused;
-
-  public quizFile: File | undefined;
+  quizFile = null;
 
   public created(): void {
     this.$_gameService_getQmLobby().then(() => {
       document.title = 'Lobby - ' + this.game.title;
     });
+  }
+
+  public uploadFile(): void {
+    if (this.quizFile !== undefined) {
+      this.$_quizService_uploadQuiz(this.userId, this.quizFile as unknown as File)
+        .catch((error: AxiosError<ApiResponse>) => {
+          this.$_helper_toastError(error);
+        });
+    }
   }
 
   public startGame(): void {

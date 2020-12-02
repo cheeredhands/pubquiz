@@ -21,8 +21,6 @@ namespace Pubquiz.Domain.Models
         public int TotalQuestionCount => QuizSections.Sum(qs => qs.QuestionItemRefs.Count);
         public IEnumerable<string> QuizItemIds => QuizSections.SelectMany(qs => qs.QuizItemRefs.Select(qi => qi.Id));
 
-        public string OwnerId { get; set; }
-        
         public Quiz()
         {
             QuizSections = new List<QuizSection>();
