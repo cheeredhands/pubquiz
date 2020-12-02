@@ -14,7 +14,10 @@
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <slot name="rightcontent"></slot>
-        <b-nav-item-dropdown v-if="isLoggedIn" :text="userName" right>
+        <b-nav-item-dropdown v-if="isLoggedIn" right>
+           <template #button-content>
+            <em>{{userName}}</em>
+          </template>
           <b-dropdown-item @click="logOut()">{{ $t('LEAVE_GAME')}}</b-dropdown-item>
           <b-dropdown-item>{{ $t('MENU_HELP') }}</b-dropdown-item>
           <b-dropdown-item to="/about">{{ $t('MENU_ABOUT') }}</b-dropdown-item>
