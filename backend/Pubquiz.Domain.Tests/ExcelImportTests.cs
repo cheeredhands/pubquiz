@@ -26,9 +26,9 @@ namespace Pubquiz.Domain.Tests
                 new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "PeCe.zip", quizrSettings, LoggerFactory);
             command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
             // act
-        
+
             var quizrPackage = await command.Execute();
-        
+
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
@@ -37,7 +37,8 @@ namespace Pubquiz.Domain.Tests
             var quizRef = await quizCollection.GetAsync(quizrPackage.QuizRefs.First().Id);
             Assert.AreEqual("PéCé-pubquiz 2019", quizRef.Title);
         }
-        [TestMethod]
+
+        [TestMethod, Ignore]
         public async Task Oki2020QuizExcelQuizPackage_Import_CorrectQuizNameImported()
         {
             // arrange
@@ -49,12 +50,13 @@ namespace Pubquiz.Domain.Tests
             };
             await using var stream = File.OpenRead("testfiles/OKI-Kerstquiz-2020.zip");
             var command =
-                new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "OKI-Kerstquiz-2020.zip", quizrSettings, LoggerFactory);
+                new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "OKI-Kerstquiz-2020.zip", quizrSettings,
+                    LoggerFactory);
             command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
             // act
-        
+
             var quizrPackage = await command.Execute();
-        
+
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
