@@ -47,6 +47,8 @@ const storeOpts: StoreOptions<RootState> = {
     debounceMs: parseInt(process.env.VUE_APP_DEBOUNCE_MS || '1500')
   },
   getters: {
+    user: state => state.user || {},
+    team: state => state.team || {},
     game: state => state.game || {},
     userId: state => state.user?.userId || '',
     userName: state => state.user?.userName || '',

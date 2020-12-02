@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="md" type="dark" variant="dark">
+  <b-navbar toggleable="sm" type="dark" variant="info">
     <b-navbar-brand to="/" :title="$t('HOME_TITLE')">{{ $t('APP_TITLE')}}</b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse is-nav id="nav-collapse">
@@ -49,7 +49,7 @@ export default class NavBarPart extends mixins(AccountServiceMixin) {
   }
 
   get userName(): string {
-    return this.team.name || this.user.userName;
+    return this.user.userName || this.team.name;
   }
 
   public logOut(): void {
