@@ -222,10 +222,18 @@ const storeOpts: StoreOptions<RootState> = {
     },
     logout(state) {
       state.team = undefined;
+      state.user = undefined;
       state.isLoggedIn = false;
       state.game = undefined;
       state.currentGameId = undefined;
       state.teams = [];
+      state.gameRefs = [];
+      state.quizRefs = [];
+      state.qmTeams = [];
+      state.quizItem = undefined;
+      state.quizItems = {};
+      state.quizItemViewModel = undefined;
+      state.quizItemViewModels = {};
     },
     saveSignalRConnection(state, signalrconnection) {
       state.signalrconnection = signalrconnection;
