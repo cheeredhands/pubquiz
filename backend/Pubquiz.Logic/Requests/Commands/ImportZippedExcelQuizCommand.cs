@@ -166,13 +166,14 @@ namespace Pubquiz.Logic.Requests.Commands
                 headerRow.Field<string>(6) != "MediaType" ||
                 headerRow.Field<string>(7) != "MediaFileName" ||
                 headerRow.Field<string>(8) != "MediaUrl" ||
-                headerRow.Field<string>(9) != "InteractionType" ||
-                headerRow.Field<string>(10) != "Text" ||
-                headerRow.Field<string>(11) != "InteractionMaxScore" ||
-                headerRow.Field<string>(12) != "Choices" ||
-                headerRow.Field<string>(13) != "Solutions" ||
-                headerRow.Field<string>(14) != "LevenshteinTolerance" ||
-                headerRow.Field<string>(15) != "FlagIfWithinTolerance")
+                headerRow.Field<string>(9) != "MediaIsSolution" ||
+                headerRow.Field<string>(10) != "InteractionType" ||
+                headerRow.Field<string>(11) != "Text" ||
+                headerRow.Field<string>(12) != "InteractionMaxScore" ||
+                headerRow.Field<string>(13) != "Choices" ||
+                headerRow.Field<string>(14) != "Solutions" ||
+                headerRow.Field<string>(15) != "LevenshteinTolerance" ||
+                headerRow.Field<string>(16) != "FlagIfWithinTolerance")
             {
                 errors.Add("The column headers are incorrect.");
                 return;
@@ -314,6 +315,34 @@ namespace Pubquiz.Logic.Requests.Commands
                             $"{_quizrSettings.BaseUrl}/{_quizrSettings.ContentPath}/{_package.Hash}/{mediaFileName}";
                     }
 
+                    // MediaIsSolution 9
+                    var mediaIsSolutionString = quizItemRow[9].ToString().Trim().ToUpperInvariant();
+                    if (!string.IsNullOrWhiteSpace(mediaIsSolutionString))
+                    {
+                        switch (mediaIsSolutionString)
+                        {
+                            case "YES":
+                            case "TRUE":
+                                mediaObject.IsSolution = true;
+                                break;
+                            case "NO":
+                            case "FALSE":
+                                mediaObject.IsSolution = false;
+                                break;
+                            default:
+                                errors.Add(
+                                    $"Invalid MediaIsSolution '{mediaIsSolutionString}' on row {rowCounter}");
+                                mediaObjectErrors++;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        errors.Add(
+                            $"The MediaIsSolution is incorrectly specified for item on row {rowCounter}");
+                        mediaObjectErrors++;
+                    }
+                    
                     if (mediaObjectErrors == 0)
                     {
                         currentQuizItem.MediaObjects.Add(mediaObject);
@@ -321,11 +350,11 @@ namespace Pubquiz.Logic.Requests.Commands
                 }
 
                 var interactionErrors = 0;
-                var interactionTypeString = quizItemRow[9].ToString().Trim();
+                var interactionTypeString = quizItemRow[10].ToString().Trim();
                 if (!string.IsNullOrWhiteSpace(interactionTypeString))
                 {
                     var interaction = new Interaction();
-                    // InteractionType 9
+                    // InteractionType 10
                     if (Enum.TryParse<InteractionType>(interactionTypeString, true, out var interactionType))
                     {
                         interaction.InteractionType = interactionType;
@@ -336,8 +365,8 @@ namespace Pubquiz.Logic.Requests.Commands
                         interactionErrors++;
                     }
 
-                    // Text 10
-                    var interactionText = quizItemRow[10].ToString().Trim();
+                    // Text 11
+                    var interactionText = quizItemRow[11].ToString().Trim();
                     if (!string.IsNullOrWhiteSpace(interactionText))
                     {
                         interaction.Text = interactionText;
@@ -348,10 +377,10 @@ namespace Pubquiz.Logic.Requests.Commands
                         interactionErrors++;
                     }
 
-                    // InteractionMaxScore 11
+                    // InteractionMaxScore 12
                     try
                     {
-                        var interactionMaxScore = Convert.ToInt32(quizItemRow.Field<double>(11));
+                        var interactionMaxScore = Convert.ToInt32(quizItemRow.Field<double>(12));
                         interaction.MaxScore = interactionMaxScore;
                     }
                     catch (InvalidCastException)
@@ -360,11 +389,11 @@ namespace Pubquiz.Logic.Requests.Commands
                         interactionErrors++;
                     }
 
-                    // Choices 12
+                    // Choices 13
                     if (interaction.InteractionType == InteractionType.MultipleChoice ||
                         interaction.InteractionType == InteractionType.MultipleResponse)
                     {
-                        var choicesString = quizItemRow[12].ToString().Trim();
+                        var choicesString = quizItemRow[13].ToString().Trim();
                         if (!string.IsNullOrWhiteSpace(choicesString))
                         {
                             var choicesTokenized = choicesString.Split("||", StringSplitOptions.RemoveEmptyEntries);
@@ -387,8 +416,8 @@ namespace Pubquiz.Logic.Requests.Commands
                     }
 
 
-                    // Solutions 13
-                    var solutionsString = quizItemRow[13].ToString().Trim();
+                    // Solutions 14
+                    var solutionsString = quizItemRow[14].ToString().Trim();
                     if (!string.IsNullOrWhiteSpace(solutionsString))
                     {
                         var solutionsTokenized = solutionsString.Split("&&", StringSplitOptions.RemoveEmptyEntries);
@@ -434,12 +463,12 @@ namespace Pubquiz.Logic.Requests.Commands
                     }
 
 
-                    // LevenshteinTolerance 14
+                    // LevenshteinTolerance 15
                     if (interaction.InteractionType == InteractionType.ShortAnswer)
                     {
                         try
                         {
-                            var levenshteinTolerance = Convert.ToInt32(quizItemRow.Field<double>(14));
+                            var levenshteinTolerance = Convert.ToInt32(quizItemRow.Field<double>(15));
                             interaction.Solution.LevenshteinTolerance = levenshteinTolerance;
                         }
                         catch (InvalidCastException)
@@ -449,8 +478,8 @@ namespace Pubquiz.Logic.Requests.Commands
                             interactionErrors++;
                         }
 
-                        // FlagIfWithinTolerance 15
-                        var flagIfWithinToleranceString = quizItemRow[15].ToString().Trim().ToUpperInvariant();
+                        // FlagIfWithinTolerance 16
+                        var flagIfWithinToleranceString = quizItemRow[16].ToString().Trim().ToUpperInvariant();
                         if (!string.IsNullOrWhiteSpace(flagIfWithinToleranceString))
                         {
                             switch (flagIfWithinToleranceString)

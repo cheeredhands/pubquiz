@@ -9,6 +9,7 @@ namespace Pubquiz.Domain.Models
         public string Uri { get; set; }
         public MediaDimensions Dimensions { get; set; }
         public MediaType MediaType { get; set; }
+        public bool IsSolution { get; set; }
         public string MimeType { get; set; }
         /// <summary>
         /// Indicates whether media object are visible to teams.
