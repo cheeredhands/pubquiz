@@ -65,6 +65,7 @@
   "InvalidQuizId": "Ongeldig quiz id.",
   "QuestionNotInQuiz": "Onbekende vraag voor deze quiz.",
   "InvalidTeamId": "Ongeldig team id.",
+  "InvalidSectionId": "Ongeldige section id.",
   "QuestionNotInCurrentQuizSection": "Onbekende vraag voor huidige quiz sectie.",
   "Ok": "Ok",
   "InvalidInteractionId": "Ongeldige interactie id.",

@@ -38,7 +38,7 @@ namespace Pubquiz.Domain.Tests
             Assert.AreEqual("PéCé-pubquiz 2019", quizRef.Title);
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task Oki2020QuizExcelQuizPackage_Import_CorrectQuizNameImported()
         {
             // arrange

@@ -65,6 +65,7 @@
   "InvalidQuizId": "Invalid quiz id.",
   "QuestionNotInQuiz": "Question not in quiz.",
   "InvalidTeamId": "Invalid team id.",
+  "InvalidSectionId": "Invalid section id.",
   "QuestionNotInCurrentQuizSection": "Question not in current quiz section.",
   "Ok": "Ok",
   "InvalidInteractionId": "Invalid interaction id.",
