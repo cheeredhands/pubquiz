@@ -40,10 +40,10 @@ namespace Pubquiz.Logic.Requests.Queries
             if (team != null)
             {
                 team.Answers.TryGetValue(QuizItemId, out var answer);
-                return new QuizItemViewModel(quizItem, answer);
+                return new QuizItemViewModel(quizItem, game.State, answer);
             }
 
-            return new QuizItemViewModel(quizItem);
+            return new QuizItemViewModel(quizItem, game.State);
         }
     }
 }

@@ -37,6 +37,7 @@ namespace Pubquiz.Domain.Models
         public int CurrentSectionIndex { get; set; }
 
         public string CurrentSectionId { get; set; }
+        public string CurrentSectionTitle { get; set; }
         public string CurrentQuizItemId { get; set; }
 
         /// <summary>
@@ -62,86 +63,67 @@ namespace Pubquiz.Domain.Models
 
         public void SetState(GameState newGameState)
         {
-            switch (newGameState)
-            {
-                case GameState.Closed:
-                    if (State != GameState.Open)
-                    {
-                        throw new DomainException(ResultCode.InvalidGameStateTransition,
-                            "Can only close the game from the open state.", true);
-                    }
-
-                    break;
-                case GameState.Open:
-                    if (State != GameState.Closed)
-                    {
-                        throw new DomainException(ResultCode.InvalidGameStateTransition,
-                            "Can only open the game from the closed state.", true);
-                    }
-
-                    if (State == GameState.Closed &&
-                        (QuizId == Guid.Empty.ToShortGuidString() || string.IsNullOrWhiteSpace(Title)))
-                    {
-                        throw new DomainException(ResultCode.InvalidGameStateTransition,
-                            "Can't open the game without a quiz and/or a title.", true);
-                    }
-
-                    break;
-                case GameState.Running:
-                    if (State != GameState.Open && State != GameState.Paused)
-                    {
-                        throw new DomainException(ResultCode.InvalidGameStateTransition,
-                            "Can only start the game from the open and paused states.", true);
-                    }
-
-                    if (!TeamIds.Any())
-                    {
-                        throw new DomainException(ResultCode.InvalidGameStateTransition,
-                            "Can't start the game without teams.", true);
-                    }
-
-                    break;
-                case GameState.Paused:
-                    if (State != GameState.Running)
-                    {
-                        throw new DomainException(ResultCode.InvalidGameStateTransition,
-                            "Can only pause the game from the running state.", true);
-                    }
-
-                    break;
-
-                case GameState.Finished:
-                    if (State != GameState.Running && State != GameState.Paused)
-                    {
-                        throw new DomainException(ResultCode.InvalidGameStateTransition,
-                            "Can only finish the game from the running and paused states.", true);
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(newGameState), newGameState, null);
-            }
+            // switch (newGameState)
+            // {
+            //     case GameState.Closed:
+            //         if (State != GameState.Open)
+            //         {
+            //             throw new DomainException(ResultCode.InvalidGameStateTransition,
+            //                 "Can only close the game from the open state.", true);
+            //         }
+            //
+            //         break;
+            //     case GameState.Open:
+            //         if (State != GameState.Closed)
+            //         {
+            //             throw new DomainException(ResultCode.InvalidGameStateTransition,
+            //                 "Can only open the game from the closed state.", true);
+            //         }
+            //
+            //         if (State == GameState.Closed &&
+            //             (QuizId == Guid.Empty.ToShortGuidString() || string.IsNullOrWhiteSpace(Title)))
+            //         {
+            //             throw new DomainException(ResultCode.InvalidGameStateTransition,
+            //                 "Can't open the game without a quiz and/or a title.", true);
+            //         }
+            //
+            //         break;
+            //     case GameState.Running:
+            //         if (State != GameState.Open && State != GameState.Paused)
+            //         {
+            //             throw new DomainException(ResultCode.InvalidGameStateTransition,
+            //                 "Can only start the game from the open and paused states.", true);
+            //         }
+            //
+            //         if (!TeamIds.Any())
+            //         {
+            //             throw new DomainException(ResultCode.InvalidGameStateTransition,
+            //                 "Can't start the game without teams.", true);
+            //         }
+            //
+            //         break;
+            //     case GameState.Paused:
+            //         if (State != GameState.Running)
+            //         {
+            //             throw new DomainException(ResultCode.InvalidGameStateTransition,
+            //                 "Can only pause the game from the running state.", true);
+            //         }
+            //
+            //         break;
+            //
+            //     case GameState.Finished:
+            //         if (State != GameState.Running && State != GameState.Paused)
+            //         {
+            //             throw new DomainException(ResultCode.InvalidGameStateTransition,
+            //                 "Can only finish the game from the running and paused states.", true);
+            //         }
+            //
+            //         break;
+            //     default:
+            //         throw new ArgumentOutOfRangeException(nameof(newGameState), newGameState, null);
+            // }
 
             State = newGameState;
         }
-
-        // public GameViewModel ToViewModel()
-        // {
-        //     return new GameViewModel
-        //     {
-        //         GameId = Id,
-        //         State = State,
-        //         GameTitle = Title,
-        //         TotalQuizItemCount = TotalQuizItemCount,
-        //         TotalQuestionCount = TotalQuestionCount,
-        //         CurrentSectionQuizItemCount = CurrentSectionQuizItemCount,
-        //         CurrentSectionIndex = CurrentSectionIndex,
-        //         CurrentSectionId = CurrentSectionId,
-        //         CurrentQuizItemId = CurrentQuizItemId,
-        //         CurrentQuizItemIndexInSection = CurrentQuizItemIndexInSection,
-        //         CurrentQuizItemIndexInTotal = CurrentQuizItemIndexInTotal,
-        //         CurrentQuestionIndexInTotal = CurrentQuestionIndexInTotal
-        //     };
-        // }
     }
 }

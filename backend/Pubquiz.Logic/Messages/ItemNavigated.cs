@@ -4,6 +4,7 @@ namespace Pubquiz.Logic.Messages
     {
         public string GameId { get; }
         public string NewSectionId { get; }
+        public string NewSectionTitle { get; }
         public string NewQuizItemId { get; }
         public int NewSectionIndex { get; }
         public int NewSectionQuizItemCount { get; }
@@ -11,11 +12,12 @@ namespace Pubquiz.Logic.Messages
         public int NewQuizItemIndexInTotal { get; }
         public int NewQuestionIndexInTotal { get; }
 
-        public ItemNavigated(string gameId, string newSectionId, string newQuizItemId, int newSectionIndex,
+        public ItemNavigated(string gameId, string newSectionId, string newSectionTitle, string newQuizItemId, int newSectionIndex,
             int newQuizItemIndexInSection, int newQuizItemIndexInTotal, int newQuestionIndexInTotal, int newSectionQuizItemCount)
         {
             GameId = gameId;
             NewSectionId = newSectionId;
+            NewSectionTitle = newSectionTitle;
             NewQuizItemId = newQuizItemId;
             NewSectionIndex = newSectionIndex;
             NewQuizItemIndexInSection = newQuizItemIndexInSection;

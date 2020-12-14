@@ -7,9 +7,17 @@ import { TeamLobbyViewModel, QmLobbyViewModel, QmInGameViewModel, TeamInGameView
 /* eslint camelcase: "off" */
 @Component
 export default class GameServiceMixin extends mixins(HelperMixin) {
-  public $_gameService_setGameState(actorId: string, gameId: string, newGameState: GameState):Promise<void | AxiosResponse<any>> {
+  public $_gameService_setGameState(actorId: string, gameId: string, newGameState: GameState): Promise<void | AxiosResponse<any>> {
     return this.$axios.post('api/game/setgamestate', {
       actorId, gameId, newGameState
+    }).catch((error: AxiosError<ApiResponse>) => {
+      this.$_helper_toastError(error);
+    });
+  }
+
+  public $_gameService_reviewSection(actorId: string, gameId: string, sectionId: string): Promise<void | AxiosResponse<any>> {
+    return this.$axios.post('api/game/setreview', {
+      actorId, gameId, sectionId
     }).catch((error: AxiosError<ApiResponse>) => {
       this.$_helper_toastError(error);
     });

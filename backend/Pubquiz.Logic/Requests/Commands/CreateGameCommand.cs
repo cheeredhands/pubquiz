@@ -47,6 +47,7 @@ namespace Pubquiz.Logic.Requests.Commands
                 CurrentSectionQuizItemCount = quiz.QuizSections[0].QuizItemRefs.Count,
                 CurrentSectionIndex = 1,
                 CurrentSectionId = quiz.QuizSections[0].Id,
+                CurrentSectionTitle = quiz.QuizSections[0].Title,
                 CurrentQuizItemId = quiz.QuizSections[0].QuizItemRefs[0].Id,
                 CurrentQuizItemIndexInSection = 1,
                 CurrentQuizItemIndexInTotal = 1,

@@ -3,7 +3,7 @@ import './plugins/quizr-helpers';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight, BIconFileEarmarkPlus } from 'bootstrap-vue';
+import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight, BIconFileEarmarkPlus, BIconSearch } from 'bootstrap-vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSignOutAlt, faTrashAlt, faPlay, faPause, faStop, faPowerOff, faUser, faArrowLeft, faArrowRight, faPen, faCheck, faGlasses, faExternalLinkSquareAlt, faCheckSquare, faCheckCircle, faTimesCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -23,6 +23,7 @@ Vue.use(BootstrapVue, {
 Vue.component('b-icon-exclamation-triangle', BIconExclamationTriangle);
 Vue.component('b-icon-arrow-up-right', BIconBoxArrowUpRight);
 Vue.component('b-icon-file-earmark-plus', BIconFileEarmarkPlus);
+Vue.component('b-icon-search', BIconSearch);
 
 // https://dev.to/heftyhead/lets-talk-about-an-unnecessary-but-popular-vue-plugin-1ied
 const axiosInstanceBackend = axios.create({

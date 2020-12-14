@@ -55,7 +55,7 @@ namespace Pubquiz.Logic.Requests.Commands
             {
                 newQuizItemIndexInTotal = game.TotalQuizItemCount;
                 newSectionIndex = quiz.QuizSections.Count;
-                game.CurrentSectionQuizItemCount = newSectionIndex;
+                game.CurrentSectionQuizItemCount = quiz.QuizSections.Last().QuizItemRefs.Count;
                 newQuizItemIndexInSection = quiz.QuizSections.Last().QuizItemRefs.Count;
             }
             else
@@ -76,10 +76,13 @@ namespace Pubquiz.Logic.Requests.Commands
             }
 
             game.CurrentSectionIndex = newSectionIndex;
-            var newSectionId = quiz.QuizSections[newSectionIndex - 1].Id;
+            var newSection = quiz.QuizSections[newSectionIndex - 1];
+            var newSectionId = newSection.Id;
+            var newSectionTitle = newSection.Title;
             game.CurrentSectionId = newSectionId;
+            game.CurrentSectionTitle = newSectionTitle;
             game.CurrentQuizItemIndexInSection = newQuizItemIndexInSection;
-            var newQuizItemId = quiz.QuizSections[newSectionIndex - 1].QuizItemRefs[newQuizItemIndexInSection - 1].Id;
+            var newQuizItemId = newSection.QuizItemRefs[newQuizItemIndexInSection - 1].Id;
             game.CurrentQuizItemId = newQuizItemId;
 
             var questionsInPreviousSections =
@@ -93,9 +96,9 @@ namespace Pubquiz.Logic.Requests.Commands
             await gameCollection.UpdateAsync(game);
 
             //chuck it on the bus
-            await Bus.Publish(new ItemNavigated(GameId, newSectionId, newQuizItemId, newSectionIndex,
-                newQuizItemIndexInSection,
-                newQuizItemIndexInTotal, newQuestionIndexInTotal, game.CurrentSectionQuizItemCount));
+            await Bus.Publish(new ItemNavigated(GameId, newSectionId, newSectionTitle, newQuizItemId, newSectionIndex,
+                newQuizItemIndexInSection, newQuizItemIndexInTotal, newQuestionIndexInTotal,
+                game.CurrentSectionQuizItemCount));
             return newQuizItemId;
         }
     }

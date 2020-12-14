@@ -104,13 +104,13 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> SetGameState(SetGameStateNotification notification)
         {
-            var teamId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(notification.ActorId) && teamId != notification.ActorId)
+            var userId = User.GetId();
+            if (!string.IsNullOrWhiteSpace(notification.ActorId) && userId != notification.ActorId)
             {
                 return Forbid();
             }
 
-            notification.ActorId = User.GetId();
+            notification.ActorId = userId;
             await notification.Execute();
 
             return Ok(new ApiResponse
@@ -120,6 +120,26 @@ namespace Pubquiz.WebApi.Controllers
             });
         }
 
+        [HttpPost("setreview")]
+        [Authorize(AuthPolicy.QuizMaster)]
+        public async Task<IActionResult> SetReview(SetReviewNotification notification)
+        {
+            var userId = User.GetId();
+            if (!string.IsNullOrWhiteSpace(notification.ActorId) && userId != notification.ActorId)
+            {
+                return Forbid();
+            }
+
+            notification.ActorId = userId;
+            await notification.Execute();
+            
+            return Ok(new ApiResponse
+            {
+                Code = ResultCode.Ok,
+                Message = $"Game set to review {notification.SectionId}."
+            });
+            
+        }
         [HttpPost("navigate")]
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<IActionResult> NavigateToItemByOffset(NavigateToItemByOffsetCommand command)

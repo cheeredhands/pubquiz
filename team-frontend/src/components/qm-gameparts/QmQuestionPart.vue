@@ -48,17 +48,21 @@
               </div>
             </div>
           </b-col>
-          <b-col v-if="quizItem.mediaObjects && quizItem.mediaObjects.length > 0">
+          <b-col
+            v-if="quizItem.mediaObjects && mediaObjects.length > 0"
+          >
             <div
-              v-for="mediaObject in quizItem.mediaObjects"
+              v-for="mediaObject in mediaObjects"
               :key="mediaObject.id"
             >
-              <b-img
-                fluid
-                rounded
-                v-if="mediaObject.mediaType === imageType"
-                :src="mediaObject.uri"
-              />
+              <figure>
+                <b-img
+                  fluid
+                  rounded
+                  v-if="mediaObject.mediaType === imageType"
+                  :src="mediaObject.uri"
+                />
+              </figure>
               <audio
                 controls
                 v-if="mediaObject.mediaType === audioType"
@@ -76,15 +80,23 @@
       </b-container>
     </div>
     <div class="question-nav">
+            <b-button @click="navigateItem(-10)" variant="secondary" class="mr-1">
+        <font-awesome-icon icon="arrow-left" />
+        {{ $t("SKIP_10_BACK") }}
+      </b-button>
       <b-button @click="navigateItem(-1)" variant="secondary">
         <font-awesome-icon icon="arrow-left" />
         {{ $t("PREVIOUS_ITEM") }}
       </b-button>
-      {{ $t("SECTION") }} {{ game.currentSectionIndex }} :
+      {{ $t("SECTION") }} {{ game.currentSectionTitle }} ({{ game.currentSectionIndex }}) :
       {{ $t("QUIZ_ITEM") }} {{ game.currentQuizItemIndexInSection }}
       {{ $t("OF") }} {{ game.currentSectionQuizItemCount }})
       <b-button @click="navigateItem(1)" variant="secondary">
         {{ $t("NEXT_ITEM") }}
+        <font-awesome-icon icon="arrow-right" />
+      </b-button>
+      <b-button @click="navigateItem(10)" variant="secondary" class="ml-1">
+        {{ $t("SKIP_10_FORWARD") }}
         <font-awesome-icon icon="arrow-right" />
       </b-button>
     </div>
@@ -95,7 +107,7 @@
 import Component, { mixins } from 'vue-class-component';
 import GameServiceMixin from '../../services/game-service-mixin';
 import HelperMixin from '../../services/helper-mixin';
-import { Game, InteractionType, MediaType, QuizItem } from '../../models/models';
+import { Game, GameState, InteractionType, MediaObject, MediaType, QuizItem } from '../../models/models';
 import { Watch } from 'vue-property-decorator';
 
 @Component
@@ -118,6 +130,14 @@ export default class QmQuestionPart extends mixins(
 
   get quizItem(): QuizItem {
     return this.$store.getters.quizItem;
+  }
+
+  get mediaObjects(): MediaObject[] {
+    if (this.game.state === GameState.Reviewing) {
+      return this.quizItem.mediaObjects.filter((m) => m.isSolution);
+    } else {
+      return this.quizItem.mediaObjects.filter((m) => !m.isSolution);
+    }
   }
 
   get currentQuizItemId(): string {
@@ -148,9 +168,11 @@ export default class QmQuestionPart extends mixins(
   padding: 1em;
   border-bottom: 1px solid black;
   background-color: mintcream;
+  overflow: hidden;
 }
 
 .question-nav {
+  padding: 1em;
   grid-area: question-nav;
 }
 

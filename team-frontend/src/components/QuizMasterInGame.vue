@@ -3,7 +3,7 @@
   <div id="main">
     <nav-bar-part>
       <b-nav-item>
-        <b-button
+        <b-button class="mr-1"
           @click="toggleGame"
           :variant="game.state === runningState ? 'secondary' : 'success'"
         >
@@ -13,8 +13,11 @@
           {{
             game.state === runningState ? $t("PAUSE_GAME") : $t("RESUME_GAME")
           }} </b-button
-        >&nbsp;
-        <b-button @click="finishGame" variant="danger">
+        >
+        <b-button class="mr-1" @click="reviewCurrentSection" variant="success">
+          <b-icon-search/>
+          {{$t("REVIEW_CURRENT_SECTION")}}</b-button>
+        <b-button disabled @click="finishGame" variant="danger">
           <font-awesome-icon icon="power-off" />
           {{ $t("FINISH_GAME") }}
         </b-button>
@@ -120,6 +123,14 @@ export default class QuizMasterInGame extends mixins(
     return this.$store.getters.userId;
   }
 
+  public reviewCurrentSection(): void {
+    this.$_gameService_reviewSection(
+      this.userId,
+      this.game.id,
+      this.game.currentSectionId
+    );
+  }
+
   public toggleGame(): void {
     this.$_gameService_setGameState(
       this.userId,
@@ -175,7 +186,7 @@ export default class QuizMasterInGame extends mixins(
 .quiz-container {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 4fr 3fr;
+  grid-template-rows: 1fr 1fr;
   grid-template-areas: "question" "ranking";
   grid-area: quiz-container;
   padding: 0px;
@@ -186,6 +197,7 @@ export default class QuizMasterInGame extends mixins(
   grid-area: question;
   /* padding: 0.5em; */
   border-bottom: 4px solid #212529;
+  /* overflow: hidden; */
 }
 
 .ranking {

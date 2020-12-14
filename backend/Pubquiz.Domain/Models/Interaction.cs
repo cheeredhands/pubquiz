@@ -19,6 +19,7 @@ namespace Pubquiz.Domain.Models
 
         public Interaction()
         {
+            
         }
     }
 }

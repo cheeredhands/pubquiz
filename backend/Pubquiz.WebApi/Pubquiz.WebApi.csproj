@@ -43,4 +43,12 @@
       <ProjectReference Include="..\Pubquiz.Logic\Pubquiz.Logic.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="wwwroot\uploads\OKI-Kerstquiz-2020.zip">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

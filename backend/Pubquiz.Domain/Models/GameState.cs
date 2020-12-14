@@ -7,9 +7,10 @@ namespace Pubquiz.Domain.Models
     public enum GameState
     {
         Closed,
-        Open, // e.g. open for registration
-        Running, // InSession? Started?
+        Open, 
+        Running, 
+        Reviewing,
         Paused,
-        Finished // Ended?
+        Finished 
     }
 }

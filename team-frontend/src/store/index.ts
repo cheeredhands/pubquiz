@@ -200,6 +200,7 @@ const storeOpts: StoreOptions<RootState> = {
       state.game.currentSectionQuizItemCount = message.newSectionQuizItemCount;
       state.game.currentSectionIndex = message.newSectionIndex;
       state.game.currentSectionId = message.newSectionId;
+      state.game.currentSectionTitle = message.newSectionTitle;
       state.game.currentQuizItemId = message.newQuizItemId;
       state.game.currentQuizItemIndexInSection = message.newQuizItemIndexInSection;
       state.game.currentQuizItemIndexInTotal = message.newQuizItemIndexInTotal;

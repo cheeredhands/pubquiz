@@ -31,6 +31,7 @@ export enum GameState {
   Closed = 'Closed',
   Open = 'Open',
   Running = 'Running',
+  Reviewing = 'Reviewing',
   Paused = 'Paused',
   Finished = 'Finished'
 }
@@ -61,6 +62,7 @@ export interface Game {
   currentSectionQuizItemCount: number;
   currentSectionIndex: number;
   currentSectionId: string;
+  currentSectionTitle: string;
   currentQuizItemId: string;
   currentQuizItemType: QuizItemType;
   currentQuizItemTitle: string;
@@ -124,6 +126,7 @@ export interface MediaObject {
   dimensions: MediaDimensions;
   mediaType: MediaType;
   mimeType: string;
+  isSolution: boolean;
   teamVisible: boolean;
 }
 

@@ -26,6 +26,7 @@ using Pubquiz.Persistence.Extensions;
 using Pubquiz.Persistence.Helpers;
 using Pubquiz.WebApi.Helpers;
 using Pubquiz.WebApi.Models;
+using Rebus.Bus;
 using Rebus.Persistence.InMem;
 using Rebus.Routing.TypeBased;
 using Rebus.ServiceProvider;
@@ -39,7 +40,7 @@ namespace Pubquiz.WebApi
         private readonly IConfiguration _configuration;
         private readonly string _secretKey;
         private readonly SymmetricSecurityKey _signingKey;
-        
+
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -203,7 +204,7 @@ namespace Pubquiz.WebApi
             services.AddRequests(Assembly.Load("Pubquiz.Logic"));
             services.AddSignalR().AddJsonProtocol(options =>
                 options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-            
+
             var quizrSettings = new QuizrSettings();
             _configuration.Bind("QuizrSettings", quizrSettings);
             quizrSettings.WebRootPath = _hostingEnvironment.WebRootPath;
@@ -265,6 +266,7 @@ namespace Pubquiz.WebApi
         private void SeedStuff(IApplicationBuilder app, IHostEnvironment env)
         {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+            var bus = app.ApplicationServices.GetService<IBus>();
             var quizrSettings = app.ApplicationServices.GetService<QuizrSettings>();
             var mongoDbIsEmpty = _configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
                                  unitOfWork.GetCollection<Team>().GetCountAsync().Result == 0;
@@ -273,8 +275,11 @@ namespace Pubquiz.WebApi
             {
                 //var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
                 var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
-                var seeder = new TestSeeder(unitOfWork, loggerFactory);
+                var seeder = new TestSeeder(unitOfWork, loggerFactory, bus, quizrSettings);
                 seeder.SeedSeedSet(quizrSettings.BaseUrl);
+
+                seeder.SeedZippedExcelQuiz("uploads/OKI-Kerstquiz-2020.zip", "OKI-Kerstquiz-2020.zip", "OKI2020",
+                    "OKI-kerstquiz 2020").Wait();
             }
         }
     }

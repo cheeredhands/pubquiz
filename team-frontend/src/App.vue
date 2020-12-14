@@ -100,4 +100,8 @@ footer {
 .strong {
   font-style: italic;
 }
+
+.img-fluid {
+  max-height: 100%;
+}
 </style>

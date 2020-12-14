@@ -6,6 +6,7 @@ namespace Pubquiz.Domain
         InvalidCode,
         TeamNameIsTaken,
         InvalidTeamId,
+        InvalidSectionId,
         InvalidQuizItemId,
         InvalidQuizId,
         QuestionNotInQuiz,

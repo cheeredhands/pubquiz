@@ -155,29 +155,7 @@ namespace Pubquiz.Logic.Requests.Commands
         {
             var enumerableRows = quizItemsSheet.AsEnumerable();
 
-            // check column headers
-            var headerRow = enumerableRows.First();
-            if (headerRow.Field<string>(0) != "SectionTitle" ||
-                headerRow.Field<string>(1) != "QuizItemTitle" ||
-                headerRow.Field<string>(2) != "QuizItemType" ||
-                headerRow.Field<string>(3) != "Body" ||
-                headerRow.Field<string>(4) != "QuizItemMaxScore" ||
-                headerRow.Field<string>(5) != "MediaTitle" ||
-                headerRow.Field<string>(6) != "MediaType" ||
-                headerRow.Field<string>(7) != "MediaFileName" ||
-                headerRow.Field<string>(8) != "MediaUrl" ||
-                headerRow.Field<string>(9) != "MediaIsSolution" ||
-                headerRow.Field<string>(10) != "InteractionType" ||
-                headerRow.Field<string>(11) != "Text" ||
-                headerRow.Field<string>(12) != "InteractionMaxScore" ||
-                headerRow.Field<string>(13) != "Choices" ||
-                headerRow.Field<string>(14) != "Solutions" ||
-                headerRow.Field<string>(15) != "LevenshteinTolerance" ||
-                headerRow.Field<string>(16) != "FlagIfWithinTolerance")
-            {
-                errors.Add("The column headers are incorrect.");
-                return;
-            }
+            if (CheckColumnHeaders(errors, enumerableRows)) return;
 
             var quizItemRows = enumerableRows.Skip(1);
 
@@ -274,18 +252,13 @@ namespace Pubquiz.Logic.Requests.Commands
                     }
                 }
 
-                // MediaTitle 5
+                // MediaType 5
                 var mediaObjectErrors = 0;
-                var mediaTitle = quizItemRow[5].ToString().Trim();
-                if (!string.IsNullOrWhiteSpace(mediaTitle))
+                var mediaTypeString = quizItemRow[5].ToString().Trim();
+                if (!string.IsNullOrWhiteSpace(mediaTypeString))
                 {
-                    var mediaObject = new MediaObject
-                    {
-                        Title = mediaTitle
-                    };
-
-                    // MediaType 6
-                    var mediaTypeString = quizItemRow[6].ToString().Trim();
+                    var mediaObject = new MediaObject();
+                    
                     if (Enum.TryParse<MediaType>(mediaTypeString, true, out var mediaType))
                     {
                         mediaObject.MediaType = mediaType;
@@ -295,6 +268,10 @@ namespace Pubquiz.Logic.Requests.Commands
                         errors.Add($"Missing MediaType on row {rowCounter}");
                         mediaObjectErrors++;
                     }
+                   
+                    // MediaTitle 6
+                    var mediaTitle = quizItemRow[6].ToString().Trim();
+                    mediaObject.Title = mediaTitle;
 
                     // MediaFileName 7
                     var mediaFileName = quizItemRow[7].ToString().Trim();
@@ -353,7 +330,8 @@ namespace Pubquiz.Logic.Requests.Commands
                 var interactionTypeString = quizItemRow[10].ToString().Trim();
                 if (!string.IsNullOrWhiteSpace(interactionTypeString))
                 {
-                    var interaction = new Interaction();
+                    
+                    var interaction = new Interaction(currentQuizItem.Interactions.Count);
                     // InteractionType 10
                     if (Enum.TryParse<InteractionType>(interactionTypeString, true, out var interactionType))
                     {
@@ -513,6 +491,35 @@ namespace Pubquiz.Logic.Requests.Commands
                     }
                 }
             }
+        }
+
+        private static bool CheckColumnHeaders(List<string> errors, EnumerableRowCollection<DataRow> enumerableRows)
+        {
+            // check column headers
+            var headerRow = enumerableRows.First();
+            if (headerRow.Field<string>(0) != "SectionTitle" ||
+                headerRow.Field<string>(1) != "QuizItemTitle" ||
+                headerRow.Field<string>(2) != "QuizItemType" ||
+                headerRow.Field<string>(3) != "Body" ||
+                headerRow.Field<string>(4) != "QuizItemMaxScore" ||
+                headerRow.Field<string>(5) != "MediaType" ||
+                headerRow.Field<string>(6) != "MediaTitle" ||
+                headerRow.Field<string>(7) != "MediaFileName" ||
+                headerRow.Field<string>(8) != "MediaUrl" ||
+                headerRow.Field<string>(9) != "MediaIsSolution" ||
+                headerRow.Field<string>(10) != "InteractionType" ||
+                headerRow.Field<string>(11) != "Text" ||
+                headerRow.Field<string>(12) != "InteractionMaxScore" ||
+                headerRow.Field<string>(13) != "Choices" ||
+                headerRow.Field<string>(14) != "Solutions" ||
+                headerRow.Field<string>(15) != "LevenshteinTolerance" ||
+                headerRow.Field<string>(16) != "FlagIfWithinTolerance")
+            {
+                errors.Add("The column headers are incorrect.");
+                return true;
+            }
+
+            return false;
         }
 
         private void ParseSettings(DataTable startSheet, Quiz quiz, List<string> errors)

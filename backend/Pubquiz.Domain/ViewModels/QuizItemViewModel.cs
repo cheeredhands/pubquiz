@@ -21,12 +21,15 @@ namespace Pubquiz.Domain.ViewModels
         {
         }
 
-        public QuizItemViewModel(QuizItem quizItem, Answer answer = null)
+        public QuizItemViewModel(QuizItem quizItem, GameState gameState, Answer answer = null)
         {
             Id = quizItem.Id;
             Title = quizItem.Title;
             Body = quizItem.Body;
             MediaObjects = quizItem.MediaObjects.Where(m => m.TeamVisible).ToList();
+            MediaObjects = gameState == GameState.Reviewing
+                ? MediaObjects.Where(o => o.IsSolution).ToList()
+                : MediaObjects.Where(o => !o.IsSolution).ToList();
             QuizItemType = quizItem.QuizItemType;
             MaxScore = quizItem.MaxScore;
 

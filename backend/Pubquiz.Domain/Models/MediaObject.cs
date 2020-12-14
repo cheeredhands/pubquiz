@@ -21,11 +21,13 @@ namespace Pubquiz.Domain.Models
             Id = Guid.NewGuid();
             Uri = uri;
             MediaType = mediaType;
-            TeamVisible = false;
+            TeamVisible = true;
         }
 
         public MediaObject()
         {
+            Id = Guid.NewGuid();
+            TeamVisible = true;
         }
     }
 }

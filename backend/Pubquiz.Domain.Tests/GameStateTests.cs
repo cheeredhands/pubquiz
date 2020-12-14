@@ -6,7 +6,7 @@ using Pubquiz.Persistence.Extensions;
 
 namespace Pubquiz.Domain.Tests
 {
-    [TestClass]
+    [TestClass, Ignore]
     public class GameStateTests
     {
         [TestMethod]

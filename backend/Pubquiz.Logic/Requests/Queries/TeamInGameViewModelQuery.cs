@@ -36,7 +36,7 @@ namespace Pubquiz.Logic.Requests.Queries
             var model = new TeamInGameViewModel
             {
                 Game = game,
-                QuizItemViewModel = new QuizItemViewModel(quizItem, answer)
+                QuizItemViewModel = new QuizItemViewModel(quizItem, game.State, answer)
             };
 
             return model;

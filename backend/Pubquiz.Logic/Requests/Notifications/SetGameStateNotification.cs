@@ -40,7 +40,7 @@ namespace Pubquiz.Logic.Requests.Notifications
                 }
             }
 
-            var oldGameState = game.State;
+            var oldGameState = (GameState)((int)game.State);
 
             game.SetState(NewGameState);
 

@@ -47,6 +47,7 @@ export interface TeamLoggedOutMessage {
 export interface ItemNavigatedMessage {
     gameId: string;
     newSectionId: string;
+    newSectionTitle: string;
     newQuizItemId: string;
     newSectionIndex: number;
     newSectionQuizItemCount: number;
