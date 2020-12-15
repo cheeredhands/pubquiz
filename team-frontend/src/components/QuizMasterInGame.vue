@@ -17,9 +17,13 @@
         <b-button size="sm" class="mr-1" @click="reviewCurrentSection" variant="success">
           <b-icon-search/>
           {{$t("REVIEW_CURRENT_SECTION")}}</b-button>
-        <b-button size="sm" disabled @click="finishGame" variant="danger">
+        <b-button size="sm" class="mr-1" disabled @click="finishGame" variant="danger">
           <font-awesome-icon icon="power-off" />
           {{ $t("FINISH_GAME") }}
+        </b-button>
+        <b-button size="sm" @click="openGame" variant="danger">
+          <font-awesome-icon icon="power-off" />
+          {{ $t("OPEN_GAME") }}
         </b-button>
       </b-nav-item>
       <template v-slot:centercontent
@@ -141,6 +145,14 @@ export default class QuizMasterInGame extends mixins(
       this.game.state === GameState.Running
         ? GameState.Paused
         : GameState.Running
+    );
+  }
+
+  public openGame(): void {
+    this.$_gameService_setGameState(
+      this.userId,
+      this.game.id,
+      GameState.Open
     );
   }
 
