@@ -54,10 +54,10 @@ namespace Pubquiz.Logic.Requests.Commands
             game.CurrentSectionId = section.Id;
             game.CurrentSectionIndex = quiz.QuizSections.IndexOf(section) + 1;
             game.CurrentQuizItemId = section.QuizItemRefs.First().Id;
-            game.CurrentQuestionIndexInTotal = quiz.QuizSections.Take(game.CurrentSectionIndex)
+            game.CurrentQuestionIndexInTotal = quiz.QuizSections.Take(game.CurrentSectionIndex-1)
                 .Select(s => s.QuestionItemRefs.Count).Sum() + 1;
             game.CurrentQuizItemIndexInTotal =
-                quiz.QuizSections.Take(game.CurrentSectionIndex).Select(s => s.QuizItemRefs.Count).Sum() + 1;
+                quiz.QuizSections.Take(game.CurrentSectionIndex-1).Select(s => s.QuizItemRefs.Count).Sum() + 1;
             game.CurrentSectionQuizItemCount = section.QuizItemRefs.Count;
             game.CurrentQuizItemIndexInSection = 1;
 
