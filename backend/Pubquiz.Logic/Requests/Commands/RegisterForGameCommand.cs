@@ -57,8 +57,8 @@ namespace Pubquiz.Logic.Requests.Commands
             {
                 // check if team name is taken, otherwise throw DomainException
                 var isTeamNameTaken = !string.IsNullOrWhiteSpace(Name) &&
-                                      await teamCollection.AnyAsync(t =>
-                                          String.Equals(t.Name, Name, StringComparison.CurrentCultureIgnoreCase) &&
+                                      teamCollection.AsQueryable().ToList().Any(t =>
+                                          string.Equals(t.Name, Name, StringComparison.InvariantCultureIgnoreCase) &&
                                           t.CurrentGameId == game.Id);
                 if (isTeamNameTaken)
                 {

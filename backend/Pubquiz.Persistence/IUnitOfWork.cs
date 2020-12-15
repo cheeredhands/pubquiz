@@ -16,15 +16,5 @@
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         ICollection<T> GetCollection<T>() where T : Model, new();
-
-        /// <summary>
-        /// Commit the unit of work (transaction).
-        /// </summary>
-        void Commit();
-
-        /// <summary>
-        /// Cancel the unit of work (abort the transaction).
-        /// </summary>
-        void Abort();
     }
 }

@@ -47,7 +47,6 @@ namespace Pubquiz.Domain.Tests
             var game = UnitOfWork.GetCollection<Game>().GetAsync(Game.Id).Result;
             game.SetState(GameState.Closed);
             UnitOfWork.GetCollection<Game>().UpdateAsync(game);
-            UnitOfWork.Commit();
             var firstTeam = Teams[0];
             var query = new TeamLobbyViewModelQuery(UnitOfWork) {TeamId = firstTeam.Id};
 
@@ -67,7 +66,6 @@ namespace Pubquiz.Domain.Tests
 
             // act
             notification.Execute().Wait();
-            UnitOfWork.Commit();
 
             // assert
             var updatedUser = UnitOfWork.GetCollection<User>().GetAsync(actorId).Result;

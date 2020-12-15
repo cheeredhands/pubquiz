@@ -56,8 +56,7 @@ namespace Pubquiz.WebApi.Helpers
                     context.Result = new NotFoundObjectResult(message);
                 }
             }
-
-            _unitOfWork.Abort();
+            
             base.OnException(context);
         }
     }

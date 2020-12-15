@@ -104,7 +104,7 @@ namespace Pubquiz.WebApi
                 .AddMvcOptions(options =>
                 {
                     options.Filters.Add(typeof(DomainExceptionFilter));
-                    options.Filters.Add(typeof(UnitOfWorkActionFilter));
+                    //options.Filters.Add(typeof(UnitOfWorkActionFilter));
                 })
                 .AddNewtonsoftJson()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);

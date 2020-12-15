@@ -22,7 +22,6 @@ namespace Pubquiz.Domain.Tests
 
             // act
             var team = command.Execute().Result;
-            UnitOfWork.Commit();
 
             // assert
             Assert.AreEqual("Team 4", team.Name);
@@ -37,7 +36,6 @@ namespace Pubquiz.Domain.Tests
 
             // act
             var team = command.Execute().Result;
-            UnitOfWork.Commit();
 
             // assert
             var gameCollection = UnitOfWork.GetCollection<Game>();
@@ -57,7 +55,6 @@ namespace Pubquiz.Domain.Tests
 
             // act
             var team = command.Execute().Result;
-            UnitOfWork.Commit();
 
             // assert
             team.RecoveryCode = firstTeam.RecoveryCode;
@@ -99,7 +96,6 @@ namespace Pubquiz.Domain.Tests
 
             // act
             notification.Execute().Wait();
-            UnitOfWork.Commit();
 
             // assert
             var team = UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
@@ -164,7 +160,6 @@ namespace Pubquiz.Domain.Tests
 
             // act
             command.Execute().Wait();
-            UnitOfWork.Commit();
 
             var team = UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
             Assert.AreEqual("a,b,c", team.MemberNames);
@@ -229,7 +224,6 @@ namespace Pubquiz.Domain.Tests
 
             // act
             notification.Execute().Wait();
-            UnitOfWork.Commit();
 
             // assert
             Assert.IsNull(UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result);
