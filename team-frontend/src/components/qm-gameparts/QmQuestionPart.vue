@@ -9,7 +9,9 @@
             </h1>
           </b-col>
           <b-col v-if="isReviewing">
-             <h2 class="float-right"><b-badge variant="success">{{ $t("REVIEWING") }}</b-badge></h2></b-col
+            <h2 class="float-right">
+              <b-badge variant="success">{{ $t("REVIEWING") }}</b-badge>
+            </h2></b-col
           >
         </b-row>
         <b-row>
@@ -51,13 +53,8 @@
               </div>
             </div>
           </b-col>
-          <b-col
-            v-if="mediaObjects && mediaObjects.length > 0"
-          >
-            <div
-              v-for="mediaObject in mediaObjects"
-              :key="mediaObject.id"
-            >
+          <b-col v-if="mediaObjects && mediaObjects.length > 0">
+            <div v-for="mediaObject in mediaObjects" :key="mediaObject.id">
               <figure>
                 <b-img
                   fluid
@@ -83,7 +80,7 @@
       </b-container>
     </div>
     <div class="question-nav">
-            <b-button @click="navigateItem(-10)" variant="secondary" class="mr-1">
+      <b-button @click="navigateItem(-10)" variant="secondary" class="mr-1">
         <font-awesome-icon icon="arrow-left" />
         {{ $t("SKIP_10_BACK") }}
       </b-button>
@@ -91,8 +88,9 @@
         <font-awesome-icon icon="arrow-left" />
         {{ $t("PREVIOUS_ITEM") }}
       </b-button>
-      {{ $t("SECTION") }} {{ game.currentSectionTitle }} ({{ game.currentSectionIndex }}) :
-      {{ $t("QUIZ_ITEM") }} {{ game.currentQuizItemIndexInSection }}
+      {{ $t("SECTION") }} {{ game.currentSectionTitle }} ({{
+        game.currentSectionIndex
+      }}) : {{ $t("QUIZ_ITEM") }} {{ game.currentQuizItemIndexInSection }}
       {{ $t("OF") }} {{ game.currentSectionQuizItemCount }})
       <b-button @click="navigateItem(1)" variant="secondary">
         {{ $t("NEXT_ITEM") }}
@@ -148,6 +146,9 @@ export default class QmQuestionPart extends mixins(
   }
 
   get mediaObjects(): MediaObject[] {
+    if (this.quizItem.mediaObjects === undefined) {
+      return [];
+    }
     if (this.isReviewing) {
       if (this.quizItem.mediaObjects.filter((m) => m.isSolution).length > 0) {
         return this.quizItem.mediaObjects.filter((m) => m.isSolution);

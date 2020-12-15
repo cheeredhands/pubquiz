@@ -26,8 +26,10 @@
               {{ quizItem.title }}
             </h1>
           </b-col>
-         <b-col v-if="isReviewing">
-             <h2 class="float-right"><b-badge variant="success">{{ $t("REVIEWING") }}</b-badge></h2></b-col
+          <b-col v-if="isReviewing">
+            <h2 class="float-right">
+              <b-badge variant="success">{{ $t("REVIEWING") }}</b-badge>
+            </h2></b-col
           >
         </b-row>
         <b-row>
@@ -63,10 +65,18 @@
                   </li>
                 </ul>
               </div>
-               <div v-else-if="isReviewing && interaction.interactionType === shortAnswer">
+              <div
+                v-else-if="
+                  isReviewing && interaction.interactionType === shortAnswer
+                "
+              >
                 <strong>{{ interaction.solution.responses.join(", ") }}</strong>
               </div>
-              <div v-else-if="isReviewing && interaction.interactionType === extendedText">
+              <div
+                v-else-if="
+                  isReviewing && interaction.interactionType === extendedText
+                "
+              >
                 <strong>{{ interaction.solution.responses.join(", ") }}</strong>
               </div>
             </div>
@@ -129,6 +139,9 @@ export default class Beamer extends mixins(GameServiceMixin) {
   }
 
   get mediaObjects(): MediaObject[] {
+    if (this.quizItem.mediaObjects === undefined) {
+      return [];
+    }
     if (this.isReviewing) {
       if (this.quizItem.mediaObjects.filter((m) => m.isSolution).length > 0) {
         return this.quizItem.mediaObjects.filter((m) => m.isSolution);
