@@ -78,7 +78,7 @@ export default class TeamInGame extends mixins(
   }
 
   get isPaused(): boolean {
-    return this.gameState === GameState.Paused;
+    return this.gameState === GameState.Paused || this.gameState === GameState.Reviewing;
   }
 
   @Watch('gameState')

@@ -3,7 +3,7 @@
   <div id="main">
     <nav-bar-part>
       <b-nav-item>
-        <b-button class="mr-1"
+        <b-button size="sm" class="mr-1"
           @click="toggleGame"
           :variant="game.state === runningState ? 'secondary' : 'success'"
         >
@@ -14,10 +14,10 @@
             game.state === runningState ? $t("PAUSE_GAME") : $t("RESUME_GAME")
           }} </b-button
         >
-        <b-button class="mr-1" @click="reviewCurrentSection" variant="success">
+        <b-button size="sm" class="mr-1" @click="reviewCurrentSection" variant="success">
           <b-icon-search/>
           {{$t("REVIEW_CURRENT_SECTION")}}</b-button>
-        <b-button disabled @click="finishGame" variant="danger">
+        <b-button size="sm" disabled @click="finishGame" variant="danger">
           <font-awesome-icon icon="power-off" />
           {{ $t("FINISH_GAME") }}
         </b-button>
@@ -55,6 +55,9 @@
                 </template>
                 <h5 class="mt-0 mb-1">{{ team.name }}</h5>
                 <p class="mb-0">
+                  {{ team.memberNames }}
+                </p>
+                <p class="mb-0 d-none">
                   TODO: score in this quiz section, trend (going up or sinking).
                 </p></b-media
               >

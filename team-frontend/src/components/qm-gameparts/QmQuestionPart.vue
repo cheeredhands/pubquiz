@@ -8,6 +8,9 @@
               {{ quizItem.title }}
             </h1>
           </b-col>
+          <b-col v-if="isReviewing">
+             <h2 class="float-right"><b-badge variant="success">{{ $t("REVIEWING") }}</b-badge></h2></b-col
+          >
         </b-row>
         <b-row>
           <b-col>
@@ -49,7 +52,7 @@
             </div>
           </b-col>
           <b-col
-            v-if="quizItem.mediaObjects && mediaObjects.length > 0"
+            v-if="mediaObjects && mediaObjects.length > 0"
           >
             <div
               v-for="mediaObject in mediaObjects"
@@ -128,16 +131,29 @@ export default class QmQuestionPart extends mixins(
     return (this.$store.getters.game || {}) as Game;
   }
 
+  get gameState(): GameState {
+    return this.game.state;
+  }
+
+  get isPaused(): boolean {
+    return this.gameState === GameState.Paused;
+  }
+
+  get isReviewing(): boolean {
+    return this.gameState === GameState.Reviewing;
+  }
+
   get quizItem(): QuizItem {
     return this.$store.getters.quizItem;
   }
 
   get mediaObjects(): MediaObject[] {
-    if (this.game.state === GameState.Reviewing) {
-      return this.quizItem.mediaObjects.filter((m) => m.isSolution);
-    } else {
-      return this.quizItem.mediaObjects.filter((m) => !m.isSolution);
+    if (this.isReviewing) {
+      if (this.quizItem.mediaObjects.filter((m) => m.isSolution).length > 0) {
+        return this.quizItem.mediaObjects.filter((m) => m.isSolution);
+      }
     }
+    return this.quizItem.mediaObjects.filter((m) => !m.isSolution);
   }
 
   get currentQuizItemId(): string {
