@@ -200,7 +200,7 @@ export default class QuizMasterInGame extends mixins(
   grid-area: question;
   /* padding: 0.5em; */
   border-bottom: 4px solid #212529;
-  /* overflow: hidden; */
+  overflow: auto;
 }
 
 .ranking {

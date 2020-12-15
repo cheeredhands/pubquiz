@@ -175,7 +175,7 @@ export default class QmQuestionPart extends mixins(
 .question-container {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 6fr 1fr;
+  grid-template-rows: 8fr 1fr;
   grid-template-areas: "question-current" "question-nav";
   height: 100%;
 }
@@ -185,7 +185,7 @@ export default class QmQuestionPart extends mixins(
   padding: 1em;
   border-bottom: 1px solid black;
   background-color: mintcream;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .question-nav {
