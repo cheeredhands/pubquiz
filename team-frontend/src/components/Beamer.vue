@@ -188,4 +188,7 @@ body.modal-open .main-container {
   filter: blur(12px);
   filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='12');
 }
+li.correct {
+  font-weight: bold;
+}
 </style>
