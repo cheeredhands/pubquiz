@@ -100,5 +100,14 @@
   "CHANGES_SAVED": "Antwoord(en) automatisch opgeslagen.",
   "REVIEWING": "Antwoorden",
   "REVIEW_CURRENT_SECTION": "Antwoordmodus",
-  "OPEN_GAME": "Open"
+  "OPEN_GAME": "Open",
+  "ADD_GAME_FOR_QUIZ": "Spel toevoegen",
+  "MY_GAMES": "Mijn spellen",
+  "MY_QUIZZES": "Mijn quizzen",
+  "UPLOAD_QUIZ": "Quiz uploaden",
+  "ADD_QUIZ": "Quiz toevoegen",
+  "EDIT_GAME": "Spel bewerken",
+  "DELETE_GAME": "Spel verwijderen",
+  "TEAM_OFFLINE": "Team is offline",
+  "OTHER_GAMES": "Andere spellen"
 }

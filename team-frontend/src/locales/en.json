@@ -100,5 +100,14 @@
   "CHANGES_SAVED": "Answers automatically saved.",
   "REVIEWING": "Reviewing",
   "REVIEW_CURRENT_SECTION": "Review section",
-  "OPEN_GAME": "Open"
+  "OPEN_GAME": "Open",
+  "ADD_GAME_FOR_QUIZ": "Add game",
+  "MY_GAMES": "My games",
+  "MY_QUIZZES": "My quizzes",
+  "UPLOAD_QUIZ": "Upload quiz",
+  "ADD_QUIZ": "Add quiz",
+  "EDIT_GAME": "Edit game",
+  "DELETE_GAME": "Delete game",
+  "TEAM_OFFLINE": "Team is offline",
+  "OTHER_GAMES": "Other games"
 }
