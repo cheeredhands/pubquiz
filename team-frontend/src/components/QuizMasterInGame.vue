@@ -7,9 +7,8 @@
           @click="toggleGame"
           :variant="game.state === runningState ? 'secondary' : 'success'"
         >
-          <font-awesome-icon
-            :icon="game.state === runningState ? 'pause' : 'play'"
-          />
+        <b-icon-play-fill v-if="game.state !== runningState" />
+        <b-icon-pause-fill v-if="game.state === runningState" />
           {{
             game.state === runningState ? $t("PAUSE_GAME") : $t("RESUME_GAME")
           }} </b-button
@@ -18,11 +17,11 @@
           <b-icon-search/>
           {{$t("REVIEW_CURRENT_SECTION")}}</b-button>
         <b-button size="sm" class="mr-1" disabled @click="finishGame" variant="danger">
-          <font-awesome-icon icon="power-off" />
+          <b-icon-power/>
           {{ $t("FINISH_GAME") }}
         </b-button>
         <b-button size="sm" @click="openGame" variant="danger">
-          <font-awesome-icon icon="power-off" />
+          <b-icon-door-open-fill/>
           {{ $t("OPEN_GAME") }}
         </b-button>
       </b-nav-item>
@@ -33,7 +32,7 @@
       <template v-slot:rightcontent>
         <b-nav-item v-b-tooltip.hover to="/qm/lobby" :title="$t('LOBBY_TITLE')">Lobby</b-nav-item>
         <b-nav-item v-b-tooltip.hover to="/beamer" :title="$t('BEAMER_TITLE')" target="_blank"
-          >Beamer <b-icon-arrow-up-right/></b-nav-item>
+          >Beamer <b-icon-window/></b-nav-item>
       </template>
     </nav-bar-part>
 

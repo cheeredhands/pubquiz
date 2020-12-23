@@ -9,7 +9,8 @@
           variant="success"
           >{{ $t("CONTINUE_GAME") }}</b-button
         >
-        <b-button size="sm" v-else @click="startGame" variant="success">{{
+        <b-button size="sm" v-else @click="startGame" variant="success">
+          <b-icon-play-fill v-if="game.state !== runningState" />{{
           $t("START_GAME")
         }}</b-button>
       </b-nav-item>
@@ -53,12 +54,12 @@
                   <b-badge v-if="!team.isLoggedIn">{{
                     $t("LOGGED_OUT")
                   }}</b-badge>
-                  <font-awesome-icon
-                    icon="trash-alt"
+                  <b-icon-trash-fill
                     @click="kickTeam(team.id, team.name)"
-                    pull="right"
+                    class="float-right"
                     style="cursor: pointer"
                     :title="$t('KICK_OUT')"
+                    v-b-tooltip
                   />
                 </b-list-group-item>
               </b-list-group>
@@ -74,22 +75,19 @@
                   <strong>{{ gameRef.title }} </strong>
                   <span class="small">(quiz: {{ gameRef.quizTitle }})</span
                   >&nbsp;<code>{{ gameRef.inviteCode }}</code>
-                  <font-awesome-icon
+                  <b-icon-trash-fill
                     v-b-tooltip
-                    icon="trash-alt"
-                    @click="kickTeam(gameRef.id)"
-                    pull="right"
+                    @click="kickTeam(team.id, team.name)"
+                    class="float-right"
                     style="cursor: pointer"
                     :title="$t('DELETE_GAME')"
                   />
-                  <font-awesome-icon
+                  <b-icon-pencil-fill
                     v-b-tooltip
                     :title="$t('EDIT_GAME')"
-                    pull="right"
-                    class="mr-2"
-                    icon="pen"
-                    @click="kickTeam(gameRef.id)"
+                    class="float-right mr-2"
                     style="cursor: pointer"
+                    @click="kickTeam(gameRef.id)"
                   />
                 </b-list-group-item> </b-list-group
             ></b-card>
@@ -103,7 +101,7 @@
                     :title="$t('ADD_QUIZ')"
                     style="cursor: pointer"
                   >
-                    <b-icon-file-earmark-plus></b-icon-file-earmark-plus>
+                    <b-icon-file-earmark-plus/>
                   </h5>
                 </span>
                 <span v-else>{{ $t("CURRENT_TEAMS_IN_GAME") }}</span>

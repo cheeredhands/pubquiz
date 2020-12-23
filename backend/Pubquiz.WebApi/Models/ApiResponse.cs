@@ -23,6 +23,7 @@ namespace Pubquiz.WebApi.Models
         public List<GameRef> GameRefs { get; set; }
         public GameState GameState { get; set; }
         public UserRole UserRole { get; set; }
+        public string RecoveryCode { get; set; }
     }
 
     public class RegisterForGameResponse : ApiResponse

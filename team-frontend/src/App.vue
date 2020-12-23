@@ -33,7 +33,8 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
               memberNames: response.data.memberNames,
               currentGameId: response.data.currentGameId,
               isLoggedIn: true,
-              gameId: response.data.currentGameId
+              gameId: response.data.currentGameId,
+              recoveryCode: response.data.recoveryCode
             })
             .then(() => {
               if (this.$router.currentRoute.name !== 'Beamer') {

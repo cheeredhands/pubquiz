@@ -31,6 +31,7 @@ export interface WhoAmIResponse extends ApiResponse {
     currentGameId: string;
     gameState: GameState;
     userRole: UserRole;
+    recoveryCode: string;
   }
 
 export interface SaveTeamMembersResponse extends ApiResponse {

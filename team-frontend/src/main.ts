@@ -3,15 +3,9 @@ import './plugins/quizr-helpers';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight, BIconFileEarmarkPlus, BIconSearch } from 'bootstrap-vue';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSignOutAlt, faTrashAlt, faPlay, faPause, faStop, faPowerOff, faUser, faArrowLeft, faArrowRight, faPen, faCheck, faGlasses, faExternalLinkSquareAlt, faCheckSquare, faCheckCircle, faTimesCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight, BIconFileEarmarkPlus, BIconSearch, BIconEyeglasses, BIconTrashFill, BIconPencilFill, BIconPlayFill, BIconPauseFill, BIconPower, BIconDoorOpenFill, BIconArrowLeftShort, BIconArrowLeft, BIconArrowRightShort, BIconArrowRight, BIconWindow, BIconCheckCircleFill, BIconXCircleFill } from 'bootstrap-vue';
 import axios from 'axios';
 import i18n from './plugins/i18n';
-
-library.add(faGlasses, faSignOutAlt, faTrashAlt, faPlay, faPause, faStop, faPowerOff, faUser, faArrowLeft, faArrowRight, faPen, faCheck, faExternalLinkSquareAlt, faCheckCircle, faTimesCircle, faPlus);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
@@ -24,6 +18,20 @@ Vue.component('b-icon-exclamation-triangle', BIconExclamationTriangle);
 Vue.component('b-icon-arrow-up-right', BIconBoxArrowUpRight);
 Vue.component('b-icon-file-earmark-plus', BIconFileEarmarkPlus);
 Vue.component('b-icon-search', BIconSearch);
+Vue.component('b-icon-eyeglasses', BIconEyeglasses);
+Vue.component('b-icon-trash-fill', BIconTrashFill);
+Vue.component('b-icon-pencil-fill', BIconPencilFill);
+Vue.component('b-icon-play-fill', BIconPlayFill);
+Vue.component('b-icon-pause-fill', BIconPauseFill);
+Vue.component('b-icon-power', BIconPower);
+Vue.component('b-icon-door-open-fill', BIconDoorOpenFill);
+Vue.component('b-icon-arrow-left-short', BIconArrowLeftShort);
+Vue.component('b-icon-arrow-left', BIconArrowLeft);
+Vue.component('b-icon-arrow-right-short', BIconArrowRightShort);
+Vue.component('b-icon-arrow-right', BIconArrowRight);
+Vue.component('b-icon-window', BIconWindow);
+Vue.component('b-icon-check-circle-fill', BIconCheckCircleFill);
+Vue.component('b-icon-x-circle-fill', BIconXCircleFill);
 
 // https://dev.to/heftyhead/lets-talk-about-an-unnecessary-but-popular-vue-plugin-1ied
 const axiosInstanceBackend = axios.create({

@@ -29,7 +29,12 @@
             v-b-tooltip.click.right
             :title="team.recoveryCode"
           >
-            {{ team.name }}<b-icon-exclamation-triangle class="ml-1" :title="$t('TEAM_OFFLINE')" v-if="!team.isLoggedIn"></b-icon-exclamation-triangle>
+            {{ team.name
+            }}<b-icon-exclamation-triangle
+              class="ml-1"
+              :title="$t('TEAM_OFFLINE')"
+              v-if="!team.isLoggedIn"
+            ></b-icon-exclamation-triangle>
           </h5>
           <b-badge
             pill
@@ -52,12 +57,11 @@
               v-for="interactionResponse in team.answers[game.currentQuizItemId]
                 .interactionResponses"
               :key="interactionResponse.id"
-              class="small mb-0"
+              class="mb-0"
             >
-              <font-awesome-icon
-                icon="glasses"
+              <b-icon-eyeglasses
                 class="float-right mr-1 mt-1"
-                title="Flagged for manual correction"
+                :title="$t('FLAGGED')"
                 v-if="interactionResponse.flaggedForManualCorrection"
               />
 
@@ -71,6 +75,8 @@
                 href="#"
                 pill
                 variant="success"
+                v-b-tooltip
+                :title="$t('SET_OUTCOME_CORRECT')"
                 class="ml-1 mb-1"
                 @click="
                   correctInteraction(
@@ -81,14 +87,13 @@
                   )
                 "
               >
-                <font-awesome-icon
-                  :title="$t('SET_OUTCOME_CORRECT')"
-                  icon="check-circle"
-              /></b-badge>
+                <b-icon-check-circle-fill/></b-badge>
               <b-badge
                 href="#"
                 pill
                 variant="danger"
+                v-b-tooltip
+                :title="$t('SET_OUTCOME_INCORRECT')"
                 class="ml-1 mb-1"
                 @click="
                   correctInteraction(
@@ -99,10 +104,7 @@
                   )
                 "
               >
-                <font-awesome-icon
-                  :title="$t('SET_OUTCOME_INCORRECT')"
-                  icon="times-circle"
-              /></b-badge>
+                <b-icon-x-circle-fill /></b-badge>
             </p>
           </div>
         </b-list-group-item>

@@ -81,24 +81,34 @@
     </div>
     <div class="question-nav">
       <b-button @click="navigateItem(-10)" variant="secondary" class="mr-1">
-        <font-awesome-icon icon="arrow-left" />
+        <b-icon-arrow-left />
         {{ $t("SKIP_10_BACK") }}
       </b-button>
       <b-button @click="navigateItem(-1)" variant="secondary">
-        <font-awesome-icon icon="arrow-left" />
+        <b-icon-arrow-left-short />
         {{ $t("PREVIOUS_ITEM") }}
       </b-button>
-      {{ $t("SECTION") }} {{ game.currentSectionTitle }} ({{
-        game.currentSectionIndex
-      }}) : {{ $t("QUIZ_ITEM") }} {{ game.currentQuizItemIndexInSection }}
-      {{ $t("OF") }} {{ game.currentSectionQuizItemCount }})
-      <b-button @click="navigateItem(1)" variant="secondary">
-        {{ $t("NEXT_ITEM") }}
-        <font-awesome-icon icon="arrow-right" />
-      </b-button>
-      <b-button @click="navigateItem(10)" variant="secondary" class="ml-1">
+      <span class="text-center">
+        {{ $t("SECTION") }} {{ game.currentSectionTitle }} ({{
+          game.currentSectionIndex
+        }}) : {{ $t("QUIZ_ITEM") }} {{ game.currentQuizItemIndexInSection }}
+        {{ $t("OF") }} {{ game.currentSectionQuizItemCount }})
+      </span>
+      <b-button
+        @click="navigateItem(10)"
+        variant="secondary"
+        class="ml-1 float-right"
+      >
         {{ $t("SKIP_10_FORWARD") }}
-        <font-awesome-icon icon="arrow-right" />
+        <b-icon-arrow-right />
+      </b-button>
+      <b-button
+        @click="navigateItem(1)"
+        variant="secondary"
+        class="float-right"
+      >
+        {{ $t("NEXT_ITEM") }}
+        <b-icon-arrow-right-short />
       </b-button>
     </div>
   </div>

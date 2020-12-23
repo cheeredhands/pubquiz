@@ -84,7 +84,8 @@ namespace Pubquiz.WebApi.Controllers
                     MemberNames = team.MemberNames,
                     CurrentGameId = team.CurrentGameId,
                     GameState = game.State,
-                    UserRole = User.GetUserRole()
+                    UserRole = User.GetUserRole(),
+                    RecoveryCode = team.RecoveryCode
                 });
             }
 

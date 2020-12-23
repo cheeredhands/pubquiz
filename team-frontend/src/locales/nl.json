@@ -23,7 +23,7 @@
   "CODE_ORIGIN": "De code krijg je van de quizmaster.",
   "CODE_LENGTH": "Een code is minimaal 4 tekens.",
   "TEAMLOBBY_WELCOME": "Welkom in de lobby!",
-  "TEAMLOBBY_SIT_BACK": "Sit back and relax..",
+  "TEAMLOBBY_SIT_BACK": "Zodra iedereen er klaar voor is, wordt je automatisch doorgestuurd naar het spelscherm. Tot die tijd kun je hier je teamnaam aanpassen en je teamleden invullen. Je wijzigingen worden automatisch opgeslagen!",
   "MEMBERS": "Teamleden",
   "MEMBER_NAMES": "Geef hier de namen van je teamleden op (één per regel).",
   "ADJUST": "Aanpassen",
@@ -109,5 +109,6 @@
   "EDIT_GAME": "Spel bewerken",
   "DELETE_GAME": "Spel verwijderen",
   "TEAM_OFFLINE": "Team is offline",
-  "OTHER_GAMES": "Andere spellen"
+  "OTHER_GAMES": "Andere spellen",
+  "FLAGGED": "Handmatig nakijken nodig"
 }

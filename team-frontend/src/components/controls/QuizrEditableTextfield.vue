@@ -2,7 +2,7 @@
   <b-form ref="form" @submit="exitEditMode" novalidate>
     <b-form-group :label="label" :description="description" label-for="inputField">
       <b-input-group>
-        <font-awesome-icon v-if="!editable" icon="pen" @click="clickPen" :title="$t('EDIT')" />
+        <b-icon-pencil-fill v-if="!editable" @click="clickPen" :title="$t('EDIT')" />
         <b-form-input
           ref="the_input"
           :plaintext="!editable"
@@ -72,7 +72,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.fa-pen {
+.bi-pencil-fill {
   cursor: pointer;
   display: inline-block;
   position: absolute;
@@ -93,7 +93,7 @@ input {
 input:hover {
   border: 1px solid lightgrey;
 }
-.input-group:hover .fa-pen {
+.input-group:hover .bi-pencil-fill {
   /* display: inline-block; */
   color: black;
 }

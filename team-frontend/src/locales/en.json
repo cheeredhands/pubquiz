@@ -109,5 +109,6 @@
   "EDIT_GAME": "Edit game",
   "DELETE_GAME": "Delete game",
   "TEAM_OFFLINE": "Team is offline",
-  "OTHER_GAMES": "Other games"
+  "OTHER_GAMES": "Other games",
+  "FLAGGED": "Flagged for manual correction"
 }
