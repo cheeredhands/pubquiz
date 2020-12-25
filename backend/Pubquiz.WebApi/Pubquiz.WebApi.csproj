@@ -9,7 +9,6 @@
         <Folder Include="wwwroot\" />
         <Folder Include="wwwroot\mediaobjects" />
         <Folder Include="wwwroot\quiz" />
-        <Folder Include="wwwroot\uploads" />
     </ItemGroup>
 
     <ItemGroup>
@@ -49,6 +48,12 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\uploads\Fryslan-Kerstquiz-2020.zip">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Security.Claims;
@@ -23,7 +24,6 @@ using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
-using Pubquiz.Persistence.Helpers;
 using Pubquiz.WebApi.Helpers;
 using Pubquiz.WebApi.Models;
 using Rebus.Bus;
@@ -271,15 +271,30 @@ namespace Pubquiz.WebApi
             var mongoDbIsEmpty = _configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
                                  unitOfWork.GetCollection<Team>().GetCountAsync().Result == 0;
             // Seed the test data when using in-memory-database
-            if (mongoDbIsEmpty || _configuration.GetValue<string>("AppSettings:Database") == "Memory")
-            {
-                //var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
-                var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
-                var seeder = new TestSeeder(unitOfWork, loggerFactory, bus, quizrSettings);
-                seeder.SeedSeedSet(quizrSettings.BaseUrl);
+            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
+            var seeder = new TestSeeder(unitOfWork, loggerFactory, bus, quizrSettings);
 
+            var quizCollection = unitOfWork.GetCollection<Quiz>();
+            var gameCollection = unitOfWork.GetCollection<Game>();
+            var seedQuiz =
+                quizCollection.GetAsync(Guid.Parse("DEF9AB47-DF1A-48AE-8946-D20DB7B6127F").ToShortGuidString()).Result;
+            if (seedQuiz == null)
+            {
+                seeder.SeedSeedSet(quizrSettings.BaseUrl);
+            }
+
+            var okiKerstQuiz = gameCollection.AnyAsync(q => q.Title == "OKI-kerstquiz 2020").Result;
+            if (!okiKerstQuiz)
+            {
                 seeder.SeedZippedExcelQuiz("uploads/OKI-Kerstquiz-2020.zip", "OKI-Kerstquiz-2020.zip", "OKI2020",
                     "OKI-kerstquiz 2020").Wait();
+            }
+
+            var krystkwis = gameCollection.AnyAsync(g => g.Title == "Krystkwis 2020").Result;
+            if (!krystkwis)
+            {
+                seeder.SeedZippedExcelQuiz("uploads/Fryslan-Kerstquiz-2020.zip", "Fryslan-Kerstquiz-2020.zip", "JOEPIE",
+                    "Krystkwis 2020").Wait();
             }
         }
     }

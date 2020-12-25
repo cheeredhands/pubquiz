@@ -39,6 +39,34 @@ namespace Pubquiz.Domain.Tests
         }
 
         [TestMethod]
+        public async Task Fryslan2020QuizExcelQuizPackage_Import_CorrectQuizNameImported()
+        {
+            // arrange
+            var quizrSettings = new QuizrSettings
+            {
+                BaseUrl = "https://localhost:5001",
+                WebRootPath = "",
+                ContentPath = "quiz"
+            };
+            await using var stream = File.OpenRead("testfiles/Fryslan-Kerstquiz-2020.zip");
+            var command =
+                new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "Fryslan-Kerstquiz-2020.zip", quizrSettings,
+                    LoggerFactory);
+            command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
+            // act
+
+            var quizrPackage = await command.Execute();
+
+            // assert
+            var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
+            var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
+            Assert.AreEqual(1, quizrPackage.QuizRefs.Count);
+            var quizCollection = UnitOfWork.GetCollection<Quiz>();
+            var quizRef = await quizCollection.GetAsync(quizrPackage.QuizRefs.First().Id);
+            Assert.AreEqual("TH en Anne's krystkwis 2020", quizRef.Title);
+        }
+
+        [TestMethod]
         public async Task Oki2020QuizExcelQuizPackage_Import_CorrectQuizNameImported()
         {
             // arrange

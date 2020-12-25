@@ -63,7 +63,7 @@ namespace Pubquiz.Logic.Tools
 
             var quiz = new Quiz
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("DEF9AB47-DF1A-48AE-8946-D20DB7B6127F").ToShortGuidString(),
                 Title = "PéCé-pubquiz 2019"
             };
             quiz.QuizSections.Add(quizSectionIntro);

@@ -37,5 +37,8 @@
         <None Update="testfiles\OKI-Kerstquiz-2020.zip">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="testfiles\Fryslan-Kerstquiz-2020.zip">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>
