@@ -46,6 +46,11 @@ namespace Pubquiz.WebApi.Models
         public List<GameRef> GameRefs { get; set; }
     }
 
+    public class CreateGameResponse : ApiResponse
+    {
+        public string GameId { get; set; }
+    }
+
     public class SelectGameResponse : ApiResponse
     {
         public string GameId { get; set; }

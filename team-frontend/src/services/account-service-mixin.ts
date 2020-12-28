@@ -14,7 +14,7 @@ export default class AccountServiceMixin extends Vue {
   }
 
   public $_accountService_registerForGame(name: string, code: string): Promise<AxiosResponse<RegisterForGameResponse>> {
-    return this.$axios.post('/api/account/register', { name, code }, { withCredentials: true });
+    return this.$axios.post('/api/account/registerteam', { name, code }, { withCredentials: true });
   }
 
   public $_accountService_loginUser(userName: string, password: string): Promise<AxiosResponse<LoginResponse>> {
@@ -22,6 +22,6 @@ export default class AccountServiceMixin extends Vue {
   }
 
   public $_accountService_deleteTeam(teamId: string): Promise<AxiosResponse> {
-    return this.$axios.post('api/account/deleteteam', { teamId });
+    return this.$axios.delete(`api/team/${teamId}`);
   }
 }

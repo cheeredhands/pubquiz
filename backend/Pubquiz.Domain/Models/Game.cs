@@ -61,6 +61,17 @@ namespace Pubquiz.Domain.Models
             TeamIds = new List<string>();
         }
 
+        public GameRef ToGameRef()
+        {
+            return new GameRef
+            {
+                Id = Id,
+                Title = Title,
+                InviteCode = InviteCode,
+                QuizTitle = QuizTitle
+            };
+        }
+
         public void SetState(GameState newGameState)
         {
             // switch (newGameState)

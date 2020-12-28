@@ -29,7 +29,7 @@ namespace Pubquiz.Logic.Tools
         {
             var quizSectionIntro = new QuizSection
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("4EF005A0-CA2C-415F-8F90-05976F921A81").ToShortGuidString(),
                 Title = "Introductie",
                 QuizItemRefs = new List<QuizItemRef>
                 {
@@ -38,7 +38,7 @@ namespace Pubquiz.Logic.Tools
             };
             var quizSection1 = new QuizSection
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("91A7564D-E410-4B1A-A09F-37CE421C1AD8").ToShortGuidString(),
                 Title = "Vanalles 1",
                 QuizItemRefs = new List<QuizItemRef>
                 {
@@ -51,7 +51,7 @@ namespace Pubquiz.Logic.Tools
 
             var quizSection2 = new QuizSection
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("DEEDC520-9D9F-4839-BA7B-A016F18D3632").ToShortGuidString(),
                 Title = "Vanalles 2",
                 QuizItemRefs = new List<QuizItemRef>
                 {
@@ -77,7 +77,7 @@ namespace Pubquiz.Logic.Tools
         {
             var introItem = new QuizItem
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("51034511-FE2C-43EC-B9A2-066E6EDAB187").ToShortGuidString(),
                 Body =
                     "Gebruik van apparatuur met een<br>scherm is (uiteraard) niet toegestaan.<br>Over de uitslag kan worden gecorrespondeerd,<br>nmaar de quizmaster heeft altijd gelijk.",
                 Title = "Huisregels",
@@ -93,7 +93,7 @@ namespace Pubquiz.Logic.Tools
         {
             var question = new QuizItem
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("EE4BC702-2A7E-421C-A50C-CE5FD1889F82").ToShortGuidString(),
                 Body = "Wat bereken je met een integraalberekening?",
                 Title = "Vanalles 1 - vraag 1",
                 MaxScore = 1,
@@ -115,7 +115,7 @@ namespace Pubquiz.Logic.Tools
         {
             var question = new QuizItem
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("8A7F9B9E-5497-4D3A-8E92-424F5994E324").ToShortGuidString(),
                 Body =
                     "Bij Cito gebruiken we VPN-software genaamd Pulse Secure om thuis te werken. Waar staat VPN voor?",
                 Title = "Vanalles 1 - vraag 2",
@@ -138,7 +138,7 @@ namespace Pubquiz.Logic.Tools
         {
             var question = new QuizItem
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("5AC76615-6688-45EC-9693-3E5C0C571F9C").ToShortGuidString(),
                 Body = "(todo: filmpje toevoegen)",
                 Title = "Vanalles 1 - vraag 3",
                 MaxScore = 2,
@@ -166,7 +166,7 @@ namespace Pubquiz.Logic.Tools
         {
             var question = new QuizItem
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("9196D624-CAAA-4D9C-B4C8-0550E14FDB1C").ToShortGuidString(),
                 Body = "(filmpje)",
                 Title = "Vanalles 1 - vraag 4",
                 MaxScore = 1,
@@ -190,7 +190,7 @@ namespace Pubquiz.Logic.Tools
         {
             var question = new QuizItem
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("02E8EC35-50CD-4224-A672-4D01AB65B4FC").ToShortGuidString(),
                 Body = "Wat is de naam van de droogste champagnesoort?",
                 Title = "Vanalles 2 - vraag 1",
                 MaxScore = 1,
@@ -218,7 +218,7 @@ namespace Pubquiz.Logic.Tools
         {
             var question = new QuizItem
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("E2B70217-BABA-4319-8E3C-21999F452A84").ToShortGuidString(),
                 Body = "Hoe heet de schrijver van ‘The Hitchhiker's Guide to the Galaxy’?",
                 Title = "Vanalles 2  vraag 2",
                 MaxScore = 1,
@@ -240,7 +240,7 @@ namespace Pubquiz.Logic.Tools
         {
             var question = new QuizItem
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("1E2DAD58-0821-4730-A8A9-0E38FFB1F4A0").ToShortGuidString(),
                 Body = "(audiofragment)",
                 Title = "Vanalles 2 - vraag 3",
                 MaxScore = 3,

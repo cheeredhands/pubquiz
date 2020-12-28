@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain;
+using Pubquiz.Domain.Models;
+using Pubquiz.Domain.ViewModels;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Requests.Commands;
 using Pubquiz.Logic.Requests.Notifications;
@@ -10,6 +15,7 @@ using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Models;
+using Rebus.Bus;
 using Rebus.Messages;
 
 namespace Pubquiz.WebApi.Controllers
@@ -19,10 +25,12 @@ namespace Pubquiz.WebApi.Controllers
     public class GameController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IBus _bus;
 
-        public GameController(IUnitOfWork unitOfWork)
+        public GameController(IUnitOfWork unitOfWork, IBus bus)
         {
             _unitOfWork = unitOfWork;
+            _bus = bus;
         }
 
         #region Team actions
@@ -71,11 +79,11 @@ namespace Pubquiz.WebApi.Controllers
 
         #endregion
 
-        #region Admin and quiz master actions
+        #region Quiz master actions
 
         [HttpGet("quizmasterlobby")]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> GetQuizMasterLobby()
+        public async Task<ActionResult<QmLobbyViewModel>> GetQuizMasterLobby()
         {
             var query = new QmLobbyViewModelQuery(_unitOfWork) {UserId = User.GetId()};
             var result = await query.Execute();
@@ -84,33 +92,30 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpGet("quizmasteringame")]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> GetQuizMasterInGame()
+        public async Task<ActionResult<QmInGameViewModel>> GetQuizMasterInGame()
         {
             var query = new QmInGameViewModelQuery(_unitOfWork) {ActorId = User.GetId()};
             var result = await query.Execute();
             return Ok(result);
         }
 
-        [HttpGet("games")]
+        [HttpGet]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> GetGames()
+        public async Task<ActionResult<List<GameRef>>> GetGames()
         {
             var query = new GetGamesQuery(_unitOfWork) {UserId = User.GetId()};
             var result = await query.Execute();
-            return Ok(result);
+            return Ok(result.Select(g => g.ToGameRef()));
         }
 
-        [HttpPost("setgamestate")]
+        [HttpPost("{gameId}/setstate/{gameState}")]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> SetGameState(SetGameStateNotification notification)
+        public async Task<ActionResult<ApiResponse>> SetState(string gameId, GameState gameState)
         {
-            var userId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(notification.ActorId) && userId != notification.ActorId)
+            var notification = new SetGameStateNotification(_unitOfWork, _bus)
             {
-                return Forbid();
-            }
-
-            notification.ActorId = userId;
+                GameId = gameId, ActorId = User.GetId(), NewGameState = gameState
+            };
             await notification.Execute();
 
             return Ok(new ApiResponse
@@ -120,31 +125,42 @@ namespace Pubquiz.WebApi.Controllers
             });
         }
 
-        [HttpPost("setreview")]
+        /// <summary>
+        /// Set the game to the review state and navigate to the first quizitem of
+        /// the specified section.
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="sectionId"></param>
+        /// <returns></returns>
+        [HttpPost("{gameId}/setreview/{sectionId}")]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> SetReview(SetReviewNotification notification)
+        public async Task<ActionResult<ApiResponse>> SetReview(string gameId, string sectionId)
         {
-            var userId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(notification.ActorId) && userId != notification.ActorId)
+            var notification = new SetReviewNotification(_unitOfWork, _bus)
             {
-                return Forbid();
-            }
-
-            notification.ActorId = userId;
+                ActorId = User.GetId(),
+                GameId = gameId,
+                SectionId = sectionId
+            };
             await notification.Execute();
-            
+
             return Ok(new ApiResponse
             {
                 Code = ResultCode.Ok,
                 Message = $"Game set to review {notification.SectionId}."
             });
-            
         }
-        [HttpPost("navigate")]
+
+        [HttpPost("{gameId}/navigatebyoffset/{offset}")]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> NavigateToItemByOffset(NavigateToItemByOffsetCommand command)
+        public async Task<ActionResult<NavigateItemResponse>> NavigateToItemByOffset(string gameId, int offset)
         {
-            command.ActorId = User.GetId();
+            var command = new NavigateToItemByOffsetCommand(_unitOfWork, _bus)
+            {
+                ActorId = User.GetId(),
+                GameId = gameId,
+                Offset = offset
+            };
             var result = await command.Execute();
 
             return Ok(new NavigateItemResponse
@@ -157,7 +173,7 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpGet("{gameId}/getquizitem/{quizItemId}")]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> GetQuizItem(string gameId, string quizItemId)
+        public async Task<ActionResult<QuizItem>> GetQuizItem(string gameId, string quizItemId)
         {
             var query = new QuizItemQuery(_unitOfWork);
             query.ActorId = User.GetId();
@@ -168,33 +184,45 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(result);
         }
-
-        [HttpPost("correctinteraction")]
+        
+        [HttpPost("{gameId}/select")]
         [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<IActionResult> CorrectInteraction(CorrectInteractionNotification notification)
+        public async Task<ActionResult<SelectGameResponse>> SelectGame(string gameId)
         {
-            notification.ActorId = User.GetId();
+            var userId = User.GetId();
+            var notification = new SelectGameNotification(_unitOfWork, _bus);
+            notification.ActorId = userId;
+
             await notification.Execute();
-            return Ok(new ApiResponse {Code = ResultCode.Ok, Message = "Interaction corrected."});
+
+            return Ok(new SelectGameResponse
+            {
+                Code = ResultCode.Ok,
+                Message = "Game selected",
+                GameId = notification.GameId
+            });
         }
 
-        [HttpGet("getquizzes")]
-        [Authorize(AuthPolicy.Admin)]
-        public async Task<IActionResult> GetQuizzes()
-        {
-            var query = new GetQuizzesQuery(_unitOfWork) {ActorId = User.GetId()};
-            var result = await query.Execute();
-            return Ok(result);
-        }
+        #endregion
 
-        [HttpPost("creategame")]
+        #region Admin actions
+
+
+
+        [HttpPost]
         [Authorize(AuthPolicy.Admin)]
-        public async Task<IActionResult> CreateGame(CreateGameCommand command)
+        public async Task<ActionResult<CreateGameResponse>> CreateGame(CreateGameCommand command)
         {
             command.ActorId = User.GetId();
             var result = await command.Execute();
-            return Ok(result);
+            return Ok(new CreateGameResponse
+            {
+                Code = ResultCode.Ok,
+                Message = "Game created.",
+                GameId = result.Id
+            });
         }
+
         #endregion
     }
 }

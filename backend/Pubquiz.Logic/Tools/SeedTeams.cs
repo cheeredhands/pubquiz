@@ -17,7 +17,7 @@ namespace Pubquiz.Logic.Tools
             {
                 new Team
                 {
-                    Id = Guid.NewGuid().ToShortGuidString(),
+                    Id = Guid.Parse("288710A4-2E9D-4C66-A88B-29FCEB624C87").ToShortGuidString(),
                     Name = team1Name,
                     UserName = team1Name.ReplaceSpaces(),
                     CurrentGameId = gameId,
@@ -26,7 +26,7 @@ namespace Pubquiz.Logic.Tools
                 },
                 new Team
                 {
-                    Id = Guid.NewGuid().ToShortGuidString(),
+                    Id = Guid.Parse("BC00753A-7D43-48F8-AC58-994D30FEA08C").ToShortGuidString(),
                     Name = team2Name,
                     UserName = team2Name.ReplaceSpaces(),
                     CurrentGameId = gameId,
@@ -35,7 +35,7 @@ namespace Pubquiz.Logic.Tools
                 },
                 new Team
                 {
-                    Id = Guid.NewGuid().ToShortGuidString(),
+                    Id = Guid.Parse("35881DC9-D8BF-4FB6-BE8D-43A65EE6EE25").ToShortGuidString(),
                     Name = team3Name,
                     UserName = team3Name.ReplaceSpaces(),
                     CurrentGameId = gameId,

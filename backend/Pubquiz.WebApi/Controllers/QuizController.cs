@@ -1,10 +1,13 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain;
+using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests.Commands;
+using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Models;
@@ -28,6 +31,15 @@ namespace Pubquiz.WebApi.Controllers
             _bus = bus;
             _quizrSettings = quizrSettings;
             _loggerFactory = loggerFactory;
+        }
+        
+        [HttpGet]
+        [Authorize(AuthPolicy.Admin)]
+        public async Task<ActionResult<List<QuizRef>>> GetQuizzes()
+        {
+            var query = new GetQuizzesQuery(_unitOfWork) {ActorId = User.GetId()};
+            var result = await query.Execute();
+            return Ok(result);
         }
 
         /// <summary>

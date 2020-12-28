@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
@@ -106,7 +107,10 @@ namespace Pubquiz.WebApi
                     options.Filters.Add(typeof(DomainExceptionFilter));
                     //options.Filters.Add(typeof(UnitOfWorkActionFilter));
                 })
-                .AddNewtonsoftJson()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -157,7 +161,7 @@ namespace Pubquiz.WebApi
                     policy => policy.RequireClaim(ClaimTypes.Role, "QuizMaster", "Admin")
                         .RequireAuthenticatedUser());
             });
-            services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
+            //services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
             services.AddResponseCompression();
 
             // CORS
