@@ -15,10 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Serialization;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
@@ -264,7 +262,7 @@ namespace Pubquiz.WebApi
             });
         }
 
-        private void SeedStuff(IApplicationBuilder app, IHostEnvironment env)
+        private static void SeedStuff(IApplicationBuilder app, IHostEnvironment env)
         {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
             var bus = app.ApplicationServices.GetService<IBus>();
