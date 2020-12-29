@@ -106,18 +106,15 @@
             ></b-card>
             <b-card no-body class="mt-3" header-tag="header">
               <template #header>
-                <span v-if="game.state === openState">
-                  {{ $t("MY_QUIZZES") }}
-                  <h5
-                    class="float-right mb-0"
-                    v-b-tooltip
-                    :title="$t('ADD_QUIZ')"
-                    style="cursor: pointer"
-                  >
-                    <b-icon-file-earmark-plus />
-                  </h5>
-                </span>
-                <span v-else>{{ $t("CURRENT_TEAMS_IN_GAME") }}</span>
+                {{ $t("MY_QUIZZES") }}
+                <h5
+                  class="float-right mb-0"
+                  v-b-tooltip
+                  :title="$t('ADD_QUIZ')"
+                  style="cursor: pointer"
+                >
+                  <b-icon-file-earmark-plus />
+                </h5>
               </template>
               <b-list-group flush>
                 <b-list-group-item
