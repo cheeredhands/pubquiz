@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Domain.ViewModels;
-using Pubquiz.Logic.Messages;
-using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Requests.Commands;
 using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Logic.Requests.Queries;
@@ -16,7 +13,6 @@ using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Models;
 using Rebus.Bus;
-using Rebus.Messages;
 
 namespace Pubquiz.WebApi.Controllers
 {
@@ -43,16 +39,6 @@ namespace Pubquiz.WebApi.Controllers
             var query = new TeamLobbyViewModelQuery(_unitOfWork) {TeamId = teamId};
             var result = await query.Execute();
             return Ok(result);
-        }
-
-        [HttpPost("submitresponse")]
-        [Authorize(AuthPolicy.Team)]
-        public async Task<IActionResult> SubmitInteractionResponse(
-            SubmitInteractionResponseNotification notification)
-        {
-            notification.TeamId = User.GetId();
-            await notification.Execute();
-            return Ok(new ApiResponse {Code = ResultCode.Ok, Message = "Response submitted ok."});
         }
 
         [HttpGet("teamingame")]
@@ -206,8 +192,6 @@ namespace Pubquiz.WebApi.Controllers
         #endregion
 
         #region Admin actions
-
-
 
         [HttpPost]
         [Authorize(AuthPolicy.Admin)]

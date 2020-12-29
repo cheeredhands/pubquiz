@@ -65,7 +65,6 @@ namespace Pubquiz.WebApi
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
-            //app.UseCors();
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:8080", "http://localhost:8081", "*")
@@ -105,11 +104,10 @@ namespace Pubquiz.WebApi
                 .AddMvcOptions(options =>
                 {
                     options.Filters.Add(typeof(DomainExceptionFilter));
-                    //options.Filters.Add(typeof(UnitOfWorkActionFilter));
                 })
-                .AddNewtonsoftJson(options =>
+                .AddJsonOptions(opts =>
                 {
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -161,7 +159,6 @@ namespace Pubquiz.WebApi
                     policy => policy.RequireClaim(ClaimTypes.Role, "QuizMaster", "Admin")
                         .RequireAuthenticatedUser());
             });
-            //services.AddSingleton<IConfigureOptions<MvcNewtonsoftJsonOptions>, JsonOptionsSetup>();
             services.AddResponseCompression();
 
             // CORS
@@ -250,7 +247,7 @@ namespace Pubquiz.WebApi
             services.ConfigureSwaggerGen(options =>
             {
                 var baseDirectory = _hostingEnvironment.ContentRootPath;
-                var commentsFileName = Assembly.GetEntryAssembly().GetName().Name + ".XML";
+                var commentsFileName = Assembly.GetEntryAssembly().GetName().Name + ".xml";
                 var commentsFile = Path.Combine(baseDirectory, commentsFileName);
                 if (File.Exists(commentsFile))
                 {
@@ -272,9 +269,7 @@ namespace Pubquiz.WebApi
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
             var bus = app.ApplicationServices.GetService<IBus>();
             var quizrSettings = app.ApplicationServices.GetService<QuizrSettings>();
-            var mongoDbIsEmpty = _configuration.GetValue<string>("AppSettings:Database") == "MongoDB" &&
-                                 unitOfWork.GetCollection<Team>().GetCountAsync().Result == 0;
-            // Seed the test data when using in-memory-database
+
             var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
             var seeder = new TestSeeder(unitOfWork, loggerFactory, bus, quizrSettings);
 

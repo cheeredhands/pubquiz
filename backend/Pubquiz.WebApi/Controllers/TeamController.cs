@@ -39,6 +39,24 @@ namespace Pubquiz.WebApi.Controllers
                 Message = $"Team with id {notification.TeamId} deleted"
             });
         }
+        
+        [HttpPost("submitanswer")]
+        [Authorize(AuthPolicy.Team)]
+        public async Task<IActionResult> SubmitInteractionResponse(
+            SubmitAnswerRequest request)
+        {
+            var notification = new SubmitInteractionResponseNotification(_unitOfWork, _bus)
+            {
+                TeamId = User.GetId(),
+                QuizItemId = request.QuizItemId,
+                InteractionId = request.InteractionId,
+                Response = request.Response,
+                ChoiceOptionIds = request.ChoiceOptionIds
+            };
+            notification.TeamId = User.GetId();
+            await notification.Execute();
+            return Ok(new ApiResponse {Code = ResultCode.Ok, Message = "Response submitted ok."});
+        }
 
         [HttpPost("{teamId}/correction/{quizItemId}/{interactionId}/{correct}")]
         [Authorize(AuthPolicy.QuizMaster)]

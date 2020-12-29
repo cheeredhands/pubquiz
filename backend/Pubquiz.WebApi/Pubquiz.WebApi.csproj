@@ -6,7 +6,12 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DocumentationFile>bin\Debug\Pubquiz.WebApi.xml</DocumentationFile>
+      <DocumentationFile>Pubquiz.WebApi.xml</DocumentationFile>
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>Pubquiz.WebApi.xml</DocumentationFile>
       <NoWarn>1701;1702;1591</NoWarn>
     </PropertyGroup>
 

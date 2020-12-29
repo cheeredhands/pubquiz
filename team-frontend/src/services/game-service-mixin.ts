@@ -108,13 +108,11 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
   }
 
   public async $_gameService_submitInteractionResponse(quizItemId: string, interactionId: number, choiceOptionIds?: number[], response?: string): Promise<void> {
-    await this.$axios.post<ApiResponse>('api/game/submitresponse', {
+    await this.$axios.post<ApiResponse>('api/team/submitanswer', {
       quizItemId,
       interactionId,
       choiceOptionIds,
       response
-    }).then(() => {
-      // this.$store.commit('setQuizItemViewModel', response.data);
     }).catch(
       (error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);
