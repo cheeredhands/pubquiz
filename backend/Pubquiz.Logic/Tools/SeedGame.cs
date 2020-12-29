@@ -12,7 +12,7 @@ namespace Pubquiz.Logic.Tools
         {
             var game = new Game
             {
-                Id = Guid.NewGuid().ToShortGuidString(),
+                Id = Guid.Parse("5C4ED8FB-005A-4521-9678-3CB20374FBDF").ToShortGuidString(),
                 QuizId = quiz.Id,
                 Title = "PéCé",
                 QuizTitle = quiz.Title,

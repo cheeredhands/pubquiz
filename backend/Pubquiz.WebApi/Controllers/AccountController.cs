@@ -103,11 +103,15 @@ namespace Pubquiz.WebApi.Controllers
             });
         }
 
-        [HttpPost("register")]
+        [HttpPost("registerteam")]
         [AllowAnonymous]
-        public async Task<ActionResult<RegisterForGameResponse>> RegisterForGame(
-            [FromBody] RegisterForGameCommand command)
+        public async Task<ActionResult<RegisterForGameResponse>> RegisterForGame(RegisterTeamRequest request)
         {
+            var command = new RegisterForGameCommand(_unitOfWork, _bus)
+            {
+                Name = request.Name,
+                Code = request.Code
+            };
             var team = await command.Execute();
             var jwt = SignInAndGetJwt(team);
 
@@ -126,8 +130,13 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginCommand command)
+        public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
+            var command = new LoginCommand(_unitOfWork, _bus)
+            {
+                UserName = request.UserName,
+                Password = request.Password
+            };
             var user = await command.Execute();
             var jwt = SignInAndGetJwt(user);
             return Ok(new LoginResponse
@@ -140,27 +149,6 @@ namespace Pubquiz.WebApi.Controllers
                 CurrentGameId = user.CurrentGameId,
                 QuizRefs = user.QuizRefs,
                 GameRefs = user.GameRefs
-            });
-        }
-
-        [HttpPost("selectgame")]
-        [Authorize(Roles = "QuizMaster")]
-        public async Task<ActionResult<SelectGameResponse>> SelectGame([FromBody] SelectGameNotification notification)
-        {
-            var userId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(notification.ActorId) && userId != notification.ActorId)
-            {
-                return Forbid();
-            }
-
-            notification.ActorId = userId;
-            await notification.Execute();
-
-            return Ok(new SelectGameResponse
-            {
-                Code = ResultCode.Ok,
-                Message = "Game selected",
-                GameId = notification.GameId
             });
         }
 
@@ -186,7 +174,7 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("testauth")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(AuthPolicy.Admin)]
         public ActionResult<TestAuthResponse> TestAuth()
         {
             var teamCollection = _unitOfWork.GetCollection<Team>();
@@ -202,15 +190,13 @@ namespace Pubquiz.WebApi.Controllers
 
         [HttpPost("changeteamname")]
         [Authorize(Roles = "Team")]
-        public async Task<ActionResult<ChangeTeamNameResponse>> ChangeTeamName(ChangeTeamNameNotification notification)
+        public async Task<ActionResult<ChangeTeamNameResponse>> ChangeTeamName(ChangeTeamNameRequest request)
         {
-            var teamId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(notification.TeamId) && teamId != notification.TeamId)
+            var notification = new ChangeTeamNameNotification(_unitOfWork, _bus)
             {
-                return Forbid();
-            }
-
-            notification.TeamId = teamId;
+                TeamId = User.GetId(),
+                NewName = request.NewName
+            };
 
             await notification.Execute();
 
@@ -223,12 +209,15 @@ namespace Pubquiz.WebApi.Controllers
         }
 
         [HttpPost("changeteammembers")]
-        [Authorize(Roles = "Team")]
+        [Authorize(AuthPolicy.Team)]
         public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(
-            ChangeTeamMembersNotification notification)
+            ChangeTeamMembersRequest request)
         {
-            var teamId = User.GetId();
-            notification.TeamId = teamId;
+            var notification = new ChangeTeamMembersNotification(_unitOfWork, _bus)
+            {
+                TeamId = User.GetId(),
+                TeamMembers = request.TeamMembers
+            };
 
             await notification.Execute();
             return Ok(new ChangeTeamMembersResponse
@@ -236,25 +225,6 @@ namespace Pubquiz.WebApi.Controllers
                 Code = ResultCode.Ok,
                 Message = "Team members changed.",
                 TeamMembers = notification.TeamMembers
-            });
-        }
-
-        [HttpPost("deleteteam")]
-        [Authorize(Roles = "QuizMaster, Admin")]
-        public async Task<ActionResult<ApiResponse>> DeleteTeam(DeleteTeamNotification notification)
-        {
-            var actorId = User.GetId();
-            if (!string.IsNullOrWhiteSpace(notification.ActorId) && notification.ActorId != actorId)
-            {
-                return Forbid();
-            }
-
-            notification.ActorId = actorId;
-            await notification.Execute();
-            return Ok(new ApiResponse
-            {
-                Code = ResultCode.Ok,
-                Message = $"Team with id {notification.TeamId} deleted"
             });
         }
 

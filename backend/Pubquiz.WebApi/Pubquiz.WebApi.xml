@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Pubquiz.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:Pubquiz.WebApi.Controllers.GameController.SetReview(System.String,System.String)">
+            <summary>
+            Set the game to the review state and navigate to the first quizitem of
+            the specified section.
+            </summary>
+            <param name="gameId"></param>
+            <param name="sectionId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Controllers.QuizController.UploadZippedExcelQuiz(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Upload a zip file containing an excel file and associated media files.
+            </summary>
+            <param name="formFile"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Helpers.Extensions.AddRequests(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Reflection.Assembly)">
+            <summary>
+            Add the Command, Notification and Query requests to the service collection.
+            </summary>
+            <param name="serviceCollection"></param>
+            <param name="sourceAssembly"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Helpers.Extensions.IsSubclassOfRawGeneric(System.Type,System.Type)">
+            <summary>
+            Alternative version of <see cref="M:System.Type.IsSubclassOf(System.Type)"/> that supports raw generic types (generic types without
+            any type parameters).
+            </summary>
+            <param name="generic">The base type class for which the check is made.</param>
+            <param name="toCheck">To type to determine for whether it derives from <paramref name="generic"/>.</param>
+        </member>
+    </members>
+</doc>

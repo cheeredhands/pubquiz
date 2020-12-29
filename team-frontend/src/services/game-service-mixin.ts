@@ -8,17 +8,17 @@ import { TeamLobbyViewModel, QmLobbyViewModel, QmInGameViewModel, TeamInGameView
 @Component
 export default class GameServiceMixin extends mixins(HelperMixin) {
   public $_gameService_setGameState(actorId: string, gameId: string, newGameState: GameState): Promise<void | AxiosResponse<any>> {
-    return this.$axios.post('api/game/setgamestate', {
-      actorId, gameId, newGameState
-    }).catch((error: AxiosError<ApiResponse>) => {
+    return this.$axios.post(`api/game/${gameId}/setstate/${newGameState}`).catch((error: AxiosError<ApiResponse>) => {
       this.$_helper_toastError(error);
     });
   }
 
+  // public $_gameService_selectGame(actorId: string, gameId: string){
+  //   return this.$axios.post('api/game/')
+  // }
+
   public $_gameService_reviewSection(actorId: string, gameId: string, sectionId: string): Promise<void | AxiosResponse<any>> {
-    return this.$axios.post('api/game/setreview', {
-      actorId, gameId, sectionId
-    }).catch((error: AxiosError<ApiResponse>) => {
+    return this.$axios.post(`api/game/${gameId}/setreview/${sectionId}`).catch((error: AxiosError<ApiResponse>) => {
       this.$_helper_toastError(error);
     });
   }
@@ -72,9 +72,7 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
   }
 
   public async $_gameService_navigateItem(gameId: string, offset: number): Promise<void> {
-    await this.$axios.post<NavigateItemResponse>('api/game/navigate', {
-      gameId, offset
-    }).catch(
+    await this.$axios.post<NavigateItemResponse>(`api/game/${gameId}/navigatebyoffset/${offset}`).catch(
       (error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);
       }
@@ -110,13 +108,11 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
   }
 
   public async $_gameService_submitInteractionResponse(quizItemId: string, interactionId: number, choiceOptionIds?: number[], response?: string): Promise<void> {
-    await this.$axios.post<ApiResponse>('api/game/submitresponse', {
+    await this.$axios.post<ApiResponse>('api/team/submitanswer', {
       quizItemId,
       interactionId,
       choiceOptionIds,
       response
-    }).then(() => {
-      // this.$store.commit('setQuizItemViewModel', response.data);
     }).catch(
       (error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);
@@ -125,7 +121,7 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
   }
 
   public async $_gameService_correctInteraction(teamId: string, quizItemId: string, interactionId: string, correct: boolean): Promise<void> {
-    await this.$axios.post<ApiResponse>('api/game/correctinteraction', { teamId, quizItemId, interactionId, correct }).then(() => {
+    await this.$axios.post<ApiResponse>(`api/team/${teamId}/correction/${quizItemId}/${interactionId}/${correct}`).then(() => {
       // nothing
     }).catch(
       (error: AxiosError<ApiResponse>) => {
