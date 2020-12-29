@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repo items", "Repo items", 
 		..\.gitignore = ..\.gitignore
 		..\.travis.yml = ..\.travis.yml
 		..\README.md = ..\README.md
+		..\.github\workflows\all-build-and-deploy.yml = ..\.github\workflows\all-build-and-deploy.yml
+		..\.github\workflows\all-build-and-test-on-pr.yml = ..\.github\workflows\all-build-and-test-on-pr.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pubquiz.Persistence", "Pubquiz.Persistence\Pubquiz.Persistence.csproj", "{7CABA0D5-C782-4623-8BC0-12FB72993F13}"
