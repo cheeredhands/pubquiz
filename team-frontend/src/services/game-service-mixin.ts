@@ -13,9 +13,11 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
     });
   }
 
-  // public $_gameService_selectGame(actorId: string, gameId: string){
-  //   return this.$axios.post('api/game/')
-  // }
+  public $_gameService_selectGame(gameId: string) : Promise<void | AxiosResponse<any>> {
+    return this.$axios.post(`api/game/${gameId}/select`).catch((error: AxiosError<ApiResponse>) => {
+      this.$_helper_toastError(error);
+    });
+  }
 
   public $_gameService_reviewSection(actorId: string, gameId: string, sectionId: string): Promise<void | AxiosResponse<any>> {
     return this.$axios.post(`api/game/${gameId}/setreview/${sectionId}`).catch((error: AxiosError<ApiResponse>) => {

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
@@ -24,16 +26,22 @@ namespace Pubquiz.Logic.Requests.Commands
 
         protected override async Task<Game> DoExecute()
         {
-            // TODO check invite code    
+            // check invite code
+            var gameCollection = UnitOfWork.GetCollection<Game>();
+            var inviteCodeInUse = await gameCollection.AnyAsync(g =>
+                g.State != GameState.Finished && g.State != GameState.Closed && g.InviteCode == InviteCode);
+            if (inviteCodeInUse)
+            {
+                throw new DomainException(ResultCode.InvalidCode, "Invite code is invalid.", true);
+            }
 
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
             var quiz = await quizCollection.GetAsync(QuizId);
 
-            // TODO link all quiz masters for now
+            // link quiz master identified by actorId
             var userCollection = UnitOfWork.GetCollection<User>();
-            var quizMasters = userCollection.AsQueryable().Where(u => u.UserRole == UserRole.QuizMaster);
-
-
+            var quizMaster = await userCollection.GetAsync(ActorId);
+            
             var game = new Game
             {
                 Id = Guid.NewGuid().ToShortGuidString(),
@@ -41,7 +49,7 @@ namespace Pubquiz.Logic.Requests.Commands
                 Title = GameTitle,
                 QuizTitle = quiz.Title,
                 InviteCode = InviteCode,
-                QuizMasterIds = quizMasters.Select(q => q.Id).ToList(),
+                QuizMasterIds = new List<string> {ActorId}, // quizMasters.Select(q => q.Id).ToList(),
                 TotalQuestionCount = quiz.TotalQuestionCount,
                 TotalQuizItemCount = quiz.TotalQuizItemCount,
                 CurrentSectionQuizItemCount = quiz.QuizSections[0].QuizItemRefs.Count,
@@ -56,18 +64,13 @@ namespace Pubquiz.Logic.Requests.Commands
             };
 
             // add game to quiz master
-            foreach (var quizMaster in quizMasters)
-            {
-                var gameRef = new GameRef {Id = game.Id, Title = game.Title, QuizTitle = game.QuizTitle, InviteCode = game.InviteCode};
-                quizMaster.GameRefs.Add(gameRef);
-                var quizRef = quizMaster.QuizRefs.First(r => r.Id == QuizId);
-                quizRef.GameRefs.Add(gameRef);
-                await userCollection.UpdateAsync(quizMaster);
-            }
-
-            var gameCollection = UnitOfWork.GetCollection<Game>();
+            var gameRef = new GameRef
+                {Id = game.Id, Title = game.Title, QuizTitle = game.QuizTitle, InviteCode = game.InviteCode};
+            quizMaster.GameRefs.Add(gameRef);
+            var quizRef = quizMaster.QuizRefs.First(r => r.Id == QuizId);
+            quizRef.GameRefs.Add(gameRef);
+            await userCollection.UpdateAsync(quizMaster);
             await gameCollection.AddAsync(game);
-
             return game;
         }
     }

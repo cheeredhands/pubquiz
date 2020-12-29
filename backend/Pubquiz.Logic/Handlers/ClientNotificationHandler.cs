@@ -13,7 +13,7 @@ namespace Pubquiz.Logic.Handlers
         IHandleMessages<ErrorOccurred>, IHandleMessages<TeamRegistered>, IHandleMessages<QmTeamRegistered>,
         IHandleMessages<GameStateChanged>, IHandleMessages<TeamNameUpdated>, IHandleMessages<TeamLoggedOut>,
         IHandleMessages<UserLoggedOut>, IHandleMessages<TeamDeleted>, IHandleMessages<ItemNavigated>,
-        IHandleMessages<InteractionResponseAdded>, IHandleMessages<TeamConnectionChanged>
+        IHandleMessages<InteractionResponseAdded>, IHandleMessages<TeamConnectionChanged>, IHandleMessages<GameSelected>
     {
         private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
         private readonly ILogger _logger;
@@ -155,6 +155,14 @@ namespace Pubquiz.Logic.Handlers
 
             // notify other teams
             await _gameHubContext.Clients.Group(teamGroupId).ItemNavigated(message);
+        }
+
+        public async Task Handle(GameSelected message)
+        {
+            var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).GameSelected(message);
         }
     }
 }

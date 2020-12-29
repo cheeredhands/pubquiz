@@ -3,9 +3,8 @@ import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
 import { User, GameState, QuizItem, Team, Game, GameRef, QuizRef } from '../models/models';
-import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage, TeamConnectionChangedMessage } from '../models/messages';
+import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage, TeamConnectionChangedMessage, GameSelectedMessage } from '../models/messages';
 import { QuizItemViewModel, TeamViewModel } from '../models/viewModels';
-import { WhoAmIResponse } from '@/models/apiResponses';
 
 Vue.use(Vuex);
 export interface RootState {
@@ -332,6 +331,10 @@ const storeOpts: StoreOptions<RootState> = {
       // const team = state.qmTeams.find(t => t.id === answerScoredMessage.teamId);
       // if (team === undefined) { return; }
       commit('setQmTeamAnswer', message);
+    },
+    processGameSelected({ commit }, message: GameSelectedMessage) {
+      commit('setQmTeams', message.qmLobbyViewModel.teamsInGame);
+      commit('setGame', message.qmLobbyViewModel.game);
     }
   }
 };

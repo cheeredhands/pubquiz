@@ -3,7 +3,7 @@ import './plugins/quizr-helpers';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight, BIconFileEarmarkPlus, BIconSearch, BIconEyeglasses, BIconTrashFill, BIconPencilFill, BIconPlayFill, BIconPauseFill, BIconPower, BIconDoorOpenFill, BIconArrowLeftShort, BIconArrowLeft, BIconArrowRightShort, BIconArrowRight, BIconWindow, BIconCheckCircleFill, BIconXCircleFill } from 'bootstrap-vue';
+import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight, BIconFileEarmarkPlus, BIconSearch, BIconEyeglasses, BIconTrashFill, BIconPencilFill, BIconPlayFill, BIconPauseFill, BIconPower, BIconDoorOpenFill, BIconArrowLeftShort, BIconArrowLeft, BIconArrowRightShort, BIconArrowRight, BIconWindow, BIconCheckCircleFill, BIconXCircleFill, BIconCheckCircle } from 'bootstrap-vue';
 import axios from 'axios';
 import i18n from './plugins/i18n';
 
@@ -30,6 +30,7 @@ Vue.component('b-icon-arrow-left', BIconArrowLeft);
 Vue.component('b-icon-arrow-right-short', BIconArrowRightShort);
 Vue.component('b-icon-arrow-right', BIconArrowRight);
 Vue.component('b-icon-window', BIconWindow);
+Vue.component('b-icon-check-circle', BIconCheckCircle);
 Vue.component('b-icon-check-circle-fill', BIconCheckCircleFill);
 Vue.component('b-icon-x-circle-fill', BIconXCircleFill);
 

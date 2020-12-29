@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 
 namespace Pubquiz.Logic.Hubs
@@ -92,5 +93,12 @@ namespace Pubquiz.Logic.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         Task AnswerScored(AnswerScored message);
+
+        /// <summary>
+        /// Called when the quiz master has selected a game to be the current game.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task GameSelected(GameSelected message);
     }
 }

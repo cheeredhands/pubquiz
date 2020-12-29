@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
+using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Rebus.Bus;
@@ -37,8 +39,16 @@ namespace Pubquiz.Logic.Requests.Notifications
                     $"Actor with id {ActorId} is not authorized for game '{GameId}'", true);
             }
 
+            var oldGameId = user.CurrentGameId;
             user.CurrentGameId = GameId;
             await userCollection.UpdateAsync(user);
+
+            var query = new QmLobbyViewModelQuery(UnitOfWork)
+            {
+                UserId = ActorId
+            };
+            var viewModel = await query.Execute();
+            await Bus.Publish(new GameSelected(oldGameId, GameId, viewModel));
         }
     }
 }

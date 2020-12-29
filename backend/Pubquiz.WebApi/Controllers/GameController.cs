@@ -170,17 +170,14 @@ namespace Pubquiz.WebApi.Controllers
 
             return Ok(result);
         }
-        
+
         [HttpPost("{gameId}/select")]
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<SelectGameResponse>> SelectGame(string gameId)
         {
             var userId = User.GetId();
-            var notification = new SelectGameNotification(_unitOfWork, _bus);
-            notification.ActorId = userId;
-
+            var notification = new SelectGameNotification(_unitOfWork, _bus) {GameId = gameId, ActorId = userId};
             await notification.Execute();
-
             return Ok(new SelectGameResponse
             {
                 Code = ResultCode.Ok,
@@ -194,10 +191,17 @@ namespace Pubquiz.WebApi.Controllers
         #region Admin actions
 
         [HttpPost]
-        [Authorize(AuthPolicy.Admin)]
-        public async Task<ActionResult<CreateGameResponse>> CreateGame(CreateGameCommand command)
+        [Authorize(AuthPolicy.QuizMaster)]
+        public async Task<ActionResult<CreateGameResponse>> CreateGame(CreateGameRequest request)
         {
-            command.ActorId = User.GetId();
+            var command = new CreateGameCommand(_unitOfWork, _bus)
+            {
+                ActorId = User.GetId(),
+                GameTitle = request.GameTitle,
+                InviteCode = request.InviteCode,
+                QuizId = request.QuizId
+            };
+
             var result = await command.Execute();
             return Ok(new CreateGameResponse
             {

@@ -53,13 +53,11 @@ namespace Pubquiz.Logic.Tools
 
         public static string GetTeamsGroupId(string gameId)
         {
-            // TODO: add as method to Team class?
             return $"teams-{gameId}";
         }
 
         public static string GetQuizMasterGroupId(string gameId)
         {
-            // TODO: add as method to Game class?
             return $"quizmaster-{gameId}";
         }
 

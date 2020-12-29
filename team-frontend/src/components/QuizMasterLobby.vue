@@ -11,8 +11,9 @@
         >
         <b-button size="sm" v-else @click="startGame" variant="success">
           <b-icon-play-fill v-if="game.state !== runningState" />{{
-          $t("START_GAME")
-        }}</b-button>
+            $t("START_GAME")
+          }}</b-button
+        >
       </b-nav-item>
       <template v-slot:centercontent
         >Lobby - {{ game.title }} ({{ $t(game.state) }} {{ $t("SECTION") }}
@@ -66,15 +67,19 @@
             </b-card>
           </b-col>
           <b-col lg="6">
-            <b-card no-body class="example-drag mt-5" :header="$t('MY_GAMES')">
+            <b-card no-body class="mt-5" :header="$t('MY_GAMES')">
               <b-list-group flush>
                 <b-list-group-item
-                  v-for="gameRef in gameRefs.filter((r) => r.id === game.id)"
+                  v-for="gameRef in gameRefs"
                   :key="gameRef.id"
                 >
-                  <strong>{{ gameRef.title }} </strong>
+                  <strong>
+                    <b-icon-check-circle-fill v-if="gameRef.id === game.id" />
+                    {{ gameRef.title }}
+                  </strong>
                   <span class="small">(quiz: {{ gameRef.quizTitle }})</span
                   >&nbsp;<code>{{ gameRef.inviteCode }}</code>
+
                   <b-icon-trash-fill
                     v-b-tooltip
                     @click="kickTeam(team.id, team.name)"
@@ -89,9 +94,17 @@
                     style="cursor: pointer"
                     @click="kickTeam(gameRef.id)"
                   />
+                  <b-icon-check-circle
+                    v-if="gameRef.id !== game.id"
+                    v-b-tooltip
+                    @click="selectGame(gameRef.id)"
+                    class="float-right mr-2"
+                    style="cursor: pointer"
+                    :title="$t('SELECT_GAME')"
+                  />
                 </b-list-group-item> </b-list-group
             ></b-card>
-            <b-card no-body class="example-drag mt-5" header-tag="header">
+            <b-card no-body class="mt-3" header-tag="header">
               <template #header>
                 <span v-if="game.state === openState">
                   {{ $t("MY_QUIZZES") }}
@@ -101,7 +114,7 @@
                     :title="$t('ADD_QUIZ')"
                     style="cursor: pointer"
                   >
-                    <b-icon-file-earmark-plus/>
+                    <b-icon-file-earmark-plus />
                   </h5>
                 </span>
                 <span v-else>{{ $t("CURRENT_TEAMS_IN_GAME") }}</span>
@@ -113,15 +126,14 @@
                 >
                   <strong>{{ quizRef.title }} </strong>
                   <span class="small"
-                    >{{ quizRef.gameRefs.length }} game<span
-                      v-if="
-                        quizRef.gameRefs.length === 0 ||
-                        quizRef.gameRefs.length > 1
-                      "
-                      >s</span
-                    > </span
-                  >&nbsp;
+                    >{{ quizRef.gameRefs.length }}
+                    <span v-if="quizRef.gameRefs.length === 1">{{
+                      $t("GAME")
+                    }}</span
+                    ><span v-else>{{ $t("GAMES") }} </span>
+                  </span>
                   <b-button
+                    @click="addGameForQuiz(quizRef.id)"
                     class="float-right"
                     variant="secondary"
                     size="sm"
@@ -132,11 +144,7 @@
                 </b-list-group-item>
               </b-list-group></b-card
             >
-          </b-col>
-        </b-row>
-        <b-row
-          ><b-col lg="6">
-            <b-card class="example-drag mt-5" :header="$t('UPLOAD_QUIZ')">
+            <b-card class="example-drag mt-3" :header="$t('UPLOAD_QUIZ')">
               <div>
                 <!-- Styled -->
                 <b-form-file
@@ -152,8 +160,8 @@
                 <b-button @click="uploadFile()">Upload</b-button>
               </div>
             </b-card>
-          </b-col></b-row
-        >
+          </b-col>
+        </b-row>
       </b-container>
     </div>
     <footer-part></footer-part>
@@ -224,13 +232,18 @@ export default class QuizMasterLobby extends mixins(
       )
         .then(() => {
           this.$router.push({ name: 'QuizMasterInGame' });
-        })
-        .catch((error: AxiosError<ApiResponse>) => {
-          this.$_helper_toastError(error);
         });
     } else {
       this.$router.push({ name: 'QuizMasterInGame' });
     }
+  }
+
+  public selectGame(gameId: string): void {
+    this.$_gameService_selectGame(gameId);
+  }
+
+  public addGameForQuiz(quizId: string): void {
+    // this.$_quizService_addGameForQuiz(quizId)
   }
 
   public kickTeam(teamId: string, name: string): void {

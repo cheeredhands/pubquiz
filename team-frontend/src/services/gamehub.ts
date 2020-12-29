@@ -13,6 +13,14 @@ export default {
       });
     }
   },
+  async restart(): Promise<void> {
+    const connection = store.state.signalrconnection;
+    if (connection !== undefined) {
+      await connection.stop().then(() => {
+        store.commit('clearSignalRConnection');
+      });
+    }
+  },
   async init(): Promise<void> {
     await this.close();
     const connection = new SignalR.HubConnectionBuilder()
@@ -90,6 +98,12 @@ export default {
     connection.on('AnswerScored', data => {
       console.log(data);
       store.dispatch('processAnswerScored', data);
+    });
+
+    connection.on('GameSelected', async data => {
+      console.log(data);
+      await this.restart(); // restart so we get a new groupId
+      store.dispatch('processGameSelected', data);
     });
     return start().catch(err => {
       return console.error(err.toString());

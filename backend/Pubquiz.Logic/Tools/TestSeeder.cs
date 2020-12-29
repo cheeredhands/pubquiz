@@ -98,10 +98,11 @@ namespace Pubquiz.Logic.Tools
 
             var quizrPackage = await command.Execute();
 
-            var adminId = userCollection.FirstOrDefaultAsync(u => u.UserRole == UserRole.Admin).Result.Id;
+            //ar adminId = userCollection.FirstOrDefaultAsync(u => u.UserRole == UserRole.Admin).Result.Id;
+            
             var createGameCommand = new CreateGameCommand(_unitOfWork, _bus)
             {
-                ActorId = adminId,
+                ActorId = qmId,
                 QuizId = quizrPackage.QuizRefs[0].Id,
                 InviteCode = inviteCode,
                 GameTitle = gameTitle
@@ -109,12 +110,12 @@ namespace Pubquiz.Logic.Tools
 
             var game = await createGameCommand.Execute();
 
-            var selectGameNotification = new SelectGameNotification(_unitOfWork, _bus)
-            {
-                ActorId = qmId,
-                GameId = game.Id
-            };
-            await selectGameNotification.Execute();
+            // var selectGameNotification = new SelectGameNotification(_unitOfWork, _bus)
+            // {
+            //     ActorId = qmId,
+            //     GameId = game.Id
+            // };
+            // await selectGameNotification.Execute();
 
 
         }
