@@ -11,6 +11,7 @@ namespace Pubquiz.Logic.Messages
         public GameSelected(string gameId, string newGameId, QmLobbyViewModel qmLobbyViewModel)
         {
             GameId = gameId;
+            NewGameId = newGameId;
             QmLobbyViewModel = qmLobbyViewModel;
         }
     }

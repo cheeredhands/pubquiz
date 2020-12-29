@@ -113,5 +113,6 @@ export interface AnswerScoredMessage {
 
 export interface GameSelectedMessage {
     gameId: string;
+    newGameId: string;
     qmLobbyViewModel: QmLobbyViewModel;
 }
