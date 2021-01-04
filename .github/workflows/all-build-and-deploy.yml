@@ -22,7 +22,7 @@ on:
 env:
 #  AZURE_WEBAPP_NAME: thenanne-web    # set this to your application's name
 #  AZURE_WEBAPP_PACKAGE_PATH: 'team-frontend/dist'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '13.x'                # set this to the node version to use
+  NODE_VERSION: '14.x'                # set this to the node version to use
 
 jobs:
   build-team-frontend:
@@ -64,7 +64,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 5.0.101
     - name: Install dependencies
       working-directory: backend
       run: dotnet restore
