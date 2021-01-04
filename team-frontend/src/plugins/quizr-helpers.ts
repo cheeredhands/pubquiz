@@ -1,4 +1,5 @@
 import Vue, { PluginObject } from 'vue';
+/* eslint no-console: "off" */
 
 export class QuizrHelpers {
   public formIsValid(evt: Event, form?: HTMLFormElement): boolean {

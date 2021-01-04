@@ -5,6 +5,7 @@ import gamehub from '../services/gamehub';
 import { User, GameState, QuizItem, Team, Game, GameRef, QuizRef } from '../models/models';
 import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage, TeamConnectionChangedMessage, GameSelectedMessage } from '../models/messages';
 import { QuizItemViewModel, TeamViewModel } from '../models/viewModels';
+/* eslint no-console: "off" */
 
 Vue.use(Vuex);
 export interface RootState {

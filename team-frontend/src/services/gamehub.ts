@@ -1,6 +1,7 @@
 import * as SignalR from '@microsoft/signalr';
 import store from '../store/index';
 import { HttpTransportType } from '@microsoft/signalr';
+/* eslint no-console: "off" */
 
 export default {
   closing: false,
