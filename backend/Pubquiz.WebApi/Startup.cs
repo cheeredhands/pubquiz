@@ -37,15 +37,11 @@ namespace Pubquiz.WebApi
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IConfiguration _configuration;
-        private readonly string _secretKey;
-        private readonly SymmetricSecurityKey _signingKey;
 
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
             _configuration = configuration;
-            _secretKey = _configuration.GetValue<string>("AppSettings:JwtSecret");
-            _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_secretKey));
         }
 
 
@@ -108,6 +104,10 @@ namespace Pubquiz.WebApi
                     opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            
+            var secretKey = _configuration.GetValue<string>("AppSettings:JwtSecret");
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -116,7 +116,7 @@ namespace Pubquiz.WebApi
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = _signingKey,
+                        IssuerSigningKey = signingKey,
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };

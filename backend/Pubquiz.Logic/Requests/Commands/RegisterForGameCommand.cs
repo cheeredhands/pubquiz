@@ -46,11 +46,6 @@ namespace Pubquiz.Logic.Requests.Commands
                     throw new DomainException(ResultCode.InvalidCode, "Invalid code.", false);
                 }
 
-                // if (team.IsLoggedIn)
-                // {
-                //     throw new DomainException(ResultCode.TeamAlreadyLoggedIn,
-                //         "Team is already logged in on another device.", true);
-                // }
             }
 
             if (team == null)

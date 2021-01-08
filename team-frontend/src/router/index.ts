@@ -3,7 +3,6 @@ import Router from 'vue-router';
 
 import Home from '../components/Home.vue';
 import About from '../components/About.vue';
-import RegisterTeam from '../components/RegisterTeam.vue';
 import TeamLobby from '../components/TeamLobby.vue';
 import QuizMasterLogin from '../components/QuizMasterLogin.vue';
 import QuizMasterLobby from '../components/QuizMasterLobby.vue';
