@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Notifications
 {
@@ -20,7 +20,7 @@ namespace Pubquiz.Logic.Requests.Notifications
         public string ActorId { get; set; }
         public string GameId { get; set; }
 
-        public SelectGameNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public SelectGameNotification(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
         {
         }
 
@@ -48,7 +48,7 @@ namespace Pubquiz.Logic.Requests.Notifications
                 UserId = ActorId
             };
             var viewModel = await query.Execute();
-            await Bus.Publish(new GameSelected(oldGameId, GameId, viewModel));
+            await Mediator.Publish(new GameSelected(oldGameId, GameId, viewModel));
         }
     }
 }

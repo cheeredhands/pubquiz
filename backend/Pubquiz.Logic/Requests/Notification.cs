@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
@@ -9,11 +9,11 @@ namespace Pubquiz.Logic.Requests
     /// </summary>
     public abstract class Notification : Request
     {        
-        protected readonly IBus Bus;
+        protected readonly IMediator Mediator;
 
-        protected Notification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork)
+        protected Notification(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork)
         {
-            Bus = bus;
+            Mediator = mediator;
         }
 
         public Task Execute()

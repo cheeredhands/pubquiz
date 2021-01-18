@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Notifications
 {
@@ -11,7 +11,7 @@ namespace Pubquiz.Logic.Requests.Notifications
     {
         public string UserId { get; set; }
 
-        public LogoutUserNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public LogoutUserNotification(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
         {
         }
 
@@ -24,7 +24,7 @@ namespace Pubquiz.Logic.Requests.Notifications
                 throw new DomainException(ResultCode.InvalidUserId, "Invalid User id", false);
             }
             
-            await Bus.Publish(new UserLoggedOut(user.Id, user.UserName, user.CurrentGameId));
+            await Mediator.Publish(new UserLoggedOut(user.Id, user.UserName, user.CurrentGameId));
         }
     }
 }

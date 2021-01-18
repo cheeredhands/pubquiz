@@ -1,14 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Hubs
 {
@@ -30,12 +29,12 @@ namespace Pubquiz.Logic.Hubs
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<GameHub> _logger;
-        private readonly IBus _bus;
+        private readonly IMediator _mediator;
 
-        public GameHub(ILoggerFactory loggerFactory, IUnitOfWork unitOfWork, IBus bus)
+        public GameHub(ILoggerFactory loggerFactory, IUnitOfWork unitOfWork, IMediator mediator)
         {
             _unitOfWork = unitOfWork;
-            _bus = bus;
+            _mediator = mediator;
             _logger = loggerFactory.CreateLogger<GameHub>();
         }
 
@@ -63,7 +62,7 @@ namespace Pubquiz.Logic.Hubs
                     var team = await teamCollection.GetAsync(userId);
                     team.ConnectionCount++;
                     await teamCollection.UpdateAsync(team);
-                    await _bus.Publish(new TeamConnectionChanged(team.Id, team.Name, team.CurrentGameId, team.ConnectionCount));
+                    await _mediator.Publish(new TeamConnectionChanged(team.Id, team.Name, team.CurrentGameId, team.ConnectionCount));
                     break;
                 case UserRole.Admin:
                     await Groups.AddToGroupAsync(Context.ConnectionId, Helpers.GetAdminGroupId());
@@ -106,7 +105,7 @@ namespace Pubquiz.Logic.Hubs
                     var team = await teamCollection.GetAsync(userId);
                     team.ConnectionCount--;
                     await teamCollection.UpdateAsync(team);
-                    await _bus.Publish(new TeamConnectionChanged(team.Id, team.Name, team.CurrentGameId, team.ConnectionCount));
+                    await _mediator.Publish(new TeamConnectionChanged(team.Id, team.Name, team.CurrentGameId, team.ConnectionCount));
                     break;
                 case UserRole.Admin:
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, Helpers.GetAdminGroupId());

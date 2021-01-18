@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace Pubquiz.Logic.Messages
 {
-    public class ItemNavigated
+    public class ItemNavigated : INotification
     {
         public string GameId { get; }
         public string NewSectionId { get; }

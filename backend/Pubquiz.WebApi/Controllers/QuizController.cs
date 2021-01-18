@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,6 @@ using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Models;
-using Rebus.Bus;
 
 namespace Pubquiz.WebApi.Controllers
 {
@@ -20,15 +20,15 @@ namespace Pubquiz.WebApi.Controllers
     public class QuizController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IBus _bus;
+        private readonly IMediator _mediator;
         private readonly QuizrSettings _quizrSettings;
         private readonly ILoggerFactory _loggerFactory;
 
-        public QuizController(IUnitOfWork unitOfWork, IBus bus, QuizrSettings quizrSettings,
+        public QuizController(IUnitOfWork unitOfWork, IMediator mediator, QuizrSettings quizrSettings,
             ILoggerFactory loggerFactory)
         {
             _unitOfWork = unitOfWork;
-            _bus = bus;
+            _mediator = mediator;
             _quizrSettings = quizrSettings;
             _loggerFactory = loggerFactory;
         }
@@ -54,7 +54,7 @@ namespace Pubquiz.WebApi.Controllers
         {
             await using var fileStream = formFile.OpenReadStream();
             var command =
-                new ImportZippedExcelQuizCommand(_unitOfWork, _bus, fileStream, formFile.FileName, _quizrSettings,
+                new ImportZippedExcelQuizCommand(_unitOfWork, _mediator, fileStream, formFile.FileName, _quizrSettings,
                     _loggerFactory);
             command.ActorId = User.GetId();
             var result = await command.Execute();

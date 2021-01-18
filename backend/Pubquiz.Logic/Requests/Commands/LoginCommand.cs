@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Commands
 {
@@ -14,7 +14,7 @@ namespace Pubquiz.Logic.Requests.Commands
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        public LoginCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public LoginCommand(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
         {
         }
 

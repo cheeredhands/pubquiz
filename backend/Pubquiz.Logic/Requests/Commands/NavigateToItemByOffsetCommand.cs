@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Commands
 {
@@ -16,7 +16,7 @@ namespace Pubquiz.Logic.Requests.Commands
         public string GameId { get; set; }
         public string ActorId { get; set; }
 
-        public NavigateToItemByOffsetCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public NavigateToItemByOffsetCommand(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
         {
         }
 
@@ -96,7 +96,7 @@ namespace Pubquiz.Logic.Requests.Commands
             await gameCollection.UpdateAsync(game);
 
             //chuck it on the bus
-            await Bus.Publish(new ItemNavigated(GameId, newSectionId, newSectionTitle, newQuizItemId, newSectionIndex,
+            await Mediator.Publish(new ItemNavigated(GameId, newSectionId, newSectionTitle, newQuizItemId, newSectionIndex,
                 newQuizItemIndexInSection, newQuizItemIndexInTotal, newQuestionIndexInTotal,
                 game.CurrentSectionQuizItemCount));
             return newQuizItemId;

@@ -5,20 +5,19 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Requests.Commands;
 using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.WebApi.Models;
-using Rebus.Bus;
 
 namespace Pubquiz.WebApi.Controllers
 {
@@ -27,13 +26,13 @@ namespace Pubquiz.WebApi.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IBus _bus;
+        private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
 
-        public AccountController(IUnitOfWork unitOfWork, IBus bus, IConfiguration configuration)
+        public AccountController(IUnitOfWork unitOfWork, IMediator mediator, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
-            _bus = bus;
+            _mediator = mediator;
             _configuration = configuration;
         }
 
@@ -107,7 +106,7 @@ namespace Pubquiz.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<RegisterForGameResponse>> RegisterForGame(RegisterTeamRequest request)
         {
-            var command = new RegisterForGameCommand(_unitOfWork, _bus)
+            var command = new RegisterForGameCommand(_unitOfWork, _mediator)
             {
                 Name = request.Name,
                 Code = request.Code
@@ -132,7 +131,7 @@ namespace Pubquiz.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
-            var command = new LoginCommand(_unitOfWork, _bus)
+            var command = new LoginCommand(_unitOfWork, _mediator)
             {
                 UserName = request.UserName,
                 Password = request.Password
@@ -192,13 +191,12 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(Roles = "Team")]
         public async Task<ActionResult<ChangeTeamNameResponse>> ChangeTeamName(ChangeTeamNameRequest request)
         {
-            var notification = new ChangeTeamNameNotification(_unitOfWork, _bus)
+            var notification = new ChangeTeamNameNotification
             {
                 TeamId = User.GetId(),
                 NewName = request.NewName
             };
-
-            await notification.Execute();
+            await _mediator.Publish(notification);
 
             return Ok(new ChangeTeamNameResponse
             {
@@ -213,13 +211,14 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(
             ChangeTeamMembersRequest request)
         {
-            var notification = new ChangeTeamMembersNotification(_unitOfWork, _bus)
+            var notification = new ChangeTeamMembersNotification
             {
                 TeamId = User.GetId(),
                 TeamMembers = request.TeamMembers
             };
 
-            await notification.Execute();
+            await _mediator.Publish(notification);
+            
             return Ok(new ChangeTeamMembersResponse
             {
                 Code = ResultCode.Ok,
@@ -237,12 +236,12 @@ namespace Pubquiz.WebApi.Controllers
                 var actorRole = User.GetUserRole();
                 if (actorRole == UserRole.Team)
                 {
-                    var notification = new LogoutTeamNotification(_unitOfWork, _bus) {TeamId = actorId};
-                    await notification.Execute();
+                    var notification = new LogoutTeamNotification {TeamId = actorId};
+                    await _mediator.Publish(notification);
                 }
                 else
                 {
-                    var notification = new LogoutUserNotification(_unitOfWork, _bus) {UserId = actorId};
+                    var notification = new LogoutUserNotification(_unitOfWork, _mediator) {UserId = actorId};
                     await notification.Execute();
                 }
             }

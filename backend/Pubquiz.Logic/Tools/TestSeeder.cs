@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests.Commands;
-using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Tools
 {
@@ -15,14 +14,14 @@ namespace Pubquiz.Logic.Tools
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
-        private readonly IBus _bus;
+        private readonly IMediator _mediator;
         private readonly QuizrSettings _quizrSettings;
         private readonly ILoggerFactory _loggerFactory;
 
-        public TestSeeder(IUnitOfWork unitOfWork, ILoggerFactory loggerFactory, IBus bus, QuizrSettings quizrSettings)
+        public TestSeeder(IUnitOfWork unitOfWork, ILoggerFactory loggerFactory, IMediator mediator, QuizrSettings quizrSettings)
         {
             _unitOfWork = unitOfWork;
-            _bus = bus;
+            _mediator = mediator;
             _quizrSettings = quizrSettings;
             _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<TestSeeder>();
@@ -91,7 +90,7 @@ namespace Pubquiz.Logic.Tools
             var path = Path.Combine(_quizrSettings.WebRootPath, filePath);
             await using var stream = File.OpenRead(path);
             var command =
-                new ImportZippedExcelQuizCommand(_unitOfWork, _bus, stream, fileName, _quizrSettings, _loggerFactory);
+                new ImportZippedExcelQuizCommand(_unitOfWork, _mediator, stream, fileName, _quizrSettings, _loggerFactory);
             var userCollection = _unitOfWork.GetCollection<User>();
             var qmId = userCollection.FirstOrDefaultAsync(u => u.UserRole == UserRole.QuizMaster).Result.Id;
             command.ActorId = qmId;
@@ -100,7 +99,7 @@ namespace Pubquiz.Logic.Tools
 
             //ar adminId = userCollection.FirstOrDefaultAsync(u => u.UserRole == UserRole.Admin).Result.Id;
             
-            var createGameCommand = new CreateGameCommand(_unitOfWork, _bus)
+            var createGameCommand = new CreateGameCommand(_unitOfWork, _mediator)
             {
                 ActorId = qmId,
                 QuizId = quizrPackage.QuizRefs[0].Id,

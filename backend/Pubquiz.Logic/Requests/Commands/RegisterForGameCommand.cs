@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Commands
 {
@@ -18,7 +18,7 @@ namespace Pubquiz.Logic.Requests.Commands
         public string Name;
         public string Code;
 
-        public RegisterForGameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public RegisterForGameCommand(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
         {
         }
 
@@ -61,7 +61,7 @@ namespace Pubquiz.Logic.Requests.Commands
                 }
 
                 // register team and return team object
-                var userName = Name.Trim();
+                var userName = Name?.Trim();
                 var recoveryCode = Helpers.GenerateSessionRecoveryCode(teamCollection, game.Id);
 
                 team = new Team
@@ -93,8 +93,8 @@ namespace Pubquiz.Logic.Requests.Commands
                 await teamCollection.UpdateAsync(team);
             }
 
-            await Bus.Publish(new TeamRegistered(team.Id, team.Name, team.CurrentGameId, team.MemberNames));
-            await Bus.Publish(new QmTeamRegistered {GameId = team.CurrentGameId, Team = team});
+            await Mediator.Publish(new TeamRegistered(team.Id, team.Name, team.CurrentGameId, team.MemberNames));
+            await Mediator.Publish(new QmTeamRegistered {GameId = team.CurrentGameId, Team = team});
             return team;
         }
     }

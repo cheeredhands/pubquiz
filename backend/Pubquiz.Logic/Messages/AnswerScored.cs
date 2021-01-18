@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using MediatR;
 using Pubquiz.Domain.Models;
 
 namespace Pubquiz.Logic.Messages
 {
-    public class AnswerScored
+    public class AnswerScored : INotification
     {
         public string TeamId { get; set; }
         public string GameId { get; set; }

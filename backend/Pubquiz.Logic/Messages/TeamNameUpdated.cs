@@ -1,6 +1,8 @@
-﻿namespace Pubquiz.Logic.Messages
+﻿using MediatR;
+
+namespace Pubquiz.Logic.Messages
 {
-    public class TeamNameUpdated
+    public class TeamNameUpdated : INotification
     {
         public string TeamId { get; }
         public string GameId { get; }

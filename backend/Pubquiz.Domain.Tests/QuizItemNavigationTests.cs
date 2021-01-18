@@ -13,7 +13,7 @@ namespace Pubquiz.Domain.Tests
         public void TestQuizAtFirstSectionAndFirstQuestion_NavigateOneBackward_CorrectSectionAndQuizItem()
         {
             // Arrange
-            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Bus)
+            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Mediator)
             {
                 Offset = -1,
                 GameId = Game.Id,
@@ -36,7 +36,7 @@ namespace Pubquiz.Domain.Tests
         public void TestQuizAtFirstSectionAndFirstQuestion_NavigateOneForward_CorrectSectionAndQuizItem()
         {
             // Arrange
-            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Bus)
+            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Mediator)
             {
                 Offset = 1,
                 GameId = Game.Id,
@@ -59,7 +59,7 @@ namespace Pubquiz.Domain.Tests
         public void TestQuizAtFirstSectionAndFirstQuestion_NavigateFourForward_CorrectSectionAndQuizItem()
         {
             // Arrange
-            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Bus)
+            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Mediator)
             {
                 Offset = 4,
                 GameId = Game.Id,
@@ -82,7 +82,7 @@ namespace Pubquiz.Domain.Tests
         public void TestQuizAtFirstSectionAndFirstQuestion_NavigateTenForward_LocationAtEnd()
         {
             // Arrange
-            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Bus)
+            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Mediator)
             {
                 Offset = 10,
                 GameId = Game.Id,
@@ -105,7 +105,7 @@ namespace Pubquiz.Domain.Tests
         public void TestQuizAtFirstSectionAndFirstQuestion_NavigateFourBackward_LocationAtStart()
         {
             // Arrange
-            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Bus)
+            var command = new NavigateToItemByOffsetCommand(UnitOfWork, Mediator)
             {
                 Offset = -4,
                 GameId = Game.Id,

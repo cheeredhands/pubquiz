@@ -1,8 +1,9 @@
 using System;
+using MediatR;
 
 namespace Pubquiz.Logic.Messages
 {
-    public class TeamLoggedOut
+    public class TeamLoggedOut : INotification
     {
         public string TeamId { get; }
         public string GameId { get; }

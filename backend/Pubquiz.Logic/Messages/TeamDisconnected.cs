@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace Pubquiz.Logic.Messages
 {
-    public class TeamDisconnected
+    public class TeamDisconnected : INotification
     {
         public string TeamId { get; }
         public string GameId { get; }

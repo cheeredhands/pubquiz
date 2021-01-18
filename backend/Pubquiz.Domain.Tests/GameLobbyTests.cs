@@ -62,7 +62,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Users.First(u => u.UserName == "Quiz master 1").Id;
-            var notification = new SelectGameNotification(UnitOfWork, Bus) {GameId = Game.Id, ActorId = actorId};
+            var notification = new SelectGameNotification(UnitOfWork, Mediator) {GameId = Game.Id, ActorId = actorId};
 
             // act
             notification.Execute().Wait();
@@ -78,7 +78,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Users.First(u => u.UserName == "Quiz master 1").Id;
-            var command = new SelectGameNotification(UnitOfWork, Bus)
+            var command = new SelectGameNotification(UnitOfWork, Mediator)
                 {GameId = Guid.Empty.ToShortGuidString(), ActorId = actorId};
 
             // act & assert
@@ -93,7 +93,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Guid.Empty.ToShortGuidString();
-            var command = new SelectGameNotification(UnitOfWork, Bus) {GameId = Game.Id, ActorId = actorId};
+            var command = new SelectGameNotification(UnitOfWork, Mediator) {GameId = Game.Id, ActorId = actorId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -107,7 +107,7 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Users.First(u => u.UserName == "Quiz master 2").Id;
-            var command = new SelectGameNotification(UnitOfWork, Bus) {GameId = Game.Id, ActorId = actorId};
+            var command = new SelectGameNotification(UnitOfWork, Mediator) {GameId = Game.Id, ActorId = actorId};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;

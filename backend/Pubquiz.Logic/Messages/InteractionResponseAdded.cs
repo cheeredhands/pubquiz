@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace Pubquiz.Logic.Messages
 {
-    public class InteractionResponseAdded
+    public class InteractionResponseAdded : INotification
     {
         public string GameId { get; }
         public string TeamId { get; }

@@ -1,24 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
+using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Handlers;
+using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.NoAction;
-using Rebus.Activation;
-using Rebus.Bus;
-using Rebus.Config;
-using Rebus.Persistence.InMem;
-using Rebus.Routing.TypeBased;
-using Rebus.Transport.InMem;
 
 namespace Pubquiz.Domain.Tests
 {
@@ -32,21 +26,34 @@ namespace Pubquiz.Domain.Tests
         protected List<Team> Teams;
         protected List<QuizItem> QuestionsInQuiz;
         protected List<QuizItem> OtherQuestions;
-        protected IBus Bus;
+        protected IMediator Mediator;
         protected ILoggerFactory LoggerFactory;
-        private InMemorySubscriberStore _inMemorySubscriberStore;
 
         [TestInitialize]
         public void Initialize()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var serviceProvider = new ServiceCollection()
-                .AddLogging(builder => builder.AddConsole()).BuildServiceProvider();
-            LoggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            // var memoryCache = new MemoryCache(new MemoryCacheOptions());
+            //
+            // ICollectionOptions inMemoryCollectionOptions = new InMemoryDatabaseOptions();
+            // UnitOfWork = new NoActionUnitOfWork(memoryCache, LoggerFactory, inMemoryCollectionOptions);
 
-            ICollectionOptions inMemoryCollectionOptions = new InMemoryDatabaseOptions();
-            UnitOfWork = new NoActionUnitOfWork(memoryCache, LoggerFactory, inMemoryCollectionOptions);
+            var services = new ServiceCollection();
+
+            var serviceProvider = services
+                .AddLogging(builder => builder.AddConsole())
+                .AddMemoryCache()
+                .AddSingleton<ICollectionOptions, InMemoryDatabaseOptions>()
+                .AddScoped<IUnitOfWork, NoActionUnitOfWork>()
+                .AddMediatR(typeof(AnswerScored))
+                .BuildServiceProvider();
+
+            
+            
+            LoggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            UnitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+            Mediator = serviceProvider.GetRequiredService<IMediator>();
+
 
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
             var userCollection = UnitOfWork.GetCollection<User>();
@@ -74,23 +81,6 @@ namespace Pubquiz.Domain.Tests
                 Teams.ToAsyncEnumerable().ForEachAsync(t => teamCollection.AddAsync(t)),
                 Users.ToAsyncEnumerable().ForEachAsync(u => userCollection.AddAsync(u)),
                 gameCollection.AddAsync(Game));
-
-            // set up bus
-            var activator = new BuiltinHandlerActivator();
-            activator.Register((bus, messageContext) => new ScoringHandler(UnitOfWork, bus, LoggerFactory));
-            activator.Register(() => new ClientNotificationHandler(LoggerFactory, null));
-
-            // needed so the inmemory subscription store will be centralized
-            _inMemorySubscriberStore = new InMemorySubscriberStore();
-
-            Configure.With(activator).Logging(l => l.ColoredConsole())
-                .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
-                .Routing(r => r.TypeBased().MapAssemblyOf<TeamMembersChanged>("Messages"))
-                .Subscriptions(s => s.StoreInMemory(_inMemorySubscriberStore))
-                .Start();
-
-            Bus = activator.Bus;
-            Bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic"));
         }
     }
 }

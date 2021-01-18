@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Commands
 {
@@ -20,7 +20,7 @@ namespace Pubquiz.Logic.Requests.Commands
         public string InviteCode { get; set; }
         public string GameTitle { get; set; }
 
-        public CreateGameCommand(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public CreateGameCommand(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
         {
         }
 

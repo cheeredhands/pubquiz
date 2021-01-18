@@ -15,7 +15,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_SubmitResponseForInvalidTeam_ThrowsException()
         {
             // arrange
-            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Bus)
+            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Mediator)
             {
                 TeamId = Guid.Empty.ToShortGuidString(),
                 ChoiceOptionIds = new List<int> {3},
@@ -35,7 +35,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_SubmitResponseForInvalidQuestion_ThrowsException()
         {
             // arrange
-            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Bus)
+            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Mediator)
             {
                 TeamId = Game.TeamIds[0],
                 ChoiceOptionIds = new List<int> {3},
@@ -55,7 +55,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_SubmitResponseForQuestionNotInCurrentQuiz_ThrowsException()
         {
             // arrange
-            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Bus)
+            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Mediator)
             {
                 TeamId = Game.TeamIds[0],
                 ChoiceOptionIds = new List<int> {3},
@@ -76,7 +76,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_SubmitResponseForQuestionNotInCurrentQuizSection_ThrowsException()
         {
             // arrange
-            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Bus)
+            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Mediator)
             {
                 TeamId = Game.TeamIds[0],
                 ChoiceOptionIds = new List<int> {3},
@@ -96,7 +96,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_SubmitResponseForInvalidInteraction_ThrowsException()
         {
             // arrange
-            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Bus)
+            var notification = new SubmitInteractionResponseNotification(UnitOfWork, Mediator)
             {
                 TeamId = Game.TeamIds[0],
                 ChoiceOptionIds = new List<int> {3},

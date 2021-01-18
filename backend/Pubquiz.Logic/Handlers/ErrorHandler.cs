@@ -1,11 +1,12 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
-using Rebus.Handlers;
-using ErrorOccurred = Pubquiz.Logic.Messages.ErrorOccurred;
+using Pubquiz.Logic.Messages;
 
 namespace Pubquiz.Logic.Handlers
 {
-    public class ErrorHandler : IHandleMessages<ErrorOccurred>
+    public class ErrorHandler : INotificationHandler<ErrorOccurred>
     {
         private readonly ILogger _logger;
 
@@ -14,7 +15,7 @@ namespace Pubquiz.Logic.Handlers
             _logger = loggerFactory.CreateLogger<ErrorHandler>();
         }
 
-        public Task Handle(ErrorOccurred message) => Task.Run(() =>
+        public Task Handle(ErrorOccurred message, CancellationToken cancellationToken) => Task.Run(() =>
         {
             _logger.LogError((int)message.DomainException.ResultCode, message.DomainException,
                 "An error occurred while handling a message.");

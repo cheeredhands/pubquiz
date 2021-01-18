@@ -23,7 +23,7 @@ namespace Pubquiz.Domain.Tests
             };
             await using var stream = File.OpenRead("testfiles/PeCe.zip");
             var command =
-                new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "PeCe.zip", quizrSettings, LoggerFactory);
+                new ImportZippedExcelQuizCommand(UnitOfWork, Mediator, stream, "PeCe.zip", quizrSettings, LoggerFactory);
             command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
             // act
 
@@ -50,7 +50,7 @@ namespace Pubquiz.Domain.Tests
             };
             await using var stream = File.OpenRead("testfiles/Fryslan-Kerstquiz-2020.zip");
             var command =
-                new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "Fryslan-Kerstquiz-2020.zip", quizrSettings,
+                new ImportZippedExcelQuizCommand(UnitOfWork, Mediator, stream, "Fryslan-Kerstquiz-2020.zip", quizrSettings,
                     LoggerFactory);
             command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
             // act
@@ -78,7 +78,7 @@ namespace Pubquiz.Domain.Tests
             };
             await using var stream = File.OpenRead("testfiles/OKI-Kerstquiz-2020.zip");
             var command =
-                new ImportZippedExcelQuizCommand(UnitOfWork, Bus, stream, "OKI-Kerstquiz-2020.zip", quizrSettings,
+                new ImportZippedExcelQuizCommand(UnitOfWork, Mediator, stream, "OKI-Kerstquiz-2020.zip", quizrSettings,
                     LoggerFactory);
             command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
             // act

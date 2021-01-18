@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Notifications
 {
@@ -23,7 +23,7 @@ namespace Pubquiz.Logic.Requests.Notifications
         public int InteractionId { get; set; }
         public bool Correct { get; set; }
 
-        public CorrectInteractionNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public CorrectInteractionNotification(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
         {
         }
 
@@ -59,7 +59,7 @@ namespace Pubquiz.Logic.Requests.Notifications
             answer.CorrectInteraction(InteractionId, Correct);
             
             await teamCollection.UpdateAsync(team);
-            await Bus.Publish(
+            await Mediator.Publish(
                 new InteractionCorrected(game.Id, TeamId, QuizItemId, InteractionId, Correct));
         }
     }

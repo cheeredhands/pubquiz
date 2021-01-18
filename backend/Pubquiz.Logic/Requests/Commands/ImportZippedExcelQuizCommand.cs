@@ -7,12 +7,12 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using ExcelDataReader;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests.Commands
 {
@@ -27,9 +27,9 @@ namespace Pubquiz.Logic.Requests.Commands
         private string _packagePath;
         private readonly ILogger<ImportZippedExcelQuizCommand> _logger;
 
-        public ImportZippedExcelQuizCommand(IUnitOfWork unitOfWork, IBus bus, Stream fileStream, string fileName,
+        public ImportZippedExcelQuizCommand(IUnitOfWork unitOfWork, IMediator mediator, Stream fileStream, string fileName,
             QuizrSettings quizrSettings, ILoggerFactory loggerFactory) :
-            base(unitOfWork, bus)
+            base(unitOfWork, mediator)
         {
             _fileStream = fileStream;
             _fileName = fileName;

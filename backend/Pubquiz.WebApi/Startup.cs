@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -25,11 +26,6 @@ using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
 using Pubquiz.WebApi.Helpers;
 using Pubquiz.WebApi.Models;
-using Rebus.Bus;
-using Rebus.Persistence.InMem;
-using Rebus.Routing.TypeBased;
-using Rebus.ServiceProvider;
-using Rebus.Transport.InMem;
 
 namespace Pubquiz.WebApi
 {
@@ -79,8 +75,6 @@ namespace Pubquiz.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.ApplicationServices.UseRebus(bus => bus.SubscribeByScanningForHandlers(Assembly.Load("Pubquiz.Logic")));
 
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
@@ -180,16 +174,9 @@ namespace Pubquiz.WebApi
         private void AddQuizrSpecificStuff(IServiceCollection services)
         {
             services.AddMemoryCache();
-            services.AutoRegisterHandlersFromAssembly("Pubquiz.Logic");
-            // needed so the in memory subscription store will be centralized
-            var inMemorySubscriberStore = new InMemorySubscriberStore();
-            services.AddSingleton(inMemorySubscriberStore);
-            services.AddRebus(configure =>
-                configure //.Logging(l => l.Use(new MsLoggerFactoryAdapter(_loggerFactory)))
-                    .Transport(t => t.UseInMemoryTransport(new InMemNetwork(true), "Messages"))
-                    .Subscriptions(s => s.StoreInMemory(inMemorySubscriberStore))
-                    .Routing(r => r.TypeBased().MapAssemblyOf<InteractionResponseAdded>("Messages")));
 
+            services.AddMediatR(typeof(TeamRegistered));
+          
             switch (_configuration.GetValue<string>("AppSettings:Database"))
             {
                 case "Memory":
@@ -265,11 +252,11 @@ namespace Pubquiz.WebApi
         private static void SeedStuff(IApplicationBuilder app, IHostEnvironment env)
         {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
-            var bus = app.ApplicationServices.GetService<IBus>();
+            var mediator = app.ApplicationServices.GetService<IMediator>();
             var quizrSettings = app.ApplicationServices.GetService<QuizrSettings>();
 
             var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
-            var seeder = new TestSeeder(unitOfWork, loggerFactory, bus, quizrSettings);
+            var seeder = new TestSeeder(unitOfWork, loggerFactory, mediator, quizrSettings);
 
             var quizCollection = unitOfWork.GetCollection<Quiz>();
             var gameCollection = unitOfWork.GetCollection<Game>();

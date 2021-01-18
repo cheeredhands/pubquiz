@@ -1,8 +1,9 @@
+using MediatR;
 using Pubquiz.Domain.ViewModels;
 
 namespace Pubquiz.Logic.Messages
 {
-    public class GameSelected
+    public class GameSelected : INotification
     {
         public string GameId { get; set; }
         public string NewGameId { get; set; }

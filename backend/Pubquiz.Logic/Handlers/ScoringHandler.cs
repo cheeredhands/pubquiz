@@ -1,39 +1,35 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Persistence;
-using Rebus.Bus;
-using Rebus.Handlers;
 
 namespace Pubquiz.Logic.Handlers
 {
-    public class ScoringHandler : IHandleMessages<InteractionResponseAdded>, IHandleMessages<InteractionCorrected>
+    public class ScoringHandler : Handler, INotificationHandler<InteractionResponseAdded>, INotificationHandler<InteractionCorrected>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IBus _bus;
         private readonly ILogger<ScoringHandler> _logger;
 
-        public ScoringHandler(IUnitOfWork unitOfWork, IBus bus, ILoggerFactory loggerFactory)
+        public ScoringHandler(IUnitOfWork unitOfWork, IMediator mediator, ILoggerFactory loggerFactory) : base(unitOfWork, mediator, loggerFactory)
         {
-            _unitOfWork = unitOfWork;
-            _bus = bus;
             _logger = loggerFactory.CreateLogger<ScoringHandler>();
         }
 
-        public async Task Handle(InteractionResponseAdded message)
+        public async Task Handle(InteractionResponseAdded message, CancellationToken cancellationToken)
         {
             _logger.LogDebug($"Start scoring an answer.");
             // score it
-            var teamCollection = _unitOfWork.GetCollection<Team>();
+            var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(message.TeamId);
             if (team == null)
             {
                 _logger.LogInformation($"Scoring: Team is null.");
                 // something like:
                 var exception = new DomainException(ResultCode.InvalidTeamId, "Team could not be found while scoring answer.", true);
-                await _bus.Publish(new ErrorOccurred(exception));
+                await Mediator.Publish(new ErrorOccurred(exception), cancellationToken);
                 return;
             }
             
@@ -44,7 +40,7 @@ namespace Pubquiz.Logic.Handlers
                 return;
             }
 
-            var quizItemCollection = _unitOfWork.GetCollection<QuizItem>();
+            var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
             var quizItem = await quizItemCollection.GetAsync(message.QuizItemId);
             if (quizItem == null)
             {
@@ -61,7 +57,7 @@ namespace Pubquiz.Logic.Handlers
             
             _logger.LogDebug($"Done scoring an answer.");
             
-            await _bus.Publish(new AnswerScored
+            await Mediator.Publish(new AnswerScored
             {
                 TeamId = team.Id,
                 GameId = message.GameId,
@@ -70,21 +66,21 @@ namespace Pubquiz.Logic.Handlers
                 TotalTeamScore = team.TotalScore,
                 ScorePerQuizSection = team.ScorePerQuizSection,
                 Answer = answer
-            });
+            }, cancellationToken);
         }
 
-        public async Task Handle(InteractionCorrected message)
+        public async Task Handle(InteractionCorrected message, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start scoring an answer.");
             // score it
-            var teamCollection = _unitOfWork.GetCollection<Team>();
+            var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(message.TeamId);
             if (team == null)
             {
                 _logger.LogInformation($"Scoring: Team is null.");
                 // something like:
                 var exception = new DomainException(ResultCode.InvalidTeamId, "Team could not be found while scoring answer.", true);
-                await _bus.Publish(new ErrorOccurred(exception));
+                await Mediator.Publish(new ErrorOccurred(exception), cancellationToken);
                 return;
             }
             
@@ -95,7 +91,7 @@ namespace Pubquiz.Logic.Handlers
                 return;
             }
 
-            var quizItemCollection = _unitOfWork.GetCollection<QuizItem>();
+            var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
             var quizItem = await quizItemCollection.GetAsync(message.QuizItemId);
             if (quizItem == null)
             {
@@ -111,7 +107,7 @@ namespace Pubquiz.Logic.Handlers
             
             _logger.LogInformation($"Done scoring an answer.");
             
-            await _bus.Publish(new AnswerScored
+            await Mediator.Publish(new AnswerScored
             {
                 TeamId = team.Id,
                 GameId = message.GameId,
@@ -120,7 +116,7 @@ namespace Pubquiz.Logic.Handlers
                 TotalTeamScore = team.TotalScore,
                 ScorePerQuizSection = team.ScorePerQuizSection,
                 Answer = answer
-            });
+            }, cancellationToken);
         }
     }
 }

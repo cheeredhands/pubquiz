@@ -1,9 +1,10 @@
 ﻿using System;
+using MediatR;
 using Pubquiz.Domain.Models;
 
 namespace Pubquiz.Logic.Messages
 {
-    public class GameStateChanged
+    public class GameStateChanged : INotification
     {
         public string GameId { get; }
         public GameState OldGameState { get; }

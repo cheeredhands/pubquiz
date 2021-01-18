@@ -1,19 +1,20 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
-using Rebus.Handlers;
 
 namespace Pubquiz.Logic.Handlers
 {
     public class ClientNotificationHandler :
-        IHandleMessages<AnswerScored>, IHandleMessages<TeamMembersChanged>,
-        IHandleMessages<ErrorOccurred>, IHandleMessages<TeamRegistered>, IHandleMessages<QmTeamRegistered>,
-        IHandleMessages<GameStateChanged>, IHandleMessages<TeamNameUpdated>, IHandleMessages<TeamLoggedOut>,
-        IHandleMessages<UserLoggedOut>, IHandleMessages<TeamDeleted>, IHandleMessages<ItemNavigated>,
-        IHandleMessages<InteractionResponseAdded>, IHandleMessages<TeamConnectionChanged>, IHandleMessages<GameSelected>
+        INotificationHandler<AnswerScored>, INotificationHandler<TeamMembersChanged>,
+        INotificationHandler<ErrorOccurred>, INotificationHandler<TeamRegistered>, INotificationHandler<QmTeamRegistered>,
+        INotificationHandler<GameStateChanged>, INotificationHandler<TeamNameUpdated>, INotificationHandler<TeamLoggedOut>,
+        INotificationHandler<UserLoggedOut>, INotificationHandler<TeamDeleted>, INotificationHandler<ItemNavigated>,
+        INotificationHandler<InteractionResponseAdded>, INotificationHandler<TeamConnectionChanged>, INotificationHandler<GameSelected>
     {
         private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
         private readonly ILogger _logger;
@@ -24,7 +25,7 @@ namespace Pubquiz.Logic.Handlers
             _logger = loggerFactory.CreateLogger<ClientNotificationHandler>();
         }
 
-        public async Task Handle(AnswerScored message)
+        public async Task Handle(AnswerScored message, CancellationToken cancellationToken)
         {
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
@@ -32,7 +33,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(quizMasterGroupId).AnswerScored(message);
         }
 
-        public async Task Handle(InteractionResponseAdded message)
+        public async Task Handle(InteractionResponseAdded message, CancellationToken cancellationToken)
         {
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
@@ -40,7 +41,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(quizMasterGroupId).InteractionResponseAdded(message);
         }
 
-        public async Task Handle(TeamMembersChanged message)
+        public async Task Handle(TeamMembersChanged message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
@@ -52,12 +53,12 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).TeamMembersChanged(message);
         }
 
-        public async Task Handle(ErrorOccurred message)
+        public Task Handle(ErrorOccurred message, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
-        public async Task Handle(QmTeamRegistered message)
+        public async Task Handle(QmTeamRegistered message, CancellationToken cancellationToken)
         {
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 
@@ -65,7 +66,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(quizMasterGroupId).QmTeamRegistered(message);
         }
 
-        public async Task Handle(TeamRegistered message)
+        public async Task Handle(TeamRegistered message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
 
@@ -73,7 +74,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).TeamRegistered(message);
         }
         
-        public async Task Handle(TeamConnectionChanged message)
+        public async Task Handle(TeamConnectionChanged message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
@@ -85,7 +86,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).TeamConnectionChanged(message);
         }
         
-        public async Task Handle(TeamLoggedOut message)
+        public async Task Handle(TeamLoggedOut message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
@@ -97,7 +98,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).TeamLoggedOut(message);
         }
 
-        public async Task Handle(UserLoggedOut message)
+        public async Task Handle(UserLoggedOut message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
@@ -109,7 +110,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).UserLoggedOut(message);
         }
 
-        public async Task Handle(GameStateChanged message)
+        public async Task Handle(GameStateChanged message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
@@ -121,7 +122,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).GameStateChanged(message);
         }
 
-        public async Task Handle(TeamNameUpdated message)
+        public async Task Handle(TeamNameUpdated message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
@@ -133,7 +134,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).TeamNameUpdated(message);
         }
 
-        public async Task Handle(TeamDeleted message)
+        public async Task Handle(TeamDeleted message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
@@ -145,7 +146,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).TeamDeleted(message);
         }
 
-        public async Task Handle(ItemNavigated message)
+        public async Task Handle(ItemNavigated message, CancellationToken cancellationToken)
         {
             var teamGroupId = Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
@@ -157,7 +158,7 @@ namespace Pubquiz.Logic.Handlers
             await _gameHubContext.Clients.Group(teamGroupId).ItemNavigated(message);
         }
 
-        public async Task Handle(GameSelected message)
+        public async Task Handle(GameSelected message, CancellationToken cancellationToken)
         {
             var quizMasterGroupId = Helpers.GetQuizMasterGroupId(message.GameId);
 

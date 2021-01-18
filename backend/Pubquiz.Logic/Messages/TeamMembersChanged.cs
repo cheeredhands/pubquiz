@@ -1,8 +1,9 @@
 using System;
+using MediatR;
 
 namespace Pubquiz.Logic.Messages
 {
-    public class TeamMembersChanged
+    public class TeamMembersChanged : INotification
     {
         public string GameId { get; }
         public string TeamId { get; }

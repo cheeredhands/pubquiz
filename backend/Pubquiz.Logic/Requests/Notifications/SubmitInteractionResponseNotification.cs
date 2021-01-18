@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Rebus.Bus;
-using InteractionResponseAdded = Pubquiz.Logic.Messages.InteractionResponseAdded;
 
 namespace Pubquiz.Logic.Requests.Notifications
 {
@@ -23,7 +23,7 @@ namespace Pubquiz.Logic.Requests.Notifications
         public List<int> ChoiceOptionIds { get; set; }
         public string Response { get; set; }
 
-        public SubmitInteractionResponseNotification(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork, bus)
+        public SubmitInteractionResponseNotification(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
         {
         }
 
@@ -81,8 +81,7 @@ namespace Pubquiz.Logic.Requests.Notifications
             var response = string.IsNullOrWhiteSpace(Response)
                 ? GetChoiceOptionTexts(quizItem, ChoiceOptionIds)
                 : Response;
-            await Bus.Publish(
-                new InteractionResponseAdded(game.Id, TeamId, QuizItemId, InteractionId, response));
+            await Mediator.Publish(new InteractionResponseAdded(game.Id, TeamId, QuizItemId, InteractionId, response));
         }
 
         private string GetChoiceOptionTexts(QuizItem question, List<int> choiceOptionIds)

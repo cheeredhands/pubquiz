@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
@@ -18,7 +19,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithCorrectNewTeam_TeamRegistered()
         {
             // arrange
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "Team 4", Code = "JOINME"};
+            var command = new RegisterForGameCommand(UnitOfWork, Mediator) {Name = "Team 4", Code = "JOINME"};
 
             // act
             var team = command.Execute().Result;
@@ -32,7 +33,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithCorrectNewTeam_TeamInGame()
         {
             // arrange
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "Team 4", Code = "JOINME"};
+            var command = new RegisterForGameCommand(UnitOfWork, Mediator) {Name = "Team 4", Code = "JOINME"};
 
             // act
             var team = command.Execute().Result;
@@ -51,7 +52,7 @@ namespace Pubquiz.Domain.Tests
             // arrange 
             var firstTeamId = Game.TeamIds[0];
             var firstTeam = UnitOfWork.GetCollection<Team>().GetAsync(firstTeamId).Result;
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "", Code = firstTeam.RecoveryCode};
+            var command = new RegisterForGameCommand(UnitOfWork, Mediator) {Name = "", Code = firstTeam.RecoveryCode};
 
             // act
             var team = command.Execute().Result;
@@ -65,7 +66,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithInvalidCode_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "Team 4", Code = "INVALIDCODE"};
+            var command = new RegisterForGameCommand(UnitOfWork, Mediator) {Name = "Team 4", Code = "INVALIDCODE"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -78,7 +79,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_RegisterWithExistingTeamName_ThrowsException()
         {
             // arrange
-            var command = new RegisterForGameCommand(UnitOfWork, Bus) {Name = "Team 3", Code = "JOINME"};
+            var command = new RegisterForGameCommand(UnitOfWork, Mediator) {Name = "Team 3", Code = "JOINME"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -92,10 +93,11 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var notification = new ChangeTeamNameNotification(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
+            var notification = new ChangeTeamNameNotification {NewName = "Team 1a", TeamId = teamId};
 
             // act
-            notification.Execute().Wait();
+            Mediator.Publish(notification).Wait();
+            Thread.Sleep(2000);
 
             // assert
             var team = UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
@@ -109,10 +111,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty.ToShortGuidString();
-            var command = new ChangeTeamNameNotification(UnitOfWork, Bus) {NewName = "Team 1a", TeamId = teamId};
+            var notification = new ChangeTeamNameNotification {NewName = "Team 1a", TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Publish(notification)).Result;
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
@@ -124,10 +126,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamNameNotification(UnitOfWork, Bus) {NewName = "Team 2", TeamId = teamId};
+            var notification = new ChangeTeamNameNotification {NewName = "Team 2", TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Publish(notification)).Result;
             Assert.AreEqual("Team name is taken.", exception.Message);
             Assert.AreEqual(ResultCode.TeamNameIsTaken, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
@@ -139,11 +141,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty.ToShortGuidString();
-            var command = new ChangeTeamMembersNotification(UnitOfWork, Bus)
-                {TeamMembers = "a,b,c", TeamId = teamId};
+            var notification = new ChangeTeamMembersNotification {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Publish(notification)).Result;
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
@@ -155,11 +156,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var command = new ChangeTeamMembersNotification(UnitOfWork, Bus)
-                {TeamMembers = "a,b,c", TeamId = teamId};
+            var notification = new ChangeTeamMembersNotification {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act
-            command.Execute().Wait();
+            Mediator.Publish(notification).Wait();
 
             var team = UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
             Assert.AreEqual("a,b,c", team.MemberNames);
@@ -172,10 +172,10 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var teamId = Guid.Empty.ToShortGuidString();
             var user = Users.First(u => u.UserName == "Quiz master 1");
-            var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = user.Id, TeamId = teamId};
+            var notification = new DeleteTeamNotification {ActorId = user.Id, TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Publish(notification)).Result;
             Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -188,10 +188,10 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
             var actorId = Guid.Empty.ToShortGuidString();
-            var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = actorId, TeamId = teamId};
+            var notification = new DeleteTeamNotification {ActorId = actorId, TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Publish(notification)).Result;
             Assert.AreEqual(ResultCode.InvalidUserId, exception.ResultCode);
             Assert.AreEqual("Invalid ActorId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -204,10 +204,10 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
             var user = Users.First(u => u.UserName == "Quiz master 2");
-            var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = user.Id, TeamId = teamId};
+            var notification = new DeleteTeamNotification {ActorId = user.Id, TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => notification.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Publish(notification)).Result;
             Assert.AreEqual(ResultCode.QuizMasterUnauthorizedForGame, exception.ResultCode);
             Assert.AreEqual($"Actor with id {user.Id} is not authorized for game '{Game.Id}'", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -220,10 +220,10 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
             var user = Users.First(u => u.UserName == "Quiz master 1");
-            var notification = new DeleteTeamNotification(UnitOfWork, Bus) {ActorId = user.Id, TeamId = teamId};
+            var notification = new DeleteTeamNotification {ActorId = user.Id, TeamId = teamId};
 
             // act
-            notification.Execute().Wait();
+            Mediator.Publish(notification).Wait();
 
             // assert
             Assert.IsNull(UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result);
@@ -236,7 +236,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_LoginAdmin_AdminLoggedIn()
         {
             // arrange
-            var command = new LoginCommand(UnitOfWork, Bus) {UserName = "Admin", Password = "secret123"};
+            var command = new LoginCommand(UnitOfWork, Mediator) {UserName = "Admin", Password = "secret123"};
 
             // act
             var user = command.Execute().Result;
@@ -250,7 +250,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_LoginQuizMaster_QuizMasterLoggedIn()
         {
             // arrange
-            var command = new LoginCommand(UnitOfWork, Bus) {UserName = "Quiz master 1", Password = "qm1"};
+            var command = new LoginCommand(UnitOfWork, Mediator) {UserName = "Quiz master 1", Password = "qm1"};
 
             // act
             var user = command.Execute().Result;
@@ -264,7 +264,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_LoginInvalidPassword_ThrowsException()
         {
             // arrange
-            var command = new LoginCommand(UnitOfWork, Bus) {UserName = "Admin", Password = "wrong password"};
+            var command = new LoginCommand(UnitOfWork, Mediator) {UserName = "Admin", Password = "wrong password"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
@@ -278,7 +278,7 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_LoginInvalidUserName_ThrowsException()
         {
             // arrange
-            var command = new LoginCommand(UnitOfWork, Bus) {UserName = "NonexistentUser", Password = "secret123"};
+            var command = new LoginCommand(UnitOfWork, Mediator) {UserName = "NonexistentUser", Password = "secret123"};
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;

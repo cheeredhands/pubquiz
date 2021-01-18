@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using MediatR;
 using Pubquiz.Persistence;
-using Rebus.Bus;
 
 namespace Pubquiz.Logic.Requests
 {
@@ -10,11 +10,11 @@ namespace Pubquiz.Logic.Requests
     /// <typeparam name="TResponse"></typeparam>
     public abstract class Command<TResponse> : Request
     {
-        protected readonly IBus Bus;
+        protected readonly IMediator Mediator;
 
-        protected Command(IUnitOfWork unitOfWork, IBus bus) : base(unitOfWork)
+        protected Command(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork)
         {
-            Bus = bus;
+            Mediator = mediator;
         }
 
         public Task<TResponse> Execute()
