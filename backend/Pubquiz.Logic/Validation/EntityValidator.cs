@@ -29,8 +29,20 @@ namespace Pubquiz.Logic.Validation
             {
                 var m = GetType().GetMethod("CheckEntity", BindingFlags.NonPublic | BindingFlags.Instance);
                 var genericCheckEntityMethod = m!.MakeGenericMethod(attribute.EntityType);
-                genericCheckEntityMethod.Invoke(this,
-                    new object[] {attribute.IdPropertyName, ResultCode.InvalidEntityId});
+                try
+                {
+                    genericCheckEntityMethod.Invoke(this,
+                        new object[] {attribute.IdPropertyName, ResultCode.InvalidEntityId});
+                }
+                catch (TargetInvocationException e)
+                {
+                    if (e.InnerException is DomainException domainException)
+                    {
+                        throw domainException;
+                    }
+                    throw;
+                }
+                
             }
         }
 
@@ -43,8 +55,7 @@ namespace Pubquiz.Logic.Validation
 
             if (property == null && field == null)
             {
-                throw new Exception(
-                    $"Could not find property or field {entityIdPropertyName} on {_requestType.Name}");
+                throw new Exception($"Could not find property or field {entityIdPropertyName} on {_requestType.Name}");
             }
 
             var value = property?.GetValue(_request) ?? field?.GetValue(_request);
