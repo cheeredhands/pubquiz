@@ -16,20 +16,19 @@ namespace Pubquiz.Logic.Tools
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
         private readonly QuizrSettings _quizrSettings;
-        private readonly ILoggerFactory _loggerFactory;
 
-        public TestSeeder(IUnitOfWork unitOfWork, ILoggerFactory loggerFactory, IMediator mediator, QuizrSettings quizrSettings)
+        public TestSeeder(IUnitOfWork unitOfWork, ILoggerFactory loggerFactory, IMediator mediator,
+            QuizrSettings quizrSettings)
         {
             _unitOfWork = unitOfWork;
             _mediator = mediator;
             _quizrSettings = quizrSettings;
-            _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<TestSeeder>();
         }
 
         public void SeedSeedSet(string mediaBaseUrl)
         {
-            _logger.LogInformation("Seeding the seed set.");
+            _logger.LogInformation("Seeding the seed set");
             var quizCollection = _unitOfWork.GetCollection<Quiz>();
             var teamCollection = _unitOfWork.GetCollection<Team>();
             var userCollection = _unitOfWork.GetCollection<User>();
@@ -54,7 +53,7 @@ namespace Pubquiz.Logic.Tools
             var teamUsers = SeedTeams.GetUsersFromTeams(teams);
             foreach (var team in teams)
             {
-                _logger.LogInformation($"{team.Name}: {team.RecoveryCode}");
+                _logger.LogInformation("{Name}: {RecoveryCode}", team.Name, team.RecoveryCode);
             }
 
             game.QuizId = quiz.Id;
@@ -89,17 +88,15 @@ namespace Pubquiz.Logic.Tools
         {
             var path = Path.Combine(_quizrSettings.WebRootPath, filePath);
             await using var stream = File.OpenRead(path);
-            var command =
-                new ImportZippedExcelQuizCommand(_unitOfWork, _mediator, stream, fileName, _quizrSettings, _loggerFactory);
             var userCollection = _unitOfWork.GetCollection<User>();
             var qmId = userCollection.FirstOrDefaultAsync(u => u.UserRole == UserRole.QuizMaster).Result.Id;
-            command.ActorId = qmId;
+            var command = new ImportZippedExcelQuizCommand {ActorId = qmId, FileName = fileName, FileStream = stream};
 
-            var quizrPackage = await command.Execute();
+            var quizrPackage = await _mediator.Send(command);
 
             //ar adminId = userCollection.FirstOrDefaultAsync(u => u.UserRole == UserRole.Admin).Result.Id;
-            
-            var createGameCommand = new CreateGameCommand(_unitOfWork, _mediator)
+
+            var createGameCommand = new CreateGameCommand
             {
                 ActorId = qmId,
                 QuizId = quizrPackage.QuizRefs[0].Id,
@@ -107,21 +104,19 @@ namespace Pubquiz.Logic.Tools
                 GameTitle = gameTitle
             };
 
-            var game = await createGameCommand.Execute();
-
+            await _mediator.Send(createGameCommand);
+            
             // var selectGameNotification = new SelectGameNotification(_unitOfWork, _bus)
             // {
             //     ActorId = qmId,
             //     GameId = game.Id
             // };
             // await selectGameNotification.Execute();
-
-
         }
 
         public void SeedTestSet()
         {
-            _logger.LogInformation("Seeding test set.");
+            _logger.LogInformation("Seeding test set");
             var quizCollection = _unitOfWork.GetCollection<Quiz>();
             var teamCollection = _unitOfWork.GetCollection<Team>();
             var userCollection = _unitOfWork.GetCollection<User>();
@@ -144,7 +139,7 @@ namespace Pubquiz.Logic.Tools
             var teams = TestTeams.GetTeams(teamCollection, game.Id);
             foreach (var team in teams)
             {
-                _logger.LogInformation($"{team.Name}: {team.RecoveryCode}");
+                _logger.LogInformation("{Name}: {RecoveryCode}", team.Name, team.RecoveryCode);
             }
 
             game.QuizId = quiz.Id;

@@ -1,4 +1,6 @@
-﻿namespace Pubquiz.Persistence
+﻿using System;
+
+namespace Pubquiz.Persistence
 {
     /// <summary>
     ///     Interface for Unit of Work

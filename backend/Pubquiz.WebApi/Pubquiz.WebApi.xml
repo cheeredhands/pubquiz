@@ -20,21 +20,5 @@
             <param name="formFile"></param>
             <returns></returns>
         </member>
-        <member name="M:Pubquiz.WebApi.Helpers.Extensions.AddRequests(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Reflection.Assembly)">
-            <summary>
-            Add the Command, Notification and Query requests to the service collection.
-            </summary>
-            <param name="serviceCollection"></param>
-            <param name="sourceAssembly"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Pubquiz.WebApi.Helpers.Extensions.IsSubclassOfRawGeneric(System.Type,System.Type)">
-            <summary>
-            Alternative version of <see cref="M:System.Type.IsSubclassOf(System.Type)"/> that supports raw generic types (generic types without
-            any type parameters).
-            </summary>
-            <param name="generic">The base type class for which the check is made.</param>
-            <param name="toCheck">To type to determine for whether it derives from <paramref name="generic"/>.</param>
-        </member>
     </members>
 </doc>

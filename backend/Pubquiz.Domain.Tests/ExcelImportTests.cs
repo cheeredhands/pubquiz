@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests.Commands;
-using Pubquiz.Logic.Tools;
+// ReSharper disable StringLiteralTypo
 
 namespace Pubquiz.Domain.Tests
 {
@@ -15,26 +15,23 @@ namespace Pubquiz.Domain.Tests
         public async Task PeCeExcelQuizPackage_Import_CorrectQuizNameImported()
         {
             // arrange
-            var quizrSettings = new QuizrSettings
-            {
-                BaseUrl = "https://localhost:5001",
-                WebRootPath = "",
-                ContentPath = "quiz"
-            };
             await using var stream = File.OpenRead("testfiles/PeCe.zip");
-            var command =
-                new ImportZippedExcelQuizCommand(UnitOfWork, Mediator, stream, "PeCe.zip", quizrSettings, LoggerFactory);
-            command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
+            var command = new ImportZippedExcelQuizCommand
+            {
+                ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id,
+                FileStream = stream,
+                FileName = "PeCe.zip"
+            };
             // act
 
-            var quizrPackage = await command.Execute();
+            var quizrPackage = await Mediator.Send(command);
 
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
-            Assert.AreEqual(1, quizrPackage.QuizRefs.Count);
+            Assert.AreEqual(1, quizrPackageRetrieved.QuizRefs.Count);
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quizRef = await quizCollection.GetAsync(quizrPackage.QuizRefs.First().Id);
+            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizRefs.First().Id);
             Assert.AreEqual("PéCé-pubquiz 2019", quizRef.Title);
         }
 
@@ -42,27 +39,23 @@ namespace Pubquiz.Domain.Tests
         public async Task Fryslan2020QuizExcelQuizPackage_Import_CorrectQuizNameImported()
         {
             // arrange
-            var quizrSettings = new QuizrSettings
-            {
-                BaseUrl = "https://localhost:5001",
-                WebRootPath = "",
-                ContentPath = "quiz"
-            };
             await using var stream = File.OpenRead("testfiles/Fryslan-Kerstquiz-2020.zip");
-            var command =
-                new ImportZippedExcelQuizCommand(UnitOfWork, Mediator, stream, "Fryslan-Kerstquiz-2020.zip", quizrSettings,
-                    LoggerFactory);
-            command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
+            var command = new ImportZippedExcelQuizCommand
+            {
+                ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id,
+                FileStream = stream,
+                FileName = "Fryslan-Kerstquiz-2020.zip"
+            };
             // act
 
-            var quizrPackage = await command.Execute();
+            var quizrPackage = await Mediator.Send(command);
 
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
-            Assert.AreEqual(1, quizrPackage.QuizRefs.Count);
+            Assert.AreEqual(1, quizrPackageRetrieved.QuizRefs.Count);
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quizRef = await quizCollection.GetAsync(quizrPackage.QuizRefs.First().Id);
+            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizRefs.First().Id);
             Assert.AreEqual("TH en Anne's krystkwis 2020", quizRef.Title);
         }
 
@@ -70,27 +63,23 @@ namespace Pubquiz.Domain.Tests
         public async Task Oki2020QuizExcelQuizPackage_Import_CorrectQuizNameImported()
         {
             // arrange
-            var quizrSettings = new QuizrSettings
-            {
-                BaseUrl = "https://localhost:5001",
-                WebRootPath = "",
-                ContentPath = "quiz"
-            };
             await using var stream = File.OpenRead("testfiles/OKI-Kerstquiz-2020.zip");
-            var command =
-                new ImportZippedExcelQuizCommand(UnitOfWork, Mediator, stream, "OKI-Kerstquiz-2020.zip", quizrSettings,
-                    LoggerFactory);
-            command.ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id;
+            var command = new ImportZippedExcelQuizCommand
+            {
+                ActorId = Users.First(u => u.UserRole == UserRole.QuizMaster).Id,
+                FileStream = stream,
+                FileName = "OKI-Kerstquiz-2020.zip"
+            };
             // act
 
-            var quizrPackage = await command.Execute();
+            var quizrPackage = await Mediator.Send(command);
 
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
-            Assert.AreEqual(1, quizrPackage.QuizRefs.Count);
+            Assert.AreEqual(1, quizrPackageRetrieved.QuizRefs.Count);
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quizRef = await quizCollection.GetAsync(quizrPackage.QuizRefs.First().Id);
+            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizRefs.First().Id);
             Assert.AreEqual("OKI-Kerstquiz 2020", quizRef.Title);
         }
     }

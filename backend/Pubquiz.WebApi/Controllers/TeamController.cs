@@ -27,14 +27,14 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<ApiResponse>> DeleteTeam(string teamId)
         {
-            var notification = new DeleteTeamNotification {ActorId = User.GetId(), TeamId = teamId};
+            var command = new DeleteTeamCommand {ActorId = User.GetId(), TeamId = teamId};
 
-            await _mediator.Publish(notification);
-            
+            await _mediator.Publish(command);
+
             return Ok(new ApiResponse
             {
                 Code = ResultCode.Ok,
-                Message = $"Team with id {notification.TeamId} deleted"
+                Message = $"Team with id {command.TeamId} deleted"
             });
         }
 
@@ -43,7 +43,7 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<IActionResult> SubmitInteractionResponse(
             SubmitAnswerRequest request)
         {
-            var notification = new SubmitInteractionResponseNotification(_unitOfWork, _mediator)
+            var command = new SubmitInteractionResponseCommand
             {
                 TeamId = User.GetId(),
                 QuizItemId = request.QuizItemId,
@@ -51,8 +51,8 @@ namespace Pubquiz.WebApi.Controllers
                 Response = request.Response,
                 ChoiceOptionIds = request.ChoiceOptionIds
             };
-            notification.TeamId = User.GetId();
-            await notification.Execute();
+            command.TeamId = User.GetId();
+            await _mediator.Send(command);
             return Ok(new ApiResponse {Code = ResultCode.Ok, Message = "Response submitted ok."});
         }
 
@@ -61,12 +61,12 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<ApiResponse>> CorrectInteraction(string teamId, string quizItemId,
             int interactionId, bool correct)
         {
-            var notification = new CorrectInteractionNotification(_unitOfWork, _mediator)
+            var command = new CorrectInteractionCommand
             {
                 ActorId = User.GetId(), TeamId = teamId, QuizItemId = quizItemId, InteractionId = interactionId,
                 Correct = correct
             };
-            await notification.Execute();
+            await _mediator.Send(command);
             return Ok(new ApiResponse {Code = ResultCode.Ok, Message = "Interaction corrected."});
         }
     }

@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
@@ -17,12 +16,10 @@ namespace Pubquiz.Logic.Handlers
         INotificationHandler<InteractionResponseAdded>, INotificationHandler<TeamConnectionChanged>, INotificationHandler<GameSelected>
     {
         private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
-        private readonly ILogger _logger;
 
-        public ClientNotificationHandler(ILoggerFactory loggerFactory, IHubContext<GameHub, IGameHub> gameHubContext)
+        public ClientNotificationHandler(IHubContext<GameHub, IGameHub> gameHubContext)
         {
             _gameHubContext = gameHubContext;
-            _logger = loggerFactory.CreateLogger<ClientNotificationHandler>();
         }
 
         public async Task Handle(AnswerScored message, CancellationToken cancellationToken)

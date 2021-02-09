@@ -1,105 +1,14 @@
-using System.Linq;
-using System.Threading.Tasks;
 using MediatR;
-using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
-using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Requests.Commands
 {
     [ValidateEntity(EntityType = typeof(Game), IdPropertyName = "GameId")]
-    public class NavigateToItemByOffsetCommand : Command<string>
+    public class NavigateToItemByOffsetCommand : IRequest<string>
     {
         public int Offset { get; set; }
         public string GameId { get; set; }
         public string ActorId { get; set; }
-
-        public NavigateToItemByOffsetCommand(IUnitOfWork unitOfWork, IMediator mediator) : base(unitOfWork, mediator)
-        {
-        }
-
-        protected override async Task<string> DoExecute()
-        {
-            var gameCollection = UnitOfWork.GetCollection<Game>();
-            var quizCollection = UnitOfWork.GetCollection<Quiz>();
-
-            var game = await gameCollection.GetAsync(GameId);
-            var quiz = await quizCollection.GetAsync(game.QuizId);
-
-            var user = await UnitOfWork.GetCollection<User>().GetAsync(ActorId);
-
-            if (user.UserRole != UserRole.Admin)
-            {
-                if (game.QuizMasterIds.All(i => i != ActorId))
-                {
-                    throw new DomainException(ResultCode.QuizMasterUnauthorizedForGame,
-                        $"Actor with id {ActorId} is not authorized for game '{game.Id}'", true);
-                }
-            }
-
-            // check if valid navigation
-            int newSectionIndex = game.CurrentSectionIndex;
-            var newQuizItemIndexInTotal = game.CurrentQuizItemIndexInTotal + Offset;
-            var newQuizItemIndexInSection = game.CurrentQuizItemIndexInSection + Offset;
-
-            if (newQuizItemIndexInTotal < 1)
-            {
-                newQuizItemIndexInTotal = 1;
-                newSectionIndex = 1;
-                game.CurrentSectionQuizItemCount = quiz.QuizSections.First().QuizItemRefs.Count;
-                newQuizItemIndexInSection = 1;
-            }
-            else if (newQuizItemIndexInTotal > game.TotalQuizItemCount)
-            {
-                newQuizItemIndexInTotal = game.TotalQuizItemCount;
-                newSectionIndex = quiz.QuizSections.Count;
-                game.CurrentSectionQuizItemCount = quiz.QuizSections.Last().QuizItemRefs.Count;
-                newQuizItemIndexInSection = quiz.QuizSections.Last().QuizItemRefs.Count;
-            }
-            else
-            {
-                while (newQuizItemIndexInSection < 1)
-                {
-                    newSectionIndex--;
-                    game.CurrentSectionQuizItemCount = quiz.QuizSections[newSectionIndex - 1].QuizItemRefs.Count;
-                    newQuizItemIndexInSection += game.CurrentSectionQuizItemCount;
-                }
-
-                while (newQuizItemIndexInSection > game.CurrentSectionQuizItemCount)
-                {
-                    newSectionIndex++;
-                    newQuizItemIndexInSection -= game.CurrentSectionQuizItemCount;
-                    game.CurrentSectionQuizItemCount = quiz.QuizSections[newSectionIndex - 1].QuizItemRefs.Count;
-                }
-            }
-
-            game.CurrentSectionIndex = newSectionIndex;
-            var newSection = quiz.QuizSections[newSectionIndex - 1];
-            var newSectionId = newSection.Id;
-            var newSectionTitle = newSection.Title;
-            game.CurrentSectionId = newSectionId;
-            game.CurrentSectionTitle = newSectionTitle;
-            game.CurrentQuizItemIndexInSection = newQuizItemIndexInSection;
-            var newQuizItemId = newSection.QuizItemRefs[newQuizItemIndexInSection - 1].Id;
-            game.CurrentQuizItemId = newQuizItemId;
-
-            var questionsInPreviousSections =
-                quiz.QuizSections.Take(newSectionIndex - 1).Sum(qs => qs.QuestionItemRefs.Count);
-            var questionsInSectionIncludingCurrentQuizItem = quiz.QuizSections[newSectionIndex - 1].QuizItemRefs
-                .Take(newQuizItemIndexInSection).Count(qi => qi.ItemType != QuizItemType.Information);
-            var newQuestionIndexInTotal = questionsInPreviousSections + questionsInSectionIncludingCurrentQuizItem;
-            game.CurrentQuestionIndexInTotal = newQuestionIndexInTotal;
-            game.CurrentQuizItemIndexInTotal = newQuizItemIndexInTotal;
-
-            await gameCollection.UpdateAsync(game);
-
-            //chuck it on the bus
-            await Mediator.Publish(new ItemNavigated(GameId, newSectionId, newSectionTitle, newQuizItemId, newSectionIndex,
-                newQuizItemIndexInSection, newQuizItemIndexInTotal, newQuestionIndexInTotal,
-                game.CurrentSectionQuizItemCount));
-            return newQuizItemId;
-        }
     }
 }

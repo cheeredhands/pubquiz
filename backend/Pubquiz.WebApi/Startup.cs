@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Handlers;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
@@ -79,7 +81,7 @@ namespace Pubquiz.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
 
-            SeedStuff(app, env);
+            SeedStuff(app);
         }
 
         private void AddDefaultWebApiStuff(IServiceCollection services)
@@ -89,19 +91,13 @@ namespace Pubquiz.WebApi
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             services.AddControllers()
-                .AddMvcOptions(options =>
-                {
-                    options.Filters.Add(typeof(DomainExceptionFilter));
-                })
-                .AddJsonOptions(opts =>
-                {
-                    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                })
+                .AddMvcOptions(options => { options.Filters.Add(typeof(DomainExceptionFilter)); })
+                .AddJsonOptions(opts => { opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            
+
             var secretKey = _configuration.GetValue<string>("AppSettings:JwtSecret");
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
-            
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -174,9 +170,10 @@ namespace Pubquiz.WebApi
         private void AddQuizrSpecificStuff(IServiceCollection services)
         {
             services.AddMemoryCache();
-
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            services.AddTransient<IRequestPreProcessor<IRequest>, ValidationPreProcessor<IRequest>>();
             services.AddMediatR(typeof(TeamRegistered));
-          
+
             switch (_configuration.GetValue<string>("AppSettings:Database"))
             {
                 case "Memory":
@@ -187,7 +184,6 @@ namespace Pubquiz.WebApi
                     break;
             }
 
-            services.AddRequests(Assembly.Load("Pubquiz.Logic"));
             services.AddSignalR().AddJsonProtocol(options =>
                 options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
@@ -232,7 +228,7 @@ namespace Pubquiz.WebApi
             services.ConfigureSwaggerGen(options =>
             {
                 var baseDirectory = _hostingEnvironment.ContentRootPath;
-                var commentsFileName = Assembly.GetEntryAssembly().GetName().Name + ".xml";
+                var commentsFileName = Assembly.GetEntryAssembly()?.GetName().Name + ".xml";
                 var commentsFile = Path.Combine(baseDirectory, commentsFileName);
                 if (File.Exists(commentsFile))
                 {
@@ -249,7 +245,7 @@ namespace Pubquiz.WebApi
             });
         }
 
-        private static void SeedStuff(IApplicationBuilder app, IHostEnvironment env)
+        private static void SeedStuff(IApplicationBuilder app)
         {
             var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
             var mediator = app.ApplicationServices.GetService<IMediator>();
@@ -257,6 +253,10 @@ namespace Pubquiz.WebApi
 
             var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
             var seeder = new TestSeeder(unitOfWork, loggerFactory, mediator, quizrSettings);
+            if (unitOfWork == null || mediator == null || quizrSettings == null || loggerFactory == null)
+            {
+                return;
+            }
 
             var quizCollection = unitOfWork.GetCollection<Quiz>();
             var gameCollection = unitOfWork.GetCollection<Game>();

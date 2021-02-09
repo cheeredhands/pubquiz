@@ -20,13 +20,13 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(InteractionResponseAdded message, CancellationToken cancellationToken)
         {
-            _logger.LogDebug($"Start scoring an answer.");
+            _logger.LogDebug("Start scoring an answer");
             // score it
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(message.TeamId);
             if (team == null)
             {
-                _logger.LogInformation($"Scoring: Team is null.");
+                _logger.LogInformation("Scoring: Team is null");
                 // something like:
                 var exception = new DomainException(ResultCode.InvalidTeamId, "Team could not be found while scoring answer.", true);
                 await Mediator.Publish(new ErrorOccurred(exception), cancellationToken);
@@ -36,7 +36,7 @@ namespace Pubquiz.Logic.Handlers
             team.Answers.TryGetValue(message.QuizItemId, out var answer);
             if (answer == null)
             {
-                _logger.LogInformation($"Scoring: Answer is null.");
+                _logger.LogInformation("Scoring: Answer is null");
                 return;
             }
 
@@ -44,18 +44,18 @@ namespace Pubquiz.Logic.Handlers
             var quizItem = await quizItemCollection.GetAsync(message.QuizItemId);
             if (quizItem == null)
             {
-                _logger.LogInformation($"Scoring: QuizItem is null.");
+                _logger.LogInformation("Scoring: QuizItem is null");
                 return;
             }
 
             // score it!
             quizItem.Score(answer);
-            _logger.LogDebug($"scored", quizItem.Interactions);
+            _logger.LogDebug("scored");
             team.UpdateScore();
 
             await teamCollection.UpdateAsync(team);
             
-            _logger.LogDebug($"Done scoring an answer.");
+            _logger.LogDebug("Done scoring an answer");
             
             await Mediator.Publish(new AnswerScored
             {
@@ -71,13 +71,13 @@ namespace Pubquiz.Logic.Handlers
 
         public async Task Handle(InteractionCorrected message, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start scoring an answer.");
+            _logger.LogInformation("Start scoring an answer");
             // score it
             var teamCollection = UnitOfWork.GetCollection<Team>();
             var team = await teamCollection.GetAsync(message.TeamId);
             if (team == null)
             {
-                _logger.LogInformation($"Scoring: Team is null.");
+                _logger.LogInformation("Scoring: Team is null");
                 // something like:
                 var exception = new DomainException(ResultCode.InvalidTeamId, "Team could not be found while scoring answer.", true);
                 await Mediator.Publish(new ErrorOccurred(exception), cancellationToken);
@@ -87,7 +87,7 @@ namespace Pubquiz.Logic.Handlers
             team.Answers.TryGetValue(message.QuizItemId, out var answer);
             if (answer == null)
             {
-                _logger.LogInformation($"Scoring: Answer is null.");
+                _logger.LogInformation("Scoring: Answer is null");
                 return;
             }
 
@@ -95,7 +95,7 @@ namespace Pubquiz.Logic.Handlers
             var quizItem = await quizItemCollection.GetAsync(message.QuizItemId);
             if (quizItem == null)
             {
-                _logger.LogInformation($"Scoring: QuizItem is null.");
+                _logger.LogInformation("Scoring: QuizItem is null");
                 return;
             }
 
@@ -105,7 +105,7 @@ namespace Pubquiz.Logic.Handlers
 
             await teamCollection.UpdateAsync(team);
             
-            _logger.LogInformation($"Done scoring an answer.");
+            _logger.LogInformation("Done scoring an answer");
             
             await Mediator.Publish(new AnswerScored
             {

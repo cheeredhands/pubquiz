@@ -3,11 +3,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Pubquiz.Domain.Models;
+using Pubquiz.Logic.Handlers;
 using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
@@ -28,6 +31,7 @@ namespace Pubquiz.Domain.Tests
         protected List<QuizItem> OtherQuestions;
         protected IMediator Mediator;
         protected ILoggerFactory LoggerFactory;
+        protected QuizrSettings QuizrSettings;
 
         [TestInitialize]
         public void Initialize()
@@ -43,16 +47,25 @@ namespace Pubquiz.Domain.Tests
             var serviceProvider = services
                 .AddLogging(builder => builder.AddConsole())
                 .AddMemoryCache()
+                .AddSingleton(_ => new QuizrSettings
+                {
+                    BaseUrl = "https://localhost:5001",
+                    WebRootPath = "",
+                    ContentPath = "quiz"
+                })
                 .AddSingleton<ICollectionOptions, InMemoryDatabaseOptions>()
                 .AddScoped<IUnitOfWork, NoActionUnitOfWork>()
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>))
+                .AddTransient<IRequestPreProcessor<IRequest>, ValidationPreProcessor<IRequest>>()
                 .AddMediatR(typeof(AnswerScored))
+                .AddScoped(_ => new Mock<IHubContext<GameHub, IGameHub>>().Object)
                 .BuildServiceProvider();
 
-            
-            
+
             LoggerFactory = serviceProvider.GetService<ILoggerFactory>();
             UnitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
             Mediator = serviceProvider.GetRequiredService<IMediator>();
+            QuizrSettings = serviceProvider.GetRequiredService<QuizrSettings>();
 
 
             var quizCollection = UnitOfWork.GetCollection<Quiz>();

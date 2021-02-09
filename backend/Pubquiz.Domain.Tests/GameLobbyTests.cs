@@ -17,10 +17,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var firstTeam = Teams[0];
-            var query = new TeamLobbyViewModelQuery(UnitOfWork) {TeamId = firstTeam.Id};
+            var query = new TeamLobbyViewModelQuery {TeamId = firstTeam.Id};
 
             // act
-            var model = query.Execute().Result;
+            var model = Mediator.Send(query).Result;
 
             // assert
             CollectionAssert.DoesNotContain(model.OtherTeamsInGame, firstTeam.Id);
@@ -30,10 +30,10 @@ namespace Pubquiz.Domain.Tests
         public void TestGame_TeamLobbyWithInvalidTeamId_ThrowsException()
         {
             // arrange
-            var query = new TeamLobbyViewModelQuery(UnitOfWork) {TeamId = Guid.Empty.ToShortGuidString()};
+            var query = new TeamLobbyViewModelQuery {TeamId = Guid.Empty.ToShortGuidString()};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => query.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(query)).Result;
             Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -48,10 +48,10 @@ namespace Pubquiz.Domain.Tests
             game.SetState(GameState.Closed);
             UnitOfWork.GetCollection<Game>().UpdateAsync(game);
             var firstTeam = Teams[0];
-            var query = new TeamLobbyViewModelQuery(UnitOfWork) {TeamId = firstTeam.Id};
+            var query = new TeamLobbyViewModelQuery {TeamId = firstTeam.Id};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => query.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(query)).Result;
             Assert.AreEqual(ResultCode.LobbyUnavailableBecauseOfGameState, exception.ResultCode);
             Assert.AreEqual("The lobby for this game is not open.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -62,10 +62,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Users.First(u => u.UserName == "Quiz master 1").Id;
-            var notification = new SelectGameNotification(UnitOfWork, Mediator) {GameId = Game.Id, ActorId = actorId};
+            var selectGameCommand = new SelectGameCommand {GameId = Game.Id, ActorId = actorId};
 
             // act
-            notification.Execute().Wait();
+            Mediator.Send(selectGameCommand).Wait();
 
             // assert
             var updatedUser = UnitOfWork.GetCollection<User>().GetAsync(actorId).Result;
@@ -78,11 +78,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Users.First(u => u.UserName == "Quiz master 1").Id;
-            var command = new SelectGameNotification(UnitOfWork, Mediator)
-                {GameId = Guid.Empty.ToShortGuidString(), ActorId = actorId};
+            var command = new SelectGameCommand {GameId = Guid.Empty.ToShortGuidString(), ActorId = actorId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
             Assert.AreEqual(ResultCode.InvalidGameId, exception.ResultCode);
             Assert.AreEqual("Invalid GameId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -93,10 +92,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Guid.Empty.ToShortGuidString();
-            var command = new SelectGameNotification(UnitOfWork, Mediator) {GameId = Game.Id, ActorId = actorId};
+            var command = new SelectGameCommand {GameId = Game.Id, ActorId = actorId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
             Assert.AreEqual(ResultCode.InvalidUserId, exception.ResultCode);
             Assert.AreEqual("Invalid ActorId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -107,10 +106,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var actorId = Users.First(u => u.UserName == "Quiz master 2").Id;
-            var command = new SelectGameNotification(UnitOfWork, Mediator) {GameId = Game.Id, ActorId = actorId};
+            var command = new SelectGameCommand {GameId = Game.Id, ActorId = actorId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => command.Execute()).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
             Assert.AreEqual(ResultCode.QuizMasterUnauthorizedForGame, exception.ResultCode);
             Assert.AreEqual($"Actor with id {actorId} is not authorized for game '{Game.Id}'", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);

@@ -16,7 +16,6 @@ using Pubquiz.Logic.Requests.Commands;
 using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
-using Pubquiz.Persistence;
 using Pubquiz.WebApi.Models;
 
 namespace Pubquiz.WebApi.Controllers
@@ -25,13 +24,11 @@ namespace Pubquiz.WebApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
 
-        public AccountController(IUnitOfWork unitOfWork, IMediator mediator, IConfiguration configuration)
+        public AccountController(IMediator mediator, IConfiguration configuration)
         {
-            _unitOfWork = unitOfWork;
             _mediator = mediator;
             _configuration = configuration;
         }
@@ -40,7 +37,7 @@ namespace Pubquiz.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<WhoAmiResponse>> WhoAmI()
         {
-            if (!User.Identity.IsAuthenticated)
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
                 return Ok(new WhoAmiResponse
                 {
@@ -55,8 +52,8 @@ namespace Pubquiz.WebApi.Controllers
             var userId = User.GetId();
 
             var user = userRole == UserRole.Team
-                ? await new TeamQuery(_unitOfWork) {TeamId = userId}.Execute()
-                : await new UserQuery(_unitOfWork) {UserId = userId}.Execute();
+                ? await _mediator.Send(new TeamQuery {TeamId = userId})
+                : await _mediator.Send(new UserQuery {UserId = userId});
 
             if (user == null)
             {
@@ -68,8 +65,8 @@ namespace Pubquiz.WebApi.Controllers
                 });
             }
 
-            var gameCollection = _unitOfWork.GetCollection<Game>();
-            var game = await gameCollection.GetAsync(user.CurrentGameId);
+            var query = new GameQuery {GameId = user.CurrentGameId};
+            var game =await _mediator.Send(query);
 
             if (user is Team team)
             {
@@ -106,12 +103,12 @@ namespace Pubquiz.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<RegisterForGameResponse>> RegisterForGame(RegisterTeamRequest request)
         {
-            var command = new RegisterForGameCommand(_unitOfWork, _mediator)
+            var command = new RegisterForGameCommand
             {
                 Name = request.Name,
                 Code = request.Code
             };
-            var team = await command.Execute();
+            var team = await _mediator.Send(command);
             var jwt = SignInAndGetJwt(team);
 
             return Ok(new RegisterForGameResponse
@@ -131,12 +128,12 @@ namespace Pubquiz.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
-            var command = new LoginCommand(_unitOfWork, _mediator)
+            var command = new LoginCommand
             {
                 UserName = request.UserName,
                 Password = request.Password
             };
-            var user = await command.Execute();
+            var user = await _mediator.Send(command);
             var jwt = SignInAndGetJwt(user);
             return Ok(new LoginResponse
             {
@@ -172,37 +169,37 @@ namespace Pubquiz.WebApi.Controllers
             return tokenHandler.WriteToken(token);
         }
 
-        [HttpPost("testauth")]
-        [Authorize(AuthPolicy.Admin)]
-        public ActionResult<TestAuthResponse> TestAuth()
-        {
-            var teamCollection = _unitOfWork.GetCollection<Team>();
-            var teams = teamCollection.AsQueryable().ToList();
-
-            return Ok(new TestAuthResponse
-            {
-                Code = ResultCode.Ok,
-                Message = $"Test ok. {User.Identity.Name} - {User.GetId()}",
-                Teams = teams
-            });
-        }
+        // [HttpPost("testauth")]
+        // [Authorize(AuthPolicy.Admin)]
+        // public ActionResult<TestAuthResponse> TestAuth()
+        // {
+        //     var teamCollection = _unitOfWork.GetCollection<Team>();
+        //     var teams = teamCollection.AsQueryable().ToList();
+        //
+        //     return Ok(new TestAuthResponse
+        //     {
+        //         Code = ResultCode.Ok,
+        //         Message = $"Test ok. {User.Identity?.Name} - {User.GetId()}",
+        //         Teams = teams
+        //     });
+        // }
 
         [HttpPost("changeteamname")]
         [Authorize(Roles = "Team")]
         public async Task<ActionResult<ChangeTeamNameResponse>> ChangeTeamName(ChangeTeamNameRequest request)
         {
-            var notification = new ChangeTeamNameNotification
+            var command = new ChangeTeamNameCommand
             {
                 TeamId = User.GetId(),
                 NewName = request.NewName
             };
-            await _mediator.Publish(notification);
+            await _mediator.Send(command);
 
             return Ok(new ChangeTeamNameResponse
             {
                 Code = ResultCode.Ok,
                 Message = "Team renamed.",
-                TeamName = notification.NewName
+                TeamName = command.NewName
             });
         }
 
@@ -211,19 +208,19 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<ChangeTeamMembersResponse>> ChangeTeamMembers(
             ChangeTeamMembersRequest request)
         {
-            var notification = new ChangeTeamMembersNotification
+            var command = new ChangeTeamMembersCommand
             {
                 TeamId = User.GetId(),
                 TeamMembers = request.TeamMembers
             };
 
-            await _mediator.Publish(notification);
-            
+            await _mediator.Send(command);
+
             return Ok(new ChangeTeamMembersResponse
             {
                 Code = ResultCode.Ok,
                 Message = "Team members changed.",
-                TeamMembers = notification.TeamMembers
+                TeamMembers = command.TeamMembers
             });
         }
 
@@ -236,13 +233,13 @@ namespace Pubquiz.WebApi.Controllers
                 var actorRole = User.GetUserRole();
                 if (actorRole == UserRole.Team)
                 {
-                    var notification = new LogoutTeamNotification {TeamId = actorId};
+                    var notification = new LogoutTeamCommand {TeamId = actorId};
                     await _mediator.Publish(notification);
                 }
                 else
                 {
-                    var notification = new LogoutUserNotification(_unitOfWork, _mediator) {UserId = actorId};
-                    await notification.Execute();
+                    var command = new LogoutUserCommand {UserId = actorId};
+                    await _mediator.Send(command);
                 }
             }
 

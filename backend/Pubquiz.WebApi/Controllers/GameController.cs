@@ -11,7 +11,6 @@ using Pubquiz.Logic.Requests.Commands;
 using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
-using Pubquiz.Persistence;
 using Pubquiz.WebApi.Models;
 
 namespace Pubquiz.WebApi.Controllers
@@ -20,12 +19,10 @@ namespace Pubquiz.WebApi.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMediator _mediator;
 
-        public GameController(IUnitOfWork unitOfWork, IMediator bus)
+        public GameController(IMediator bus)
         {
-            _unitOfWork = unitOfWork;
             _mediator = bus;
         }
 
@@ -36,8 +33,8 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<IActionResult> GetTeamLobby()
         {
             var teamId = User.GetId();
-            var query = new TeamLobbyViewModelQuery(_unitOfWork) {TeamId = teamId};
-            var result = await query.Execute();
+            var query = new TeamLobbyViewModelQuery {TeamId = teamId};
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
@@ -45,8 +42,8 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.Team)]
         public async Task<IActionResult> GetTeamInGame()
         {
-            var query = new TeamInGameViewModelQuery(_unitOfWork) {ActorId = User.GetId()};
-            var result = await query.Execute();
+            var query = new TeamInGameViewModelQuery {ActorId = User.GetId()};
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
@@ -54,12 +51,8 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.Team)]
         public async Task<IActionResult> GetTeamQuizItem(string gameId, string quizItemId)
         {
-            var query = new QuizItemViewModelQuery(_unitOfWork)
-            {
-                ActorId = User.GetId(), GameId = gameId, QuizItemId = quizItemId
-            };
-
-            var result = await query.Execute();
+            var query = new QuizItemViewModelQuery {ActorId = User.GetId(), GameId = gameId, QuizItemId = quizItemId};
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
@@ -71,8 +64,8 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<QmLobbyViewModel>> GetQuizMasterLobby()
         {
-            var query = new QmLobbyViewModelQuery(_unitOfWork) {UserId = User.GetId()};
-            var result = await query.Execute();
+            var query = new QmLobbyViewModelQuery {UserId = User.GetId()};
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
@@ -80,8 +73,8 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<QmInGameViewModel>> GetQuizMasterInGame()
         {
-            var query = new QmInGameViewModelQuery(_unitOfWork) {ActorId = User.GetId()};
-            var result = await query.Execute();
+            var query = new QmInGameViewModelQuery {ActorId = User.GetId()};
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
@@ -89,8 +82,8 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<List<GameRef>>> GetGames()
         {
-            var query = new GetGamesQuery(_unitOfWork) {UserId = User.GetId()};
-            var result = await query.Execute();
+            var query = new GetGamesQuery {UserId = User.GetId()};
+            var result = await _mediator.Send(query);
             return Ok(result.Select(g => g.ToGameRef()));
         }
 
@@ -98,7 +91,7 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<ApiResponse>> SetState(string gameId, GameState gameState)
         {
-            var notification = new SetGameStateNotification
+            var notification = new SetGameStateCommand
             {
                 GameId = gameId, ActorId = User.GetId(), NewGameState = gameState
             };
@@ -123,7 +116,7 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<ApiResponse>> SetReview(string gameId, string sectionId)
         {
-            var notification = new SetReviewNotification
+            var notification = new SetReviewCommand
             {
                 ActorId = User.GetId(),
                 GameId = gameId,
@@ -142,13 +135,13 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<NavigateItemResponse>> NavigateToItemByOffset(string gameId, int offset)
         {
-            var command = new NavigateToItemByOffsetCommand(_unitOfWork, _mediator)
+            var command = new NavigateToItemByOffsetCommand
             {
                 ActorId = User.GetId(),
                 GameId = gameId,
                 Offset = offset
             };
-            var result = await command.Execute();
+            var result = await _mediator.Send(command);
 
             return Ok(new NavigateItemResponse
             {
@@ -162,13 +155,8 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<QuizItem>> GetQuizItem(string gameId, string quizItemId)
         {
-            var query = new QuizItemQuery(_unitOfWork);
-            query.ActorId = User.GetId();
-            query.GameId = gameId;
-            query.QuizItemId = quizItemId;
-
-            var result = await query.Execute();
-
+            var query = new QuizItemQuery {ActorId = User.GetId(), GameId = gameId, QuizItemId = quizItemId};
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
@@ -177,13 +165,13 @@ namespace Pubquiz.WebApi.Controllers
         public async Task<ActionResult<SelectGameResponse>> SelectGame(string gameId)
         {
             var userId = User.GetId();
-            var notification = new SelectGameNotification(_unitOfWork, _mediator) {GameId = gameId, ActorId = userId};
-            await notification.Execute();
+            var command = new SelectGameCommand {GameId = gameId, ActorId = userId};
+            await _mediator.Send(command);
             return Ok(new SelectGameResponse
             {
                 Code = ResultCode.Ok,
                 Message = "Game selected",
-                GameId = notification.GameId
+                GameId = command.GameId
             });
         }
 
@@ -195,7 +183,7 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<CreateGameResponse>> CreateGame(CreateGameRequest request)
         {
-            var command = new CreateGameCommand(_unitOfWork, _mediator)
+            var command = new CreateGameCommand
             {
                 ActorId = User.GetId(),
                 GameTitle = request.GameTitle,
@@ -203,7 +191,7 @@ namespace Pubquiz.WebApi.Controllers
                 QuizId = request.QuizId
             };
 
-            var result = await command.Execute();
+            var result = await _mediator.Send(command);
             return Ok(new CreateGameResponse
             {
                 Code = ResultCode.Ok,

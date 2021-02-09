@@ -5,6 +5,7 @@ namespace Pubquiz.Domain
         /* Error codes */
         InvalidCode,
         TeamNameIsTaken,
+        InvalidEntityId,
         InvalidTeamId,
         InvalidSectionId,
         InvalidQuizItemId,
