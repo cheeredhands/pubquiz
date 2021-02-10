@@ -29,19 +29,8 @@ namespace Pubquiz.Logic.Handlers
             _logger = loggerFactory.CreateLogger<TeamChangeHandlers>();
         }
 
-        private async Task CheckTeamId(string teamId)
-        {
-            var entityCollection = UnitOfWork.GetCollection<Team>();
-            var entity = await entityCollection.GetAsync(teamId);
-            if (entity == null)
-            {
-                throw new DomainException(ResultCode.InvalidTeamId, $"Invalid TeamId.", true);
-            }
-        }
-
         public async Task<Unit> Handle(ChangeTeamMembersCommand notification, CancellationToken cancellationToken)
         {
-            await CheckTeamId(notification.TeamId);
             if (notification.TeamMembers.Length > ValidationValues.MaxTeamMembersLength)
             {
                 throw new DomainException(ResultCode.ValidationError,
@@ -206,7 +195,7 @@ namespace Pubquiz.Logic.Handlers
 
             if (quizItem.Interactions.All(i => i.Id != request.InteractionId))
             {
-                throw new DomainException(ResultCode.InvalidInteractionId, "Invalid InteractionId.", true);
+                throw new DomainException(ResultCode.InvalidEntityId, "Invalid InteractionId.", true);
             }
 
 

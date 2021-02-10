@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Messages;
 
-namespace Pubquiz.Logic.Hubs
+namespace Pubquiz.WebApi.Hubs
 {
     public interface IGameHub : IClientProxy
     {

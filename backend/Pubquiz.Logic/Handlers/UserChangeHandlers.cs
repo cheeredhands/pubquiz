@@ -28,7 +28,7 @@ namespace Pubquiz.Logic.Handlers
             var user = await userCollection.GetAsync(request.UserId);
             if (user == null)
             {
-                throw new DomainException(ResultCode.InvalidUserId, "Invalid User id", false);
+                throw new DomainException(ResultCode.InvalidEntityId, "Invalid User id", false);
             }
 
             await Mediator.Publish(new UserLoggedOut(user.Id, user.UserName, user.CurrentGameId), cancellationToken);

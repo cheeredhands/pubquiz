@@ -233,8 +233,8 @@ namespace Pubquiz.WebApi.Controllers
                 var actorRole = User.GetUserRole();
                 if (actorRole == UserRole.Team)
                 {
-                    var notification = new LogoutTeamCommand {TeamId = actorId};
-                    await _mediator.Publish(notification);
+                    var command = new LogoutTeamCommand {TeamId = actorId};
+                    await _mediator.Send(command);
                 }
                 else
                 {

@@ -8,11 +8,6 @@ namespace Pubquiz.Persistence
     public interface IUnitOfWork
     {
         /// <summary>
-        /// ActorId 
-        /// </summary>
-        string ActorId { get; set; }
-
-        /// <summary>
         ///     Get the collection
         /// </summary>
         /// <typeparam name="T"></typeparam>

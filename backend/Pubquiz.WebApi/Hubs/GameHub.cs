@@ -9,7 +9,7 @@ using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 
-namespace Pubquiz.Logic.Hubs
+namespace Pubquiz.WebApi.Hubs
 {
     /// <summary>
     /// The GameHub is responsible for communicating relevant changes in a game.
@@ -56,7 +56,7 @@ namespace Pubquiz.Logic.Hubs
             switch (userRole)
             {
                 case UserRole.Team:
-                    var teamGroupId = Helpers.GetTeamsGroupId(currentGameId);
+                    var teamGroupId = Logic.Tools.Helpers.GetTeamsGroupId(currentGameId);
                     await Groups.AddToGroupAsync(Context.ConnectionId, teamGroupId);
                     var teamCollection = _unitOfWork.GetCollection<Team>();
                     var team = await teamCollection.GetAsync(userId);
@@ -65,10 +65,10 @@ namespace Pubquiz.Logic.Hubs
                     await _mediator.Publish(new TeamConnectionChanged(team.Id, team.Name, team.CurrentGameId, team.ConnectionCount));
                     break;
                 case UserRole.Admin:
-                    await Groups.AddToGroupAsync(Context.ConnectionId, Helpers.GetAdminGroupId());
+                    await Groups.AddToGroupAsync(Context.ConnectionId, Logic.Tools.Helpers.GetAdminGroupId());
                     break;
                 case UserRole.QuizMaster:
-                    var quizmasterGroupId = Helpers.GetQuizMasterGroupId(currentGameId);
+                    var quizmasterGroupId = Logic.Tools.Helpers.GetQuizMasterGroupId(currentGameId);
                     await Groups.AddToGroupAsync(Context.ConnectionId, quizmasterGroupId);
                     var userCollection = _unitOfWork.GetCollection<User>();
                     user.ConnectionCount++;
@@ -99,7 +99,7 @@ namespace Pubquiz.Logic.Hubs
             switch (userRole)
             {
                 case UserRole.Team:
-                    var teamGroupId = Helpers.GetTeamsGroupId(currentGameId);
+                    var teamGroupId = Logic.Tools.Helpers.GetTeamsGroupId(currentGameId);
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, teamGroupId);
                     var teamCollection = _unitOfWork.GetCollection<Team>();
                     var team = await teamCollection.GetAsync(userId);
@@ -108,10 +108,10 @@ namespace Pubquiz.Logic.Hubs
                     await _mediator.Publish(new TeamConnectionChanged(team.Id, team.Name, team.CurrentGameId, team.ConnectionCount));
                     break;
                 case UserRole.Admin:
-                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, Helpers.GetAdminGroupId());
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, Logic.Tools.Helpers.GetAdminGroupId());
                     break;
                 case UserRole.QuizMaster:
-                    var quizmasterGroupId = Helpers.GetQuizMasterGroupId(currentGameId);
+                    var quizmasterGroupId = Logic.Tools.Helpers.GetQuizMasterGroupId(currentGameId);
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, quizmasterGroupId);
                     var userCollection = _unitOfWork.GetCollection<User>();
                     user.ConnectionCount--;

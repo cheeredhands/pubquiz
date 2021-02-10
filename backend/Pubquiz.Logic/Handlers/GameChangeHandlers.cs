@@ -102,7 +102,7 @@ namespace Pubquiz.Logic.Handlers
             var section = quiz.QuizSections.FirstOrDefault(s => s.Id == request.SectionId);
             if (section == null)
             {
-                throw new DomainException(ResultCode.InvalidSectionId,
+                throw new DomainException(ResultCode.InvalidEntityId,
                     $"Section with id {request.SectionId} doesn't exist in game with id {request.GameId}", true);
             }
 

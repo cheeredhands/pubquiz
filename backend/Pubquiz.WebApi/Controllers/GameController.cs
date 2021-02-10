@@ -91,17 +91,17 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<ApiResponse>> SetState(string gameId, GameState gameState)
         {
-            var notification = new SetGameStateCommand
+            var command = new SetGameStateCommand
             {
                 GameId = gameId, ActorId = User.GetId(), NewGameState = gameState
             };
 
-            await _mediator.Publish(notification);
+            await _mediator.Send(command);
 
             return Ok(new ApiResponse
             {
                 Code = ResultCode.Ok,
-                Message = $"Game state changed to {notification.NewGameState}."
+                Message = $"Game state changed to {command.NewGameState}."
             });
         }
 
@@ -116,18 +116,18 @@ namespace Pubquiz.WebApi.Controllers
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<ApiResponse>> SetReview(string gameId, string sectionId)
         {
-            var notification = new SetReviewCommand
+            var command = new SetReviewCommand
             {
                 ActorId = User.GetId(),
                 GameId = gameId,
                 SectionId = sectionId
             };
-            await _mediator.Publish(notification);
+            await _mediator.Send(command);
 
             return Ok(new ApiResponse
             {
                 Code = ResultCode.Ok,
-                Message = $"Game set to review {notification.SectionId}."
+                Message = $"Game set to review {command.SectionId}."
             });
         }
 

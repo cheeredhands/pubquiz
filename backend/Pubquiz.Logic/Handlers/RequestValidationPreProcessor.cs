@@ -7,16 +7,17 @@ using Pubquiz.Persistence;
 
 namespace Pubquiz.Logic.Handlers
 {
-    public class ValidationPreProcessor<TRequest> : IRequestPreProcessor<IRequest> // ValidationPreProcessor<TRequest> or else it don't get registered in DI d'oh!
+    public class RequestValidationPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
+        where TRequest : IBaseRequest
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public ValidationPreProcessor(IUnitOfWork unitOfWork)
+        public RequestValidationPreProcessor(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public Task Process(IRequest request, CancellationToken cancellationToken)
+        public Task Process(TRequest request, CancellationToken cancellationToken)
         {
             var entityValidator = new EntityValidator(_unitOfWork, request);
             entityValidator.CheckValidationAttributes();

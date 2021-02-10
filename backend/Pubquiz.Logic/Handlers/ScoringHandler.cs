@@ -26,10 +26,7 @@ namespace Pubquiz.Logic.Handlers
             var team = await teamCollection.GetAsync(message.TeamId);
             if (team == null)
             {
-                _logger.LogInformation("Scoring: Team is null");
-                // something like:
-                var exception = new DomainException(ResultCode.InvalidTeamId, "Team could not be found while scoring answer.", true);
-                await Mediator.Publish(new ErrorOccurred(exception), cancellationToken);
+                _logger.LogError((int)ResultCode.InvalidEntityId, "Team could not be found while scoring answer");
                 return;
             }
             
@@ -77,10 +74,7 @@ namespace Pubquiz.Logic.Handlers
             var team = await teamCollection.GetAsync(message.TeamId);
             if (team == null)
             {
-                _logger.LogInformation("Scoring: Team is null");
-                // something like:
-                var exception = new DomainException(ResultCode.InvalidTeamId, "Team could not be found while scoring answer.", true);
-                await Mediator.Publish(new ErrorOccurred(exception), cancellationToken);
+                _logger.LogError((int)ResultCode.InvalidEntityId, "Team could not be found while scoring answer");
                 return;
             }
             

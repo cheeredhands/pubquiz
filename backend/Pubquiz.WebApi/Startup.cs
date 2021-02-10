@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,13 +22,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Handlers;
-using Pubquiz.Logic.Hubs;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
 using Pubquiz.Persistence.Extensions;
 using Pubquiz.WebApi.Helpers;
+using Pubquiz.WebApi.Hubs;
 using Pubquiz.WebApi.Models;
+using SimpleInjector;
 
 namespace Pubquiz.WebApi
 {
@@ -35,11 +37,16 @@ namespace Pubquiz.WebApi
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IConfiguration _configuration;
+        private readonly Container _container = new SimpleInjector.Container();
 
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
             _configuration = configuration;
+
+
+            // Set to false. This will be the default in v5.x and going forward.
+            _container.Options.ResolveUnregisteredConcreteTypes = false;
         }
 
 
@@ -49,11 +56,69 @@ namespace Pubquiz.WebApi
             AddDefaultWebApiStuff(services);
             AddQuizrSpecificStuff(services);
             AddSwagger(services);
+            AddDI(services);
+        }
+
+        private void AddDI(IServiceCollection services)
+        {
+            // Sets up the basic configuration that for integrating Simple Injector with
+            // ASP.NET Core by setting the DefaultScopedLifestyle, and setting up auto
+            // cross wiring.
+            services.AddSimpleInjector(_container, options =>
+            {
+                // AddAspNetCore() wraps web requests in a Simple Injector scope and
+                // allows request-scoped framework services to be resolved.
+                options.AddAspNetCore()
+
+                    // Ensure activation of a specific framework type to be created by
+                    // Simple Injector instead of the built-in configuration system.
+                    // All calls are optional. You can enable what you need. For instance,
+                    // ViewComponents, PageModels, and TagHelpers are not needed when you
+                    // build a Web API.
+                    .AddControllerActivation();
+                //.AddViewComponentActivation()
+                //.AddPageModelActivation()
+                //.AddTagHelperActivation();
+
+                // Optionally, allow application components to depend on the non-generic
+                // ILogger (Microsoft.Extensions.Logging) or IStringLocalizer
+                // (Microsoft.Extensions.Localization) abstractions.
+                options.AddLogging();
+                //options.AddLocalization();
+            });
+
+            InitializeContainer(services);
+        }
+
+        private void InitializeContainer(IServiceCollection services)
+        {
+            // Add application services. For instance:
+            AddMediatr(_container, typeof(Startup).Assembly, typeof(TeamRegistered).Assembly);
+            _container.Collection.Register(typeof(IRequestPreProcessor<>),
+                new[]
+                {
+                    typeof(RequestValidationPreProcessor<>)
+                });
+
+            // Find all Hub implementations and register them as scoped.
+            var types = _container.GetTypesToRegister<Hub>(typeof(GameHub).Assembly);
+            foreach (Type type in types) _container.Register(type, type, Lifestyle.Scoped);
+
+            // NOTE: SimpleInjectorHubActivator<T> must be registered as Scoped
+            services.AddScoped(typeof(IHubActivator<>), typeof(SimpleInjectorHubActivator<>));
+
+            var quizrSettings = new QuizrSettings();
+            _configuration.Bind("QuizrSettings", quizrSettings);
+            quizrSettings.WebRootPath = _hostingEnvironment.WebRootPath;
+            _container.RegisterInstance(quizrSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // UseSimpleInjector() finalizes the integration process.
+            app.UseSimpleInjector(_container);
+
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
@@ -82,6 +147,49 @@ namespace Pubquiz.WebApi
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
 
             SeedStuff(app);
+        }
+
+        private void AddMediatr(Container container, params Assembly[] assemblies)
+        {
+            var allAssemblies = GetAssemblies(assemblies);
+
+            container.RegisterSingleton<IMediator, Mediator>();
+            container.Register(typeof(IRequestHandler<,>), assemblies);
+
+            RegisterHandlers(container, typeof(INotificationHandler<>), allAssemblies);
+            //RegisterHandlers(container, typeof(IRequestExceptionAction<,>), allAssemblies);
+            //RegisterHandlers(container, typeof(IRequestExceptionHandler<,,>), allAssemblies);
+
+            //Pipeline
+            container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
+            {
+                //typeof(RequestExceptionProcessorBehavior<,>),
+                //typeof(RequestExceptionActionProcessorBehavior<,>),
+                typeof(RequestPreProcessorBehavior<,>),
+                //typeof(RequestPostProcessorBehavior<,>)
+            });
+
+            container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
+        }
+
+        private static void RegisterHandlers(Container container, Type collectionType, Assembly[] assemblies)
+        {
+            // we have to do this because by default, generic type definitions (such as the Constrained Notification Handler) won't be registered
+            var handlerTypes = container.GetTypesToRegister(collectionType, assemblies, new TypesToRegisterOptions
+            {
+                IncludeGenericTypeDefinitions = true,
+                IncludeComposites = false,
+            });
+
+            container.Collection.Register(collectionType, handlerTypes);
+        }
+
+        private static Assembly[] GetAssemblies(IEnumerable<Assembly> assemblies)
+        {
+            var allAssemblies = new List<Assembly> {typeof(IMediator).GetTypeInfo().Assembly};
+            allAssemblies.AddRange(assemblies);
+
+            return allAssemblies.ToArray();
         }
 
         private void AddDefaultWebApiStuff(IServiceCollection services)
@@ -170,9 +278,6 @@ namespace Pubquiz.WebApi
         private void AddQuizrSpecificStuff(IServiceCollection services)
         {
             services.AddMemoryCache();
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
-            services.AddTransient<IRequestPreProcessor<IRequest>, ValidationPreProcessor<IRequest>>();
-            services.AddMediatR(typeof(TeamRegistered));
 
             switch (_configuration.GetValue<string>("AppSettings:Database"))
             {
@@ -186,11 +291,6 @@ namespace Pubquiz.WebApi
 
             services.AddSignalR().AddJsonProtocol(options =>
                 options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-
-            var quizrSettings = new QuizrSettings();
-            _configuration.Bind("QuizrSettings", quizrSettings);
-            quizrSettings.WebRootPath = _hostingEnvironment.WebRootPath;
-            services.AddSingleton(quizrSettings);
         }
 
         private void AddSwagger(IServiceCollection services)

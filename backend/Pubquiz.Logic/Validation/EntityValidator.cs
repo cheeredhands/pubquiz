@@ -11,10 +11,10 @@ namespace Pubquiz.Logic.Validation
     public class EntityValidator
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRequest _request;
+        private readonly IBaseRequest _request;
         private readonly Type _requestType;
 
-        public EntityValidator(IUnitOfWork unitOfWork, IRequest request)
+        public EntityValidator(IUnitOfWork unitOfWork, IBaseRequest request)
         {
             _unitOfWork = unitOfWork;
             _request = request;
@@ -31,8 +31,7 @@ namespace Pubquiz.Logic.Validation
                 var genericCheckEntityMethod = m!.MakeGenericMethod(attribute.EntityType);
                 try
                 {
-                    genericCheckEntityMethod.Invoke(this,
-                        new object[] {attribute.IdPropertyName, ResultCode.InvalidEntityId});
+                    genericCheckEntityMethod.Invoke(this, new object[] {attribute.IdPropertyName});
                 }
                 catch (TargetInvocationException e)
                 {
@@ -40,13 +39,13 @@ namespace Pubquiz.Logic.Validation
                     {
                         throw domainException;
                     }
+
                     throw;
                 }
-                
             }
         }
 
-        private void CheckEntity<TEntity>(string entityIdPropertyName, ResultCode resultCode)
+        private void CheckEntity<TEntity>(string entityIdPropertyName)
             where TEntity : Model, new()
         {
             // get the property or field
@@ -70,7 +69,7 @@ namespace Pubquiz.Logic.Validation
             var entity = entityCollection.GetAsync(entityId).Result;
             if (entity == null)
             {
-                throw new DomainException(resultCode, $"Invalid {entityIdPropertyName}.", true);
+                throw new DomainException(ResultCode.InvalidEntityId, $"Invalid {entityIdPropertyName}.", true);
             }
         }
     }

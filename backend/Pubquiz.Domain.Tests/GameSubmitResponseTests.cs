@@ -24,7 +24,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
-            Assert.AreEqual(ResultCode.InvalidTeamId, exception.ResultCode);
+            Assert.AreEqual(ResultCode.InvalidEntityId, exception.ResultCode);
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -44,7 +44,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
-            Assert.AreEqual(ResultCode.InvalidQuizItemId, exception.ResultCode);
+            Assert.AreEqual(ResultCode.InvalidEntityId, exception.ResultCode);
             Assert.AreEqual("Invalid QuizItemId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
@@ -105,7 +105,7 @@ namespace Pubquiz.Domain.Tests
 
             // act & assert
             var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
-            Assert.AreEqual(ResultCode.InvalidInteractionId, exception.ResultCode);
+            Assert.AreEqual(ResultCode.InvalidEntityId, exception.ResultCode);
             Assert.AreEqual("Invalid InteractionId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }

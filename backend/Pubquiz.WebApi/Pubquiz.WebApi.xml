@@ -20,5 +20,99 @@
             <param name="formFile"></param>
             <returns></returns>
         </member>
+        <!-- Badly formed XML comment ignored for member "T:Pubquiz.WebApi.Hubs.GameHub" -->
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.TeamRegistered(Pubquiz.Logic.Messages.TeamRegistered)">
+            <summary>
+            Called when a team registered for a game. Notifies other teams.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.QmTeamRegistered(Pubquiz.Logic.Messages.QmTeamRegistered)">
+            <summary>
+            Called when a team registered for a game. Notifies the quiz masters within the current game.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.TeamConnectionChanged(Pubquiz.Logic.Messages.TeamConnectionChanged)">
+            <summary>
+            Called when a team connects with signalr.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.TeamLoggedOut(Pubquiz.Logic.Messages.TeamLoggedOut)">
+            <summary>
+            Called when a team logs out (leaves the game). Notifies other teams and the qui master
+            within the current game.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.UserLoggedOut(Pubquiz.Logic.Messages.UserLoggedOut)">
+            <summary>
+            Called when a user logs out (leaves the game). Notifies other teams and the quiz master
+            within the current game.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.TeamNameUpdated(Pubquiz.Logic.Messages.TeamNameUpdated)">
+            <summary>
+            Called when a team updates its name.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.TeamDeleted(Pubquiz.Logic.Messages.TeamDeleted)">
+            <summary>
+            Called when a team is deleted.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.TeamMembersChanged(Pubquiz.Logic.Messages.TeamMembersChanged)">
+            <summary>
+            Called when a team changes its team members.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.GameStateChanged(Pubquiz.Logic.Messages.GameStateChanged)">
+            <summary>
+            Called when the quiz master changes the state of the game.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.ItemNavigated(Pubquiz.Logic.Messages.ItemNavigated)">
+            <summary>
+            Called when the quiz master navigates to another quiz item.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.InteractionResponseAdded(Pubquiz.Logic.Messages.InteractionResponseAdded)">
+            <summary>
+            Called when a team answers (part of) a quiz item.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.AnswerScored(Pubquiz.Logic.Messages.AnswerScored)">
+            <summary>
+            Called when the system has scored (part of) an answer.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.GameSelected(Pubquiz.Logic.Messages.GameSelected)">
+            <summary>
+            Called when the quiz master has selected a game to be the current game.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

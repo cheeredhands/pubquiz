@@ -8,7 +8,7 @@ namespace Pubquiz.Persistence
     /// </summary>
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
-        public string ActorId { get; set; }
+        protected string ActorId { get; set; }
         protected readonly ILoggerFactory LoggerFactory;
         protected readonly bool LogTime;
         protected readonly IMemoryCache MemoryCache;

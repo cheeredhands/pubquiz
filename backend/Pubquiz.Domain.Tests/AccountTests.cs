@@ -140,10 +140,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Guid.Empty.ToShortGuidString();
-            var notification = new ChangeTeamMembersCommand {TeamMembers = "a,b,c", TeamId = teamId};
+            var command = new ChangeTeamMembersCommand {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(notification)).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.AreEqual(ResultCode.InvalidEntityId, exception.ResultCode);
             Assert.IsTrue(exception.IsBadRequest);
@@ -155,10 +155,10 @@ namespace Pubquiz.Domain.Tests
         {
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
-            var notification = new ChangeTeamMembersCommand {TeamMembers = "a,b,c", TeamId = teamId};
+            var command = new ChangeTeamMembersCommand {TeamMembers = "a,b,c", TeamId = teamId};
 
             // act
-            Mediator.Send(notification).Wait();
+            Mediator.Send(command).Wait();
 
             var team = UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result;
             Assert.AreEqual("a,b,c", team.MemberNames);
@@ -171,10 +171,10 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var teamId = Guid.Empty.ToShortGuidString();
             var user = Users.First(u => u.UserName == "Quiz master 1");
-            var notification = new DeleteTeamCommand {ActorId = user.Id, TeamId = teamId};
+            var command = new DeleteTeamCommand {ActorId = user.Id, TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(notification)).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
             Assert.AreEqual(ResultCode.InvalidEntityId, exception.ResultCode);
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -187,10 +187,10 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
             var actorId = Guid.Empty.ToShortGuidString();
-            var notification = new DeleteTeamCommand {ActorId = actorId, TeamId = teamId};
+            var command = new DeleteTeamCommand {ActorId = actorId, TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(notification)).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
             Assert.AreEqual(ResultCode.InvalidEntityId, exception.ResultCode);
             Assert.AreEqual("Invalid ActorId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -203,10 +203,10 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
             var user = Users.First(u => u.UserName == "Quiz master 2");
-            var notification = new DeleteTeamCommand {ActorId = user.Id, TeamId = teamId};
+            var command = new DeleteTeamCommand {ActorId = user.Id, TeamId = teamId};
 
             // act & assert
-            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(notification)).Result;
+            var exception = Assert.ThrowsExceptionAsync<DomainException>(() => Mediator.Send(command)).Result;
             Assert.AreEqual(ResultCode.QuizMasterUnauthorizedForGame, exception.ResultCode);
             Assert.AreEqual($"Actor with id {user.Id} is not authorized for game '{Game.Id}'", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
@@ -219,10 +219,10 @@ namespace Pubquiz.Domain.Tests
             // arrange
             var teamId = Game.TeamIds[0]; // Team 1
             var user = Users.First(u => u.UserName == "Quiz master 1");
-            var notification = new DeleteTeamCommand {ActorId = user.Id, TeamId = teamId};
+            var command = new DeleteTeamCommand {ActorId = user.Id, TeamId = teamId};
 
             // act
-            Mediator.Send(notification).Wait();
+            Mediator.Send(command).Wait();
 
             // assert
             Assert.IsNull(UnitOfWork.GetCollection<Team>().GetAsync(teamId).Result);
