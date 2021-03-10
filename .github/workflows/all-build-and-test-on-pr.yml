@@ -61,12 +61,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       working-directory: backend
-      run: dotnet test --no-restore --verbosity normal
-    - name: Download team-frontend artifact
-      uses: actions/download-artifact@master
-      with:
-        name: dist-folder 
-        path: ${{env.DOTNET_ROOT}}/myapp/wwwroot
+      run: dotnet test --no-restore --verbosity normal   
     - name: Notify slack success
       if: success()
       env:
