@@ -29,7 +29,7 @@ namespace Pubquiz.WebApi.Controllers
         {
             var command = new DeleteTeamCommand {ActorId = User.GetId(), TeamId = teamId};
 
-            await _mediator.Publish(command);
+            await _mediator.Send(command);
 
             return Ok(new ApiResponse
             {
