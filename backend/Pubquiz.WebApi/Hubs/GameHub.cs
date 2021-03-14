@@ -15,13 +15,11 @@ namespace Pubquiz.WebApi.Hubs
     /// The GameHub is responsible for communicating relevant changes in a game.
     /// To be able to manage the connection properly without the risk of sending messages
     /// to the wrong clients, we create groups.
-    /// When a quiz master registers through <see cref="QuizMasterRegistered"/> two groups
-    /// are created.
     /// - a group for the quiz master
     /// - a group for the teams
     /// To isolate group names within a game, the id of the game is used as postfix. So
-    /// there will be a group called quizmaster-<gameId> and a group for the teams
-    /// called teams-<gameId>.
+    /// there will be a group called quizmaster-[gameId] and a group for the teams
+    /// called teams-[gameId].
     /// Whenever a connection is lost, group membership MUST be rebuild.
     /// </summary>
     [Authorize]

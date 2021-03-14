@@ -20,7 +20,19 @@
             <param name="formFile"></param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:Pubquiz.WebApi.Hubs.GameHub" -->
+        <member name="T:Pubquiz.WebApi.Hubs.GameHub">
+            <summary>
+            The GameHub is responsible for communicating relevant changes in a game.
+            To be able to manage the connection properly without the risk of sending messages
+            to the wrong clients, we create groups.
+            - a group for the quiz master
+            - a group for the teams
+            To isolate group names within a game, the id of the game is used as postfix. So
+            there will be a group called quizmaster-[gameId] and a group for the teams
+            called teams-[gameId].
+            Whenever a connection is lost, group membership MUST be rebuild.
+            </summary>
+        </member>
         <member name="M:Pubquiz.WebApi.Hubs.IGameHub.TeamRegistered(Pubquiz.Logic.Messages.TeamRegistered)">
             <summary>
             Called when a team registered for a game. Notifies other teams.
