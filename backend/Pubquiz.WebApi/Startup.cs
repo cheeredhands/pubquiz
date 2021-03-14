@@ -29,6 +29,7 @@ using Pubquiz.Persistence.Extensions;
 using Pubquiz.WebApi.Helpers;
 using Pubquiz.WebApi.Hubs;
 using Pubquiz.WebApi.Models;
+using Serilog;
 using SimpleInjector;
 
 namespace Pubquiz.WebApi
@@ -121,6 +122,7 @@ namespace Pubquiz.WebApi
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseCors(builder =>
             {
