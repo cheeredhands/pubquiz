@@ -1,4 +1,4 @@
-# Pubquiz system [![volkswagen status](https://auchenberg.github.io/volkswagen/volkswargen_ci.svg?v=1)](https://github.com/auchenberg/volkswagen)
+# Pubquiz system [![volkswagen status](https://auchenberg.github.io/volkswagen/volkswargen_ci.svg?v=1)](https://github.com/auchenberg/volkswagen) [![CodeFactor](https://www.codefactor.io/repository/github/cheeredhands/pubquiz/badge)](https://www.codefactor.io/repository/github/cheeredhands/pubquiz)
 
 ![all - build, test and deploy](https://github.com/thtm88/pubquiz/workflows/all%20-%20build,%20test%20and%20deploy/badge.svg)
 
