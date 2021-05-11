@@ -76,7 +76,7 @@ namespace Pubquiz.Logic.Handlers
             {
                 ActorId = request.ActorId, GameId = request.GameId, NewGameState = GameState.Reviewing
             };
-            await Mediator.Publish(notification, cancellationToken);
+            await Mediator.Send(notification, cancellationToken);
             return Unit.Value;
         }
 
