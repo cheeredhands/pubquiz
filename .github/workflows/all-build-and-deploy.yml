@@ -43,8 +43,7 @@ jobs:
       - name: npm run test
         working-directory: team-frontend
         run: npm run test --if-present
-      #     # move the contents of the dist folder to a subfolder called
-      #     # wwwroot. 
+      #     move the contents of the dist folder to a subfolder called wwwroot.
       #     mkdir pub
       #     mv dist/* pub
       #     mv pub wwwroot

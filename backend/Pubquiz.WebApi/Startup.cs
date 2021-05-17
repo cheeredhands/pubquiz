@@ -217,8 +217,7 @@ namespace Pubquiz.WebApi
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
-
-
+                    
                     // We have to hook the OnMessageReceived event in order to
                     // allow the JWT authentication handler to read the access
                     // token from the query string when a WebSocket or 
