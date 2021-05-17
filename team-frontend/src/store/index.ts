@@ -44,7 +44,7 @@ const storeOpts: StoreOptions<RootState> = {
     quizRefs: [],
     gameRefs: [],
     qmTeams: [],
-    debounceMs: parseInt(process.env.VUE_APP_DEBOUNCE_MS || '1500')
+    debounceMs: parseInt(process.env.VUE_APP_DEBOUNCE_MS || '1500', 10)
   },
   getters: {
     user: state => state.user || {},
