@@ -18,7 +18,6 @@ namespace Pubquiz.Domain.Models
 
         public QuizItemRef()
         {
-            
         }
     }
 }

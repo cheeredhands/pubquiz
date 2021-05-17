@@ -46,8 +46,7 @@ namespace Pubquiz.Persistence.Decorators
             document.LastModified = dateNow;
             return await base.AddAsync(document);
         }
-
-
+        
         /// <inheritdoc />
         public override async Task<bool> UpdateAsync(T document)
         {

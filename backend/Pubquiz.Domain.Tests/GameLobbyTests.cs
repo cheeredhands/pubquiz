@@ -38,8 +38,7 @@ namespace Pubquiz.Domain.Tests
             Assert.AreEqual("Invalid TeamId.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
-
-
+        
         [TestMethod]
         public void TestGame_TeamLobbyWithNonOpenGame_ThrowsException()
         {

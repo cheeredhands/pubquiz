@@ -25,6 +25,5 @@ namespace Pubquiz.Domain.Models
         {
             QuizSections = new List<QuizSection>();
         }
-
     }
 }

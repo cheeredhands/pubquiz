@@ -104,13 +104,11 @@ namespace Pubquiz.Domain.Tests
             Assert.AreEqual(game.State, GameState.Running);
         }
 
-
         [TestMethod]
         public void GameInOpenStateWithoutTeams_Run_ThrowsException()
         {
             // arrange
             var game = new Game {State = GameState.Open};
-
 
             // act & assert
             var exception = Assert.ThrowsException<DomainException>(() => game.SetState(GameState.Running));

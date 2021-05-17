@@ -9,19 +9,19 @@
 # For more information on GitHub Actions for Azure, refer to https://github.com/Azure/Actions
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
 
-name: all - build, test and deploy 
+name: all - build, test and deploy
 # on:
 #  release:
 #    types: [created, edited]
 
-on: 
+on:
   push:
     #paths: ['.github/workflows/team-frontend-build-and-deploy.yml','team-frontend/**']
     branches: [ master ]
-    
+
 env:
-#  AZURE_WEBAPP_NAME: thenanne-web    # set this to your application's name
-#  AZURE_WEBAPP_PACKAGE_PATH: 'team-frontend/dist'      # set this to the path to your web app project, defaults to the repository root
+  #  AZURE_WEBAPP_NAME: thenanne-web    # set this to your application's name
+  #  AZURE_WEBAPP_PACKAGE_PATH: 'team-frontend/dist'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '14.x'                # set this to the node version to use
 
 jobs:
@@ -29,89 +29,89 @@ jobs:
     name: build team-frontend
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-    - name: npm install
-      working-directory: team-frontend
-      run: npm install
-    - name: npm run build
-      working-directory: team-frontend
-      run: npm run build
-    - name: npm run test
-      working-directory: team-frontend
-      run: npm run test --if-present
-    #     # move the contents of the dist folder to a subfolder called
-    #     # wwwroot. 
-    #     mkdir pub
-    #     mv dist/* pub
-    #     mv pub wwwroot
-    #     mv wwwroot dist/
-    #     ls dist/wwwroot
-    - name: Upload artifacts
-      uses: actions/upload-artifact@master
-      with:
-        name: dist-folder # Upload artifact with name `dist`
-        path: 'team-frontend/dist' # Upload content of `dist` folder
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: npm install
+        working-directory: team-frontend
+        run: npm install
+      - name: npm run build
+        working-directory: team-frontend
+        run: npm run build
+      - name: npm run test
+        working-directory: team-frontend
+        run: npm run test --if-present
+      #     # move the contents of the dist folder to a subfolder called
+      #     # wwwroot. 
+      #     mkdir pub
+      #     mv dist/* pub
+      #     mv pub wwwroot
+      #     mv wwwroot dist/
+      #     ls dist/wwwroot
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: dist-folder # Upload artifact with name `dist`
+          path: 'team-frontend/dist' # Upload content of `dist` folder
   build-backend:
     name: build backend
     runs-on: ubuntu-latest
     needs: build-team-frontend
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.101
-    - name: Install dependencies
-      working-directory: backend
-      run: dotnet restore
-    - name: Build
-      working-directory: backend
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      working-directory: backend
-      run: dotnet test --no-restore --verbosity normal
-    - name: Download team-frontend artifact
-      uses: actions/download-artifact@master
-      with:
-        name: dist-folder 
-        path: ${{env.DOTNET_ROOT}}/myapp/wwwroot
-    - name: dotnet publish
-      working-directory: backend
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp        
-    - name: Upload artifact
-      if: success()
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: backend
-        path: ${{env.DOTNET_ROOT}}/myapp    
-        # path: backend/Pubquiz.WebApi/bin/Release/netcoreapp3.1
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'quizr-web'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.QUIZR_WEB_PUBLISH_PROFILE }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
-    - name: Notify slack success
-      if: success()
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      uses: voxmedia/github-action-slack-notify-build@v1
-      with:
-        channel: sourcecontrol
-        status: SUCCESS
-        color: good
-    - name: Notify slack fail
-      if: failure()
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      uses: voxmedia/github-action-slack-notify-build@v1
-      with:
-        channel: sourcecontrol
-        status: FAILED
-        color: danger
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.101
+      - name: Install dependencies
+        working-directory: backend
+        run: dotnet restore
+      - name: Build
+        working-directory: backend
+        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        working-directory: backend
+        run: dotnet test --no-restore --verbosity normal
+      - name: Download team-frontend artifact
+        uses: actions/download-artifact@master
+        with:
+          name: dist-folder
+          path: ${{env.DOTNET_ROOT}}/myapp/wwwroot
+      - name: dotnet publish
+        working-directory: backend
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Upload artifact
+        if: success()
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: backend
+          path: ${{env.DOTNET_ROOT}}/myapp
+          # path: backend/Pubquiz.WebApi/bin/Release/netcoreapp3.1
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'quizr-web'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.QUIZR_WEB_PUBLISH_PROFILE }}
+          package: ${{env.DOTNET_ROOT}}/myapp
+      - name: Notify slack success
+        if: success()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: sourcecontrol
+          status: SUCCESS
+          color: good
+      - name: Notify slack fail
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: sourcecontrol
+          status: FAILED
+          color: danger
 

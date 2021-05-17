@@ -19,7 +19,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1}));
 
             // Act
-            answer.Score(mcQuestion);
+            mcQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -36,7 +36,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {3}));
 
             // Act
-            answer.Score(mcQuestion);
+            mcQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(1, answer.TotalScore);
@@ -53,7 +53,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1, 3}));
 
             // Act
-            answer.Score(mcQuestion);
+            mcQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -70,7 +70,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {4, 3}));
 
             // Act
-            answer.Score(mrQuestion);
+            mrQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(1, answer.TotalScore);
@@ -87,7 +87,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1, 3}));
 
             // Act
-            answer.Score(mrQuestion);
+            mrQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -104,7 +104,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1, 2}));
 
             // Act
-            answer.Score(mrQuestion);
+            mrQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -121,7 +121,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, new[] {1, 2, 3, 4}));
 
             // Act
-            answer.Score(mrQuestion);
+            mrQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -138,7 +138,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, new int[] { }));
 
             // Act
-            answer.Score(mrQuestion);
+            mrQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -155,7 +155,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, "answer"));
 
             // Act
-            answer.Score(saQuestion);
+            saQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(1, answer.TotalScore);
@@ -172,7 +172,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, "wrong answer"));
 
             // Act
-            answer.Score(saQuestion);
+            saQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -190,7 +190,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, string.Empty));
 
             // Act
-            answer.Score(saQuestion);
+            saQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -208,7 +208,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, "answer"));
 
             // Act
-            answer.Score(saQuestion);
+            saQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(1, answer.TotalScore);
@@ -225,7 +225,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, "ansver"));
 
             // Act
-            answer.Score(saQuestion);
+            saQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(1, answer.TotalScore);
@@ -236,14 +236,14 @@ namespace Pubquiz.Domain.Tests
         {
             // Arrange
             var quiz = TestQuiz.GetQuiz();
-            var multipleSaQuestion = TestQuiz.GetMultipleSAQuestion();// quiz.QuizSections.First().QuestionItems[4];
+            var multipleSaQuestion = TestQuiz.GetMultipleSAQuestion(); // quiz.QuizSections.First().QuestionItems[4];
 
             var answer = new Answer(quiz.QuizSections[1].Id, multipleSaQuestion.Id);
             answer.InteractionResponses.Add(new InteractionResponse(1, "answer1"));
             answer.InteractionResponses.Add(new InteractionResponse(2, "answer2"));
 
             // Act
-            answer.Score(multipleSaQuestion);
+            multipleSaQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(3, answer.TotalScore);
@@ -261,7 +261,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(2, "wrong answer"));
 
             // Act
-            answer.Score(multipleSaQuestion);
+            multipleSaQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(1, answer.TotalScore);
@@ -279,7 +279,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(2, "answer2"));
 
             // Act
-            answer.Score(multipleSaQuestion);
+            multipleSaQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(2, answer.TotalScore);
@@ -296,7 +296,7 @@ namespace Pubquiz.Domain.Tests
             answer.InteractionResponses.Add(new InteractionResponse(1, "an answer"));
 
             // Act
-            answer.Score(etQuestion);
+            etQuestion.Score(answer);
 
             // Assert
             Assert.AreEqual(0, answer.TotalScore);
@@ -315,7 +315,7 @@ namespace Pubquiz.Domain.Tests
 
             // Act
             //answer.Score(etQuestion);
-            etQuestion.Score(answer);
+            etQuestion.Score(answer);;
             answer.InteractionResponses[0].Correct(true);
             //answer.Score(etQuestion);
             etQuestion.Score(answer);

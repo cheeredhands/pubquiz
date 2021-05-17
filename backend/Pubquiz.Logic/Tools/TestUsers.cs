@@ -34,7 +34,6 @@ namespace Pubquiz.Logic.Tools
                 }
             };
 
-
             return users;
         }
     }

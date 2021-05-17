@@ -15,6 +15,4 @@ namespace Pubquiz.Logic.Requests.Notifications
         public string GameId { get; set; }
         public GameState NewGameState { get; set; }
     }
-
-    
 }

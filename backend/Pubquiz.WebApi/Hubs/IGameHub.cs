@@ -63,8 +63,7 @@ namespace Pubquiz.WebApi.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         Task TeamMembersChanged(TeamMembersChanged message);
-
-
+        
         /// <summary>
         /// Called when the quiz master changes the state of the game.
         /// </summary>

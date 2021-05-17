@@ -92,7 +92,6 @@ namespace Pubquiz.Logic.Handlers
                 .ToList()
                 .Select(t => new TeamViewModel(t));
 
-
             var model = new TeamLobbyViewModel
             {
                 Game = game,

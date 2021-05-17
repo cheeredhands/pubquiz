@@ -53,7 +53,6 @@ namespace Pubquiz.Domain.Tests
 
             var services = new ServiceCollection();
 
-
             services
                 .AddLogging(builder => builder.AddConsole())
                 .AddMemoryCache()
@@ -66,7 +65,6 @@ namespace Pubquiz.Domain.Tests
                 .AddSingleton<ICollectionOptions, InMemoryDatabaseOptions>()
                 .AddScoped<IUnitOfWork, NoActionUnitOfWork>();
                 
-
             AddDI(services);
             AddMediatr(_container, typeof(TeamRegistered).Assembly);
             _container.Collection.Register(typeof(IRequestPreProcessor<>),
@@ -86,7 +84,6 @@ namespace Pubquiz.Domain.Tests
             UnitOfWork = _container.GetInstance<IUnitOfWork>();
             Mediator = _container.GetInstance<IMediator>();
             QuizrSettings = _container.GetInstance<QuizrSettings>();
-
 
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
             var userCollection = UnitOfWork.GetCollection<User>();

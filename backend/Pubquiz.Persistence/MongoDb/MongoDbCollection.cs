@@ -52,7 +52,6 @@ namespace Pubquiz.Persistence.MongoDb
         public async Task<bool> UpdateAsync(T document) =>
             await Collection.FindOneAndReplaceAsync(i => i.Id == document.Id, document) != null;
 
-
         /// <inheritdoc />
         public async Task<T> AddAsync(T document)
         {
@@ -63,8 +62,7 @@ namespace Pubquiz.Persistence.MongoDb
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(string id) =>
             await Collection.FindOneAndDeleteAsync(i => i.Id == id) != null;
-
-
+        
         /// <inheritdoc />
         public async Task<long> GetCountAsync() =>
             await Collection.CountDocumentsAsync(i => true);

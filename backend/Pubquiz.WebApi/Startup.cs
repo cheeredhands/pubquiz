@@ -45,11 +45,9 @@ namespace Pubquiz.WebApi
             _hostingEnvironment = hostingEnvironment;
             _configuration = configuration;
 
-
             // Set to false. This will be the default in v5.x and going forward.
             _container.Options.ResolveUnregisteredConcreteTypes = false;
         }
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -197,7 +195,6 @@ namespace Pubquiz.WebApi
         private void AddDefaultWebApiStuff(IServiceCollection services)
         {
             // controllers, authentication, authorization and such
-
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             services.AddControllers()

@@ -20,8 +20,7 @@ namespace Pubquiz.Logic.Handlers
             unitOfWork, mediator, loggerFactory)
         {
         }
-
-
+        
         public async Task<Unit> Handle(LogoutUserCommand request, CancellationToken cancellationToken)
         {
             var userCollection = UnitOfWork.GetCollection<User>();

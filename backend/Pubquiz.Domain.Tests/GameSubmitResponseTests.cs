@@ -68,8 +68,7 @@ namespace Pubquiz.Domain.Tests
             Assert.AreEqual("This question doesn't belong to the quiz.", exception.Message);
             Assert.IsTrue(exception.IsBadRequest);
         }
-
-
+        
         [TestMethod]
         public void TestGame_SubmitResponseForQuestionNotInCurrentQuizSection_ThrowsException()
         {

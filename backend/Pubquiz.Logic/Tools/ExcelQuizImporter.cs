@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
 using Pubquiz.Persistence;
+
 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
 
 namespace Pubquiz.Logic.Tools
@@ -23,7 +24,7 @@ namespace Pubquiz.Logic.Tools
         private readonly Stream _fileStream;
         private readonly string _fileName;
         private readonly string _actorId;
-        
+
         private QuizrPackage _package;
         private string _packagePath;
 
@@ -71,7 +72,6 @@ namespace Pubquiz.Logic.Tools
                 File.Delete(filePath);
                 throw new DomainException("Het geüploade bestand is geen geldige Quizr-package.", true);
             }
-
 
             var packageCollection = _unitOfWork.GetCollection<QuizrPackage>();
             _package = packageCollection.AsQueryable().FirstOrDefault(p => p.Hash == hash);
@@ -394,7 +394,6 @@ namespace Pubquiz.Logic.Tools
                         }
                     }
 
-
                     // Solutions 14
                     var solutionsString = quizItemRow[14].ToString().Trim();
                     if (!string.IsNullOrWhiteSpace(solutionsString))
@@ -440,7 +439,6 @@ namespace Pubquiz.Logic.Tools
                         errors.Add($"Invalid Solutions on row {rowCounter}");
                         interactionErrors++;
                     }
-
 
                     // LevenshteinTolerance 15
                     if (interaction.InteractionType == InteractionType.ShortAnswer)

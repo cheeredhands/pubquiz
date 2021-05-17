@@ -6,4 +6,3 @@
         public bool TimeLoggingEnabled { get; set; }
     }
 }
-

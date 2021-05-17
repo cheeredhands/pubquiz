@@ -14,14 +14,14 @@ name: all - build and test on pr
 #  release:
 #    types: [created, edited]
 
-on: 
+on:
   pull_request:
     #paths: ['.github/workflows/team-frontend-build-and-deploy.yml','team-frontend/**']
     branches: [ master ]
-    
+
 env:
-#  AZURE_WEBAPP_NAME: thenanne-web    # set this to your application's name
-#  AZURE_WEBAPP_PACKAGE_PATH: 'team-frontend/dist'      # set this to the path to your web app project, defaults to the repository root
+  #  AZURE_WEBAPP_NAME: thenanne-web    # set this to your application's name
+  #  AZURE_WEBAPP_PACKAGE_PATH: 'team-frontend/dist'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '14.x'                # set this to the node version to use
 
 jobs:
@@ -29,55 +29,55 @@ jobs:
     name: build team-frontend
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-    - name: npm install
-      working-directory: team-frontend
-      run: npm install
-    - name: npm run build
-      working-directory: team-frontend
-      run: npm run build
-    - name: npm run test
-      working-directory: team-frontend
-      run: npm run test --if-present
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: npm install
+        working-directory: team-frontend
+        run: npm install
+      - name: npm run build
+        working-directory: team-frontend
+        run: npm run build
+      - name: npm run test
+        working-directory: team-frontend
+        run: npm run test --if-present
   build-backend:
     name: build backend
     runs-on: ubuntu-latest
     needs: build-team-frontend
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.101
-    - name: Install dependencies
-      working-directory: backend
-      run: dotnet restore
-    - name: Build
-      working-directory: backend
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      working-directory: backend
-      run: dotnet test --no-restore --verbosity normal   
-    - name: Notify slack success
-      if: success()
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      uses: voxmedia/github-action-slack-notify-build@v1
-      with:
-        channel: sourcecontrol
-        status: SUCCESS
-        color: good
-    - name: Notify slack fail
-      if: failure()
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      uses: voxmedia/github-action-slack-notify-build@v1
-      with:
-        channel: sourcecontrol
-        status: FAILED
-        color: danger
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.101
+      - name: Install dependencies
+        working-directory: backend
+        run: dotnet restore
+      - name: Build
+        working-directory: backend
+        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        working-directory: backend
+        run: dotnet test --no-restore --verbosity normal
+      - name: Notify slack success
+        if: success()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: sourcecontrol
+          status: SUCCESS
+          color: good
+      - name: Notify slack fail
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: sourcecontrol
+          status: FAILED
+          color: danger
 

@@ -50,7 +50,6 @@ namespace Pubquiz.Logic.Handlers
             return Unit.Value;
         }
 
-
         private string SanitizeTeamMembers(string teamMembers)
         {
             // replace multiple whitespace by just one
@@ -198,7 +197,6 @@ namespace Pubquiz.Logic.Handlers
                 throw new DomainException(ResultCode.InvalidEntityId, "Invalid InteractionId.", true);
             }
 
-
             // save response
             team.Answers.TryGetValue(request.QuizItemId, out var answer);
             if (answer == null)
@@ -238,7 +236,6 @@ namespace Pubquiz.Logic.Handlers
         public async Task<Team> Handle(RegisterForGameCommand request, CancellationToken cancellationToken)
         {
             var gameCollection = UnitOfWork.GetCollection<Game>();
-
 
             // check validity of invite code, otherwise throw DomainException
             var game = gameCollection.AsQueryable().FirstOrDefault(g => g.InviteCode == request.Code);

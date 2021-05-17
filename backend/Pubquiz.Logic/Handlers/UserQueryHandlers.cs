@@ -100,7 +100,6 @@ namespace Pubquiz.Logic.Handlers
             var gameCollection = UnitOfWork.GetCollection<Game>();
             var quizItemCollection = UnitOfWork.GetCollection<QuizItem>();
 
-
             var game = await gameCollection.GetAsync(request.GameId);
 
             var user = await UnitOfWork.GetCollection<User>().GetAsync(request.ActorId);
