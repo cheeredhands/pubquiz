@@ -315,7 +315,7 @@ namespace Pubquiz.Domain.Tests
 
             // Act
             //answer.Score(etQuestion);
-            etQuestion.Score(answer);;
+            etQuestion.Score(answer);
             answer.InteractionResponses[0].Correct(true);
             //answer.Score(etQuestion);
             etQuestion.Score(answer);
