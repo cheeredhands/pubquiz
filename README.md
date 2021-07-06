@@ -2,7 +2,7 @@
 
 ![all - build, test and deploy](https://github.com/thtm88/pubquiz/workflows/all%20-%20build,%20test%20and%20deploy/badge.svg)
 
- - backend - dotnet core WebAPI backend for the fantastic pubquiz app that doesn't exist yet. 
+ - backend - dotnet 5.0 WebAPI backend 
  - team-frontend - vue.js frontend for participating teams
 
 # Startup info:
