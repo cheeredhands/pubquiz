@@ -170,6 +170,12 @@ namespace Pubquiz.Logic.Tools
             foreach (var quizItemRow in quizItemRows)
             {
                 rowCounter++;
+                
+                // skip row if completely empty
+                if (quizItemRow.IsEmpty())
+                {
+                    continue;
+                }
 
                 // quiz section 0
                 var quizSectionTitle = quizItemRow[0].ToString().Trim();
