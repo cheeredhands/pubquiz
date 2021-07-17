@@ -240,7 +240,7 @@ export default class QuizMasterLobby extends mixins(
   }
 
   public addGameForQuiz(quizId: string): void {
-    // this.$_quizService_addGameForQuiz(quizId)
+    this.$_quizService_addGameForQuiz(this.userId, quizId, '', '');
   }
 
   public kickTeam(teamId: string, name: string): void {

@@ -7,7 +7,17 @@ import { TeamLobbyViewModel, QmLobbyViewModel, QmInGameViewModel, TeamInGameView
 /* eslint camelcase: "off" */
 @Component
 export default class QuizServiceMixin extends mixins(HelperMixin) {
-  public $_quizService_uploadQuiz(actorId: string, file: File) : Promise<void | AxiosResponse<any>> {
+  public $_quizService_addGameForQuiz(actorId: string, quizId: string, gameTitle: string, inviteCode: string): Promise<void | AxiosResponse<any>> {
+    return this.$axios.post<ApiResponse>('api/game', {
+      actorId, quizId, gameTitle, inviteCode
+    }).catch(
+      (error: AxiosError<ApiResponse>) => {
+        this.$_helper_toastError(error);
+      }
+    );
+  }
+
+  public $_quizService_uploadQuiz(actorId: string, file: File): Promise<void | AxiosResponse<any>> {
     const formData = new FormData();
     formData.append('formFile', file);
     return this.$axios.post('api/quiz/uploadzippedexcelquiz', formData, {
