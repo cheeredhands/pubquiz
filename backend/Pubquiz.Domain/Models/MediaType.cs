@@ -4,6 +4,7 @@ namespace Pubquiz.Domain.Models
     {
         Image,
         Video,
-        Audio
+        Audio,
+        Markdown
     }
 }

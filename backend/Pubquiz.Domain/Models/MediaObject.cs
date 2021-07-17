@@ -7,6 +7,7 @@ namespace Pubquiz.Domain.Models
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Uri { get; set; }
+        public string Text { get; set; }
         public MediaDimensions Dimensions { get; set; }
         public MediaType MediaType { get; set; }
         public bool IsSolution { get; set; }

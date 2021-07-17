@@ -34,7 +34,7 @@
         </b-row>
         <b-row>
           <b-col>
-            <p v-html="quizItem.body"></p>
+            <div><vue-markdown :source="quizItem.body" /></div>
             <div
               v-for="interaction in quizItem.interactions"
               :key="interaction.id"
@@ -100,6 +100,9 @@
                 controls
                 :src="mediaObject.uri"
               ></b-embed>
+              <div v-if="mediaObject.mediaType === markdownType">
+                <vue-markdown :source="mediaObject.text" />
+              </div>
             </div>
           </b-col>
         </b-row>
@@ -115,8 +118,11 @@ import HelperMixin from '../services/helper-mixin';
 import { InteractionType, Game, MediaType, QuizItem, GameState, MediaObject } from '../models/models';
 import { Watch } from 'vue-property-decorator';
 import { QuizItemViewModel } from '../models/viewModels';
+import VueMarkdown from 'vue-markdown-render';
 
-@Component
+@Component({
+  components: { VueMarkdown }
+})
 export default class Beamer extends mixins(GameServiceMixin) {
   public async created(): Promise<void> {
     await this.$_gameService_getQmInGame();
@@ -166,6 +172,7 @@ export default class Beamer extends mixins(GameServiceMixin) {
   public imageType: MediaType = MediaType.Image;
   public videoType: MediaType = MediaType.Video;
   public audioType: MediaType = MediaType.Audio;
+  public markdownType: MediaType = MediaType.Markdown;
 
   @Watch('currentQuizItemId') public async OnCurrentItemChanged(value: string): Promise<void> {
     await this.$_gameService_getQuizItem(this.game.id, value);

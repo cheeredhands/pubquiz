@@ -170,7 +170,7 @@ namespace Pubquiz.Logic.Tools
             foreach (var quizItemRow in quizItemRows)
             {
                 rowCounter++;
-                
+
                 // skip row if completely empty
                 if (quizItemRow.IsEmpty())
                 {
@@ -281,9 +281,9 @@ namespace Pubquiz.Logic.Tools
                     var mediaTitle = quizItemRow[6].ToString().Trim();
                     mediaObject.Title = mediaTitle;
 
-                    // MediaFileName 7
-                    var mediaFileName = quizItemRow[7].ToString().Trim();
-                    if (string.IsNullOrWhiteSpace(mediaFileName))
+                    // MediaSource 7
+                    var mediaSource = quizItemRow[7].ToString().Trim();
+                    if (string.IsNullOrWhiteSpace(mediaSource))
                     {
                         // MediaUrl 8
                         var mediaUrl = quizItemRow[8].ToString().Trim();
@@ -296,8 +296,15 @@ namespace Pubquiz.Logic.Tools
                     }
                     else
                     {
-                        mediaObject.Uri =
-                            $"{_quizrSettings.BaseUrl}/{_quizrSettings.ContentPath}/{_package.Hash}/{mediaFileName}";
+                        if (mediaObject.MediaType == MediaType.Markdown)
+                        {
+                            mediaObject.Text = mediaSource;
+                        }
+                        else
+                        {
+                            mediaObject.Uri =
+                                $"{_quizrSettings.BaseUrl}/{_quizrSettings.ContentPath}/{_package.Hash}/{mediaSource}";
+                        }
                     }
 
                     // MediaIsSolution 9
@@ -509,7 +516,7 @@ namespace Pubquiz.Logic.Tools
                 headerRow.Field<string>(4) != "QuizItemMaxScore" ||
                 headerRow.Field<string>(5) != "MediaType" ||
                 headerRow.Field<string>(6) != "MediaTitle" ||
-                headerRow.Field<string>(7) != "MediaFileName" ||
+                headerRow.Field<string>(7) != "MediaSource" ||
                 headerRow.Field<string>(8) != "MediaUrl" ||
                 headerRow.Field<string>(9) != "MediaIsSolution" ||
                 headerRow.Field<string>(10) != "InteractionType" ||

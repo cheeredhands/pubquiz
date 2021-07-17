@@ -108,7 +108,8 @@ export enum MediaType {
 
   Image = 'Image',
   Video = 'Video',
-  Audio = 'Audio'
+  Audio = 'Audio',
+  Markdown = 'Markdown'
 }
 
 export interface MediaDimensions {
@@ -123,6 +124,7 @@ export interface MediaObject {
   id: string;
   title: string;
   uri: string;
+  text: string;
   dimensions: MediaDimensions;
   mediaType: MediaType;
   mimeType: string;
