@@ -16,7 +16,7 @@
         </b-row>
         <b-row>
           <b-col>
-            <div><vue-markdown :source="quizItem.body" /></div>
+            <div><vue-markdown :source="quizItem.body || ''" /></div>
             <div
               v-for="interaction in quizItem.interactions"
               :key="interaction.id"

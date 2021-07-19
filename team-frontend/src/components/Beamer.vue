@@ -34,7 +34,7 @@
         </b-row>
         <b-row>
           <b-col>
-            <div><vue-markdown :source="quizItem.body" /></div>
+            <div><vue-markdown :source="quizItem.body || ''" /></div>
             <div
               v-for="interaction in quizItem.interactions"
               :key="interaction.id"
@@ -101,7 +101,7 @@
                 :src="mediaObject.uri"
               ></b-embed>
               <div v-if="mediaObject.mediaType === markdownType">
-                <vue-markdown :source="mediaObject.text" />
+                <vue-markdown :source="mediaObject.text || ''" />
               </div>
             </div>
           </b-col>
