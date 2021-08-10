@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pubquiz.Domain.ViewModels;
 using Pubquiz.Persistence;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -16,14 +17,18 @@ namespace Pubquiz.Domain.Models
     public class Quiz : Model
     {
         public string Title { get; set; }
-        public List<QuizSection> QuizSections { get; set; }
+        public List<QuizSection> QuizSections { get; set; } = new();
         public int TotalQuizItemCount => QuizSections.Sum(qs => qs.QuizItemRefs.Count);
         public int TotalQuestionCount => QuizSections.Sum(qs => qs.QuestionItemRefs.Count);
         public IEnumerable<string> QuizItemIds => QuizSections.SelectMany(qs => qs.QuizItemRefs.Select(qi => qi.Id));
 
-        public Quiz()
+        public QmQuizViewModel ToQmQuizViewModel()
         {
-            QuizSections = new List<QuizSection>();
+            return new QmQuizViewModel
+            {
+                Id = Id,
+                Title = Title
+            };
         }
     }
 }

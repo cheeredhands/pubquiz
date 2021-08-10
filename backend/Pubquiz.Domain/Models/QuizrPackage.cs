@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Pubquiz.Domain.ViewModels;
 using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Models
@@ -9,11 +10,6 @@ namespace Pubquiz.Domain.Models
         public string FullPath { get; set; }
         public string Filename { get; set; }
         public string PackageMetadata { get; set; }
-        public List<QuizRef> QuizRefs { get; set; }
-
-        public QuizrPackage()
-        {
-            QuizRefs = new List<QuizRef>();
-        }
+        public List<QmQuizViewModel> QuizViewModels { get; set; } = new();
     }
 }

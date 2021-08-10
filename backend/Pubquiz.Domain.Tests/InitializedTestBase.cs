@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -52,7 +53,8 @@ namespace Pubquiz.Domain.Tests
             // UnitOfWork = new NoActionUnitOfWork(memoryCache, LoggerFactory, inMemoryCollectionOptions);
 
             var services = new ServiceCollection();
-
+            Directory.Delete("quiz", true);
+            Directory.CreateDirectory("quiz");
             services
                 .AddLogging(builder => builder.AddConsole())
                 .AddMemoryCache()
@@ -100,7 +102,7 @@ namespace Pubquiz.Domain.Tests
             Game.QuizId = Quiz.Id;
             Game.TeamIds = Teams.Select(t => t.Id).ToList();
             QuestionsInQuiz = TestQuiz.GetQuizItems();
-            OtherQuestions = new List<QuizItem> {new QuizItem(), new QuizItem(), new QuizItem()};
+            OtherQuestions = new List<QuizItem> { new QuizItem(), new QuizItem(), new QuizItem() };
             Task.WaitAll(
                 quizCollection.AddAsync(Quiz),
                 QuestionsInQuiz.ToAsyncEnumerable().ForEachAsync(q => questionCollection.AddAsync(q)),
@@ -147,7 +149,7 @@ namespace Pubquiz.Domain.Tests
 
         private static Assembly[] GetAssemblies(IEnumerable<Assembly> assemblies)
         {
-            var allAssemblies = new List<Assembly> {typeof(IMediator).GetTypeInfo().Assembly};
+            var allAssemblies = new List<Assembly> { typeof(IMediator).GetTypeInfo().Assembly };
             allAssemblies.AddRange(assemblies);
 
             return allAssemblies.ToArray();

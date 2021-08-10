@@ -61,14 +61,15 @@ namespace Pubquiz.Domain.Models
             TeamIds = new List<string>();
         }
 
-        public GameRef ToGameRef()
-        {
-            return new GameRef
+        public QmGameViewModel ToQmGameViewModel() {
+            return new()
             {
                 Id = Id,
                 Title = Title,
                 InviteCode = InviteCode,
-                QuizTitle = QuizTitle
+                QuizId = QuizId,
+                QuizTitle = QuizTitle,
+                GameState = State
             };
         }
 

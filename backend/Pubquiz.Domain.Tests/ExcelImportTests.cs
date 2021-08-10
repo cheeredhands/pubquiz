@@ -11,7 +11,7 @@ namespace Pubquiz.Domain.Tests
     [TestClass]
     public class ExcelImportTests : InitializedTestBase
     {
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task PeCeExcelQuizPackage_Import_CorrectQuizNameImported()
         {
             // arrange
