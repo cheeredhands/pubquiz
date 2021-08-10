@@ -80,6 +80,7 @@ export interface TeamNameUpdatedMessage {
 }
 
 export interface GameStateChangedMessage {
+    gameId: string;
     /** The old game state */
     oldGameState: GameState;
     /** The new game state */
@@ -115,4 +116,8 @@ export interface GameSelectedMessage {
     gameId: string;
     newGameId: string;
     qmLobbyViewModel: QmLobbyViewModel;
+}
+
+export interface GameDeletedMessage {
+    gameId: string;
 }

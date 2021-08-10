@@ -24,15 +24,6 @@ namespace Pubquiz.WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        [Authorize(AuthPolicy.Admin)]
-        public async Task<ActionResult<List<QuizRef>>> GetQuizzes()
-        {
-            var query = new GetQuizzesQuery {ActorId = User.GetId()};
-            var result = await _mediator.Send(query);
-            return Ok(result);
-        }
-
         /// <summary>
         /// Upload a zip file containing an excel file and associated media files.
         /// </summary>
@@ -51,7 +42,7 @@ namespace Pubquiz.WebApi.Controllers
             var result = await _mediator.Send(command);
 
             return Ok(new ImportZippedExcelQuizResponse
-                {Code = ResultCode.Ok, Message = "Quiz successfully imported.", QuizRefs = result.QuizRefs});
+                {Code = ResultCode.Ok, Message = "Quiz successfully imported.", QuizViewModels = result.QuizViewModels});
         }
     }
 }

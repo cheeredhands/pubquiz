@@ -13,7 +13,7 @@ namespace Pubquiz.WebApi.Handlers
         INotificationHandler<GameStateChanged>, INotificationHandler<TeamNameUpdated>,
         INotificationHandler<TeamLoggedOut>, INotificationHandler<UserLoggedOut>, INotificationHandler<TeamDeleted>,
         INotificationHandler<ItemNavigated>, INotificationHandler<InteractionResponseAdded>,
-        INotificationHandler<TeamConnectionChanged>, INotificationHandler<GameSelected>
+        INotificationHandler<TeamConnectionChanged>, INotificationHandler<GameSelected>, INotificationHandler<GameDeleted>
     {
         private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
 
@@ -156,6 +156,14 @@ namespace Pubquiz.WebApi.Handlers
 
             // notify quiz master 
             await _gameHubContext.Clients.Group(quizMasterGroupId).GameSelected(message);
+        }
+        
+        public async Task Handle(GameDeleted message, CancellationToken cancellationToken)
+        {
+            var quizMasterGroupId = Logic.Tools.Helpers.GetQuizMasterGroupId(message.GameId);
+
+            // notify quiz master 
+            await _gameHubContext.Clients.Group(quizMasterGroupId).GameDeleted(message);
         }
     }
 }

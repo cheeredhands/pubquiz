@@ -106,6 +106,13 @@ export default {
       await this.restart(); // restart so we get a new groupId
       store.dispatch('processGameSelected', data);
     });
+
+    connection.on('GameDeleted', async data => {
+      console.log(data);
+      await this.restart(); // restart so we get a new groupId
+      store.dispatch('processGameDeleted', data);
+    });
+
     return start().catch(err => {
       return console.error(err.toString());
     });

@@ -10,6 +10,7 @@ using ExcelDataReader;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
+using Pubquiz.Domain.ViewModels;
 using Pubquiz.Persistence;
 
 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
@@ -139,9 +140,9 @@ namespace Pubquiz.Logic.Tools
             foreach (var quiz in quizzes)
             {
                 await quizCollection.AddAsync(quiz);
-                var quizRef = new QuizRef {Id = quiz.Id, Title = quiz.Title};
-                _package.QuizRefs.Add(quizRef);
-                user.QuizRefs.Add(quizRef);
+                var quizVm = new QmQuizViewModel {Id = quiz.Id, Title = quiz.Title};
+                _package.QuizViewModels.Add(quizVm);
+                user.QuizIds.Add(quiz.Id);
             }
 
             await userCollection.UpdateAsync(user);

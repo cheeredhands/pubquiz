@@ -1,4 +1,18 @@
-import { QuizItemType, Team, Game, QuizItem, InteractionType, ChoiceOption, MediaObject } from './models';
+import { GameState, QuizItemType, Team, Game, QuizItem, InteractionType, ChoiceOption, MediaObject } from './models';
+
+export interface GameViewModel {
+    id: string;
+    title: string;
+    quizId: string;
+    quizTitle: string;
+    inviteCode: string;
+    gameState: GameState;
+  }
+  
+  export interface QuizViewModel {
+    id: string;
+    title: string;
+  }
 
 export interface TeamViewModel {
     /** The team Id */

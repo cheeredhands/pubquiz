@@ -98,5 +98,12 @@ namespace Pubquiz.WebApi.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         Task GameSelected(GameSelected message);
+
+        /// <summary>
+        /// Called when the admin deletes a game.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task GameDeleted(GameDeleted message);
     }
 }

@@ -3,7 +3,7 @@ import './plugins/quizr-helpers';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight, BIconFileEarmarkPlus, BIconSearch, BIconEyeglasses, BIconTrashFill, BIconPencilFill, BIconPlayFill, BIconPauseFill, BIconPower, BIconDoorOpenFill, BIconArrowLeftShort, BIconArrowLeft, BIconArrowRightShort, BIconArrowRight, BIconWindow, BIconCheckCircleFill, BIconXCircleFill, BIconCheckCircle } from 'bootstrap-vue';
+import { BootstrapVue, BIconExclamationTriangle, BIconBoxArrowUpRight, BIconFileEarmarkPlus, BIconSearch, BIconEyeglasses, BIconTrashFill, BIconPencilFill, BIconPlayFill, BIconPauseFill, BIconPower, BIconDoorOpenFill, BIconArrowLeftShort, BIconArrowLeft, BIconArrowRightShort, BIconArrowRight, BIconWindow, BIconCheckCircleFill, BIconXCircleFill, BIconCheckCircle, BIconCaretRightFill, BIconCaretDownFill } from 'bootstrap-vue';
 import axios from 'axios';
 import i18n from './plugins/i18n';
 
@@ -33,6 +33,8 @@ Vue.component('b-icon-window', BIconWindow);
 Vue.component('b-icon-check-circle', BIconCheckCircle);
 Vue.component('b-icon-check-circle-fill', BIconCheckCircleFill);
 Vue.component('b-icon-x-circle-fill', BIconXCircleFill);
+Vue.component('b-icon-caret-right-fill', BIconCaretRightFill);
+Vue.component('b-icon-caret-down-fill', BIconCaretDownFill);
 
 // https://dev.to/heftyhead/lets-talk-about-an-unnecessary-but-popular-vue-plugin-1ied
 const axiosInstanceBackend = axios.create({

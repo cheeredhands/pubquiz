@@ -13,7 +13,7 @@ using Pubquiz.Persistence;
 namespace Pubquiz.Logic.Handlers
 {
     public class UserQueryHandlers : Handler, IRequestHandler<GetGamesQuery, List<Game>>,
-        IRequestHandler<GetQuizzesQuery, List<QuizRef>>, IRequestHandler<QmInGameViewModelQuery, QmInGameViewModel>,
+        IRequestHandler<QmInGameViewModelQuery, QmInGameViewModel>,
         IRequestHandler<QmLobbyViewModelQuery, QmLobbyViewModel>, IRequestHandler<QuizItemQuery, QuizItem>,
         IRequestHandler<UserQuery, User>
     {
@@ -27,26 +27,9 @@ namespace Pubquiz.Logic.Handlers
             var userCollection = UnitOfWork.GetCollection<User>();
             var user = await userCollection.GetAsync(request.UserId);
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var games = gameCollection.GetAsync(user.GameRefs.Select(r => r.Id).ToArray()).Result;
+            var games = gameCollection.GetAsync(user.GameIds.ToArray()).Result;
 
             return games.ToList();
-        }
-
-        public Task<List<QuizRef>> Handle(GetQuizzesQuery request, CancellationToken cancellationToken)
-        {
-            var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var gameCollection = UnitOfWork.GetCollection<Game>();
-
-            var quizRefs = quizCollection.AsQueryable().Select(q => new QuizRef {Id = q.Id, Title = q.Title}).ToList();
-
-            foreach (var quizRef in quizRefs)
-            {
-                quizRef.GameRefs = gameCollection.AsQueryable().Where(g => g.QuizId == quizRef.Id)
-                    .Select(g => new GameRef
-                        {Id = g.Id, Title = g.Title, QuizTitle = g.QuizTitle, InviteCode = g.InviteCode}).ToList();
-            }
-
-            return Task.FromResult(quizRefs);
         }
 
         public async Task<QmInGameViewModel> Handle(QmInGameViewModelQuery request, CancellationToken cancellationToken)

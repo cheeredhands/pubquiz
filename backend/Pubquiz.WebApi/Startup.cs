@@ -31,6 +31,7 @@ using Pubquiz.WebApi.Hubs;
 using Pubquiz.WebApi.Models;
 using Serilog;
 using SimpleInjector;
+using SimpleInjector.Lifestyles;
 
 namespace Pubquiz.WebApi
 {
@@ -106,10 +107,7 @@ namespace Pubquiz.WebApi
             // NOTE: SimpleInjectorHubActivator<T> must be registered as Scoped
             services.AddScoped(typeof(IHubActivator<>), typeof(SimpleInjectorHubActivator<>));
 
-            var quizrSettings = new QuizrSettings();
-            _configuration.Bind("QuizrSettings", quizrSettings);
-            quizrSettings.WebRootPath = _hostingEnvironment.WebRootPath;
-            _container.RegisterInstance(quizrSettings);
+            _container.Register<TestSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -146,7 +144,7 @@ namespace Pubquiz.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pubquiz backend V1"); });
 
-            SeedStuff(app);
+            SeedStuff(_container);
         }
 
         private void AddMediatr(Container container, params Assembly[] assemblies)
@@ -217,7 +215,7 @@ namespace Pubquiz.WebApi
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
-                    
+
                     // We have to hook the OnMessageReceived event in order to
                     // allow the JWT authentication handler to read the access
                     // token from the query string when a WebSocket or 
@@ -276,6 +274,11 @@ namespace Pubquiz.WebApi
         private void AddQuizrSpecificStuff(IServiceCollection services)
         {
             services.AddMemoryCache();
+
+            var quizrSettings = new QuizrSettings();
+            _configuration.Bind("QuizrSettings", quizrSettings);
+            quizrSettings.WebRootPath = _hostingEnvironment.WebRootPath;
+            services.AddSingleton(_ => quizrSettings);
 
             switch (_configuration.GetValue<string>("AppSettings:Database"))
             {
@@ -343,18 +346,19 @@ namespace Pubquiz.WebApi
             });
         }
 
-        private static void SeedStuff(IApplicationBuilder app)
+        private static void SeedStuff(Container container)
         {
-            var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
-            var mediator = app.ApplicationServices.GetService<IMediator>();
-            var quizrSettings = app.ApplicationServices.GetService<QuizrSettings>();
-
-            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
-            var seeder = new TestSeeder(unitOfWork, loggerFactory, mediator, quizrSettings);
-            if (unitOfWork == null || mediator == null || quizrSettings == null || loggerFactory == null)
-            {
-                return;
-            }
+            // var unitOfWork = app.ApplicationServices.GetService<IUnitOfWork>();
+            // var mediator = app.ApplicationServices.GetService<IMediator>();
+            // var quizrSettings = app.ApplicationServices.GetService<QuizrSettings>();
+            //
+            // var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
+            using var scope = AsyncScopedLifestyle.BeginScope(container);
+            
+            var unitOfWork = container.GetInstance<IUnitOfWork>();
+            var quizrSettings = container.GetInstance<QuizrSettings>();
+            var mediator = container.GetInstance<IMediator>();
+            var seeder = container.GetInstance<TestSeeder>();
 
             var quizCollection = unitOfWork.GetCollection<Quiz>();
             var gameCollection = unitOfWork.GetCollection<Game>();

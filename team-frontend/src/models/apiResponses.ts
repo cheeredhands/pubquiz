@@ -1,4 +1,5 @@
-import { UserRole, GameState, QuizRef } from './models';
+import { UserRole, GameState } from './models';
+import { GameViewModel, QuizViewModel } from './viewModels';
 
 export interface ApiResponse {
     errorCode: string;
@@ -11,7 +12,8 @@ export interface LoginResponse extends ApiResponse {
     userId: string;
     userName: string;
     currentGameId: string;
-    gameIds: string[];
+    quizViewModels: QuizViewModel[];
+    gameViewModels: GameViewModel[];
   }
 
 export interface RegisterForGameResponse extends ApiResponse {
@@ -32,6 +34,8 @@ export interface WhoAmIResponse extends ApiResponse {
     gameState: GameState;
     userRole: UserRole;
     recoveryCode: string;
+    quizViewModels: QuizViewModel[];
+    gameViewModels: GameViewModel[];
   }
 
 export interface SaveTeamMembersResponse extends ApiResponse {
@@ -43,5 +47,5 @@ export interface NavigateItemResponse extends ApiResponse {
   }
 
 export interface ImportZippedExcelQuizResponse extends ApiResponse {
-  quizRefs: QuizRef[];
+  QuizViewModels: QuizViewModel[];
 }

@@ -64,7 +64,7 @@ namespace Pubquiz.Domain.Tests
                 })
                 .AddSingleton<ICollectionOptions, InMemoryDatabaseOptions>()
                 .AddScoped<IUnitOfWork, NoActionUnitOfWork>();
-                
+
             AddDI(services);
             AddMediatr(_container, typeof(TeamRegistered).Assembly);
             _container.Collection.Register(typeof(IRequestPreProcessor<>),
@@ -72,7 +72,7 @@ namespace Pubquiz.Domain.Tests
                 {
                     typeof(RequestValidationPreProcessor<>)
                 });
-            
+
             var serviceProvider = services.BuildServiceProvider();
             serviceProvider.UseSimpleInjector(_container);
 
@@ -94,11 +94,8 @@ namespace Pubquiz.Domain.Tests
             Users = TestUsers.GetUsers();
             Quiz = TestQuiz.GetQuiz();
             Game = TestGame.GetGame(Users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), Quiz);
-            var gameRef = new GameRef
-                {Id = Game.Id, Title = Game.Title, QuizTitle = Game.QuizTitle, InviteCode = Game.InviteCode};
-            Users.First(u => u.UserName == "Quiz master 1").GameRefs.Add(gameRef);
-            Users.First(u => u.UserName == "Quiz master 1").QuizRefs.Add(new QuizRef
-                {Id = Quiz.Id, Title = Quiz.Title, GameRefs = new List<GameRef> {gameRef}});
+            Users.First(u => u.UserName == "Quiz master 1").GameIds.Add(Game.Id);
+            Users.First(u => u.UserName == "Quiz master 1").QuizIds.Add(Quiz.Id);
             Teams = TestTeams.GetTeams(teamCollection, Game.Id);
             Game.QuizId = Quiz.Id;
             Game.TeamIds = Teams.Select(t => t.Id).ToList();

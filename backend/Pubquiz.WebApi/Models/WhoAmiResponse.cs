@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Pubquiz.Domain.Models;
+using Pubquiz.Domain.ViewModels;
 
 namespace Pubquiz.WebApi.Models
 {
@@ -10,8 +11,8 @@ namespace Pubquiz.WebApi.Models
         public string Name { get; set; }
         public string MemberNames { get; set; }
         public string CurrentGameId { get; set; }
-        public List<QuizRef> QuizRefs { get; set; }
-        public List<GameRef> GameRefs { get; set; }
+        public List<QmQuizViewModel> QuizViewModels { get; set; }
+        public List<QmGameViewModel> GameViewModels { get; set; }
         public GameState GameState { get; set; }
         public UserRole UserRole { get; set; }
         public string RecoveryCode { get; set; }

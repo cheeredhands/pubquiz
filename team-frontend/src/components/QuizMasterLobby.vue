@@ -70,34 +70,47 @@
             <b-card no-body class="mt-5" :header="$t('MY_GAMES')">
               <b-list-group flush>
                 <b-list-group-item
-                  v-for="gameRef in gameRefs"
-                  :key="gameRef.id"
+                  :class="{ 'selected-game': gameVm.id === game.id }"
+                  v-for="gameVm in gameViewModels"
+                  :key="gameVm.id"
                 >
-                  <strong>
-                    <b-icon-check-circle-fill v-if="gameRef.id === game.id" />
-                    {{ gameRef.title }}
-                  </strong>
-                  <span class="small">(quiz: {{ gameRef.quizTitle }})</span
-                  >&nbsp;<code>{{ gameRef.inviteCode }}</code>
-
+                  <quizr-editable-textfield
+                    v-model="gameVm.title"
+                    label=""
+                    description=""
+                    :feedback="$t('GAMETITLE_FEEDBACK')"
+                    required
+                    :minlength="5"
+                    :maxlength="30"
+                    v-on:apply="applyGameTitleChange"
+                  ></quizr-editable-textfield>
+                  <b-badge class="float-right" pill variant="success">{{
+                    $t(gameVm.gameState)
+                  }}</b-badge>
+                  <quizr-inline-editable-textfield
+                    v-model="gameVm.inviteCode"
+                    label="Code"
+                    description=""
+                    :feedback="$t('INVITECODE_FEEDBACK')"
+                    required
+                    :minlength="5"
+                    :maxlength="30"
+                    v-on:apply="applyInviteCodeChange"
+                  ></quizr-inline-editable-textfield>
+                  <span class="small"
+                    ><strong>quiz:</strong> {{ gameVm.quizTitle }}</span
+                  >
                   <b-icon-trash-fill
                     v-b-tooltip
-                    @click="kickTeam(team.id, team.name)"
+                    @click="deleteGame(gameVm.id)"
                     class="float-right"
                     style="cursor: pointer"
                     :title="$t('DELETE_GAME')"
                   />
-                  <b-icon-pencil-fill
-                    v-b-tooltip
-                    :title="$t('EDIT_GAME')"
-                    class="float-right mr-2"
-                    style="cursor: pointer"
-                    @click="kickTeam(gameRef.id)"
-                  />
                   <b-icon-check-circle
-                    v-if="gameRef.id !== game.id"
+                    v-if="gameVm.id !== game.id"
                     v-b-tooltip
-                    @click="selectGame(gameRef.id)"
+                    @click="selectGame(gameVm.id)"
                     class="float-right mr-2"
                     style="cursor: pointer"
                     :title="$t('SELECT_GAME')"
@@ -118,29 +131,63 @@
               </template>
               <b-list-group flush>
                 <b-list-group-item
-                  v-for="quizRef in quizRefs"
-                  :key="quizRef.id"
+                  v-for="quizVm in quizViewModels"
+                  :key="quizVm.id"
                 >
-                  <strong>{{ quizRef.title }} </strong>
+                  <strong>{{ quizVm.title }} </strong>
                   <span class="small"
-                    >{{ quizRef.gameRefs.length }}
-                    <span v-if="quizRef.gameRefs.length === 1">{{
-                      $t("GAME")
-                    }}</span
+                    >{{
+                      gameViewModels.filter((g) => g.quizId == quizVm.id).length
+                    }}
+                    <span
+                      v-if="
+                        gameViewModels.filter((g) => g.quizId == quizVm.id)
+                          .length === 1
+                      "
+                      >{{ $t("GAME") }}</span
                     ><span v-else>{{ $t("GAMES") }} </span>
                   </span>
                   <b-button
-                    @click="addGameForQuiz(quizRef.id)"
+                    v-b-toggle="[`addgame-${quizVm.id}`]"
                     class="float-right"
                     variant="secondary"
                     size="sm"
-                    pull="right"
                   >
                     {{ $t("ADD_GAME_FOR_QUIZ") }}
+                    <span class="when-closed"><b-icon-caret-right-fill /></span>
+                    <span class="when-open"><b-icon-caret-down-fill /></span>
                   </b-button>
-                </b-list-group-item>
-              </b-list-group></b-card
-            >
+                  <b-collapse :id="`addgame-${quizVm.id}`">
+                    <br />
+                    <b-form inline>
+                      <b-input-group size="sm" prepend="Titel">
+                        <b-form-input
+                          :id="`addgame-title-${quizVm.id}`"
+                          placeholder="Titel"
+                          size="sm"
+                        >
+                        </b-form-input
+                      ></b-input-group>
+                      <b-input-group size="sm" prepend="Code" class="ml-1">
+                        <b-form-input
+                          :id="`addgame-code-${quizVm.id}`"
+                          placeholder="Code"
+                          size="sm"
+                        >
+                        </b-form-input
+                      ></b-input-group>
+                      <b-button
+                        @click="addGameForQuiz(quizVm.id)"
+                        class="ml-1 float-right"
+                        variant="primary"
+                        size="sm"
+                      >
+                        <b-icon-check-circle />
+                      </b-button>
+                    </b-form>
+                  </b-collapse>
+                </b-list-group-item> </b-list-group
+            ></b-card>
             <b-card class="example-drag mt-3" :header="$t('UPLOAD_QUIZ')">
               <div>
                 <!-- Styled -->
@@ -176,12 +223,15 @@ import GameServiceMixin from '../services/game-service-mixin';
 import NavBarPart from './parts/NavBarPart.vue';
 import FooterPart from './parts/FooterPart.vue';
 import HelperMixin from '../services/helper-mixin';
-import { Game, Team, GameState, GameRef, QuizRef } from '../models/models';
+import { Game, Team, GameState } from '../models/models';
 import { ApiResponse } from '../models/apiResponses';
 import QuizServiceMixin from '@/services/quiz-service-mixin';
+import QuizrEditableTextfield from './controls/QuizrEditableTextfield.vue';
+import QuizrInlineEditableTextfield from './controls/QuizrInlineEditableTextfield.vue';
+import { GameViewModel, QuizViewModel } from '@/models/viewModels';
 
 @Component({
-  components: { NavBarPart, FooterPart },
+  components: { NavBarPart, FooterPart, QuizrEditableTextfield, QuizrInlineEditableTextfield },
   beforeRouteEnter(to: Route, from: Route, next: any) {
     // called before the route that renders this component is confirmed.
     // does NOT have access to `this` component instance,
@@ -209,6 +259,14 @@ export default class QuizMasterLobby extends mixins(
     this.$_gameService_getQmLobby().then(() => {
       document.title = 'Lobby - ' + this.game.title;
     });
+  }
+
+  public applyGameTitleChange(): void {
+    alert('hi');
+  }
+
+  public applyInviteCodeChange(): void {
+    alert('hi');
   }
 
   public uploadFile(): void {
@@ -239,8 +297,28 @@ export default class QuizMasterLobby extends mixins(
     this.$_gameService_selectGame(gameId);
   }
 
+  public deleteGame(gameId: string): void {
+    this.$bvModal
+      .msgBoxConfirm(this.$t('CONFIRM_DELETE_GAME').toString(), {
+        title: this.$t('PLEASE_CONFIRM').toString(),
+        okVariant: 'danger'.toString(),
+        okTitle: this.$t('YES').toString(),
+        cancelTitle: this.$t('NO').toString()
+      })
+      .then(value => {
+        if (!value) {
+          return;
+        }
+        this.$_gameService_setGameState(this.userId, gameId, GameState.Deleted);
+        // this.$_gameService_deleteGame(this.game.id);
+      });
+  }
+
   public addGameForQuiz(quizId: string): void {
-    this.$_quizService_addGameForQuiz(this.userId, quizId, '', '');
+    const title = (document.getElementById(`addgame-title-${quizId}`) as HTMLInputElement).value;
+    const code = (document.getElementById(`addgame-code-${quizId}`) as HTMLInputElement).value;
+    if (title === null || code === null) return;
+    this.$_quizService_addGameForQuiz(this.userId, quizId, title, code);
   }
 
   public kickTeam(teamId: string, name: string): void {
@@ -279,12 +357,12 @@ export default class QuizMasterLobby extends mixins(
     return this.$store.getters.userId;
   }
 
-  get gameRefs(): GameRef[] {
-    return this.$store.getters.gameRefs;
+  get gameViewModels(): GameViewModel[] {
+    return this.$store.getters.gameViewModels;
   }
 
-  get quizRefs(): QuizRef[] {
-    return this.$store.getters.quizRefs;
+  get quizViewModels(): QuizViewModel[] {
+    return this.$store.getters.quizViewModels;
   }
 }
 </script>
@@ -322,5 +400,14 @@ export default class QuizMasterLobby extends mixins(
   font-size: 40px;
   color: #fff;
   padding: 0;
+}
+
+.collapsed > .when-open,
+.not-collapsed > .when-closed {
+  display: none;
+}
+
+.selected-game {
+  background-color: lightgreen;
 }
 </style>

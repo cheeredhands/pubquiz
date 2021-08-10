@@ -29,9 +29,9 @@ namespace Pubquiz.Domain.Tests
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
-            Assert.AreEqual(1, quizrPackageRetrieved.QuizRefs.Count);
+            Assert.AreEqual(1, quizrPackageRetrieved.QuizViewModels.Count);
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizRefs.First().Id);
+            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizViewModels.First().Id);
             Assert.AreEqual("PéCé-pubquiz 2019", quizRef.Title);
         }
 
@@ -53,9 +53,9 @@ namespace Pubquiz.Domain.Tests
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
-            Assert.AreEqual(1, quizrPackageRetrieved.QuizRefs.Count);
+            Assert.AreEqual(1, quizrPackageRetrieved.QuizViewModels.Count);
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizRefs.First().Id);
+            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizViewModels.First().Id);
             Assert.AreEqual("TH en Anne's krystkwis 2020", quizRef.Title);
         }
 
@@ -77,9 +77,9 @@ namespace Pubquiz.Domain.Tests
             // assert
             var quizrPackageCollection = UnitOfWork.GetCollection<QuizrPackage>();
             var quizrPackageRetrieved = await quizrPackageCollection.GetAsync(quizrPackage.Id);
-            Assert.AreEqual(1, quizrPackageRetrieved.QuizRefs.Count);
+            Assert.AreEqual(1, quizrPackageRetrieved.QuizViewModels.Count);
             var quizCollection = UnitOfWork.GetCollection<Quiz>();
-            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizRefs.First().Id);
+            var quizRef = await quizCollection.GetAsync(quizrPackageRetrieved.QuizViewModels.First().Id);
             Assert.AreEqual("OKI-Kerstquiz 2020", quizRef.Title);
         }
     }

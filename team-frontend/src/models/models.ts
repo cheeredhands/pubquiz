@@ -1,15 +1,13 @@
+import { GameViewModel, QuizViewModel } from './viewModels';
 
-export interface GameRef {
-  id: string;
-  title: string;
-  quizTitle: string;
-  inviteCode: string;
-}
-
-export interface QuizRef {
-  id: string;
-  title: string;
-  gameRefs: GameRef[];
+export enum GameState {
+  Closed = 'Closed',
+  Open = 'Open',
+  Running = 'Running',
+  Reviewing = 'Reviewing',
+  Paused = 'Paused',
+  Finished = 'Finished',
+  Deleted = 'Deleted'
 }
 
 export interface User {
@@ -21,19 +19,10 @@ export interface User {
   isLoggedIn: boolean;
   /** the current game Id */
   currentGameId: string;
-  /** the quiz ids this user is an owner of  */
-  quizRefs: QuizRef[];
-  /** the game ids this user is involved in */
-  gameRefs: GameRef[];
-}
-
-export enum GameState {
-  Closed = 'Closed',
-  Open = 'Open',
-  Running = 'Running',
-  Reviewing = 'Reviewing',
-  Paused = 'Paused',
-  Finished = 'Finished'
+  /** the quizzes this user is an owner of  */
+  quizViewModels: QuizViewModel[];
+  /** the games this user is involved in */
+  gameViewModels: GameViewModel[];
 }
 
 /** Type of the question */

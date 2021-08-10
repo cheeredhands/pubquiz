@@ -26,7 +26,7 @@ export default class QuizServiceMixin extends mixins(HelperMixin) {
       }
     })
       .then((response: AxiosResponse<ImportZippedExcelQuizResponse>) => {
-        this.$store.commit('addQuizRefs', response.data.quizRefs);
+        this.$store.commit('addQuizViewModels', response.data.QuizViewModels);
       })
       .catch((error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);

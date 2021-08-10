@@ -40,8 +40,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
               if (this.$router.currentRoute.name !== 'Beamer') {
                 if (response.data.gameState === GameState.Open) {
                   this.$router.replace({ name: 'TeamLobby' });
-                }
-                if (response.data.gameState === GameState.Running) {
+                } else {
                   this.$router.replace({ name: 'TeamInGame' });
                 }
               }
@@ -51,11 +50,10 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
             .dispatch('initQuizMaster', response.data)
             .then(() => {
               if (this.$router.currentRoute.name !== 'Beamer') {
-                if (response.data.gameState === GameState.Open) {
-                  this.$router.replace({ name: 'QuizMasterLobby' });
-                }
                 if (response.data.gameState === GameState.Running) {
                   this.$router.replace({ name: 'QuizMasterInGame' });
+                } else {
+                  this.$router.replace({ name: 'QuizMasterLobby' });
                 }
               }
             });

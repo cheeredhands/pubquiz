@@ -43,7 +43,7 @@ namespace Pubquiz.Logic.Handlers
                 throw new DomainException(ResultCode.UnauthorizedRole, "You can't do that with this role.", true);
             }
 
-            if (user.GameRefs.All(r => r.Id != request.GameId))
+            if (!user.GameIds.Contains(request.GameId))
             {
                 throw new DomainException(ResultCode.QuizMasterUnauthorizedForGame,
                     $"Actor with id {request.ActorId} is not authorized for game '{request.GameId}'", true);

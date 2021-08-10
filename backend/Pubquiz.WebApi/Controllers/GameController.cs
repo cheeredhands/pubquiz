@@ -78,15 +78,6 @@ namespace Pubquiz.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        [Authorize(AuthPolicy.QuizMaster)]
-        public async Task<ActionResult<List<GameRef>>> GetGames()
-        {
-            var query = new GetGamesQuery {UserId = User.GetId()};
-            var result = await _mediator.Send(query);
-            return Ok(result.Select(g => g.ToGameRef()));
-        }
-
         [HttpPost("{gameId}/setstate/{gameState}")]
         [Authorize(AuthPolicy.QuizMaster)]
         public async Task<ActionResult<ApiResponse>> SetState(string gameId, GameState gameState)
@@ -197,6 +188,20 @@ namespace Pubquiz.WebApi.Controllers
                 Code = ResultCode.Ok,
                 Message = "Game created.",
                 GameId = result.Id
+            });
+        }
+        
+        [HttpDelete("{gameId}")]
+        [Authorize(AuthPolicy.QuizMaster)]
+        public async Task<ActionResult<SelectGameResponse>> DeleteGame(string gameId)
+        {
+            var userId = User.GetId();
+            var command = new DeleteGameCommand {GameId = gameId, ActorId = userId};
+            await _mediator.Send(command);
+            return Ok(new ApiResponse
+            {
+                Code = ResultCode.Ok,
+                Message = "Game deleted"
             });
         }
 

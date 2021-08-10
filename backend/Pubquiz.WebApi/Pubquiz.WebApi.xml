@@ -126,5 +126,12 @@
             <param name="message"></param>
             <returns></returns>
         </member>
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.GameDeleted(Pubquiz.Logic.Messages.GameDeleted)">
+            <summary>
+            Called when the admin deletes a game.
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

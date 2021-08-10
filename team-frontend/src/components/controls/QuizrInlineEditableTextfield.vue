@@ -1,8 +1,7 @@
 <template>
-  <b-form ref="form" @submit="exitEditMode" novalidate>
-    <b-form-group :label="label" :description="description" label-for="inputField">
-      <b-input-group>
-        <b-icon-pencil-fill v-if="!editable" @click="clickPen" :title="$t('EDIT')" />
+  <b-form inline ref="form" @submit="exitEditMode" novalidate>
+    <b-form-group :description="description" label-for="inputField">
+      <b-input-group :prepend="label" size="sm">
         <b-form-input
           ref="the_input"
           :plaintext="!editable"
@@ -15,10 +14,10 @@
           type="text"
           name="inputField"
           :required="required"
-          size="lg"
+          size="sm"
           :minlength="minlength"
           :maxlength="maxlength"
-        ></b-form-input>
+        ></b-form-input><b-icon-pencil-fill v-if="!editable" @click="clickPen" :title="$t('EDIT')" />
         <b-form-invalid-feedback>{{ feedback }}</b-form-invalid-feedback>
       </b-input-group>
     </b-form-group>
@@ -74,16 +73,17 @@ export default Vue.extend({
 <style scoped>
 .bi-pencil-fill {
   cursor: pointer;
-  display: inline-block;
+  display: none;
   position: absolute;
-  right: 15px;
-  top: 15px;
+  right: 7px;
+  top: 7px;
   z-index: 10;
-  color: grey;
+  color: gray;
 }
 
 input {
-  border: 1px solid transparent;
+  border: 1px solid lightgrey;
+  /* border-color: lightgrey; */
 }
 
 .form-control-plaintext {
@@ -94,7 +94,7 @@ input:hover {
   border: 1px solid grey;
 }
 .input-group:hover .bi-pencil-fill {
-  /* display: inline-block; */
+  display: inline-block;
   color: black;
 }
 </style>

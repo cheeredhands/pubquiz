@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,15 +38,8 @@ namespace Pubquiz.Logic.Tools
             var quiz = quizFactory.GetQuiz();
             var quizItems = quizFactory.QuizItems;
             var game = SeedGame.GetGame(users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), quiz);
-            var gameRef = new GameRef
-                {Id = game.Id, Title = game.Title, QuizTitle = game.QuizTitle, InviteCode = game.InviteCode};
-            users.First(u => u.UserName == "Quiz master 1").GameRefs.Add(gameRef);
-            users.First(u => u.UserName == "Quiz master 1").QuizRefs.Add(new QuizRef
-            {
-                Id = quiz.Id,
-                Title = quiz.Title,
-                GameRefs = new List<GameRef> {gameRef}
-            });
+            users.First(u => u.UserName == "Quiz master 1").GameIds.Add(game.Id);
+            users.First(u => u.UserName == "Quiz master 1").QuizIds.Add(quiz.Id);
             users.First(u => u.UserName == "Quiz master 1").CurrentGameId = game.Id;
             var teams = SeedTeams.GetTeams(teamCollection, game.Id);
             var teamUsers = SeedTeams.GetUsersFromTeams(teams);
@@ -99,7 +91,7 @@ namespace Pubquiz.Logic.Tools
             var createGameCommand = new CreateGameCommand
             {
                 ActorId = qmId,
-                QuizId = quizrPackage.QuizRefs[0].Id,
+                QuizId = quizrPackage.QuizViewModels[0].Id,
                 InviteCode = inviteCode,
                 GameTitle = gameTitle
             };
@@ -126,15 +118,8 @@ namespace Pubquiz.Logic.Tools
             var quiz = TestQuiz.GetQuiz();
             var quizItems = TestQuiz.GetQuizItems();
             var game = TestGame.GetGame(users.Where(u => u.UserName == "Quiz master 1").Select(u => u.Id), quiz);
-            var gameRef = new GameRef
-                {Id = game.Id, Title = game.Title, QuizTitle = game.QuizTitle, InviteCode = game.InviteCode};
-            users.First(u => u.UserName == "Quiz master 1").GameRefs.Add(gameRef);
-            users.First(u => u.UserName == "Quiz master 1").QuizRefs.Add(new QuizRef
-            {
-                Id = quiz.Id,
-                Title = quiz.Title,
-                GameRefs = new List<GameRef> {gameRef}
-            });
+            users.First(u => u.UserName == "Quiz master 1").GameIds.Add(game.Id);
+            users.First(u => u.UserName == "Quiz master 1").QuizIds.Add(quiz.Id);
             users.First(u => u.UserName == "Quiz master 1").CurrentGameId = game.Id;
             var teams = TestTeams.GetTeams(teamCollection, game.Id);
             foreach (var team in teams)
