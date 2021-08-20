@@ -86,7 +86,9 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
 }
 
 .main-container {
-  overflow: auto;
+  /* overflow: auto; */
+  overflow-y: scroll; /* Show vertical scrollbar */
+  /* overflow-x: scroll; Show horizontal scrollbar */
 }
 
 footer {
