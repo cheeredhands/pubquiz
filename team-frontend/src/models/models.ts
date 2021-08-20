@@ -6,8 +6,7 @@ export enum GameState {
   Running = 'Running',
   Reviewing = 'Reviewing',
   Paused = 'Paused',
-  Finished = 'Finished',
-  Deleted = 'Deleted'
+  Finished = 'Finished'
 }
 
 export interface User {

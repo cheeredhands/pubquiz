@@ -27,6 +27,188 @@
       <b-container>
         <b-row>
           <b-col lg="6">
+            <b-card no-body class="mt-5" :header="$t('CURRENT_GAME')">
+              <b-list-group flush>
+                <b-list-group-item>
+                  <quizr-editable-textfield
+                    v-model="game.title"
+                    label=""
+                    description=""
+                    :feedback="$t('GAMETITLE_FEEDBACK')"
+                    required
+                    :minlength="5"
+                    :maxlength="30"
+                    v-on:apply="applyGameTitleChange"
+                  ></quizr-editable-textfield>
+                  <b-badge class="float-right" pill variant="success">{{
+                    $t(game.state)
+                  }}</b-badge>
+                  <quizr-inline-editable-textfield
+                    v-model="game.inviteCode"
+                    label="Code"
+                    description=""
+                    :feedback="$t('INVITECODE_FEEDBACK')"
+                    required
+                    :minlength="5"
+                    :maxlength="30"
+                    v-on:apply="applyInviteCodeChange"
+                  ></quizr-inline-editable-textfield>
+                  <span class="small"
+                    ><strong>quiz:</strong> {{ game.quizTitle }}</span
+                  ></b-list-group-item
+                >
+              </b-list-group></b-card
+            >
+            <b-card no-body class="mt-5" header-tag="header">
+              <template #header>
+                <div class="collapser" v-b-toggle.collapse-my-games>
+                  {{ $t("MY_GAMES") }}
+                  <b-icon-caret-down-fill class="float-right collapse-icon" />
+                </div>
+              </template>
+              <b-collapse id="collapse-my-games">
+                <b-list-group flush>
+                  <b-list-group-item
+                    :class="{ 'selected-game': gameVm.id === game.id }"
+                    v-for="gameVm in gameViewModels"
+                    :key="gameVm.id"
+                  >
+                    <quizr-editable-textfield
+                      v-model="gameVm.title"
+                      label=""
+                      description=""
+                      :feedback="$t('GAMETITLE_FEEDBACK')"
+                      required
+                      :minlength="5"
+                      :maxlength="30"
+                      v-on:apply="applyGameTitleChange"
+                    ></quizr-editable-textfield>
+                    <b-badge class="float-right" pill variant="success">{{
+                      $t(gameVm.gameState)
+                    }}</b-badge>
+                    <quizr-inline-editable-textfield
+                      v-model="gameVm.inviteCode"
+                      label="Code"
+                      description=""
+                      :feedback="$t('INVITECODE_FEEDBACK')"
+                      required
+                      :minlength="5"
+                      :maxlength="30"
+                      v-on:apply="applyInviteCodeChange"
+                    ></quizr-inline-editable-textfield>
+                    <span class="small"
+                      ><strong>quiz:</strong> {{ gameVm.quizTitle }}</span
+                    >
+                    <!-- <b-icon-trash-fill
+                    v-b-tooltip
+                    @click="finishGame(gameVm.id)"
+                    class="float-right"
+                    style="cursor: pointer"
+                    :title="$t('FINISH_GAME')"
+                  /> -->
+                    <b-button
+                      v-if="gameVm.id !== game.id"
+                      v-b-tooltip
+                      :title="$t('SELECT_GAME')"
+                      class="float-right mr-2"
+                      size="sm"
+                      variant="secondary"
+                      @click="selectGame(gameVm.id)"
+                    >
+                      <b-icon-check-circle
+                    /></b-button>
+                  </b-list-group-item> </b-list-group></b-collapse
+            ></b-card>
+            <b-card no-body class="mt-3" header-tag="header">
+              <template #header>
+                <div class="collapser" v-b-toggle.collapse-my-quizzes>
+                  {{ $t("MY_QUIZZES") }}
+                  <b-icon-caret-down-fill class="float-right collapse-icon" />
+                </div>
+              </template>
+              <b-collapse id="collapse-my-quizzes">
+                <b-list-group flush>
+                  <b-list-group-item
+                    v-for="quizVm in quizViewModels"
+                    :key="quizVm.id"
+                  >
+                    <strong>{{ quizVm.title }} </strong>
+                    <span class="small"
+                      >{{
+                        gameViewModels.filter((g) => g.quizId == quizVm.id)
+                          .length
+                      }}
+                      <span
+                        v-if="
+                          gameViewModels.filter((g) => g.quizId == quizVm.id)
+                            .length === 1
+                        "
+                        >{{ $t("GAME") }}</span
+                      ><span v-else>{{ $t("GAMES") }} </span>
+                    </span>
+                    <b-button
+                      v-b-toggle="[`addgame-${quizVm.id}`]"
+                      class="float-right collapser"
+                      variant="secondary"
+                      size="sm"
+                    >
+                      {{ $t("ADD_GAME_FOR_QUIZ") }}
+                      <b-icon-caret-down-fill class="collapse-icon" />
+                    </b-button>
+                    <b-collapse :id="`addgame-${quizVm.id}`">
+                      <br />
+                      <b-form inline>
+                        <b-input-group size="sm" prepend="Titel">
+                          <b-form-input
+                            :id="`addgame-title-${quizVm.id}`"
+                            placeholder="Titel"
+                            size="sm"
+                          >
+                          </b-form-input
+                        ></b-input-group>
+                        <b-input-group size="sm" prepend="Code" class="ml-1">
+                          <b-form-input
+                            :id="`addgame-code-${quizVm.id}`"
+                            placeholder="Code"
+                            size="sm"
+                          >
+                          </b-form-input
+                        ></b-input-group>
+                        <b-button
+                          @click="addGameForQuiz(quizVm.id)"
+                          class="ml-1 float-right"
+                          variant="primary"
+                          size="sm"
+                        >
+                          <b-icon-check-circle />
+                        </b-button>
+                      </b-form>
+                    </b-collapse>
+                  </b-list-group-item>
+                  <b-list-group-item>
+                    <h5>{{ $t("UPLOAD_QUIZ") }}</h5>
+                    <div>
+                      <!-- Styled -->
+                      <b-form-file
+                        accept="application/zip"
+                        v-model="quizFile"
+                        :state="Boolean(quizFile)"
+                        placeholder="Choose a file or drop it here..."
+                        drop-placeholder="Drop file here..."
+                      ></b-form-file>
+                      <b-button class="mt-3 float-right" @click="uploadFile()"
+                        >Upload</b-button
+                      >
+                      <div class="mt-3">
+                        Selected file: {{ quizFile ? quizFile.name : "" }}
+                      </div>
+                    </div>
+                  </b-list-group-item>
+                </b-list-group></b-collapse
+              ></b-card
+            >
+          </b-col>
+          <b-col lg="6">
             <b-card
               no-body
               class="example-drag mt-5"
@@ -64,145 +246,6 @@
                   />
                 </b-list-group-item>
               </b-list-group>
-            </b-card>
-          </b-col>
-          <b-col lg="6">
-            <b-card no-body class="mt-5" :header="$t('MY_GAMES')">
-              <b-list-group flush>
-                <b-list-group-item
-                  :class="{ 'selected-game': gameVm.id === game.id }"
-                  v-for="gameVm in gameViewModels"
-                  :key="gameVm.id"
-                >
-                  <quizr-editable-textfield
-                    v-model="gameVm.title"
-                    label=""
-                    description=""
-                    :feedback="$t('GAMETITLE_FEEDBACK')"
-                    required
-                    :minlength="5"
-                    :maxlength="30"
-                    v-on:apply="applyGameTitleChange"
-                  ></quizr-editable-textfield>
-                  <b-badge class="float-right" pill variant="success">{{
-                    $t(gameVm.gameState)
-                  }}</b-badge>
-                  <quizr-inline-editable-textfield
-                    v-model="gameVm.inviteCode"
-                    label="Code"
-                    description=""
-                    :feedback="$t('INVITECODE_FEEDBACK')"
-                    required
-                    :minlength="5"
-                    :maxlength="30"
-                    v-on:apply="applyInviteCodeChange"
-                  ></quizr-inline-editable-textfield>
-                  <span class="small"
-                    ><strong>quiz:</strong> {{ gameVm.quizTitle }}</span
-                  >
-                  <b-icon-trash-fill
-                    v-b-tooltip
-                    @click="deleteGame(gameVm.id)"
-                    class="float-right"
-                    style="cursor: pointer"
-                    :title="$t('DELETE_GAME')"
-                  />
-                  <b-icon-check-circle
-                    v-if="gameVm.id !== game.id"
-                    v-b-tooltip
-                    @click="selectGame(gameVm.id)"
-                    class="float-right mr-2"
-                    style="cursor: pointer"
-                    :title="$t('SELECT_GAME')"
-                  />
-                </b-list-group-item> </b-list-group
-            ></b-card>
-            <b-card no-body class="mt-3" header-tag="header">
-              <template #header>
-                {{ $t("MY_QUIZZES") }}
-                <h5
-                  class="float-right mb-0"
-                  v-b-tooltip
-                  :title="$t('ADD_QUIZ')"
-                  style="cursor: pointer"
-                >
-                  <b-icon-file-earmark-plus />
-                </h5>
-              </template>
-              <b-list-group flush>
-                <b-list-group-item
-                  v-for="quizVm in quizViewModels"
-                  :key="quizVm.id"
-                >
-                  <strong>{{ quizVm.title }} </strong>
-                  <span class="small"
-                    >{{
-                      gameViewModels.filter((g) => g.quizId == quizVm.id).length
-                    }}
-                    <span
-                      v-if="
-                        gameViewModels.filter((g) => g.quizId == quizVm.id)
-                          .length === 1
-                      "
-                      >{{ $t("GAME") }}</span
-                    ><span v-else>{{ $t("GAMES") }} </span>
-                  </span>
-                  <b-button
-                    v-b-toggle="[`addgame-${quizVm.id}`]"
-                    class="float-right"
-                    variant="secondary"
-                    size="sm"
-                  >
-                    {{ $t("ADD_GAME_FOR_QUIZ") }}
-                    <span class="when-closed"><b-icon-caret-right-fill /></span>
-                    <span class="when-open"><b-icon-caret-down-fill /></span>
-                  </b-button>
-                  <b-collapse :id="`addgame-${quizVm.id}`">
-                    <br />
-                    <b-form inline>
-                      <b-input-group size="sm" prepend="Titel">
-                        <b-form-input
-                          :id="`addgame-title-${quizVm.id}`"
-                          placeholder="Titel"
-                          size="sm"
-                        >
-                        </b-form-input
-                      ></b-input-group>
-                      <b-input-group size="sm" prepend="Code" class="ml-1">
-                        <b-form-input
-                          :id="`addgame-code-${quizVm.id}`"
-                          placeholder="Code"
-                          size="sm"
-                        >
-                        </b-form-input
-                      ></b-input-group>
-                      <b-button
-                        @click="addGameForQuiz(quizVm.id)"
-                        class="ml-1 float-right"
-                        variant="primary"
-                        size="sm"
-                      >
-                        <b-icon-check-circle />
-                      </b-button>
-                    </b-form>
-                  </b-collapse>
-                </b-list-group-item> </b-list-group
-            ></b-card>
-            <b-card class="example-drag mt-3" :header="$t('UPLOAD_QUIZ')">
-              <div>
-                <!-- Styled -->
-                <b-form-file
-                  accept="application/zip"
-                  v-model="quizFile"
-                  :state="Boolean(quizFile)"
-                  placeholder="Choose a file or drop it here..."
-                  drop-placeholder="Drop file here..."
-                ></b-form-file>
-                <div class="mt-3">
-                  Selected file: {{ quizFile ? quizFile.name : "" }}
-                </div>
-                <b-button @click="uploadFile()">Upload</b-button>
-              </div>
             </b-card>
           </b-col>
         </b-row>
@@ -297,9 +340,9 @@ export default class QuizMasterLobby extends mixins(
     this.$_gameService_selectGame(gameId);
   }
 
-  public deleteGame(gameId: string): void {
+  public finishGame(gameId: string): void {
     this.$bvModal
-      .msgBoxConfirm(this.$t('CONFIRM_DELETE_GAME').toString(), {
+      .msgBoxConfirm(this.$t('CONFIRM_FINISH_GAME').toString(), {
         title: this.$t('PLEASE_CONFIRM').toString(),
         okVariant: 'danger'.toString(),
         okTitle: this.$t('YES').toString(),
@@ -309,8 +352,7 @@ export default class QuizMasterLobby extends mixins(
         if (!value) {
           return;
         }
-        this.$_gameService_setGameState(this.userId, gameId, GameState.Deleted);
-        // this.$_gameService_deleteGame(this.game.id);
+        this.$_gameService_setGameState(this.userId, gameId, GameState.Finished);
       });
   }
 
@@ -402,9 +444,23 @@ export default class QuizMasterLobby extends mixins(
   padding: 0;
 }
 
-.collapsed > .when-open,
+/* .collapsed > .when-open,
 .not-collapsed > .when-closed {
   display: none;
+} */
+
+.card-header .collapse-icon {
+  transition: 0.3s transform ease-in-out;
+}
+.card-header.collapsed .collapse-icon {
+  transform: rotate(90deg);
+}
+
+.collapser .collapse-icon {
+  transition: 0.3s transform ease-in-out;
+}
+.collapser.collapsed .collapse-icon {
+  transform: rotate(90deg);
 }
 
 .selected-game {

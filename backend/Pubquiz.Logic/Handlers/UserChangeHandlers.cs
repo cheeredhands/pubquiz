@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -20,7 +19,7 @@ namespace Pubquiz.Logic.Handlers
             unitOfWork, mediator, loggerFactory)
         {
         }
-        
+
         public async Task<Unit> Handle(LogoutUserCommand request, CancellationToken cancellationToken)
         {
             var userCollection = UnitOfWork.GetCollection<User>();
@@ -58,7 +57,8 @@ namespace Pubquiz.Logic.Handlers
                 UserId = request.ActorId
             };
             var viewModel = await Mediator.Send(query, cancellationToken);
-            await Mediator.Publish(new GameSelected(oldGameId, request.GameId, viewModel), cancellationToken);
+            await Mediator.Publish(new GameSelected(request.ActorId, oldGameId, request.GameId, viewModel),
+                cancellationToken);
             return Unit.Value;
         }
 

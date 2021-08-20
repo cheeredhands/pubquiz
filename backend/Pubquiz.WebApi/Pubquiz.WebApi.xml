@@ -126,9 +126,9 @@
             <param name="message"></param>
             <returns></returns>
         </member>
-        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.GameDeleted(Pubquiz.Logic.Messages.GameDeleted)">
+        <member name="M:Pubquiz.WebApi.Hubs.IGameHub.GameCreated(Pubquiz.Logic.Messages.GameCreated)">
             <summary>
-            Called when the admin deletes a game.
+            Called when the quiz master creates a game.
             </summary>
             <param name="message"></param>
             <returns></returns>

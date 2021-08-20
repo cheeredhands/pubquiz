@@ -1,5 +1,5 @@
 import { GameState, Answer, Team } from './models';
-import { QmLobbyViewModel } from './viewModels';
+import { GameViewModel, QmLobbyViewModel } from './viewModels';
 
 export interface TeamConnectionChangedMessage {
         /** The team Id */
@@ -113,11 +113,13 @@ export interface AnswerScoredMessage {
   }
 
 export interface GameSelectedMessage {
+    userId: string;
     gameId: string;
     newGameId: string;
     qmLobbyViewModel: QmLobbyViewModel;
 }
 
-export interface GameDeletedMessage {
-    gameId: string;
+export interface GameCreatedMessage {
+    userId: string;
+    qmGameViewModel: GameViewModel;
 }

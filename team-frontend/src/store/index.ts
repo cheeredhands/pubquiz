@@ -2,8 +2,8 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { HubConnection } from '@microsoft/signalr';
 import gamehub from '../services/gamehub';
-import { User, GameState, QuizItem, Team, Game } from '../models/models';
-import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage, TeamConnectionChangedMessage, GameSelectedMessage, GameDeletedMessage } from '../models/messages';
+import { User, QuizItem, Team, Game } from '../models/models';
+import { TeamLoggedOutMessage, ItemNavigatedMessage, TeamRegisteredMessage, TeamNameUpdatedMessage, TeamMembersChangedMessage, TeamDeletedMessage, GameStateChangedMessage, AnswerScoredMessage, QmTeamRegisteredMessage, TeamConnectionChangedMessage, GameSelectedMessage, GameCreatedMessage } from '../models/messages';
 import { GameViewModel, QuizItemViewModel, QuizViewModel, TeamViewModel } from '../models/viewModels';
 import { WhoAmIResponse } from '@/models/apiResponses';
 /* eslint no-console: "off" */
@@ -186,10 +186,9 @@ const storeOpts: StoreOptions<RootState> = {
       }
     },
     setGameState(state, message: GameStateChangedMessage) {
-      if (state.game === undefined) {
-        return;
+      if (state.game !== undefined && state.currentGameId === message.gameId) {
+        state.game.state = message.newGameState;
       }
-      state.game.state = message.newGameState;
       const gameVmInStore = state.gameViewModels.find(g => g.id === message.gameId);
       if (gameVmInStore !== undefined) {
         Vue.set(gameVmInStore, 'gameState', message.newGameState);
@@ -200,6 +199,15 @@ const storeOpts: StoreOptions<RootState> = {
       if (currentGame === undefined) {
         state.currentGameId = undefined;
       }
+    },
+    setGames(state, gameViewModels: GameViewModel[]) {
+      state.gameViewModels = gameViewModels;
+    },
+    setQuizzes(state, quizViewModels: QuizViewModel[]) {
+      state.quizViewModels = quizViewModels;
+    },
+    addGame(state, game: GameViewModel) {
+      state.gameViewModels.push(game);
     },
     setCurrentItem(state, message: ItemNavigatedMessage) {
       if (state.game === undefined) {
@@ -311,12 +319,11 @@ const storeOpts: StoreOptions<RootState> = {
       // todo notify teams that the quizmaster left?
     },
     processGameStateChanged({ commit, state }, message: GameStateChangedMessage) {
-      if (state.game === undefined) {
-        return;
-      }
-      if (state.game.state !== message.oldGameState) {
-        console.log(`Old game state ${state.game.state} doesn't match old game state in the gameStateChanged message (${message.oldGameState})`);
-        return;
+      if (state.game !== undefined && state.game.id === message.gameId) {
+        if (state.game.state !== message.oldGameState) {
+          console.log(`Old game state ${state.game.state} doesn't match old game state in the gameStateChanged message (${message.oldGameState})`);
+          return;
+        }
       }
       commit('setGameState', message);
     },
@@ -345,10 +352,8 @@ const storeOpts: StoreOptions<RootState> = {
       commit('setQmTeams', message.qmLobbyViewModel.teamsInGame);
       commit('setGame', message.qmLobbyViewModel.game);
     },
-    processGameDeleted({ commit }, message: GameDeletedMessage) {
-      // todo process it
-      // commit('setQmTeams', message.qmLobbyViewModel.teamsInGame);
-      commit('setGame', undefined);
+    processGameCreated({ commit }, message: GameCreatedMessage) {
+      commit('addGame', message.qmGameViewModel);
     }
   }
 };

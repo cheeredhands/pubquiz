@@ -67,6 +67,8 @@ export interface QmLobbyViewModel {
     userId: string;
     game: Game;
     teamsInGame: Team[];
+    quizViewModels: QuizViewModel[];
+    gameViewModels: GameViewModel[];
 }
 
 export interface QmInGameViewModel {

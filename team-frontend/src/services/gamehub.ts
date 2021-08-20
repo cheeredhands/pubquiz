@@ -107,10 +107,9 @@ export default {
       store.dispatch('processGameSelected', data);
     });
 
-    connection.on('GameDeleted', async data => {
+    connection.on('GameCreated', async data => {
       console.log(data);
-      await this.restart(); // restart so we get a new groupId
-      store.dispatch('processGameDeleted', data);
+      store.dispatch('processGameCreated', data);
     });
 
     return start().catch(err => {

@@ -19,12 +19,6 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
     });
   }
 
-  public $_gameService_deleteGame(gameId: string) : Promise<void | AxiosResponse<any>> {
-    return this.$axios.delete(`api/game/${gameId}`).catch((error: AxiosError<ApiResponse>) => {
-      this.$_helper_toastError(error);
-    });
-  }
-
   public $_gameService_reviewSection(actorId: string, gameId: string, sectionId: string): Promise<void | AxiosResponse<any>> {
     return this.$axios.post(`api/game/${gameId}/setreview/${sectionId}`).catch((error: AxiosError<ApiResponse>) => {
       this.$_helper_toastError(error);
@@ -48,6 +42,8 @@ export default class GameServiceMixin extends mixins(HelperMixin) {
       .then((response: AxiosResponse<QmLobbyViewModel>) => {
         this.$store.commit('setQmTeams', response.data.teamsInGame);
         this.$store.commit('setGame', response.data.game);
+        this.$store.commit('setGames', response.data.gameViewModels);
+        this.$store.commit('setQuizzes', response.data.quizViewModels);
       })
       .catch((error: AxiosError<ApiResponse>) => {
         this.$_helper_toastError(error);

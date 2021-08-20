@@ -12,8 +12,6 @@ export interface LoginResponse extends ApiResponse {
     userId: string;
     userName: string;
     currentGameId: string;
-    quizViewModels: QuizViewModel[];
-    gameViewModels: GameViewModel[];
   }
 
 export interface RegisterForGameResponse extends ApiResponse {
@@ -34,8 +32,6 @@ export interface WhoAmIResponse extends ApiResponse {
     gameState: GameState;
     userRole: UserRole;
     recoveryCode: string;
-    quizViewModels: QuizViewModel[];
-    gameViewModels: GameViewModel[];
   }
 
 export interface SaveTeamMembersResponse extends ApiResponse {

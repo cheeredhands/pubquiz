@@ -17,8 +17,7 @@ namespace Pubquiz.Logic.Handlers
 {
     public class GameChangeHandlers : Handler, IRequestHandler<SetGameStateCommand>,
         IRequestHandler<SetReviewCommand>, IRequestHandler<NavigateToSectionCommand, string>,
-        IRequestHandler<NavigateToItemByOffsetCommand, string>, IRequestHandler<CreateGameCommand, Game>,
-        IRequestHandler<DeleteGameCommand>
+        IRequestHandler<NavigateToItemByOffsetCommand, string>, IRequestHandler<CreateGameCommand, Game>
     {
         public GameChangeHandlers(IUnitOfWork unitOfWork, IMediator mediator, ILoggerFactory loggerFactory) : base(
             unitOfWork, mediator, loggerFactory)
@@ -40,8 +39,8 @@ namespace Pubquiz.Logic.Handlers
                         $"Actor with id {request.ActorId} is not authorized for game '{game.Id}'", true);
                 }
             }
-
-            var oldGameState = (GameState) ((int) game.State);
+            
+            var oldGameState = (GameState)((int)game.State);
 
             game.SetState(request.NewGameState);
 
@@ -213,8 +212,9 @@ namespace Pubquiz.Logic.Handlers
         {
             // check invite code
             var gameCollection = UnitOfWork.GetCollection<Game>();
-            var inviteCodeInUse = await gameCollection.AnyAsync(g =>
-                g.State != GameState.Finished && g.State != GameState.Closed && g.InviteCode == request.InviteCode);
+            var inviteCodeInUse = await gameCollection.AnyAsync(g => g.State != GameState.Finished &&
+                                                                     g.State != GameState.Closed &&
+                                                                     g.InviteCode == request.InviteCode);
             if (inviteCodeInUse)
             {
                 throw new DomainException(ResultCode.InvalidCode, "Invite code is invalid.", true);
@@ -234,7 +234,7 @@ namespace Pubquiz.Logic.Handlers
                 Title = request.GameTitle,
                 QuizTitle = quiz.Title,
                 InviteCode = request.InviteCode,
-                QuizMasterIds = new List<string> {request.ActorId}, // quizMasters.Select(q => q.Id).ToList(),
+                QuizMasterIds = new List<string> { request.ActorId }, // quizMasters.Select(q => q.Id).ToList(),
                 TotalQuestionCount = quiz.TotalQuestionCount,
                 TotalQuizItemCount = quiz.TotalQuizItemCount,
                 CurrentSectionQuizItemCount = quiz.QuizSections[0].QuizItemRefs.Count,
@@ -252,38 +252,9 @@ namespace Pubquiz.Logic.Handlers
             quizMaster.GameIds.Add(game.Id);
             await userCollection.UpdateAsync(quizMaster);
             await gameCollection.AddAsync(game);
+
+            await Mediator.Publish(new GameCreated(request.ActorId, game.ToQmGameViewModel()), cancellationToken);
             return game;
-        }
-
-        public async Task<Unit> Handle(DeleteGameCommand request, CancellationToken cancellationToken)
-        {
-            var userCollection = UnitOfWork.GetCollection<User>();
-            var user = await userCollection.GetAsync(request.ActorId);
-            if (user.UserRole != UserRole.QuizMaster)
-            {
-                throw new DomainException(ResultCode.UnauthorizedRole, "You can't do that with this role.", true);
-            }
-
-            if (!user.GameIds.Contains(request.GameId))
-            {
-                throw new DomainException(ResultCode.QuizMasterUnauthorizedForGame,
-                    $"Actor with id {request.ActorId} is not authorized for game '{request.GameId}'", true);
-            }
-
-            user.GameIds.Remove(request.GameId);
-            if (user.CurrentGameId == request.GameId)
-            {
-                user.CurrentGameId = string.Empty;
-            }
-
-            await userCollection.UpdateAsync(user);
-            
-            var gameCollection = UnitOfWork.GetCollection<Game>();
-            await gameCollection.DeleteAsync(request.GameId);
-
-            await Mediator.Publish(new GameDeleted(request.GameId), cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

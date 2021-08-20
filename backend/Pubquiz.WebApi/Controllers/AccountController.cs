@@ -84,11 +84,6 @@ namespace Pubquiz.WebApi.Controllers
                 });
             }
 
-            var gamesQuery = new QmGameViewModelsQuery { GameIds = user.GameIds };
-            var gameVms = await _mediator.Send(gamesQuery);
-            var quizzesQuery = new QmQuizViewModelsQuery { QuizIds = user.QuizIds };
-            var quizVms = await _mediator.Send(quizzesQuery);
-            
             return Ok(new WhoAmiResponse
             {
                 Code = ResultCode.ThatsYou,
@@ -96,8 +91,6 @@ namespace Pubquiz.WebApi.Controllers
                 UserName = user.UserName,
                 UserId = User.GetId(),
                 CurrentGameId = user.CurrentGameId,
-                QuizViewModels = quizVms,
-                GameViewModels = gameVms,
                 GameState = game?.State ?? GameState.Finished,
                 UserRole = User.GetUserRole()
             });
@@ -139,12 +132,7 @@ namespace Pubquiz.WebApi.Controllers
             };
             var user = await _mediator.Send(command);
             var jwt = SignInAndGetJwt(user);
-            
-            var gamesQuery = new QmGameViewModelsQuery { GameIds = user.GameIds };
-            var gameVms = await _mediator.Send(gamesQuery);
-            var quizzesQuery = new QmQuizViewModelsQuery { QuizIds = user.QuizIds };
-            var quizVms = await _mediator.Send(quizzesQuery);
-            
+
             return Ok(new LoginResponse
             {
                 Jwt = jwt,
@@ -152,9 +140,7 @@ namespace Pubquiz.WebApi.Controllers
                 Message = $"User {user.UserName} logged in.",
                 UserId = user.Id,
                 UserName = user.UserName,
-                CurrentGameId = user.CurrentGameId,
-                QuizViewModels = quizVms,
-                GameViewModels = gameVms
+                CurrentGameId = user.CurrentGameId
             });
         }
 

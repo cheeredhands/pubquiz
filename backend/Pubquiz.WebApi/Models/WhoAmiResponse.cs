@@ -11,8 +11,6 @@ namespace Pubquiz.WebApi.Models
         public string Name { get; set; }
         public string MemberNames { get; set; }
         public string CurrentGameId { get; set; }
-        public List<QmQuizViewModel> QuizViewModels { get; set; }
-        public List<QmGameViewModel> GameViewModels { get; set; }
         public GameState GameState { get; set; }
         public UserRole UserRole { get; set; }
         public string RecoveryCode { get; set; }

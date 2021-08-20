@@ -11,7 +11,6 @@ namespace Pubquiz.Domain.Models
         Running, 
         Reviewing,
         Paused,
-        Finished,
-        Deleted
+        Finished
     }
 }

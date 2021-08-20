@@ -67,12 +67,19 @@ namespace Pubquiz.Logic.Handlers
             {
                 team.Answers = new Dictionary<string, Answer>();
             }
+            
+            var gamesQuery = new QmGameViewModelsQuery { GameIds = user.GameIds };
+            var gameVms = await Mediator.Send(gamesQuery, cancellationToken);
+            var quizzesQuery = new QmQuizViewModelsQuery { QuizIds = user.QuizIds };
+            var quizVms = await Mediator.Send(quizzesQuery, cancellationToken);
 
             var model = new QmLobbyViewModel
             {
                 UserId = request.UserId,
                 Game = game,
-                TeamsInGame = teams
+                TeamsInGame = teams,
+                GameViewModels = gameVms,
+                QuizViewModels = quizVms
             };
 
             return model;

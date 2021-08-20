@@ -13,7 +13,8 @@ namespace Pubquiz.WebApi.Handlers
         INotificationHandler<GameStateChanged>, INotificationHandler<TeamNameUpdated>,
         INotificationHandler<TeamLoggedOut>, INotificationHandler<UserLoggedOut>, INotificationHandler<TeamDeleted>,
         INotificationHandler<ItemNavigated>, INotificationHandler<InteractionResponseAdded>,
-        INotificationHandler<TeamConnectionChanged>, INotificationHandler<GameSelected>, INotificationHandler<GameDeleted>
+        INotificationHandler<TeamConnectionChanged>, INotificationHandler<GameSelected>,
+        INotificationHandler<GameCreated>
     {
         private readonly IHubContext<GameHub, IGameHub> _gameHubContext;
 
@@ -107,7 +108,7 @@ namespace Pubquiz.WebApi.Handlers
             var teamGroupId = Logic.Tools.Helpers.GetTeamsGroupId(message.GameId);
             var quizMasterGroupId = Logic.Tools.Helpers.GetQuizMasterGroupId(message.GameId);
 
-            // notify quiz master 
+            // notify quiz masters 
             await _gameHubContext.Clients.Group(quizMasterGroupId).GameStateChanged(message);
 
             // notify teams
@@ -152,18 +153,16 @@ namespace Pubquiz.WebApi.Handlers
 
         public async Task Handle(GameSelected message, CancellationToken cancellationToken)
         {
-            var quizMasterGroupId = Logic.Tools.Helpers.GetQuizMasterGroupId(message.GameId);
-
-            // notify quiz master 
-            await _gameHubContext.Clients.Group(quizMasterGroupId).GameSelected(message);
+            // this change does not affect other quiz masters, so notify quiz master by id 
+            // The connection will restarted from the client side so the quiz master gets added to
+            // the group identified by gameId.
+            await _gameHubContext.Clients.User(message.UserId).GameSelected(message);
         }
-        
-        public async Task Handle(GameDeleted message, CancellationToken cancellationToken)
-        {
-            var quizMasterGroupId = Logic.Tools.Helpers.GetQuizMasterGroupId(message.GameId);
 
-            // notify quiz master 
-            await _gameHubContext.Clients.Group(quizMasterGroupId).GameDeleted(message);
+        public async Task Handle(GameCreated message, CancellationToken cancellationToken)
+        {
+            // notify quiz master by userId
+            await _gameHubContext.Clients.User(message.UserId).GameCreated(message);
         }
     }
 }
