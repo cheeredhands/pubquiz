@@ -50,7 +50,7 @@ export default class App extends mixins(AccountServiceMixin, HelperMixin) {
             .dispatch('initQuizMaster', response.data)
             .then(() => {
               if (this.$router.currentRoute.name !== 'Beamer') {
-                if (response.data.gameState === GameState.Running) {
+                if (response.data.gameState === GameState.Running || response.data.gameState === GameState.Reviewing || response.data.gameState === GameState.Paused) {
                   this.$router.replace({ name: 'QuizMasterInGame' });
                 } else {
                   this.$router.replace({ name: 'QuizMasterLobby' });
