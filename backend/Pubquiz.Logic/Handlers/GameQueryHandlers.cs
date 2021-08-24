@@ -26,7 +26,6 @@ namespace Pubquiz.Logic.Handlers
             return game;
         }
 
-
         public async Task<List<QmGameViewModel>> Handle(QmGameViewModelsQuery request,
             CancellationToken cancellationToken)
         {

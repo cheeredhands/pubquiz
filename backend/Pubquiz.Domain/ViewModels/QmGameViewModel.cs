@@ -11,10 +11,4 @@ namespace Pubquiz.Domain.ViewModels
         public string InviteCode { get; set; }
         public GameState GameState { get; set; }
     }
-
-    public class QmQuizViewModel
-    {
-        public string Id { get; set; }
-        public string Title { get; set; }
-    }
 }
