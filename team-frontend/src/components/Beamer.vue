@@ -61,7 +61,7 @@
                     v-for="choiceOption in interaction.choiceOptions"
                     :key="choiceOption.id"
                   >
-                    {{ choiceOption.text }}
+                    <vue-markdown :source="choiceOption.text || ''" />
                   </li>
                 </ul>
               </div>
@@ -197,5 +197,10 @@ body.modal-open .main-container {
 }
 li.correct {
   font-weight: bold;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: green;
+  /* border: 2px solid green;
+  border-radius: 10px; */
 }
 </style>

@@ -9,7 +9,7 @@
         </b-col> </b-row
       ><b-row
         ><b-col>
-          <p v-html="quizItem.body"></p>
+          <div><vue-markdown :source="quizItem.body || ''" /></div>
           <div
             v-for="interaction in quizItem.interactions"
             :key="interaction.id"
@@ -30,8 +30,8 @@
                     :key="choiceOption.id"
                     :name="`mc${interaction.id}`"
                     :value="choiceOption.id"
-                    >{{ choiceOption.text }}</b-form-radio
-                  >
+                    ><vue-markdown :source="choiceOption.text || ''"
+                  /></b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
             </div>
@@ -100,6 +100,9 @@
               controls
               :src="mediaObject.uri"
             ></b-embed>
+            <div v-if="mediaObject.mediaType === markdownType">
+              <vue-markdown :source="mediaObject.text" />
+            </div>
           </div>
         </b-col>
       </b-row>
@@ -115,9 +118,12 @@ import { InteractionType, Game, MediaType } from '../../models/models';
 import { Watch } from 'vue-property-decorator';
 import { throttle, debounce, DebouncedFunc } from 'lodash';
 import { QuizItemViewModel } from '../../models/viewModels';
+import VueMarkdown from 'vue-markdown-render';
 /* eslint space-before-function-paren: "off" */
 
-@Component
+@Component({
+  components: { VueMarkdown }
+})
 export default class TeamQuestionPart extends mixins(
   GameServiceMixin,
   HelperMixin
@@ -144,6 +150,7 @@ export default class TeamQuestionPart extends mixins(
   public imageType: MediaType = MediaType.Image;
   public videoType: MediaType = MediaType.Video;
   public audioType: MediaType = MediaType.Audio;
+  public markdownType: MediaType = MediaType.Markdown;
 
   public showChangesSaved = false;
 

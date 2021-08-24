@@ -41,7 +41,7 @@
                     v-for="choiceOption in interaction.choiceOptions"
                     :key="choiceOption.id"
                   >
-                    {{ choiceOption.text }}
+                    <vue-markdown :source="choiceOption.text || ''" />
                   </li>
                 </ul>
               </div>
