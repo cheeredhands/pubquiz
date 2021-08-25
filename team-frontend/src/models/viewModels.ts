@@ -8,8 +8,8 @@ export interface GameViewModel {
     inviteCode: string;
     gameState: GameState;
   }
-  
-  export interface QuizViewModel {
+
+export interface QuizViewModel {
     id: string;
     title: string;
   }
