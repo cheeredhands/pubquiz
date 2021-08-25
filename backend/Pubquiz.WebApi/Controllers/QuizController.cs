@@ -1,13 +1,10 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pubquiz.Domain;
-using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests.Commands;
-using Pubquiz.Logic.Requests.Queries;
 using Pubquiz.Logic.Tools;
 using Pubquiz.WebApi.Models;
 
@@ -37,7 +34,7 @@ namespace Pubquiz.WebApi.Controllers
             await using var fileStream = formFile.OpenReadStream();
             var command = new ImportZippedExcelQuizCommand
             {
-                ActorId = User.GetId(), FileName = formFile.Name, FileStream = fileStream
+                ActorId = User.GetId(), FileName = formFile.FileName, FileStream = fileStream
             };
             var result = await _mediator.Send(command);
 
