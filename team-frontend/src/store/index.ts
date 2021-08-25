@@ -105,7 +105,13 @@ const storeOpts: StoreOptions<RootState> = {
       }
     },
     addQuizViewModels(state, quizViewModels: QuizViewModel[]) {
-      state.quizViewModels.push(...quizViewModels);
+      for (let i = 0; i < quizViewModels.length; i++) {
+        const vm = quizViewModels[i];
+        const quizInStore = state.quizViewModels.find(v => v.id === vm.id);
+        if (quizInStore === undefined) {
+          state.quizViewModels.push(vm);
+        }
+      }
     },
     removeTeam(state, teamId: string) {
       const teamInStore = state.teams.find(i => i.id === teamId);
