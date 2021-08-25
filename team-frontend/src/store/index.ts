@@ -71,8 +71,6 @@ const storeOpts: StoreOptions<RootState> = {
       state.user = user;
       state.isLoggedIn = true;
       state.currentGameId = user.currentGameId;
-      state.quizViewModels = user.quizViewModels;
-      state.gameViewModels = user.gameViewModels;
     },
     setTeam(state, team: Team) {
       state.team = team;
