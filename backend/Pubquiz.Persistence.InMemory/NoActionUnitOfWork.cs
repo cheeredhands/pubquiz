@@ -4,10 +4,10 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Pubquiz.Persistence.Decorators;
 
-namespace Pubquiz.Persistence.NoAction
+namespace Pubquiz.Persistence.InMemory
 {
     /// <summary>
-    ///     Unit of work doesn't do anything with storage. Can be decorated with a memorycache collection to do the 'storage'
+    ///     Unit of work doesn't do anything with storage. Can be decorated with a memory cache collection to do the 'storage'
     /// </summary>
     public class NoActionUnitOfWork : UnitOfWorkBase
     {
@@ -41,7 +41,7 @@ namespace Pubquiz.Persistence.NoAction
 
             var noActionCollection = new FlagAsDeletedDecorator<T>(MemoryCache,
                 new FillDefaultValueDecorator<T>(MemoryCache,
-                    new CacheDecorator<T>(MemoryCache, true,
+                    new MemoryCacheDecorator<T>(MemoryCache, true,
                         new NoActionCollection<T>()), ActorId));
             if (LogTime)
             {

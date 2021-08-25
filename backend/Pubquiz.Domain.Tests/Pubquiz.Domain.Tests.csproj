@@ -21,6 +21,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Pubquiz.Logic\Pubquiz.Logic.csproj" />
+        <ProjectReference Include="..\Pubquiz.Persistence.InMemory\Pubquiz.Persistence.InMemory.csproj" />
     </ItemGroup>
 
     <ItemGroup>

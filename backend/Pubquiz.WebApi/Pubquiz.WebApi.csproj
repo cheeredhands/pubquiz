@@ -60,6 +60,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Pubquiz.Logic\Pubquiz.Logic.csproj" />
+      <ProjectReference Include="..\Pubquiz.Persistence.InMemory\Pubquiz.Persistence.InMemory.csproj" />
+      <ProjectReference Include="..\Pubquiz.Persistence.MongoDb\Pubquiz.Persistence.MongoDb.csproj" />
     </ItemGroup>
 
     <ItemGroup>

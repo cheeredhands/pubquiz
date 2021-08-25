@@ -15,7 +15,7 @@ namespace Pubquiz.Persistence.Decorators
     ///     Decorator to use memory cache
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class CacheDecorator<T> : CollectionDecoratorBase<T> where T : Model, new()
+    public class MemoryCacheDecorator<T> : CollectionDecoratorBase<T> where T : Model, new()
     {
         private readonly string _collectionKey = "CachedCollection";
         private readonly object _lockCollection = new object();
@@ -23,7 +23,7 @@ namespace Pubquiz.Persistence.Decorators
         private readonly bool _neverRemove;
 
         /// <inheritdoc />
-        public CacheDecorator(IMemoryCache memoryCache, bool neverRemove, ICollection<T> decoree) : base(memoryCache,
+        public MemoryCacheDecorator(IMemoryCache memoryCache, bool neverRemove, ICollection<T> decoree) : base(memoryCache,
             decoree)
         {
             _neverRemove = neverRemove;

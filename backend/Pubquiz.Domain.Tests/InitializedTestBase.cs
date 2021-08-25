@@ -15,7 +15,7 @@ using Pubquiz.Logic.Handlers;
 using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Tools;
 using Pubquiz.Persistence;
-using Pubquiz.Persistence.NoAction;
+using Pubquiz.Persistence.InMemory;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 

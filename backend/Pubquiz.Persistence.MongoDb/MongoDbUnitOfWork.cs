@@ -71,7 +71,7 @@ namespace Pubquiz.Persistence.MongoDb
 
             var mongoCollection = new FlagAsDeletedDecorator<T>(MemoryCache,
                 new FillDefaultValueDecorator<T>(MemoryCache,
-                    new CacheDecorator<T>(MemoryCache, false,
+                    new MemoryCacheDecorator<T>(MemoryCache, false,
                         new MongoDbCollection<T>(LoggerFactory, _mongoDatabase)), ActorId));
             if (LogTime)
             {

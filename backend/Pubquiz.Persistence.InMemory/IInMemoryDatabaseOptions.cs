@@ -1,4 +1,4 @@
-﻿namespace Pubquiz.Persistence.NoAction
+﻿namespace Pubquiz.Persistence.InMemory
 {
     public interface IInMemoryDatabaseOptions: ICollectionOptions
     {

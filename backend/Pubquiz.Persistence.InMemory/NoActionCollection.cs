@@ -10,7 +10,7 @@ using Pubquiz.Persistence.Extensions;
 
 //This collection must be used in combination with caching. If the cache decorator
 //Never clears, this can be used as an in memory collection.
-namespace Pubquiz.Persistence.NoAction
+namespace Pubquiz.Persistence.InMemory
 {
     /// <summary>
     ///     Base collection for no action
