@@ -71,7 +71,7 @@ namespace Pubquiz.Logic.Tools
             if (!isValidQuizrPackage)
             {
                 File.Delete(filePath);
-                throw new DomainException("Het geüploade bestand is geen geldige Quizr-package.", true);
+                throw new DomainException(ResultCode.ValidationError,"Het geüploade bestand is geen geldige Quizr-package.", true);
             }
 
             var packageCollection = _unitOfWork.GetCollection<QuizrPackage>();
@@ -88,8 +88,9 @@ namespace Pubquiz.Logic.Tools
             }
             else
             {
-                _logger.LogInformation($"Package with hash {hash} was previously imported, returning existing id.");
-                return _package;
+                File.Delete(filePath);
+                _logger.LogInformation($"Package with hash {hash} was previously imported, returning error.");
+                throw new DomainException(ResultCode.ValidationError, "Het geüploade bestand bestaat al in het systeem.", true);
             }
 
             await Unzip();
