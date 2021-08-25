@@ -1,5 +1,5 @@
 import { UserRole, GameState } from './models';
-import { GameViewModel, QuizViewModel } from './viewModels';
+import { QuizViewModel } from './viewModels';
 
 export interface ApiResponse {
     errorCode: string;
@@ -43,5 +43,5 @@ export interface NavigateItemResponse extends ApiResponse {
   }
 
 export interface ImportZippedExcelQuizResponse extends ApiResponse {
-  QuizViewModels: QuizViewModel[];
+  quizViewModels: QuizViewModel[];
 }
