@@ -95,22 +95,3 @@ jobs:
           slot-name: 'production'
           publish-profile: ${{ secrets.QUIZR_WEB_PUBLISH_PROFILE }}
           package: ${{env.DOTNET_ROOT}}/myapp
-      - name: Notify slack success
-        if: success()
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: voxmedia/github-action-slack-notify-build@v1
-        with:
-          channel: sourcecontrol
-          status: SUCCESS
-          color: good
-      - name: Notify slack fail
-        if: failure()
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: voxmedia/github-action-slack-notify-build@v1
-        with:
-          channel: sourcecontrol
-          status: FAILED
-          color: danger
-
