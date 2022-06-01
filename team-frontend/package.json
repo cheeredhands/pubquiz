@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^5.0.9",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.16.2",
     "highlight.js": "^11.2.0",
