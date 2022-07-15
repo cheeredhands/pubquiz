@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Persistence.Extensions;
+using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Logic.Tools
 {

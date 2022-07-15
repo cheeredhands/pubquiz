@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Pubquiz.Persistence.Extensions;
+using Pubquiz.Domain;
+using Pubquiz.Persistence.Helpers;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 

@@ -7,8 +7,4 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Pubquiz.Persistence\Pubquiz.Persistence.csproj" />
-    </ItemGroup>
-
 </Project>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Pubquiz.Domain;
 
 namespace Pubquiz.Persistence
 {

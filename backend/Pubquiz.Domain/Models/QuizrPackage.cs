@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Pubquiz.Domain.ViewModels;
-using Pubquiz.Persistence;
 
 namespace Pubquiz.Domain.Models
 {

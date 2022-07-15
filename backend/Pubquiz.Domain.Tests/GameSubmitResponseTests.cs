@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pubquiz.Logic.Requests.Notifications;
-using Pubquiz.Persistence.Extensions;
+using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Domain.Tests
 {

@@ -11,7 +11,7 @@ using Pubquiz.Logic.Messages;
 using Pubquiz.Logic.Requests.Commands;
 using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Persistence;
-using Pubquiz.Persistence.Extensions;
+using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Logic.Handlers
 {

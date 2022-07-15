@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Pubquiz.Domain;
 
 namespace Pubquiz.Persistence
 {

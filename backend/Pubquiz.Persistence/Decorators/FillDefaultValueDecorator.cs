@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Pubquiz.Persistence.Extensions;
+using Pubquiz.Domain;
 using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Persistence.Decorators

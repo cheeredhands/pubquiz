@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using Pubquiz.Persistence.Extensions;
 
-namespace Pubquiz.Persistence
+namespace Pubquiz.Domain
 {
     /// <summary>
     ///     Base class for all read models.

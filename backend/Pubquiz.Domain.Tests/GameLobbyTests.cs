@@ -5,7 +5,7 @@ using Pubquiz.Domain.Models;
 using Pubquiz.Logic.Requests;
 using Pubquiz.Logic.Requests.Notifications;
 using Pubquiz.Logic.Requests.Queries;
-using Pubquiz.Persistence.Extensions;
+using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Domain.Tests
 {

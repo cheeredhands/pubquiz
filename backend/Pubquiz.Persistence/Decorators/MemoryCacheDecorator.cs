@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Pubquiz.Persistence.Extensions;
+using Pubquiz.Domain;
 using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Persistence.Decorators
@@ -188,8 +188,8 @@ namespace Pubquiz.Persistence.Decorators
 
         public override async Task<bool> AnyAsync(Expression<Func<T, bool>> filter)
         {
-            if (MemoryCache == null) return await base.AnyAsync();
-            return _neverRemove ? Collection.Values.OfType<T>().AsQueryable().Any(filter) : await base.AnyAsync();
+            if (MemoryCache == null) return await base.AnyAsync(filter);
+            return _neverRemove ? Collection.Values.OfType<T>().AsQueryable().Any(filter) : await base.AnyAsync(filter);
         }
 
         public override async Task<long> GetCountAsync(Expression<Func<T, bool>> filter)

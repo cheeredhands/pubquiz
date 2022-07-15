@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using Pubquiz.Domain;
 using Pubquiz.Domain.Models;
-using Pubquiz.Persistence.Extensions;
+using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Logic.Tools
 {

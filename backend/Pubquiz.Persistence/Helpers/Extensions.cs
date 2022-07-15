@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text.Json;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Pubquiz.Persistence.Extensions
+namespace Pubquiz.Persistence.Helpers
 {
     public static class Extensions
     {
@@ -14,14 +13,6 @@ namespace Pubquiz.Persistence.Extensions
         /// <returns></returns>
         public static T Clone<T>(this T toClone) where T : class =>
             JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(toClone));
-
-        public static string ToShortGuidString(this Guid guid)
-        {
-            string enc = Convert.ToBase64String(guid.ToByteArray());
-            enc = enc.Replace("/", "_");
-            enc = enc.Replace("+", "-");
-            return enc.Substring(0, 22);
-        }
 
         public static bool TryDecodeToGuid(this string input, out Guid decoded)
         {

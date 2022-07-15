@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Pubquiz.Domain;
 using Pubquiz.Persistence.Helpers;
 
 namespace Pubquiz.Persistence.MongoDb

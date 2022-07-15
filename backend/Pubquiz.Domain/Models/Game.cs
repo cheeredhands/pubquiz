@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Pubquiz.Domain.ViewModels;
-using Pubquiz.Persistence;
-using Pubquiz.Persistence.Extensions;
 
 // ReSharper disable CollectionNeverUpdated.Global
 

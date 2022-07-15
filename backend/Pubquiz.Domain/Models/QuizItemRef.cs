@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text;
-using Pubquiz.Persistence;
-
-namespace Pubquiz.Domain.Models
+﻿namespace Pubquiz.Domain.Models
 {
     public class QuizItemRef
     {
